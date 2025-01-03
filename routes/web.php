@@ -19,7 +19,8 @@ Route::get('/test', [TestController::class, 'test'])
 ->name('test');
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
