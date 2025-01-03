@@ -28,11 +28,6 @@ class RecordController extends Controller
             })->leftjoinSub($targets, 'targets', function($join) {
                 $join->on('questions_sub.subject', '=', 'targets.subject')->on('questions_sub.no', '=', 'targets.no');
             })->where('records.user_id', auth()->id())
-            // ->selectRaw('
-            //     *,
-            //     ROUND(100*score/target_score) as score_per_target,
-            //     IF(ROUND(100*score/target_score) >= 100, " (^^)/◎", "") as target_mark
-            //     ')
             ->selectRaw('
                 records.*,
                 questions_sub.year, questions_sub.type, questions_sub.subject, questions_sub.no, questions_sub.point,
@@ -43,14 +38,6 @@ class RecordController extends Controller
             ->orderBy('date','desc')
             ->orderBy('records.id','desc')
             ->get();
-
-            // $records = Record::where('user_id', auth()->id())
-            // ->orderBy('date','desc')
-            // ->leftjoinSub($questions_sub, 'questions_sub', function($join) {
-            //     $join->on('records.question_id', '=', 'questions_sub.id');
-            // })->joinSub($targets, 'targets', function($join) {
-            //     $join->on('questions_sub.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
-            // })->get();
 
         //演習記録（ユーザごと、大問ごとの集計値）
         $records_sub = Record::where('user_id', auth()->id())
@@ -129,28 +116,14 @@ class RecordController extends Controller
     }
 
     public function update(Request $request, Record $record) {
-        // $validated = $request->validate([
-        //     // 'user_id' => 'required',
-        //     // 'question_id' => 'required',
-        //     'date' => 'required',
-        //     'score' => 'required|integer',
-        //     'minute' => 'required|integer',
-        //     'memo' => 'nullable',
-        //     'date' => 'nullable',
-        // ]);
-
-        // $validated['user_id'] = auth()->id();
 
         $validated = $request->validate([
-            // 'user_id' => 'required',
-            // 'question_id' => 'required',
             'date' => 'required',
             'year' => 'required',
             'subject' => 'required',
             'no' => 'required',
             'score' => 'required|integer',
             'minute' => 'required|integer',
-            // 'memo' => 'nullable',
         ]);
 
         //問題IDを取得
@@ -160,7 +133,6 @@ class RecordController extends Controller
             ->first();
 
         $validated['user_id'] = auth()->id();
-        // $validated['question_id'] = $request->question_id();
         $validated['question_id'] = $question->id;
         $record->update($validated);
 
