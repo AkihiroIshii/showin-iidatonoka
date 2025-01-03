@@ -5,7 +5,8 @@
         </h2>
     </x-slot>
     ログインユーザID:{{ Auth::id() }}
-    <table class="border-separate border border-slate-400 m-auto table-fixed">
+    @if($record->user->id==Auth::id())
+        <table class="border-separate border border-slate-400 m-auto table-fixed">
             <tr class="bg-gray-300">
                 <th class="border border-slate-300 px-4 w-1/12"></td>
                 <th class="border border-slate-300 px-4 w-1/12">解いた日</td>
@@ -31,6 +32,7 @@
                 <td class="border border-slate-300 px-4">{{$record->minute}}</td>
             </tr>
         </table>
+    @endif
 </x-app-layout>
 
 
