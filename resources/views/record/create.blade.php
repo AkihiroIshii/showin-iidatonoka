@@ -11,9 +11,6 @@
             </div>
         @endif
         @auth
-            {{Auth::id()}}ログイン中
-        @endauth
-        @auth
             <form method="post" action="{{ route('record.store') }}">
                 @csrf
 

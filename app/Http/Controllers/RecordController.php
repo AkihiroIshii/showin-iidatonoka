@@ -60,11 +60,13 @@ class RecordController extends Controller
                 $join->on('questions.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
             })
             ->selectRaw('
-                *,
-                ROUND(100*max_score/point) as score_rate,
+                questions.*,
+                records_sub.*,
+                targets.target_score, targets.target_minute,
+                IF(max_score IS NOT NULL, ROUND(100*max_score/point), "-") as score_rate,
                 IF(ROUND(100*max_score/point) >= 80, " (^^)/◎", "") as max_mark,
                 IF(max_score >= target_score, " (^^)/◎", "") as target_mark
-                ')
+            ')
             //並び替え
             ->orderBy('type','desc')
             ->orderBy('year','desc')

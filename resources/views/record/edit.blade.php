@@ -10,9 +10,6 @@
                 {{session('message')}}
             </div>
         @endif
-        @auth
-            {{Auth::id()}}ログイン中
-        @endauth
         @if($record->user->id==Auth::id())
             <form method="post" action="{{ route('record.update', $record) }}">
                 @csrf
