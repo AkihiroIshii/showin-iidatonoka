@@ -11,8 +11,8 @@
         <div style="height:300px;grid-area:content;overflow:scroll;">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/12"></td>
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/12">生徒名</td>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4"></td>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">生徒名</td>
                 </tr>
                 @foreach($users as $user)
                 <tr>
