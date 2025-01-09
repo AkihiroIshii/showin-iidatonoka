@@ -4,9 +4,6 @@
             過去問演習の記録　個別表示
         </h2>
     </x-slot>
-    <x-primary-button class="mt-4">
-        <a href="{{route('record')}}" class="text-blue-600">一覧に戻る</a>
-    </x-primary-button>
     @if($record->user->id==Auth::id())
     <div>
         <table class="border-separate border border-slate-400 m-auto table-fixed">
@@ -38,8 +35,3 @@
     </div>
     @endif
 </x-app-layout>
-
-
-<th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/2">得点/配点</td>
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/2">得点/目標点</td>
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/2">解答時間(分)</td>

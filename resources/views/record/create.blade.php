@@ -86,9 +86,6 @@
                     登録
                 </x-primary-button>
             </form>
-            <x-primary-button class="mt-4">
-                <a href="{{route('record')}}" class="text-blue-600">一覧に戻る</a>
-            </x-primary-button>
         @endauth
     </div>
 </x-app-layout>

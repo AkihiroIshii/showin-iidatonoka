@@ -36,6 +36,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('record', [RecordController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('record');
+Route::get('record/spreadsheet', [RecordController::class, 'spreadsheet'])
+->middleware(['auth', 'verified'])->name('spreadsheet');
 Route::get('record/create', [RecordController::class, 'create'])
 ->name('record.create');
 // Route::get('record/create', [RecordController::class, 'create'])
@@ -48,7 +50,8 @@ Route::get('record/{record}/edit', [RecordController::class, 'edit'])
 ->name('record.edit');
 Route::patch('record/{record}', [RecordController::class, 'update'])
 ->name('record.update');
-
+Route::get('record/explanation', [RecordController::class, 'explanation'])
+->name('record.explanation');
 
 
 require __DIR__.'/auth.php';
