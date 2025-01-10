@@ -14,6 +14,8 @@ Route::middleware(['auth', 'admin'])->group(function (){
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 Route::get('/admin/show/{user}', [AdminController::class, 'show'])->name('admin.show');
+Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])->name('admin.spreadsheet');
+Route::get('/admin/link', [AdminController::class, 'link'])->name('admin.link');
 
 Route::get('/test', [TestController::class, 'test'])
 ->name('test');

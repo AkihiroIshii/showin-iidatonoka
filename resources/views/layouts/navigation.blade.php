@@ -13,15 +13,24 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
-                        新規登録
-                    </x-nav-link>
-                    <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
-                        一覧
-                    </x-nav-link>
-                    <x-nav-link :href="route('spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
-                        集計表
-                    </x-nav-link>
+                    @if(Auth::user()->role == "admin")
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                            生徒一覧
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.link')" :active="request()->routeIs('admin.link')">
+                            リンク集
+                        </x-nav-link>
+                    @else
+                        <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
+                            新規登録
+                        </x-nav-link>
+                        <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
+                            一覧
+                        </x-nav-link>
+                        <x-nav-link :href="route('spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
+                            集計表
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
