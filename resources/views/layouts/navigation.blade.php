@@ -30,6 +30,9 @@
                         <x-nav-link :href="route('spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
                             集計表
                         </x-nav-link>
+                        <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
+                            目標設定
+                        </x-nav-link>
                     @endif
                 </div>
             </div>

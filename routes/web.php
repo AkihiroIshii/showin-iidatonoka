@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TargetController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -17,9 +18,10 @@ Route::get('/admin/show/{user}', [AdminController::class, 'show'])->name('admin.
 Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])->name('admin.spreadsheet');
 Route::get('/admin/link', [AdminController::class, 'link'])->name('admin.link');
 
-Route::get('/test', [TestController::class, 'test'])
-->name('test');
+// Route::get('/test', [TestController::class, 'test'])
+// ->name('test');
 
+/* ログイン */
 Route::get('/', function () {
     // return view('welcome');
     return redirect()->route('login');
@@ -36,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+/* レコード管理 */
 Route::get('record', [RecordController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('record');
 Route::get('record/spreadsheet', [RecordController::class, 'spreadsheet'])
@@ -55,5 +58,14 @@ Route::patch('record/{record}', [RecordController::class, 'update'])
 Route::get('record/explanation', [RecordController::class, 'explanation'])
 ->name('record.explanation');
 
+/* 目標管理 */
+Route::get('target', [TargetController::class, 'index'])
+->middleware(['auth', 'verified'])->name('target');
+Route::get('target/show/{target}', [TargetController::class, 'show'])
+->name('target.show');
+Route::get('target/{target}/edit', [TargetController::class, 'edit'])
+->name('target.edit');
+Route::patch('target/{target}', [TargetController::class, 'update'])
+->name('target.update');
 
 require __DIR__.'/auth.php';
