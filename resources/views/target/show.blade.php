@@ -1,11 +1,11 @@
-<x-app-layout>
+<!-- <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             目標設定　個別表示
         </h2>
     </x-slot>
     @if($target->user->id==Auth::id())
-    <div>
+    <div class="py-6">
         <table class="border-separate border border-slate-400 m-auto table-fixed">
             <tr class="bg-gray-300">
                 <th class="border border-slate-300 px-4"></td>
@@ -16,7 +16,7 @@
             </tr>
             <tr>
                 <th class="border border-slate-300 px-4">
-                    <a href="{{route('target.edit', $record)}}" class="text-blue-600">編集</a>
+                    <a href="{{route('target.edit', $target)}}" class="text-blue-600">編集</a>
                 </td>
                 <td class="border border-slate-300 px-4">{{$target->subject}}</td>
                 <td class="border border-slate-300 px-4">{{$target->no}}</td>
@@ -26,4 +26,4 @@
         </table>
     </div>
     @endif
-</x-app-layout>
+</x-app-layout> -->

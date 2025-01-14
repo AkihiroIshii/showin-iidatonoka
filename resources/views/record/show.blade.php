@@ -1,4 +1,4 @@
-<x-app-layout>
+<!-- <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             過去問演習の記録　個別表示
@@ -34,4 +34,4 @@
         </table>
     </div>
     @endif
-</x-app-layout>
+</x-app-layout> -->

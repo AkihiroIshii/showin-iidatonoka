@@ -61,8 +61,8 @@ Route::get('record/explanation', [RecordController::class, 'explanation'])
 /* 目標管理 */
 Route::get('target', [TargetController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('target');
-Route::get('target/show/{target}', [TargetController::class, 'show'])
-->name('target.show');
+// Route::get('target/show/{target}', [TargetController::class, 'show'])
+// ->name('target.show');
 Route::get('target/{target}/edit', [TargetController::class, 'edit'])
 ->name('target.edit');
 Route::patch('target/{target}', [TargetController::class, 'update'])

@@ -44,7 +44,7 @@
                 @foreach($records as $record)
                 <tr>
                     <th class="border border-slate-300 px-4 w-1/12">
-                        <a href="{{route('record.show', $record)}}" class="text-blue-600">編集</a>
+                        <a href="{{route('record.edit', $record)}}" class="text-blue-600">編集</a>
                     </td>
                     <td class="border border-slate-300 px-4">{{$record->date}}</td>
                     <td class="border border-slate-300 px-4">{{$record->user->name}}</td>
