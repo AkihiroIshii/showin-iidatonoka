@@ -49,8 +49,8 @@ Route::get('record/create', [RecordController::class, 'create'])
 // ->middleware('admin');
 Route::post('record', [RecordController::class, 'store'])
 ->name('record.store');
-Route::get('record/show/{record}', [RecordController::class, 'show'])
-->name('record.show');
+// Route::get('record/show/{record}', [RecordController::class, 'show'])
+// ->name('record.show');
 Route::get('record/{record}/edit', [RecordController::class, 'edit'])
 ->name('record.edit');
 Route::patch('record/{record}', [RecordController::class, 'update'])
