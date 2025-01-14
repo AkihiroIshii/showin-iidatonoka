@@ -5,9 +5,7 @@
         </h2>
     </x-slot>
     @if($user->id==Auth::id())
-    <div class="px-20 py-2 font-bold text-red-400">
-        目標点をクリックすると編集できます。
-    </div>
+    <p class="px-20"><b style="color:red;">(※)目標点をクリックすると編集できます。</b></p>
     <div class="py-6">
         <table class="border-separate border border-slate-400 m-auto table-fixed">
             <tr class="bg-gray-300">

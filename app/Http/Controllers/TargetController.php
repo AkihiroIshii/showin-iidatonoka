@@ -36,7 +36,15 @@ class TargetController extends Controller
                 $join->on('targets.subject', '=', 'record_set.subject')->on('targets.no', '=', 'record_set.no');
             })
             ->selectRaw('
-                *,
+                targets.id,
+                targets.subject,
+                targets.no,
+                targets.target_score,
+                targets.target_minute,
+                record_set.count,
+                record_set.max_score,
+                record_set.avg_score,
+                record_set.avg_point,
                 IF(record_set.max_score > targets.target_score, "(^^)/◎", "") as max_mark,
                 IF(record_set.avg_score > targets.target_score, "(^^)/◎", "") as avg_mark
             ')
