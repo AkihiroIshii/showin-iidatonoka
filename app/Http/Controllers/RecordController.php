@@ -80,29 +80,8 @@ class RecordController extends Controller
         //ログインユーザ
         $user = User::where('id', auth()->id())->get();
 
-        // //問題
-        // $questions_sub = Question::where('id', '>', -1);
-        // // $questions_sub = Question::all();
-
         //目標点数
         $targets = Target::where('user_id', auth()->id());
-
-        // //演習記録
-        // $records = Record::leftjoinSub($questions_sub, 'questions_sub', function($join) {
-        //         $join->on('records.question_id', '=', 'questions_sub.id');
-        //     })->leftjoinSub($targets, 'targets', function($join) {
-        //         $join->on('questions_sub.subject', '=', 'targets.subject')->on('questions_sub.no', '=', 'targets.no');
-        //     })->where('records.user_id', auth()->id())
-        //     ->selectRaw('
-        //         records.*,
-        //         questions_sub.year, questions_sub.type, questions_sub.subject, questions_sub.no, questions_sub.point,
-        //         targets.target_score, targets.target_minute,
-        //         IF((target_score IS NOT NULL) AND (ROUND(100*score/target_score) >= 100), " (^^)/◎", "") as target_mark
-        //         ')
-        //     //並び替え
-        //     ->orderBy('date','desc')
-        //     ->orderBy('records.id','desc')
-        //     ->get();
 
         //演習記録（ユーザごと、大問ごとの集計値）
         $records_sub = Record::where('user_id', auth()->id())
@@ -139,6 +118,76 @@ class RecordController extends Controller
             ->orderBy('questions.no','asc')
             ->get();
         return view('record.spreadsheet', compact('user','questions'));
+    }
+
+    //レコード集計２（年度も集約）
+    public function spreadsheet2() {
+        //ログインユーザ
+        $user = User::where('id', auth()->id())->get();
+
+        //目標点数
+        $targets = Target::where('user_id', auth()->id());
+
+        //演習記録（ユーザごと、大問ごとの集計値）
+        $records_sub = Record::where('user_id', auth()->id())
+            ->select('user_id', 'question_id')
+            ->selectRaw('
+                COUNT(score) as count,
+                MAX(score) as max_score,
+                ROUND(AVG(score),0) as avg_score,
+                MAX(date) as latest_date,
+                ROUND(AVG(minute),0) as avg_minute
+            ')
+            ->groupBy('user_id','question_id');
+
+
+        // //大問ごとに全年度の平均を取得
+        // $q_sub = Question::select('subject', 'no')
+        //     ->selectRaw('
+        //         count(point) as count,
+        //         round(avg(point)) as avg_point
+        //     ')
+        //     ->groupBy('subject', 'no');
+
+
+        // SELECT q.subject, q.no, count(q.point), avg(q.point), avg(r.score), avg(r.minute) FROM `questions` q
+        // left join `records` r
+        // ON
+        // q.id = r.question_id
+        // where r.user_id = 11
+        // group BY
+        // q.subject, q.no
+        // ;
+        
+        $records = Record::where('user_id', auth()->id());
+
+        //大問にログインユーザの記録を紐づけ
+        $questions = Question::leftjoinSub($records, 'records', function($join) {
+                $join->on('questions.id', '=', 'records.question_id');
+            })
+            //ログインユーザの目標点を紐づけ
+            ->leftjoinSub($targets, 'targets', function($join) {
+                $join->on('questions.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
+            })
+            ->selectRaw('
+                questions.subject,
+                questions.no,
+                count(records.score) as count,
+                round(avg(questions.point)) as avg_point,
+                max(records.score) as max_score,
+                round(avg(records.score)) as avg_score,
+                round(avg(records.minute)) as avg_minute,
+                round(avg(targets.target_score)) as target_score,
+                round(avg(targets.target_minute)) as target_minute,
+                if(max(records.score)>avg(targets.target_score), "(^^)/◎", "") as max_mark,
+                if(avg(records.score)>avg(targets.target_score), "(^^)/◎", "") as avg_mark
+            ')
+            ->groupBy('questions.subject', 'questions.no')
+            //並び替え
+            ->orderBy('questions.subject','asc')
+            ->orderBy('questions.no','asc')
+            ->get();
+        return view('record.spreadsheet2', compact('user','questions'));
     }
 
     public function show (Record $record) {

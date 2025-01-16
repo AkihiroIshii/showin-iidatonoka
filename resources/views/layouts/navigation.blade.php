@@ -27,8 +27,11 @@
                         <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
                             一覧
                         </x-nav-link>
-                        <x-nav-link :href="route('spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
-                            集計表
+                        <x-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
+                            集計表(年度-科目-大問ごと)
+                        </x-nav-link>
+                        <x-nav-link :href="route('record.spreadsheet2')" :active="request()->routeIs('record.spreadsheet2')">
+                            集計表(年度区別なし)
                         </x-nav-link>
                         <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
                             目標設定

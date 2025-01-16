@@ -42,7 +42,9 @@ Route::middleware('auth')->group(function () {
 Route::get('record', [RecordController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('record');
 Route::get('record/spreadsheet', [RecordController::class, 'spreadsheet'])
-->middleware(['auth', 'verified'])->name('spreadsheet');
+->middleware(['auth', 'verified'])->name('record.spreadsheet');
+Route::get('record/spreadsheet2', [RecordController::class, 'spreadsheet2'])
+->middleware(['auth', 'verified'])->name('record.spreadsheet2');
 Route::get('record/create', [RecordController::class, 'create'])
 ->name('record.create');
 // Route::get('record/create', [RecordController::class, 'create'])
