@@ -15,6 +15,7 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">年度</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">科目</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">大問</td>
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">内容</td>
                         <!-- <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/2">配点</td> -->
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">挑戦回数</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">最後に解いた日</td>
@@ -30,6 +31,7 @@
                         <td class="border border-slate-300 px-4">{{$question->year}}</td>
                         <td class="border border-slate-300 px-4">{{$question->subject}}</td>
                         <td class="border border-slate-300 px-4">{{$question->no}}</td>
+                        <td class="border border-slate-300 px-4">{{$question->content}}</td>
                         <!-- <td class="border border-slate-300 px-4">{{$question->point}}</td> -->
                         <td class="border border-slate-300 px-4">{{$question->count}}</td>
                         <td class="border border-slate-300 px-4">{{$question->latest_date}}</td>

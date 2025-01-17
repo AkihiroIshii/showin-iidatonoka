@@ -161,6 +161,9 @@ class RecordController extends Controller
         
         $records = Record::where('user_id', auth()->id());
 
+        //最新年度の大問
+        $q_latest = Question::where('year', Question::max('year'));
+
         //大問にログインユーザの記録を紐づけ
         $questions = Question::leftjoinSub($records, 'records', function($join) {
                 $join->on('questions.id', '=', 'records.question_id');
@@ -169,9 +172,13 @@ class RecordController extends Controller
             ->leftjoinSub($targets, 'targets', function($join) {
                 $join->on('questions.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
             })
+            ->leftjoinSub($q_latest, 'q_latest', function($join) {
+                $join->on('questions.subject', '=', 'q_latest.subject')->on('questions.no', '=', 'q_latest.no');
+            })
             ->selectRaw('
                 questions.subject,
                 questions.no,
+                q_latest.content,
                 count(records.score) as count,
                 round(avg(questions.point)) as avg_point,
                 max(records.score) as max_score,
@@ -182,7 +189,7 @@ class RecordController extends Controller
                 if(max(records.score)>avg(targets.target_score), "(^^)/◎", "") as max_mark,
                 if(avg(records.score)>avg(targets.target_score), "(^^)/◎", "") as avg_mark
             ')
-            ->groupBy('questions.subject', 'questions.no')
+            ->groupBy('questions.subject', 'questions.no', 'q_latest.content')
             //並び替え
             ->orderBy('questions.subject','asc')
             ->orderBy('questions.no','asc')
