@@ -6,6 +6,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TargetController;
+use App\Http\Controllers\EventController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -17,6 +18,8 @@ Route::middleware(['auth', 'admin'])->group(function (){
 Route::get('/admin/show/{user}', [AdminController::class, 'show'])->name('admin.show');
 Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])->name('admin.spreadsheet');
 Route::get('/admin/link', [AdminController::class, 'link'])->name('admin.link');
+Route::get('/admin/event', [AdminController::class, 'event'])->name('admin.event');
+Route::get('/admin/maintain', [AdminController::class, 'maintain'])->name('admin.maintain');
 
 // Route::get('/test', [TestController::class, 'test'])
 // ->name('test');
@@ -69,5 +72,9 @@ Route::get('target/{target}/edit', [TargetController::class, 'edit'])
 ->name('target.edit');
 Route::patch('target/{target}', [TargetController::class, 'update'])
 ->name('target.update');
+
+/* イベント */
+Route::get('event', [EventController::class, 'index'])
+->middleware(['auth', 'verified'])->name('event');
 
 require __DIR__.'/auth.php';

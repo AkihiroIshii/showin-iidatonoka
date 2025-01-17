@@ -20,6 +20,12 @@
                         <x-nav-link :href="route('admin.link')" :active="request()->routeIs('admin.link')">
                             リンク集
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.event')" :active="request()->routeIs('admin.event')">
+                            イベント
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
+                            メンテナンス
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                             新規登録
@@ -35,6 +41,9 @@
                         </x-nav-link>
                         <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
                             目標設定
+                        </x-nav-link>
+                        <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                            イベント
                         </x-nav-link>
                     @endif
                 </div>

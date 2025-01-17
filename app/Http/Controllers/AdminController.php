@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Record;
 use App\Models\Question;
 use App\Models\Target;
+use App\Models\Event;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -136,11 +138,56 @@ class AdminController extends Controller
 
     public function index() {
         //生徒
-        $users = User::all();
+        $users = User::leftJoin('schools', function($join) {
+                $join->on('users.school_id', '=', 'schools.id');
+            })
+            ->selectRaw('
+                users.id,
+                users.name as user_name,
+                schools.name as school_name,
+                users.grade,
+                users.plan
+            ')
+            ->orderBy('users.grade','desc')
+            ->orderBy('users.plan','asc')
+            ->orderBy('users.id','asc')
+            ->orderBy('schools.name','asc')
+            ->get();
         return view('admin.dashboard', compact('users')); //管理者専用ページのビュー
     }
 
     public function link() {
         return view('admin.link');
     }
+
+    public function maintain() {
+        return view('admin.maintain');
+    }
+
+    public function event() {
+        $startDate = Carbon::today()->startOfDay();
+        $endDate = Carbon::today()->addMonth(2)->endOfDay();  //２か月後
+        
+        //イベント（本日から１か月間）
+        $events = Event::whereBetween('events.date_from', [$startDate, $endDate])
+            ->leftJoin('schools', function ($join) {
+                $join->on('events.school_id', '=', 'schools.id');
+            })
+            ->selectRaw("
+                events.*,
+                schools.name,
+                IF(events.date_from = events.date_to,
+                    DATE_FORMAT(events.date_from, '%c/%e'),
+                    CONCAT(
+                        CONCAT(DATE_FORMAT(events.date_from, '%c/%e'), '～'),
+                        DATE_FORMAT(events.date_to, '%c/%e')
+                    )
+                ) as formatted_date
+            ")
+            ->orderBy('events.date_from', 'asc')
+            ->get();
+            
+        return view('admin.event', compact('events'));
+    }
+
 }
