@@ -92,7 +92,7 @@
                     </ul>
                 </div>
                 <div class="content-block-1">
-                    <h4>式の展開（中３）</h4>
+                    <h4>式の展開など（中３）</h4>
                     <ul>
                     <li>
                             $$ (a+b)^2 = a^2+2ab+b^2 $$
@@ -102,6 +102,11 @@
                         </li>
                         <li>
                             $$ (a+b)(a-b) = a^2-b^2 $$
+                        </li>
+                        <li>
+                            <p>二次方程式：解の公式</p>
+                            $$ ax^2+bx+c=0 $$ において、
+                            $$ x=\frac{-b \pm \sqrt{b^2-4ac}}{2a} $$
                         </li>
                     </ul>
                 </div>
@@ -157,7 +162,59 @@
                         </li>
                     </ul>
                 </div>
+                <div class="content-block-1">
+                    <h4>物理：電流</h4>
+                    <ul>
+                        <li>
+                            <p>オームの法則（中２）</p>
+                            $$ 電圧V[V]=抵抗R[\Omega] \times 電流I[A] $$
+                        </li>
+                        <li>
+                            <p>直列回路（中２）</p>
+                            $$ I=I_1=I_2,　V=V_1+V_2,　R=R_1+R_2 $$
+                        </li>
+                        <li>
+                            <p>並列回路（中２）</p>
+                            $$ I=I_1+I_2,　V=V_1=V_2,　\frac{1}{R}=\frac{1}{R_1}+\frac{1}{R_2} $$
+                        </li>
+                        <li>
+                            <p>電力 \(W\)、電力量 \(P\)（中２）</p>
+                            $$ W=VI,　P[J]=Wt（t は秒数）$$
+                        </li>
+                    </ul>
+                </div>
+                <div class="content-block-1">
+                    <h4>物理：力学</h4>
+                    <ul>
+                        <li>
+                            <p>仕事（中３）</p>
+                            $$ 仕事[J]=力の大きさ[N] \times 動いた距離[m] $$
+                        </li>
+                        <li>
+                            <p>仕事（中３）</p>
+                            $$ 仕事率[W]=\frac{仕事[J]}{かかった時間[s]} $$
+                        </li>
+                        <li>
+                            <p>圧力（中２）</p>
+                            $$ 圧力[Pa]=\frac{面を垂直に押す力[N]}{力が働く面積[m^3]} $$
+                        </li>
+                    </ul>
+                </div>
             </div>
+
+            <h3>社会の公式</h3>
+            <div class="content-subject w-45">
+                <div class="content-block-1">
+                    <h4>地理</h4>
+                    <ul>
+                        <li>
+                            <p>経度差が \(x^\circ\) の２地点の時差 \(T\)（中１）</p>
+                            $$ 360^\circ :24[時間] = x^\circ :T[時間] $$
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </div>
 </x-app-layout>
