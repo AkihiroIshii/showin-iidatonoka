@@ -26,6 +26,9 @@
                         <x-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
                             メンテナンス
                         </x-nav-link>
+                        <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
+                            問題集（作成中）
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                             新規登録
@@ -44,6 +47,9 @@
                         </x-nav-link>
                         <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                             イベント
+                        </x-nav-link>
+                        <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
+                            <span style="color:red;">new!!</span>公式集（作成中）
                         </x-nav-link>
                     @endif
                 </div>

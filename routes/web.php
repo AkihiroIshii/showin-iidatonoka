@@ -7,6 +7,7 @@ use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\WorkbookController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -76,5 +77,10 @@ Route::patch('target/{target}', [TargetController::class, 'update'])
 /* イベント */
 Route::get('event', [EventController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('event');
+
+/* 問題集 */
+Route::get('workbook/reference', [WorkbookController::class, 'reference'])
+->name('workbook.reference');
+
 
 require __DIR__.'/auth.php';

@@ -164,6 +164,10 @@ class AdminController extends Controller
         return view('admin.maintain');
     }
 
+    public function workbook() {
+        return view('admin.workbook');
+    }
+
     public function event() {
         $startDate = Carbon::today()->startOfDay();
         $endDate = Carbon::today()->addMonth(2)->endOfDay();  //２か月後
