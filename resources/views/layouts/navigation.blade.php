@@ -34,10 +34,10 @@
                             一覧
                         </x-nav-link>
                         <x-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
-                            集計表(年度-科目-大問ごと)
+                            集計表１
                         </x-nav-link>
                         <x-nav-link :href="route('record.spreadsheet2')" :active="request()->routeIs('record.spreadsheet2')">
-                            集計表(年度区別なし)
+                            集計表２
                         </x-nav-link>
                         <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
                             目標設定
@@ -47,8 +47,14 @@
                         </x-nav-link>
                     @endif
                     <!-- 管理者、生徒共通 -->
+                    <x-nav-link :href="route('workbook.answersheet')" :active="request()->routeIs('workbook.answersheet')">
+                        <span style="color:red;">new!!</span>過去問解答用紙
+                    </x-nav-link>
                     <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
-                        <span style="color:red;">new!!</span>公式集（作成中）
+                        <span style="color:red;">new!!</span>公式集
+                    </x-nav-link>
+                    <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
+                        <span style="color:red;">new!!</span>英文法
                     </x-nav-link>
                 </div>
             </div>

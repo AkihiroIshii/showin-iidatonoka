@@ -81,6 +81,10 @@ Route::get('event', [EventController::class, 'index'])
 /* 問題集 */
 Route::get('workbook/reference', [WorkbookController::class, 'reference'])
 ->name('workbook.reference');
+Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
+->name('workbook.grammar');
+Route::get('workbook/answersheet', [WorkbookController::class, 'answersheet'])
+->name('workbook.answersheet');
 
 
 require __DIR__.'/auth.php';
