@@ -2,6 +2,7 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             英語
+            <span style="font-size:1rem;color:green;">　　スッと理解できない文があれば、早急に文法を確認しよう(`・ω・´)</span>
         </h2>
     </x-slot>
     <div class="mx-auto px-6 py-10">
@@ -233,10 +234,69 @@
                     <h4>使役動詞（中３）</h4>
                     <ul>
                         <li>
+                            <p>動詞＋人＋to不定詞</p>
                             <p>I <span class="underline">want you to study</span> more.（私は<span class="underline">あなたに</span>もっと<span class="underline">勉強してほしい</span>。）</p>
+                            <p>I <span class="underline">told him to come</span> here</span>.（私は<span class="underline">彼に</span>ここに<span class="underline">来るように伝えた</span>。）</p>
                         </li>
                         <li>
-                            <p>I <span class="underline">told him to come</span> here</span>.（私は<span class="underline">彼に</span>ここに<span class="underline">来るように伝えた</span>。）</p>
+                            <p>動詞＋人＋動詞の原形（原形不定詞）</p>
+                            <p>I <span class="underline">helped my mother wash</span> the dishes</span>.（私は<span class="underline">母が</span>皿を<span class="underline">洗うのを手伝った</span>。）</p>
+                            <p>He <span class="underline">made me wash</span> the dishes</span>.（彼は<span class="underline">私に</span>皿を<span class="underline">洗わせた</span>。）</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 関係代名詞 -->
+                <div class="content-block-1">
+                    <h4>関係代名詞（中３）</h4>
+                    <ul>
+                    <li>
+                            <p>主格（人）</p>
+                            <p>
+                                I know <span class="underline">the boy</span>. + <span class="underline">He</span> won the game.
+                                ⇒ I know the boy <span class="underline">who</span> won the game.
+                            </p>
+                            <p>
+                                （私は<span class="underline">その試合で勝った少年</span>を知っている。）
+                            </p>
+                        </li>
+                        <li>
+                            <p>所有格（人）</p>
+                            <p>
+                                I know <span class="underline">the boy</span>. + <span class="underline">His</span> name is Taro.
+                                ⇒ I know the boy <span class="underline">whose</span> name is Taro.
+                            </p>
+                            <p>
+                                （私は<span class="underline">太郎という名の少年</span>を知っている。）
+                            </p>
+                        </li>
+                        <li>
+                            <p>目的格（人）</p>
+                            <p>
+                                I know <span class="underline">the boy</span>. + You met <span class="underline">him</span> yesterday.
+                                ⇒ I know the boy <span class="underline">who</span> you met yesterday.
+                            </p>
+                            <p>
+                                （私は<span class="underline">あなたが昨日会った少年</span>を知っている。）
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 仮定法 -->
+                <div class="content-block-1">
+                    <h4>仮定法（中３）</h4>
+                    <ul>
+                        <li>
+                            <p>非現実的な願望（I wish～）</p>
+                            <p>I wish I <span class="underline">were</span> a bird.（私が鳥<span class="underline">だったらなあ</span>。）</p>
+                            <p>I wish I <span class="underline">had</span> an island</span>.（私が島を<span class="underline">持っていればなあ</span>。）</p>
+                            <p>I wish I <span class="underline">could</span> fly</span>.（私が<span class="underline">飛べればなあ</span>。）</p>
+                        </li>
+                        <li>
+                            <p>非現実的な仮定（If～）</p>
+                            <p>If I <span class="underline">were</span> a bird, I <span class="underline">could</span> fly.（もし私が鳥<span class="underline">だったら飛べるのに</span>。）</p>
+                            <p>If I <span class="underline">had</span> an island, I <span class="underline">would</span> live there.（もし私が島を<span class="underline">持っていたらそこに住むのに</span>。）</p>
                         </li>
                     </ul>
                 </div>
