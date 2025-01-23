@@ -61,8 +61,6 @@ Route::get('record/{record}/edit', [RecordController::class, 'edit'])
 ->middleware(['auth', 'verified'])->name('record.edit');
 Route::patch('record/{record}', [RecordController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('record.update');
-Route::get('record/explanation', [RecordController::class, 'explanation'])
-->middleware(['auth', 'verified'])->name('record.explanation');
 
 /* 目標管理 */
 Route::get('target', [TargetController::class, 'index'])
@@ -85,6 +83,8 @@ Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
 ->middleware(['auth', 'verified'])->name('workbook.grammar');
 Route::get('workbook/answersheet', [WorkbookController::class, 'answersheet'])
 ->middleware(['auth', 'verified'])->name('workbook.answersheet');
+Route::get('record/reading', [WorkbookController::class, 'reading'])
+->middleware(['auth', 'verified'])->name('workbook.reading');
 
 
 require __DIR__.'/auth.php';

@@ -208,10 +208,6 @@ class RecordController extends Controller
         return view('record.create');
     }
 
-    public function explanation() {
-        return view('record.explanation');
-    }
-
     public function store(Request $request) {
         $validated = $request->validate([
             // 'user_id' => 'required',

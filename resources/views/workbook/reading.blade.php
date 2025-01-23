@@ -1,15 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            過去問演習の解説
+            中学英語（英文読解）
         </h2>
     </x-slot>
     @auth
-        <x-primary-button class="mt-4">
-            <a href="{{route('record')}}" class="text-blue-600">一覧に戻る</a>
-        </x-primary-button>
+        <div style="display:flex;">
+            <div class="px-6 py-4 text-lg font-semibold">
+                <a href="{{route('workbook.grammar')}}" class="text-blue-600 font-semibold">英文法</a>
+            </div>
+            <div class="px-6 py-4 text-lg font-semibold">
+                ＞英文読解
+            </div>
+        </div>
 
         <div class="content-block">
+            <p>◎高校入試過去問を題材にして、読解練習をしてみよう！</p>
+
             <h2>
                 2024年度　英語　問３
             </h2>
@@ -92,7 +99,7 @@
             </h2>
             <div class="explanation-content">
                 <p>
-                    関係代名詞を含む文について、構造を見てみましょう。
+                    関係代名詞を含む長めの文について、構造を見てみましょう。
                 </p>
                 <div class="content-inner-block">
                     <p>第2段落　1行目</p>

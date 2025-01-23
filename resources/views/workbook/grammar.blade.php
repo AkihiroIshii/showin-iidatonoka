@@ -1,10 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            英語
+            中学英語
             <span style="font-size:1rem;color:green;">　　スッと理解できない文があれば、早急に文法を確認しよう(`・ω・´)</span>
         </h2>
     </x-slot>
+    <div style="display:flex;">
+        <div class="px-6 py-4 text-lg font-semibold">
+            ＞ 英文法
+        </div>
+        <div class="px-6 py-4 text-lg">
+            <a href="{{route('workbook.reading')}}" class="text-blue-600 font-semibold">英文読解</a>
+        </div>
+    </div>
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
             <h3>英文法</h3>

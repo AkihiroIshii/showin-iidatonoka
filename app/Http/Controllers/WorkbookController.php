@@ -14,6 +14,10 @@ class WorkbookController extends Controller
         return view('workbook.grammar');
     }
 
+    public function reading() {
+        return view('workbook.reading');
+    }
+
     public function answersheet() {
         return redirect(asset('pdf/answersheet.pdf'));
     }

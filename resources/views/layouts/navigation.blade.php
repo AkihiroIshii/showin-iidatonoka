@@ -51,7 +51,7 @@
                         <span style="color:red;">new!!</span>公式集
                     </x-nav-link>
                     <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
-                        <span style="color:red;">new!!</span>英文法
+                        <span style="color:red;">new!!</span>中学英語
                     </x-nav-link>
                 </div>
             </div>
