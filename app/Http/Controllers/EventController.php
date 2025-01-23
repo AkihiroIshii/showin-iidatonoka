@@ -40,7 +40,11 @@ class EventController extends Controller
             ")
             ->orderBy('events.date_from', 'asc')
             ->get();
-            
-        return view('event.index', compact('user','events'));
+
+        //生徒の学校のイベント数
+        $numEvent = Event::where('school_id', $user->school_id)
+            ->count('school_id');
+
+        return view('event.index', compact('user','events','numEvent'));
     }
 }

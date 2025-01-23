@@ -4,14 +4,16 @@
             イベント一覧
         </h2>
     </x-slot>
-    <div class="mx-auto px-6">
-        @auth
-            @foreach($user as $u)
-                <!-- {{--$u->name--}}さんログイン中 -->
-            @endforeach
-        @else
-            ログインできていません
-        @endauth
+    <div class="mx-auto px-6 py-4">
+        @if($numEvent == 0)
+            <div class="ml-4 mb-4">
+                <p>
+                    <span style="font-size:1rem;color:red;font-weight:bold;">
+                        (※)自分の学校の試験日などが表示されない人は、学校の年間予定表を先生に持ってきてください。先生が登録しておきます。
+                    </span>
+                </p>
+            </div>
+        @endif
         <div>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
