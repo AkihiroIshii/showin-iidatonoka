@@ -13,7 +13,7 @@ class RecordController extends Controller
 {
     public function index() {
         //ログインユーザ
-        $user = User::where('id', auth()->id())->get();
+        $user = User::where('id', auth()->id())->first();
 
         //問題
         $questions_sub = Question::where('id', '>', -1);
@@ -73,7 +73,35 @@ class RecordController extends Controller
             ->orderBy('questions.subject','asc')
             ->orderBy('questions.no','asc')
             ->get();
-        return view('record.index', compact('user','records','questions'));
+
+        // //演習記録（該当ユーザの集計値）
+        // $records_sum = Record::where('user_id', auth()->id())
+        //     ->select('user_id')
+        //     ->selectRaw('
+        //         COUNT(score) as count,
+        //         ROUND(SUM(minute)/60) as sum_hour
+        //     ')
+        //     ->groupBy('user_id')
+        //     ->first();
+
+        //演習記録（該当ユーザの集計値）
+        $records_sum_per_user = Record::select('user_id')
+            ->selectRaw('
+                COUNT(score) as count,
+                ROUND(SUM(minute)/60, 1) as sum_hour
+            ')
+            ->groupBy('user_id')
+            ->get();
+
+        //この生徒の集計値
+        $records_sum_this_user = $records_sum_per_user->firstWhere('user_id', auth()->id());
+        //演習量トップの生徒の集計値
+        $maxScore = $records_sum_per_user->max('count');
+        $records_sum_top_user = $records_sum_per_user->firstWhere('count', $maxScore);
+        
+        return view('record.index', compact('user','records','questions','records_sum_this_user','records_sum_top_user'));
+
+        // return view('record.index', compact('user','records','questions','records_sum'));
     }
 
     public function spreadsheet() {
@@ -139,25 +167,6 @@ class RecordController extends Controller
                 ROUND(AVG(minute),0) as avg_minute
             ')
             ->groupBy('user_id','question_id');
-
-
-        // //大問ごとに全年度の平均を取得
-        // $q_sub = Question::select('subject', 'no')
-        //     ->selectRaw('
-        //         count(point) as count,
-        //         round(avg(point)) as avg_point
-        //     ')
-        //     ->groupBy('subject', 'no');
-
-
-        // SELECT q.subject, q.no, count(q.point), avg(q.point), avg(r.score), avg(r.minute) FROM `questions` q
-        // left join `records` r
-        // ON
-        // q.id = r.question_id
-        // where r.user_id = 11
-        // group BY
-        // q.subject, q.no
-        // ;
         
         $records = Record::where('user_id', auth()->id());
 

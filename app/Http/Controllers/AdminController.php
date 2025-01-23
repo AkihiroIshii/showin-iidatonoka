@@ -71,7 +71,22 @@ class AdminController extends Controller
             ->orderBy('questions.no','asc')
             ->get();
 
-        return view('admin.show', compact('user','records','questions'));
+        //演習記録（該当ユーザの集計値）
+        $records_sum_per_user = Record::select('user_id')
+            ->selectRaw('
+                COUNT(score) as count,
+                ROUND(SUM(minute)/60, 1) as sum_hour
+            ')
+            ->groupBy('user_id')
+            ->get();
+
+        //この生徒の集計値
+        $records_sum_this_user = $records_sum_per_user->firstWhere('user_id', $user->id);
+        //演習量トップの生徒の集計値
+        $maxScore = $records_sum_per_user->max('count');
+        $records_sum_top_user = $records_sum_per_user->firstWhere('count', $maxScore);
+        
+        return view('admin.show', compact('user','records','questions','records_sum_this_user','records_sum_top_user'));
     }
 
     public function spreadsheet (User $user) {
