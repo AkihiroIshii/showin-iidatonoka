@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            中学英語
+            中学英語（英文法）
             <span style="font-size:1rem;color:green;">　　スッと理解できない文があれば、早急に文法を確認しよう(`・ω・´)</span>
         </h2>
     </x-slot>
