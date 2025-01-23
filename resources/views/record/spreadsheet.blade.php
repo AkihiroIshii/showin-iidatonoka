@@ -5,25 +5,14 @@
         </h2>
     </x-slot>
     <div class="mx-auto px-6">
-        @auth
-            @foreach($user as $u)
-                {{$u->name}}さんログイン中
-            @endforeach
-        @else
-            ログインできていません
-        @endauth
-        
-        <!-- @php
-            $pass="karina27";
-            echo(bcrypt($pass));
-        @endphp -->
-        <!-- <p><b style="color:red;">(※)新規登録は上のメニューから↑</b></p> -->
-        <!-- <x-primary-button class="mt-4">
-            <a href="{{route('record.explanation')}}" class="text-blue-600">過去問解説（作成中）</a>
-        </x-primary-button> -->
-        <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            過去問演習の記録　集計表
-        </h2> -->
+        <div style="display:flex;">
+            <div class="px-6 py-4 text-lg font-semibold">
+                ＞ 年度-科目-大問ごと
+            </div>
+            <div class="px-6 py-4 text-lg">
+                <a href="{{route('record.spreadsheet2', $user)}}" class="text-blue-600 font-semibold">年度区別なし</a>
+            </div>
+        </div>
         <div>
             <table class="border-separate border border-slate-400 m-auto table-fixed whitespace-nowrap">
                 <tr class="bg-gray-300">

@@ -74,16 +74,6 @@ class RecordController extends Controller
             ->orderBy('questions.no','asc')
             ->get();
 
-        // //演習記録（該当ユーザの集計値）
-        // $records_sum = Record::where('user_id', auth()->id())
-        //     ->select('user_id')
-        //     ->selectRaw('
-        //         COUNT(score) as count,
-        //         ROUND(SUM(minute)/60) as sum_hour
-        //     ')
-        //     ->groupBy('user_id')
-        //     ->first();
-
         //演習記録（該当ユーザの集計値）
         $records_sum_per_user = Record::select('user_id')
             ->selectRaw('
@@ -95,13 +85,11 @@ class RecordController extends Controller
 
         //この生徒の集計値
         $records_sum_this_user = $records_sum_per_user->firstWhere('user_id', auth()->id());
-        //演習量トップの生徒の集計値
-        $maxScore = $records_sum_per_user->max('count');
-        $records_sum_top_user = $records_sum_per_user->firstWhere('count', $maxScore);
+        //演習時間トップの生徒の集計値
+        $maxMinute = $records_sum_per_user->max('sum_hour');
+        $records_sum_top_user = $records_sum_per_user->firstWhere('sum_hour', $maxMinute);
         
         return view('record.index', compact('user','records','questions','records_sum_this_user','records_sum_top_user'));
-
-        // return view('record.index', compact('user','records','questions','records_sum'));
     }
 
     public function spreadsheet() {

@@ -5,12 +5,6 @@
         </h2>
     </x-slot>
     <div class="mx-auto px-6">
-        @auth
-            {{$user->name}}さんログイン中
-        @else
-            ログインできていません
-        @endauth
-
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             これまでの演習量
         </h2>
