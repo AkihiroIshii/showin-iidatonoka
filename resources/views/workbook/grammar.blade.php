@@ -184,8 +184,59 @@
                         </li>
                         <li>
                             <p>～と同じくらい</p>
-                            <p>He is <span class="underline">the strongest</span> of the five.（彼はその５人の中で<span class="underline">最も強い</span>。）</p>
-                            <p>He ran <span class="underline">the fastest</span> of the five.（彼はその５人の中で<span class="underline">最も速く</span>走った。）</p>
+                            <p>He is <span class="underline">as tall as</span> his father.（彼は父親<span class="underline">と同じくらい背が高い</span>。）</p>
+                            <p>He ran <span class="underline">as fast as</span> she.（彼は彼女<span class="underline">と同じくらい速く</span>走った。）</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 受け身 -->
+                <div class="content-block-1">
+                    <h4>受け身（中２）</h4>
+                    <ul>
+                        <li>
+                            <p>現在形</p>
+                            <p>English <span class="underline">is spoken</span> in the U.K.（イギリスでは英語が<span class="underline">話されている</span>。）</p>
+                        </li>
+                        <li>
+                            <p>過去形</p>
+                            <p>This <span class="underline">was made</span> by him.（これは彼によって<span class="underline">作られた</span>。）</p>
+                        </li>
+                        <li>
+                            <p>疑問形</p>
+                            <p><span class="underline">Is</span> the book <span class="underline">written</span> in French?（その本はフランス語で<span class="underline">書かれていますか</span>。）</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 現在完了形 -->
+                <div class="content-block-1">
+                    <h4>現在完了形（中３）</h4>
+                    <ul>
+                    <li>
+                            <p>経験</p>
+                            <p>I <span class="underline">have been</span> to Tokyo twice.（私は東京に２度<span class="underline">行ったことがある</span>。）</p>
+                        </li>
+                        <li>
+                            <p>完了</p>
+                            <p>I <span class="underline">have finished</span> my homework.（私は宿題を<span class="underline">やり終えたところだ</span>。）</p>
+                        </li>
+                        <li>
+                            <p>継続</p>
+                            <p>I <span class="underline">have studied</span> English since last year.（私は去年から<span class="underline">英語を勉強している</span>。）</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 使役動詞 -->
+                <div class="content-block-1">
+                    <h4>使役動詞（中３）</h4>
+                    <ul>
+                        <li>
+                            <p>I <span class="underline">want you to study</span> more.（私は<span class="underline">あなたに</span>もっと<span class="underline">勉強してほしい</span>。）</p>
+                        </li>
+                        <li>
+                            <p>I <span class="underline">told him to come</span> here</span>.（私は<span class="underline">彼に</span>ここに<span class="underline">来るように伝えた</span>。）</p>
                         </li>
                     </ul>
                 </div>

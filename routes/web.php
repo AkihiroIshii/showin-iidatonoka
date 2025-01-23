@@ -50,19 +50,19 @@ Route::get('record/spreadsheet', [RecordController::class, 'spreadsheet'])
 Route::get('record/spreadsheet2', [RecordController::class, 'spreadsheet2'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet2');
 Route::get('record/create', [RecordController::class, 'create'])
-->name('record.create');
+->middleware(['auth', 'verified'])->name('record.create');
 // Route::get('record/create', [RecordController::class, 'create'])
 // ->middleware('admin');
 Route::post('record', [RecordController::class, 'store'])
-->name('record.store');
+->middleware(['auth', 'verified'])->name('record.store');
 // Route::get('record/show/{record}', [RecordController::class, 'show'])
 // ->name('record.show');
 Route::get('record/{record}/edit', [RecordController::class, 'edit'])
-->name('record.edit');
+->middleware(['auth', 'verified'])->name('record.edit');
 Route::patch('record/{record}', [RecordController::class, 'update'])
-->name('record.update');
+->middleware(['auth', 'verified'])->name('record.update');
 Route::get('record/explanation', [RecordController::class, 'explanation'])
-->name('record.explanation');
+->middleware(['auth', 'verified'])->name('record.explanation');
 
 /* 目標管理 */
 Route::get('target', [TargetController::class, 'index'])
@@ -70,9 +70,9 @@ Route::get('target', [TargetController::class, 'index'])
 // Route::get('target/show/{target}', [TargetController::class, 'show'])
 // ->name('target.show');
 Route::get('target/{target}/edit', [TargetController::class, 'edit'])
-->name('target.edit');
+->middleware(['auth', 'verified'])->name('target.edit');
 Route::patch('target/{target}', [TargetController::class, 'update'])
-->name('target.update');
+->middleware(['auth', 'verified'])->name('target.update');
 
 /* イベント */
 Route::get('event', [EventController::class, 'index'])
@@ -80,11 +80,11 @@ Route::get('event', [EventController::class, 'index'])
 
 /* 問題集 */
 Route::get('workbook/reference', [WorkbookController::class, 'reference'])
-->name('workbook.reference');
+->middleware(['auth', 'verified'])->name('workbook.reference');
 Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
-->name('workbook.grammar');
+->middleware(['auth', 'verified'])->name('workbook.grammar');
 Route::get('workbook/answersheet', [WorkbookController::class, 'answersheet'])
-->name('workbook.answersheet');
+->middleware(['auth', 'verified'])->name('workbook.answersheet');
 
 
 require __DIR__.'/auth.php';

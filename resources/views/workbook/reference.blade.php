@@ -15,7 +15,7 @@
             <div class="content-block-1">
                     <h4>方程式の変形（中１）</h4>
                     <ul>
-                    <li>
+                        <li>
                             <p>移項　(※)ここでは両辺から \(a\) を引いている。</p>
                             $$
                             \begin{align*}
