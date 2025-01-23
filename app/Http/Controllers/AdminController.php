@@ -82,10 +82,11 @@ class AdminController extends Controller
 
         //この生徒の集計値
         $records_sum_this_user = $records_sum_per_user->firstWhere('user_id', $user->id);
+
         //演習時間トップの生徒の集計値
         $maxMinute = $records_sum_per_user->max('sum_hour');
         $records_sum_top_user = $records_sum_per_user->firstWhere('sum_hour', $maxMinute);
-        
+
         return view('admin.show', compact('user','records','questions','records_sum_this_user','records_sum_top_user'));
     }
 

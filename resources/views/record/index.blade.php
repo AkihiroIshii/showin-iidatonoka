@@ -16,10 +16,17 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">大問数</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">時間</td>
                     </tr>
+                    @isset($records_sum_this_user)
                     <tr>
                         <td class="border border-slate-300 px-4">{{$records_sum_this_user->count}}問</td>
                         <td class="border border-slate-300 px-4">{{$records_sum_this_user->sum_hour}}時間</td>
                     </tr>
+                    @else
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    @endif
                 </table>
             </div>
             <div>
