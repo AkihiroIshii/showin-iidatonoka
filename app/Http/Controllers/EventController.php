@@ -17,11 +17,15 @@ class EventController extends Controller
         $startDate = Carbon::today()->startOfDay();
         $endDate = Carbon::today()->addMonth(2)->endOfDay();  //２か月後
         
-        //イベント（本日から１か月間）
+        //イベント（本日から２か月以内。学年でも対象を絞り込み。）
         $events = Event::where(function ($query) use ($user) {
                 $query->where('school_id', $user->school_id)
                       ->orWhere('school_id', 901)  //松陰塾
-                      ->orWhere('school_id', 902); //外部
+                      ->orWhere('school_id', 902);  //外部
+            })
+            ->where(function ($query) use ($user) {
+                $query->where('events.grade', 'like', "%{$user->grade}%") // 対象学年
+                      ->orWhere('events.grade', ''); // 全学年
             })
             ->whereBetween('events.date_from', [$startDate, $endDate]) // この条件はANDとして適用される
             ->leftJoin('schools', function ($join) {

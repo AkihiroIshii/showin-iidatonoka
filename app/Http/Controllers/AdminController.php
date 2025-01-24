@@ -207,7 +207,7 @@ class AdminController extends Controller
             ->orderBy('events.date_from', 'asc')
             ->get();
             
-        return view('admin.event', compact('events'));
+        return view('event.index', compact('events'));
     }
 
 }

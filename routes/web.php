@@ -16,14 +16,16 @@ use App\Http\Controllers\WorkbookController;
 Route::middleware(['auth', 'admin'])->group(function (){
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });
-Route::get('/admin/show/{user}', [AdminController::class, 'show'])->name('admin.show');
-Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])->name('admin.spreadsheet');
-Route::get('/admin/link', [AdminController::class, 'link'])->name('admin.link');
-Route::get('/admin/event', [AdminController::class, 'event'])->name('admin.event');
-Route::get('/admin/maintain', [AdminController::class, 'maintain'])->name('admin.maintain');
-
-// Route::get('/test', [TestController::class, 'test'])
-// ->name('test');
+Route::get('/admin/show/{user}', [AdminController::class, 'show'])
+->middleware(['auth', 'verified'])->name('admin.show');
+Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
+->middleware(['auth', 'verified'])->name('admin.spreadsheet');
+Route::get('/admin/link', [AdminController::class, 'link'])
+->middleware(['auth', 'verified'])->name('admin.link');
+Route::get('/admin/event', [AdminController::class, 'event'])
+->middleware(['auth', 'verified'])->name('admin.event');
+Route::get('/admin/maintain', [AdminController::class, 'maintain'])
+->middleware(['auth', 'verified'])->name('admin.maintain');
 
 /* ログイン */
 Route::get('/', function () {
@@ -83,7 +85,7 @@ Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
 ->middleware(['auth', 'verified'])->name('workbook.grammar');
 Route::get('workbook/answersheet', [WorkbookController::class, 'answersheet'])
 ->middleware(['auth', 'verified'])->name('workbook.answersheet');
-Route::get('record/reading', [WorkbookController::class, 'reading'])
+Route::get('workbook/reading', [WorkbookController::class, 'reading'])
 ->middleware(['auth', 'verified'])->name('workbook.reading');
 
 
