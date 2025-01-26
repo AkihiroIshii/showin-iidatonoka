@@ -45,13 +45,16 @@
                     @endif
                     <!-- 管理者、生徒共通 -->
                     <x-nav-link :href="route('workbook.answersheet')" :active="request()->routeIs('workbook.answersheet')">
-                        <span style="color:red;">new!!</span>過去問解答用紙
+                        過去問解答用紙
                     </x-nav-link>
                     <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
-                        <span style="color:red;">new!!</span>公式集
+                        公式集
                     </x-nav-link>
                     <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
-                        <span style="color:red;">new!!</span>中学英語
+                        中学英語
+                    </x-nav-link>
+                    <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
+                        <span style="color:red;">new!!</span>景品
                     </x-nav-link>
                 </div>
             </div>
