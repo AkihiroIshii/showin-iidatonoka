@@ -80,7 +80,9 @@ class TargetController extends Controller
     }
 
     public function edit(Target $target) {
-        return view('target.edit', compact('target'));
+        //ログインユーザ
+        $user = User::where('id', auth()->id())->first();
+        return view('target.edit', compact('target','user'));
     }
 
     // public function store(Request $request) {

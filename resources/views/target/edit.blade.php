@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            目標設定　更新フォーム
+            過去問演習＞目標設定＞編集
         </h2>
     </x-slot>
     <div class="maxw-7xl mx-auto px-6">

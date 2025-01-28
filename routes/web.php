@@ -9,6 +9,8 @@ use App\Http\Controllers\TargetController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\WorkbookController;
 use App\Http\Controllers\GiftController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UsualtargetController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -34,10 +36,13 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-    dd(Auth::user()->user_id,Auth::user()->name);
-})->middleware(['auth', 'verified'])->name('dashboard');
+/* ダッシュボード */
+Route::get('dashboard', [DashboardController::class, 'index'])
+->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+//     dd(Auth::user()->user_id,Auth::user()->name);
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -84,6 +89,10 @@ Route::get('gift', [GiftController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('gift');
 Route::get('gift/howtoget', [GiftController::class, 'howtoget'])
 ->middleware(['auth', 'verified'])->name('gift.howtoget');
+
+/* 普段の目標 */
+Route::get('usualtarget', [UsualtargetController::class, 'index'])
+->middleware(['auth', 'verified'])->name('usualtarget');
 
 /* 問題集 */
 Route::get('workbook/reference', [WorkbookController::class, 'reference'])

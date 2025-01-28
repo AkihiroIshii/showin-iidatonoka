@@ -1,18 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            過去問演習の集計表（年度区別なし）
+            @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
+            過去問演習＞集計表２（年度区別なし）
         </h2>
     </x-slot>
     <div class="mx-auto px-6">
-        <div style="display:flex;">
-            <div class="px-6 py-4 text-lg">
-                <a href="{{route('record.spreadsheet', $user)}}" class="text-blue-600 font-semibold">年度-科目-大問ごと</a>
-            </div>
-            <div class="px-6 py-4 text-lg font-semibold">
-                ＞ 年度区別なし
-            </div>
-        </div>
         <div>
             <table class="border-separate border border-slate-400 m-auto table-fixed whitespace-nowrap">
                 <tr class="bg-gray-300">

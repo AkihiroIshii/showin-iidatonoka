@@ -1,10 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            過去問演習の記録　更新フォーム
+            過去問演習＞編集
         </h2>
     </x-slot>
     <div class="maxw-7xl mx-auto px-6">
+        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
+
         @if(session('message'))
             <div class="text-red-600 font-bold">
                 {{session('message')}}

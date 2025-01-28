@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            過去問演習の記録一覧
+            過去問演習＞記録一覧
         </h2>
     </x-slot>
     <div class="mx-auto px-6">

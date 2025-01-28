@@ -194,18 +194,21 @@ class RecordController extends Controller
         return view('record.spreadsheet2', compact('user','questions'));
     }
 
-    public function show (Record $record) {
-        // dd($record);
-        return view('record.show', compact('record'));
-    }
+    // public function show (Record $record) {
+    //     // dd($record);
+    //     return view('record.show', compact('record'));
+    // }
 
     public function edit(Record $record) {
-        // dd($record);
-        return view('record.edit', compact('record'));
+        //ログインユーザ
+        $user = User::where('id', auth()->id())->get();
+        return view('record.edit', compact('record', 'user'));
     }
 
     public function create() {
-        return view('record.create');
+        //ログインユーザ
+        $user = User::where('id', auth()->id())->get();
+        return view('record.create', compact('user'));
     }
 
     public function store(Request $request) {

@@ -1,16 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            過去問の目標点数
+            過去問演習＞目標点数
         </h2>
     </x-slot>
     @if($user->id==Auth::id())
-        @if($targets->isEmpty())
-            <p class="px-20"><b style="color:red;">(※)何も表示されない人は、先生に登録してもらおう！</b></p>
-        @else
-            <p class="px-20"><b style="color:red;">(※)目標点をクリックすると編集できます。</b></p>
-        @endif
-        <div class="py-6">
+        <div class="mx-auto px-6">
+            @if($targets->isEmpty())
+                <p class="px-20"><b style="color:red;">(※)何も表示されない人は、先生に登録してもらおう！</b></p>
+            @else
+                <p class="px-20"><b style="color:red;">(※)目標点をクリックすると編集できます。</b></p>
+            @endif
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
                     <th class="border border-slate-300 px-4">科目</td>

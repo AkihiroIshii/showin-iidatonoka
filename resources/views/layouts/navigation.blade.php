@@ -6,7 +6,6 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <!-- <x-application-logo class="block h-9 w-auto fill-current text-gray-800" /> -->
                         <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
                     </a>
                 </div>
@@ -27,26 +26,17 @@
                             メンテナンス
                         </x-nav-link>
                     @else
-                        <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
-                            新規登録
-                        </x-nav-link>
                         <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
-                            一覧
-                        </x-nav-link>
-                        <x-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
-                            集計表
-                        </x-nav-link>
-                        <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
-                            目標設定
+                            過去問演習
                         </x-nav-link>
                         <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                             イベント
                         </x-nav-link>
+                        <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                            日々の目標
+                        </x-nav-link>
                     @endif
                     <!-- 管理者、生徒共通 -->
-                    <x-nav-link :href="route('workbook.answersheet')" :active="request()->routeIs('workbook.answersheet')">
-                        過去問解答用紙
-                    </x-nav-link>
                     <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
                         公式集
                     </x-nav-link>
@@ -55,7 +45,7 @@
                     </x-nav-link>
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
                         <span style="color:red;">new!!</span>景品
-                    </x-nav-link>
+                    </x-nav-link>                 
                 </div>
             </div>
 
@@ -75,9 +65,9 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                        <!-- <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
-                        </x-dropdown-link>
+                        </x-dropdown-link> -->
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -124,9 +114,9 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
+                <!-- <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> -->
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

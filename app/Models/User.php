@@ -55,4 +55,8 @@ class User extends Authenticatable
     public function targets() {
         return $this->hasMany(Target::class);
     }
+
+    public function usualtargets() {
+        return $this->hasMany(Usualtarget::class);
+    }
 }

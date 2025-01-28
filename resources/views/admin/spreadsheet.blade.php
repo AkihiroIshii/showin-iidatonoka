@@ -1,13 +1,11 @@
 <x-app-layout>
     @if(Auth::user()->role == "admin")
         <x-slot name="header">
+            @include('layouts.adminmenu')
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 過去問演習記録の集計表（管理者）＞{{ $user->name }}
             </h2>
         </x-slot>
-        <div class="px-6 py-4 text-lg">
-            <a href="{{route('admin.show', $user)}}" class="text-blue-600 font-semibold">記録</a>
-        </div>
         <div class="mx-auto px-6">
             <div>
                 <table class="border-separate border border-slate-400 m-auto table-fixed whitespace-nowrap">

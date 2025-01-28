@@ -1,10 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            過去問演習の記録　登録フォーム
+            過去問演習＞新規登録
         </h2>
     </x-slot>
-    <div class="maxw-7xl mx-auto px-6">
+    <div class="maxw-7xl mx-auto px-6"> 
         @if(session('message'))
             <div class="text-red-600 font-bold">
                 {{session('message')}}
