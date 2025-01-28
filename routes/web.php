@@ -71,6 +71,8 @@ Route::get('record/spreadsheet', [RecordController::class, 'spreadsheet'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet');
 Route::get('record/spreadsheet2', [RecordController::class, 'spreadsheet2'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet2');
+Route::get('record/spreadsheet3', [RecordController::class, 'spreadsheet3'])
+->middleware(['auth', 'verified'])->name('record.spreadsheet3');
 Route::get('record/create', [RecordController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('record.create');
 // Route::get('record/create', [RecordController::class, 'create'])

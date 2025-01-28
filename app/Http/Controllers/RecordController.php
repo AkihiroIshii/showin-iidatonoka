@@ -191,8 +191,72 @@ class RecordController extends Controller
             ->orderBy('questions.subject','asc')
             ->orderBy('questions.no','asc')
             ->get();
-        return view('record.spreadsheet2', compact('user','questions'));
+
+            $groupedQuestions = $questions->groupBy('subject')->map(function ($group) {
+                return $group->chunk(6);
+            });
+
+        return view('record.spreadsheet2', compact('user','groupedQuestions','questions'));
     }
+
+    //レコード集計３（科目ごと）
+    public function spreadsheet3() {
+        //ログインユーザ
+        $user = User::where('id', auth()->id())->get();
+
+        //目標点数
+        $targets = Target::where('user_id', auth()->id());
+
+        //演習記録（ユーザごと、大問ごとの集計値）
+        $records_sub = Record::where('user_id', auth()->id())
+            ->select('user_id', 'question_id')
+            ->selectRaw('
+                COUNT(score) as count,
+                MAX(score) as max_score,
+                ROUND(AVG(score),0) as avg_score,
+                MAX(date) as latest_date,
+                ROUND(AVG(minute),0) as avg_minute
+            ')
+            ->groupBy('user_id','question_id');
+        
+        $records = Record::where('user_id', auth()->id());
+
+        //最新年度の大問
+        $q_latest = Question::where('year', Question::max('year'));
+
+        //大問にログインユーザの記録を紐づけ
+        $questions = Question::leftjoinSub($records, 'records', function($join) {
+                $join->on('questions.id', '=', 'records.question_id');
+            })
+            //ログインユーザの目標点を紐づけ
+            ->leftjoinSub($targets, 'targets', function($join) {
+                $join->on('questions.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
+            })
+            ->leftjoinSub($q_latest, 'q_latest', function($join) {
+                $join->on('questions.subject', '=', 'q_latest.subject')->on('questions.no', '=', 'q_latest.no');
+            })
+            ->selectRaw('
+                questions.subject,
+                questions.no,
+                q_latest.content,
+                count(records.score) as count,
+                round(avg(questions.point)) as avg_point,
+                max(records.score) as max_score,
+                round(avg(records.score)) as avg_score,
+                round(avg(records.minute)) as avg_minute,
+                round(avg(targets.target_score)) as target_score,
+                round(avg(targets.target_minute)) as target_minute,
+                if(max(records.score)>avg(targets.target_score), "(^^)/◎", "") as max_mark,
+                if(avg(records.score)>avg(targets.target_score), "(^^)/◎", "") as avg_mark
+            ')
+            ->groupBy('questions.subject', 'questions.no', 'q_latest.content')
+            //並び替え
+            ->orderBy('questions.subject','asc')
+            ->orderBy('questions.no','asc')
+            ->get();
+        return view('record.spreadsheet3', compact('user','questions'));
+    }
+
 
     // public function show (Record $record) {
     //     // dd($record);

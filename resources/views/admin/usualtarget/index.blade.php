@@ -8,7 +8,7 @@
         </x-slot>
         <div class="mx-auto px-6">
             <!-- 新規作成 -->
-            <a href="{{route('admin.usualtarget.create', $user)}}" class="text-blue-600 bold">新規作成</a>
+            <a href="{{route('admin.usualtarget.create', $user)}}" class="text-blue-600">新規作成</a>
 
             <!-- 普段の目標を表示 -->
             <div class="mb-6">
