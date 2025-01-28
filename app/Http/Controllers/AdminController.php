@@ -8,6 +8,7 @@ use App\Models\Record;
 use App\Models\Question;
 use App\Models\Target;
 use App\Models\Event;
+use App\Models\Usualtarget;
 use Carbon\Carbon;
 
 class AdminController extends Controller
@@ -19,7 +20,6 @@ class AdminController extends Controller
 
         //目標点数
         $targets = Target::where('user_id', $user->id);
-        // dd($user);
 
         //演習記録
         $records = Record::leftjoinSub($questions_sub, 'questions_sub', function($join) {
@@ -91,30 +91,8 @@ class AdminController extends Controller
     }
 
     public function spreadsheet (User $user) {
-        // //問題
-        // $questions_sub = Question::where('id', '>', -1);
-        // // $questions_sub = Question::all();
-
         //目標点数
         $targets = Target::where('user_id', $user->id);
-        // dd($user);
-
-        // //演習記録
-        // $records = Record::leftjoinSub($questions_sub, 'questions_sub', function($join) {
-        //         $join->on('records.question_id', '=', 'questions_sub.id');
-        //     })->leftjoinSub($targets, 'targets', function($join) {
-        //         $join->on('questions_sub.subject', '=', 'targets.subject')->on('questions_sub.no', '=', 'targets.no');
-        //     })->where('records.user_id', $user->id)
-        //     ->selectRaw('
-        //         records.*,
-        //         questions_sub.year, questions_sub.type, questions_sub.subject, questions_sub.no, questions_sub.point,
-        //         targets.target_score, targets.target_minute,
-        //         IF((target_score IS NOT NULL) AND (ROUND(100*score/target_score) >= 100), " (^^)/◎", "") as target_mark
-        //         ')
-        //     //並び替え
-        //     ->orderBy('date','desc')
-        //     ->orderBy('records.id','desc')
-        //     ->get();
 
         //演習記録（ユーザごと、大問ごとの集計値）
         $records_sub = Record::where('user_id', $user->id)
@@ -210,4 +188,73 @@ class AdminController extends Controller
         return view('event.index', compact('events'));
     }
 
+    public function usualtarget(User $user) {
+        $today = Carbon::today();
+        $usualtargets = Usualtarget::where('user_id', $user->id)
+            ->selectRaw("
+                id,
+                user_id,
+                DATE_FORMAT(set_date, '%c/%e') as formatted_set_date,
+                DATE_FORMAT(due_date, '%c/%e') as formatted_due_date,
+                content,
+                achieve_flg,
+                IF(
+                    achieve_flg = 1,
+                    '目標達成！(^^)/◎',
+                    IF(
+                        due_date < ?,
+                        '期限切れ(´・ω・｀)',
+                        '挑戦中'
+                    )
+                ) as achieve_mark,
+                comment,
+                coin
+            ", [$today])
+            ->get();
+
+        return view('admin.usualtarget.index', compact('user','usualtargets'));
+    }
+
+    public function edit_usualtarget(Usualtarget $usualtarget) {
+        $user = User::where('id', $usualtarget->user_id)->first();
+        return view('admin.usualtarget.edit', compact('usualtarget','user'));
+    }
+
+    public function create_usualtarget(User $user) {
+        return view('admin.usualtarget.create', compact('user'));
+    }
+
+    public function store_usualtarget(Request $request, User $user) {
+
+        $validated = $request->validate([
+            'content' => 'required',
+            'due_date' => 'required'
+        ]);
+
+        $today = Carbon::today();
+
+        $validated['user_id'] = $user->id;
+        $validated['set_date'] = $today;
+
+        $usualtarget = Usualtarget::create($validated);
+
+        $request->session()->flash('message', '登録しました');
+        return back();
+    }
+
+    public function update_usualtarget(Request $request, Usualtarget $usualtarget) {
+
+        $validated = $request->validate([
+            'content' => 'required',
+            'achieve_flg' => 'boolean',
+            'coin' => 'required|integer',
+            'comment' => 'required'
+        ]);
+
+        $usualtarget->update($validated);
+
+        $request->session()->flash('message', '更新しました');
+        return back();
+
+    }
 }

@@ -6,4 +6,7 @@
             <x-nav-link :href="route('admin.spreadsheet', $user)" :active="request()->routeIs('admin.spreadsheet')">
                 集計表１(年度-科目-大問ごと)
             </x-nav-link>
+            <x-nav-link :href="route('admin.usualtarget', $user)" :active="request()->routeIs('admin.usualtarget')">
+                日々の目標
+            </x-nav-link>
         </div>

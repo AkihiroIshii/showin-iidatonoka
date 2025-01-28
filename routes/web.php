@@ -23,6 +23,20 @@ Route::get('/admin/show/{user}', [AdminController::class, 'show'])
 ->middleware(['auth', 'verified'])->name('admin.show');
 Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
 ->middleware(['auth', 'verified'])->name('admin.spreadsheet');
+Route::get('/admin/usualtarget/{user}', [AdminController::class, 'usualtarget'])
+->middleware(['auth', 'verified'])->name('admin.usualtarget');
+
+Route::get('admin/usualtarget/create/{user}', [AdminController::class, 'create_usualtarget'])
+->middleware(['auth', 'verified'])->name('admin.usualtarget.create');
+Route::post('admin/usualtarget/store/{user}', [AdminController::class, 'store_usualtarget'])
+->middleware(['auth', 'verified'])->name('admin.usualtarget.store');
+// Route::post('/admin/usualtarget', [UsualtargetController::class, 'store'])
+//     ->name('admin.usualtarget.store');
+
+Route::get('admin/usualtarget/{usualtarget}/edit', [AdminController::class, 'edit_usualtarget'])
+->middleware(['auth', 'verified'])->name('admin.usualtarget.edit');
+Route::patch('admin/usualtarget/{usualtarget}/update', [AdminController::class, 'update_usualtarget'])
+->middleware(['auth', 'verified'])->name('admin.usualtarget.update');
 Route::get('/admin/link', [AdminController::class, 'link'])
 ->middleware(['auth', 'verified'])->name('admin.link');
 Route::get('/admin/event', [AdminController::class, 'event'])
