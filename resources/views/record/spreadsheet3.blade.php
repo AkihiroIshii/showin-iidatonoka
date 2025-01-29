@@ -2,40 +2,66 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
-            過去問演習＞集計表３（科目ごと）
+            過去問演習＞集計表３
         </h2>
     </x-slot>
     <div class="mx-auto px-6">
+        @php
+            $maxNos = ['国語' => 6, '数学' => 5, '社会' => 4, '理科' => 5, '英語' => 5];
+            $questionsSet = $questionsSet->groupBy('subject')->map(fn($group) => $group->groupBy('year'));
+        @endphp
         <div>
-            @php
-                // $questionsを6レコードずつ分割
-                $chunkedQuestions = $questions->chunk(6);
-            @endphp
-            @foreach($chunkedQuestions as $chunk)
-                <h3>{{$chunk->first()->subject}}</h3>
-                <table class="border-separate border border-slate-400 m-auto table-fixed whitespace-nowrap">
-                    <tr class="bg-gray-300">
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">科目</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">大問</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">最新年度の内容</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">挑戦回数</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">平均配点</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">最高点/目標点</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">平均点/目標点</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">平均(分)</td>
-                    </tr>
-                    @foreach($chunk as $question)
-                    <tr>
-                        <td class="border border-slate-300 px-4">{{$question->subject}}</td>
-                        <td class="border border-slate-300 px-4">{{$question->no}}</td>
-                        <td class="border border-slate-300 px-4">{{$question->content}}</td>
-                        <td class="border border-slate-300 px-4">{{$question->count}}</td>
-                        <td class="border border-slate-300 px-4">{{$question->avg_point}}</td>
-                        <td class="border border-slate-300 px-4">{{$question->max_score}}/{{$question->target_score}}{{$question->max_mark}}</td>
-                        <td class="border border-slate-300 px-4">{{$question->avg_score}}/{{$question->target_score}}{{$question->avg_mark}}</td>
-                        <td class="border border-slate-300 px-4">{{$question->avg_minute}}</td>
-                    </tr>
-                    @endforeach
+            <div>
+                <span class="bg-sky-100 font-semibold">(※)平均点が目標点以上であれば、水色になります。水色のマスを増やしましょう(^^)/</span>
+            </div>
+            @foreach($questionsSet as $subject => $years)
+                <h2 class="text-xl font-bold mt-4">{{ $subject }}</h2>
+                
+                <table class="border-collapse border border-gray-400 w-full">
+                    <thead>
+                        <tr>
+                            <th class="border border-gray-400 px-4 py-2">年度</th>
+                            @for($i = 1; $i <= 5; $i++)
+                                <th class="border border-gray-400 px-4 py-2">問 {{ $i }}</th>
+                            @endfor
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($years as $year => $questionsByYear)
+                            <tr>
+                                <td class="border border-gray-400 px-4 py-2">{{ $year }}</td>
+                                
+                                @for($i = 1; $i <= 5; $i++)
+                                    @php
+                                        $question = $questionsByYear->firstWhere('no', $i);
+                                    @endphp
+                                    <td class="border border-gray-400 px-4 py-2">
+                                        @if($question)
+                                            @php
+                                                if($question->avg_score >= $question->target_score) {
+                                                    $ulClass = 'bg-sky-100';
+                                                } else {
+                                                    $ulClass = '';
+                                                }
+                                            @endphp
+                                            <ul class="{!! $ulClass !!}">
+                                                <li>挑戦回数：{{ $question->count }}回</li>
+                                                <li>
+                                                    平均：{{ $question->avg_score }}点
+                                                    ／目標：{{ $question->target_score }}点
+                                                    @if($question->avg_score > $question->target_score)
+                                                        (^^)/◎
+                                                    @endif
+                                                </li>
+                                            </ul>
+                                        @else
+                                            &nbsp; {{-- 空白セル --}}
+                                        @endif
+                                    </td>
+                                @endfor
+                            </tr>
+                        @endforeach
+                    </tbody>
                 </table>
             @endforeach
         </div>

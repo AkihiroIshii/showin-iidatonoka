@@ -8,7 +8,7 @@ use App\Models\Record;
 use App\Models\Question;
 use App\Models\Target;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 class RecordController extends Controller
 {
     public function index() {
@@ -202,60 +202,70 @@ class RecordController extends Controller
     //レコード集計３（科目ごと）
     public function spreadsheet3() {
         //ログインユーザ
-        $user = User::where('id', auth()->id())->get();
+        $user = User::where('id', auth()->id())->first();
 
         //目標点数
         $targets = Target::where('user_id', auth()->id());
 
-        //演習記録（ユーザごと、大問ごとの集計値）
-        $records_sub = Record::where('user_id', auth()->id())
-            ->select('user_id', 'question_id')
+        //大問に、このユーザの目標点数を結合(※１)
+        $questionsWithTargets = Question::leftjoinSub($targets, 'targets', function($join) {
+            $join->on('questions.subject', '=', 'targets.subject')
+                ->on('questions.no', '=', 'targets.no');
+        })
+        ->selectRaw('
+            questions.id,
+            questions.subject,
+            questions.year,
+            questions.no,
+            targets.target_score,
+            targets.target_minute
+        ');
+// dd($questionsWithTargets);
+
+        //このユーザの記録を大問ごとに集計(※２)
+        $recordsTotal = Record::where('user_id', $user->id)
             ->selectRaw('
+                question_id,
                 COUNT(score) as count,
-                MAX(score) as max_score,
-                ROUND(AVG(score),0) as avg_score,
-                MAX(date) as latest_date,
-                ROUND(AVG(minute),0) as avg_minute
+                ROUND(AVG(score)) as avg_score
             ')
-            ->groupBy('user_id','question_id');
-        
-        $records = Record::where('user_id', auth()->id());
+            ->groupBy('question_id');
+// dd($recordsTotal);
 
-        //最新年度の大問
-        $q_latest = Question::where('year', Question::max('year'));
-
-        //大問にログインユーザの記録を紐づけ
-        $questions = Question::leftjoinSub($records, 'records', function($join) {
-                $join->on('questions.id', '=', 'records.question_id');
-            })
-            //ログインユーザの目標点を紐づけ
-            ->leftjoinSub($targets, 'targets', function($join) {
-                $join->on('questions.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
-            })
-            ->leftjoinSub($q_latest, 'q_latest', function($join) {
-                $join->on('questions.subject', '=', 'q_latest.subject')->on('questions.no', '=', 'q_latest.no');
+        //(※１)に(※２)を結合
+        $questionsSet = $questionsWithTargets
+            ->leftjoinSub($recordsTotal, 'recordsTotal', function($join) {
+                $join->on('questions.id', '=', 'recordsTotal.question_id');
             })
             ->selectRaw('
-                questions.subject,
-                questions.no,
-                q_latest.content,
-                count(records.score) as count,
-                round(avg(questions.point)) as avg_point,
-                max(records.score) as max_score,
-                round(avg(records.score)) as avg_score,
-                round(avg(records.minute)) as avg_minute,
-                round(avg(targets.target_score)) as target_score,
-                round(avg(targets.target_minute)) as target_minute,
-                if(max(records.score)>avg(targets.target_score), "(^^)/◎", "") as max_mark,
-                if(avg(records.score)>avg(targets.target_score), "(^^)/◎", "") as avg_mark
+                questions.*,
+                targets.*,
+                count,
+                avg_score
             ')
-            ->groupBy('questions.subject', 'questions.no', 'q_latest.content')
-            //並び替え
-            ->orderBy('questions.subject','asc')
+            ->orderBy('questions.subject')
+            ->orderBy('questions.year','desc')
             ->orderBy('questions.no','asc')
             ->get();
-        return view('record.spreadsheet3', compact('user','questions'));
-    }
+            // ->groupBy('questions.subject')
+            // ->map(function ($questionsBySubject) {
+            //     return $questionsBySubject->groupBy('year');
+            // });
+// dd($questionsSet);
+
+        // $maxChunkSize = 6; // 最大 6 件
+        // $groupedQuestions = $questionsSet->groupBy('subject')->map(function ($group) use ($maxChunkSize) {
+        //     return $group->chunk(min($group->count(), $maxChunkSize)); 
+        // });
+        return view('record.spreadsheet3', compact('user','questionsSet'));
+
+        // $groupedRecordsTotal = $recordsTotal->groupBy('subject')->map(function ($group) {
+        //     return $group->chunk(6);
+        // });
+// dd($groupedRecordsTotal);
+    // return view('record.spreadsheet3', compact('user','recordsTotal','groupedRecordsTotal'));
+    // return view('record.spreadsheet3', compact('user','questionsSet'));
+}
 
 
     // public function show (Record $record) {
