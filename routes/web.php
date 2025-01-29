@@ -23,6 +23,8 @@ Route::get('/admin/show/{user}', [AdminController::class, 'show'])
 ->middleware(['auth', 'verified'])->name('admin.show');
 Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
 ->middleware(['auth', 'verified'])->name('admin.spreadsheet');
+Route::get('/admin/spreadsheet3/{user}', [AdminController::class, 'spreadsheet3'])
+->middleware(['auth', 'verified'])->name('admin.spreadsheet3');
 Route::get('/admin/usualtarget/{user}', [AdminController::class, 'usualtarget'])
 ->middleware(['auth', 'verified'])->name('admin.usualtarget');
 

@@ -130,6 +130,55 @@ class AdminController extends Controller
         return view('admin.spreadsheet', compact('user', 'questions'));
     }
 
+    public function spreadsheet3 (User $user) {
+        //目標点数
+        $targets = Target::where('user_id', $user->id);
+
+        //大問に、このユーザの目標点数を結合(※１)
+        $questionsWithTargets = Question::leftjoinSub($targets, 'targets', function($join) {
+            $join->on('questions.subject', '=', 'targets.subject')
+                ->on('questions.no', '=', 'targets.no');
+        })
+        ->selectRaw('
+            questions.id,
+            questions.subject,
+            questions.year,
+            questions.no,
+            targets.target_score,
+            targets.target_minute
+        ');
+// dd($questionsWithTargets);
+
+        //このユーザの記録を大問ごとに集計(※２)
+        $recordsTotal = Record::where('user_id', $user->id)
+            ->selectRaw('
+                question_id,
+                COUNT(score) as count,
+                ROUND(AVG(score)) as avg_score
+            ')
+            ->groupBy('question_id');
+// dd($recordsTotal);
+
+        //(※１)に(※２)を結合
+        $questionsSet = $questionsWithTargets
+            ->leftjoinSub($recordsTotal, 'recordsTotal', function($join) {
+                $join->on('questions.id', '=', 'recordsTotal.question_id');
+            })
+            ->selectRaw('
+                questions.*,
+                targets.*,
+                count,
+                avg_score
+            ')
+            ->orderBy('questions.subject')
+            ->orderBy('questions.year','desc')
+            ->orderBy('questions.no','asc')
+            ->get();
+
+        return view('admin.spreadsheet3', compact('user','questionsSet'));
+    }
+
+
     public function index() {
         //生徒
         $users = User::leftJoin('schools', function($join) {
