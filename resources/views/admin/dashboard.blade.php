@@ -18,9 +18,7 @@
                     @foreach($users as $user)
                     <tr>
                         <th class="border border-slate-300 px-4">
-                            @if($user->grade =='中３')
-                                <a href="{{route('admin.show', $user)}}" class="text-blue-600">過去問</a>
-                            @endif
+                            <a href="{{route('admin.show', $user)}}" class="text-blue-600">詳細</a>
                         </td>
                         <td class="border border-slate-300 px-4">{{$user->user_name}}</td>
                         <td class="border border-slate-300 px-4">{{$user->grade}}</td>
