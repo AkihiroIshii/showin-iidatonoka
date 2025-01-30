@@ -34,6 +34,8 @@ class UsualtargetController extends Controller
                 comment,
                 coin
             ", [$today])
+            ->orderBy('set_date','desc')
+            ->orderBy('due_date','asc')
             ->get();
 
         return view('usualtarget.index', compact('user','usualtargets'));

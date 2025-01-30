@@ -69,11 +69,11 @@ Route::middleware('auth')->group(function () {
 /* レコード管理 */
 Route::get('record', [RecordController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('record');
-Route::get('record/spreadsheet', [RecordController::class, 'spreadsheet'])
+Route::get('record/spreadsheet/{user}', [RecordController::class, 'spreadsheet'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet');
-Route::get('record/spreadsheet2', [RecordController::class, 'spreadsheet2'])
+Route::get('record/spreadsheet2/{user}', [RecordController::class, 'spreadsheet2'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet2');
-Route::get('record/spreadsheet3', [RecordController::class, 'spreadsheet3'])
+Route::get('record/spreadsheet3/{user}', [RecordController::class, 'spreadsheet3'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet3');
 Route::get('record/create', [RecordController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('record.create');

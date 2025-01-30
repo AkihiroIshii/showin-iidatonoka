@@ -3,7 +3,7 @@
             <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                 新規登録
             </x-nav-link>
-            <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
+            <x-nav-link :href="route('record', $user)" :active="request()->routeIs('record')">
                 記録一覧
             </x-nav-link>
             <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
