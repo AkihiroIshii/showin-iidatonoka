@@ -7,9 +7,7 @@
             </h2>
         </x-slot>
 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight px-6">
-            これまでの演習量
-        </h2>
+        <x-h3>これまでの演習量</x-h3>
         <div style="padding-left:4px;display:flex;justify-content:center;">
             <div style="margin-right:80px;">
                 <h3 style="text-align:center;">{{$user->name}}</h3>
@@ -46,9 +44,7 @@
             </div>
         </div>
 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight px-6">
-            記録一覧
-        </h2>
+        <x-h3>演習記録一覧</x-h3>
         <div class="mx-auto px-6">
             <div>
                 <table class="border-separate border border-slate-400 m-auto table-fixed">
