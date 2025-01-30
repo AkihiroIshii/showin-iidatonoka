@@ -15,10 +15,10 @@
     </div>
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
-            <h3>英文法</h3>
+            <x-h3>中１</x-h3>
             <div class="content-subject w-45">
                 <div class="content-block-1">
-                    <h4>be動詞（中１）</h4>
+                    <h4>be動詞</h4>
                     <ul>
                         <li>
                             <p>現在形</p>
@@ -48,7 +48,7 @@
                 </div>
                 <!-- 一般動詞 -->
                 <div class="content-block-1">
-                    <h4>一般動詞（中１）</h4>
+                    <h4>一般動詞</h4>
                     <ul>
                         <li>
                             <p>現在形</p>
@@ -79,7 +79,7 @@
 
                 <!-- 代名詞 -->
                 <div class="content-block-1">
-                    <h4>代名詞（中１）</h4>
+                    <h4>代名詞</h4>
                     <ul>
                        <li>
                             <p>主格</p>
@@ -101,7 +101,7 @@
 
                 <!-- 進行形 -->
                 <div class="content-block-1">
-                    <h4>進行形（中１）</h4>
+                    <h4>進行形</h4>
                     <ul>
                     <li>
                             <p>現在進行形</p>
@@ -117,10 +117,12 @@
                         </li>
                     </ul>
                 </div>
-
+            </div>
+            <x-h3>中２</x-h3>
+            <div class="content-subject w-45">
                 <!-- 接続詞 -->
                 <div class="content-block-1">
-                    <h4>接続詞（中２）</h4>
+                    <h4>接続詞</h4>
                     <ul>
                     <li>
                             <p>He lived in Osaka. + He was ten years old <span class="underline">then</span>.</p>
@@ -137,7 +139,7 @@
 
                 <!-- 不定詞 -->
                 <div class="content-block-1">
-                    <h4>不定詞（中２）</h4>
+                    <h4>不定詞</h4>
                     <ul>
                     <li>
                             <p>名詞的用法（～すること）</p>
@@ -156,7 +158,7 @@
 
                 <!-- 助動詞 -->
                 <div class="content-block-1">
-                    <h4>助動詞（中２）</h4>
+                    <h4>助動詞</h4>
                     <ul>
                         <li>
                             <p>可能・能力</p>
@@ -179,7 +181,7 @@
 
                 <!-- 比較 -->
                 <div class="content-block-1">
-                    <h4>比較（中２）</h4>
+                    <h4>比較</h4>
                     <ul>
                         <li>
                             <p>比較級</p>
@@ -201,7 +203,7 @@
 
                 <!-- 受け身 -->
                 <div class="content-block-1">
-                    <h4>受け身（中２）</h4>
+                    <h4>受け身</h4>
                     <ul>
                         <li>
                             <p>現在形</p>
@@ -217,10 +219,13 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+            <x-h3>中３</x-h3>
+            <div class="content-subject w-45">
 
                 <!-- 現在完了形 -->
                 <div class="content-block-1">
-                    <h4>現在完了形（中３）</h4>
+                    <h4>現在完了形</h4>
                     <ul>
                     <li>
                             <p>経験</p>
@@ -239,7 +244,7 @@
 
                 <!-- 使役動詞 -->
                 <div class="content-block-1">
-                    <h4>使役動詞（中３）</h4>
+                    <h4>使役動詞</h4>
                     <ul>
                         <li>
                             <p>動詞＋人＋to不定詞</p>
@@ -256,7 +261,7 @@
 
                 <!-- 関係代名詞 -->
                 <div class="content-block-1">
-                    <h4>関係代名詞（中３）</h4>
+                    <h4>関係代名詞</h4>
                     <ul>
                     <li>
                             <p>主格（人）</p>
@@ -293,7 +298,7 @@
 
                 <!-- 仮定法 -->
                 <div class="content-block-1">
-                    <h4>仮定法（中３）</h4>
+                    <h4>仮定法</h4>
                     <ul>
                         <li>
                             <p>非現実的な願望（I wish～）</p>

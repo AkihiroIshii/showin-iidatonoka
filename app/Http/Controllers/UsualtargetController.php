@@ -2,42 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Traits\UserTrait;
 use App\Models\School;
 use App\Models\Usualtarget;
+use App\Traits\UsualtargetTrait;
 use Carbon\Carbon;
 
 class UsualtargetController extends Controller
 {
+    use UserTrait;
+    use UsualtargetTrait;
+
     public function index() {
         //ログインユーザ
-        $user = User::where('id', auth()->id())->first();
+        // $user = User::where('id', auth()->id())->first();
+        $user = $this->targetUser(Auth::user());
 
-        //普段の目標も表示するため取得
-        $today = Carbon::today();
-        $usualtargets = Usualtarget::where('user_id', auth()->id())
-            ->selectRaw("
-                user_id,
-                DATE_FORMAT(set_date, '%c/%e') as formatted_set_date,
-                DATE_FORMAT(due_date, '%c/%e') as formatted_due_date,
-                content,
-                IF(
-                    achieve_flg = 1,
-                    '目標達成！(^^)/◎',
-                    IF(
-                        due_date < ?,
-                        '期限切れ(´・ω・｀)',
-                        '挑戦中'
-                    )
-                ) as achieve_mark,
-                comment,
-                coin
-            ", [$today])
-            ->orderBy('set_date','desc')
-            ->orderBy('due_date','asc')
-            ->get();
+        $usualtargets = $this->getUsualtargets($user);
 
-        return view('usualtarget.index', compact('user','usualtargets'));
+        $lastMonthCoinSum = $this->getLastMonthCoinSum($user);
+        $thisMonthCoinSum = $this->getThisMonthCoinSum($user);
+
+        return view('usualtarget.index', compact('user','usualtargets','lastMonthCoinSum','thisMonthCoinSum'));
     }
 }

@@ -9,7 +9,7 @@
             <div class="mx-auto px-6">
                 <!-- よく使うページ -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">よく使うページ</h3>
+                    <x-h3>よく使うページ</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black">
                             <a href="https://www.showin-study.com/sms/smsSchool.php" target="_blank">生徒管理</a>
@@ -39,7 +39,7 @@
                 </div>
                 <!-- ログイン画面 -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">学習システム　生徒ログイン画面</h3>
+                    <x-h3 class="text-center font-semibold text-xl my-2 bg-green-100">学習システム　生徒ログイン画面</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://www.showin-study.com/aiShowinBrw/" target="_blank">AI-Showin</a></li>
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://student.kawaijukuone.jp/#/login" target="_blank">河合塾One</a></li>
@@ -50,7 +50,7 @@
                 </div>
                 <!-- 管理画面 -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">管理画面</h3>
+                    <x-h3 class="text-center font-semibold text-xl my-2 bg-green-100">管理画面</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://trainer.kawaijukuone.jp/#/login" target="_blank">河合塾One</a></li>
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://www.nihongo.or.jp/mojiken_sms/smsSchool.php" target="_blank">文字検</a></li>
@@ -64,7 +64,7 @@
                 </div>
                 <!-- 塾生用ページ管理 -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">塾生用ポータルサイト管理</h3>
+                    <x-h3 class="text-center font-semibold text-xl my-2 bg-green-100">塾生用ポータルサイト管理</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://secure.sakura.ad.jp/rs/cp/" target="_blank">さくらレンタルサーバ</a></li>
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://secure.sakura.ad.jp/rs/db/mysql5/index.php?route=/database/structure&db=ishii-akihiro_showin&server=135" target="_blank">phpmyadmin</a></li>
@@ -73,7 +73,7 @@
                 </div>
                 <!-- 生徒募集 -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">生徒募集</h3>
+                    <x-h3 class="text-center font-semibold text-xl my-2 bg-green-100">生徒募集</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://www.showin-juku.jp/sReserve/management.php" target="_blank">体験予約システム</a></li>
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://admin.jyukunavi.jp/" target="_blank">塾ナビ管理画面</a></li>
@@ -83,7 +83,7 @@
                 </div>
                 <!-- 高校入試情報 -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">高校入試情報</h3>
+                    <x-h3 class="text-center font-semibold text-xl my-2 bg-green-100">高校入試情報</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://www.pref.nagano.lg.jp/kyoiku/koko/saiyo-nyuushi/shiken/ko/r6/r6nyushi.html" target="_blank">令和６年度公立高等学校入学者選抜情報（長野県教育委員会）</a></li>
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://www.moshikai.jp/" target="_blank">なが模試</a></li>
@@ -92,7 +92,7 @@
                 </div>
                 <!-- 大学入試情報 -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">大学入試情報</h3>
+                    <x-h3 class="text-center font-semibold text-xl my-2 bg-green-100">大学入試情報</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://www.kawai-juku.ac.jp/zento/" target="_blank">河合塾 全統模試案内</a></li>
                         <li class="flex-auto text-center py-0"><a href="https://www.keinet.ne.jp/university/ranking/" target="_blank">河合塾　入試難易予想ランキング表</a></li>               
@@ -100,7 +100,7 @@
                 </div>
                 <!-- その他 -->
                 <div>
-                    <h3 class="text-center font-semibold text-xl my-2 bg-green-100">その他</h3>
+                    <x-h3 class="text-center font-semibold text-xl my-2 bg-green-100">その他</x-h3>
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://app.asana.com/" target="_blank">Asana</a></li>
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://www.dust-nagano.com/content.php" target="_blank">有限会社ダスト</a></li>

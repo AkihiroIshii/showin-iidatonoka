@@ -15,7 +15,7 @@
                 <span class="bg-sky-100 font-semibold">(※)平均点が目標点以上であれば、水色になります。水色のマスを増やしましょう(^^)/</span>
             </div>
             @foreach($questionsSet as $subject => $years)
-                <h2 class="text-xl font-bold mt-4">{{ $subject }}</h2>
+                <x-h3>{{ $subject }}</x-h3>
                 
                 <table class="border-collapse border border-gray-400 w-full">
                     <thead>

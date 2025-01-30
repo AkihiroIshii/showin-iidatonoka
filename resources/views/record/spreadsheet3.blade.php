@@ -12,10 +12,10 @@
         @endphp
         <div>
             <div>
-                <span class="bg-sky-100 font-semibold">(※)平均点が目標点以上であれば、水色になります。水色のマスを増やしましょう(^^)/</span>
+                <span class="bg-sky-200 font-semibold">(※)平均点が目標点以上であれば、水色になります。水色のマスを増やしましょう(^^)/</span>
             </div>
             @foreach($questionsSet as $subject => $years)
-                <h2 class="text-xl font-bold mt-4">{{ $subject }}</h2>
+                <x-h3 class="text-xl font-bold mt-4">{{ $subject }}</x-h3>
                 
                 <table class="border-collapse border border-gray-400 w-full">
                     <thead>
@@ -39,7 +39,7 @@
                                         @if($question)
                                             @php
                                                 if($question->avg_score >= $question->target_score) {
-                                                    $ulClass = 'bg-sky-100';
+                                                    $ulClass = 'bg-sky-200';
                                                 } else {
                                                     $ulClass = '';
                                                 }

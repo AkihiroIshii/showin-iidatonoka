@@ -1,20 +1,4 @@
 <x-app-layout>
-    <!-- <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot> -->
-
-    <!-- <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{-- __("You're logged in!") --}}
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{$user->name}}さんのダッシュボード
@@ -28,7 +12,7 @@
         @endphp
 
         <!-- 普段の目標を表示 -->
-        <h3>挑戦中の目標</h3>
+        <x-h3>挑戦中の目標</x-h3>
         <div class="mb-6">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
@@ -44,7 +28,7 @@
             </table>
         </div>
         
-        <h3>直近２ヵ月間のイベント</h3>
+        <x-h3>直近２ヵ月間のイベント</x-h3>
         <!-- イベントが登録されていない場合のメッセージ表示 -->
         @if(Auth::user()->role != "admin")
             @if($numEvent == 0)

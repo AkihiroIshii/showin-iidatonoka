@@ -49,17 +49,17 @@
 
                 <div class="mt-8">
                     <div>
-                        <label for="target_score" class="font-semibold mt-4">目標点</label>
                         <x-input-error :messages="$errors->get('target_score')" class="mt-2" />
-                        <input type="integer" name="target_score" class="w-auto py-2 border border-gray-300 rounded-md" id="score" value="{{old('score', $target->target_score)}}">点
+                        <label for="target_score" class="font-semibold mt-4">目標点</label>
+                        <input type="number" min="0" max="100" name="target_score" class="w-auto py-2 border border-gray-300 rounded-md" id="score" value="{{old('score', $target->target_score)}}">点
                     </div>
                 </div>
 
                 <div class="mt-8">
                     <div>
-                        <label for="target_minute" class="font-semibold mt-4">目標時間</label>
                         <x-input-error :messages="$errors->get('target_minute')" class="mt-2" />
-                        <input type="integer" name="target_minute" class="w-auto py-2 border border-gray-300 rounded-md" id="minute" value="{{old('minute', $target->target_minute)}}">分
+                        <label for="target_minute" class="font-semibold mt-4">目標時間</label>
+                        <input type="number" min="0" max="100" name="target_minute" class="w-auto py-2 border border-gray-300 rounded-md" id="minute" value="{{old('minute', $target->target_minute)}}">分
                     </div>
                 </div>
 

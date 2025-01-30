@@ -24,61 +24,69 @@
 
                 <div class="mt-8">
                     <div>
+                        <x-input-error :messages="$errors->get('year')" class="mt-2" />
                         <label for="year" class="font-semibold mt-4">過去問年度</label>
-                        <input type="string" list="list_year" name="year" class="w-auto py-2 border border-gray-300 rounded-md" id="year">
-                        <datalist id="list_year">
-                            <option value="2024"></option>
-                            <option value="2023"></option>
-                            <option value="2022"></option>
-                            <option value="2021"></option>
-                            <option value="2020"></option>
-                            <option value="2019"></option>
-                        </datalist>     
+                        <select type="string" name="year" class="w-auto py-2 border border-gray-300 rounded-md" id="year">
+                            <option value="">選択してください。</option>
+                            @for ($i = 2024; $i >= 2019; $i--)
+                                <option value="{{ $i }}" {{ old('year') == $i ? 'selected' : '' }}>
+                                    {{ $i }}
+                                </option>
+                            @endfor
+                        </select>     
                     </div>
                 </div>
 
                 <div class="mt-8">
                     <div>
+                        <x-input-error :messages="$errors->get('subject')" class="mt-2" />
                         <label for="subject" class="font-semibold mt-4">科目</label>
-                        <input type="string" list="list_subject" name="subject" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
-                        <datalist id="list_subject">
-                            <option value="国語"></option>
-                            <option value="数学"></option>
-                            <option value="社会"></option>
-                            <option value="理科"></option>
-                            <option value="英語"></option>
-                        </datalist>     
+                        @php
+                            $subjects = ['国語','数学','社会','理科','英語'];
+                        @endphp
+                        <select type="string" name="subject" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
+                            <option value="">選択してください。</option>
+                            @foreach($subjects as $subject)
+                                <option value="{{ $subject }}" {{ old('subject') == $subject ? 'selected' : '' }}>
+                                    {{ $subject }}
+                                </option>
+                            @endforeach
+                        </select>     
                     </div>
                 </div>
 
                 <div class="mt-8">
                     <div>
+                        <x-input-error :messages="$errors->get('no')" class="mt-2" />
                         <label for="no" class="font-semibold mt-4">大問番号</label>
-                        <input type="string" list="list_no" name="no" class="w-auto py-2 border border-gray-300 rounded-md" id="no">
-                        <datalist id="list_no">
-                            <option value="1"></option>
-                            <option value="2"></option>
-                            <option value="3"></option>
-                            <option value="4"></option>
-                            <option value="5"></option>
-                            <option value="全問"></option>
-                        </datalist>     
+                        @php
+                            $noValues = ['1','2','3','4','5','全問'];
+                            $noDisplays = ['問１','問２','問３','問４','問５','全問'];
+                        @endphp
+                        <select type="string" name="no" class="w-auto py-2 border border-gray-300 rounded-md" id="no">
+                            <option value="">選択してください。</option>
+                            @for($i = 0; $i < 6; $i++)
+                                <option value="{{ $noValues[$i] }}" {{ old('no') == $noValues[$i] ? 'selected' : '' }}>
+                                    {{ $noDisplays[$i] }}
+                                </option>
+                            @endfor
+                        </select>     
                     </div>
                 </div>
 
                 <div class="mt-8">
                     <div>
-                        <label for="score" class="font-semibold mt-4">得点</label>
                         <x-input-error :messages="$errors->get('score')" class="mt-2" />
-                        <input type="integer" name="score" class="w-auto py-2 border border-gray-300 rounded-md" id="score" value="{{old('score')}}">点
+                        <label for="score" class="font-semibold mt-4">得点</label>
+                        <input type="number" min="0" max="100" name="score" class="w-auto py-2 border border-gray-300 rounded-md" id="score" value="{{old('score')}}">点　(※半角で入力)
                     </div>
                 </div>
 
                 <div class="mt-8">
                     <div>
-                        <label for="minute" class="font-semibold mt-4">時間</label>
                         <x-input-error :messages="$errors->get('minute')" class="mt-2" />
-                        <input type="integer" name="minute" class="w-auto py-2 border border-gray-300 rounded-md" id="minute" value="{{old('minute')}}">分
+                        <label for="minute" class="font-semibold mt-4">時間</label>
+                        <input type="number" min="0" max="100" name="minute" class="w-auto py-2 border border-gray-300 rounded-md" id="minute" value="{{old('minute')}}">分　(※半角で入力)
                     </div>
                 </div>
 

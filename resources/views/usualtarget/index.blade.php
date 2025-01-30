@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            普段の目標一覧
+            日々の目標
         </h2>
     </x-slot>
     <div class="mx-auto px-6 py-4">
@@ -11,7 +11,26 @@
             $message = '';
         @endphp
 
+        <!-- 獲得コイン数を表示 -->
+        <x-h3>目標達成で獲得したコイン</x-h3>
+        <div>
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+            <tr class="bg-gray-300">
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">先月</th>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">今月</th>
+                </tr>
+                <tr class="bg-gray-300">
+                    <td style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">{{$lastMonthCoinSum}}枚</td>
+                    <td style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">{{$thisMonthCoinSum}}枚</td>
+                </tr>
+            </table>
+            <div class="mr-4 mb-4 text-right">
+                (※)ここで獲得したコインは、毎月一日ごろに前月分をまとめてAI-Showinに反映します。
+            </div>
+        </div>
+
         <!-- 普段の目標を表示 -->
+        <x-h3>日々の目標</x-h3>
         <div class="mb-6">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">

@@ -11,7 +11,7 @@
     </x-slot>
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
-            <h3>数学の公式</h3>
+            <x-h3>数学の公式</x-h3>
             <div class="content-subject w-30">
             <div class="content-block-1">
                     <h4>方程式の変形（中１）</h4>
@@ -134,7 +134,8 @@
                 </div>
             </div>
 
-            <h3>理科の公式</h3>
+            <!-- 理科 -->
+            <x-h3>理科の公式</x-h3>
             <div class="content-subject w-45">
             <div class="content-block-1">
                     <h4>化学</h4>
@@ -203,7 +204,8 @@
                 </div>
             </div>
 
-            <h3>社会の公式</h3>
+            <!-- 社会 -->
+            <x-h3>社会の公式</x-h3>
             <div class="content-subject w-45">
                 <div class="content-block-1">
                     <h4>地理</h4>
