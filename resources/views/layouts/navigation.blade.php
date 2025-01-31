@@ -26,9 +26,11 @@
                             メンテナンス
                         </x-nav-link>
                     @else
-                        <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
-                            過去問演習
-                        </x-nav-link>
+                        @if(Auth::user()->grade == "中３")
+                            <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
+                                過去問演習
+                            </x-nav-link>
+                        @endif
                         <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                             イベント
                         </x-nav-link>
@@ -42,6 +44,9 @@
                     </x-nav-link>
                     <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
                         中学英語
+                    </x-nav-link>
+                    <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
+                        問題集（作成中）
                     </x-nav-link>
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
                         <span style="color:red;">new!!</span>景品

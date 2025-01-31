@@ -113,6 +113,8 @@ Route::get('usualtarget', [UsualtargetController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('usualtarget');
 
 /* 問題集 */
+Route::get('workbook', [WorkbookController::class, 'index'])
+->middleware(['auth', 'verified'])->name('workbook');
 Route::get('workbook/reference', [WorkbookController::class, 'reference'])
 ->middleware(['auth', 'verified'])->name('workbook.reference');
 Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
