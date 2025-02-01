@@ -49,7 +49,7 @@
                         問題集（作成中）
                     </x-nav-link>
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
-                        <span style="color:red;">new!!</span>景品
+                        景品
                     </x-nav-link>                 
                 </div>
             </div>

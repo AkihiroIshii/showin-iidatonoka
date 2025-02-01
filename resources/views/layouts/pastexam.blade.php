@@ -10,13 +10,13 @@
                 目標点数
             </x-nav-link>
             <x-nav-link :href="route('record.spreadsheet', $user)" :active="request()->routeIs('record.spreadsheet')">
-                集計表１(年度-科目-大問ごと)
+                集計表(一覧形式)
             </x-nav-link>
-            <x-nav-link :href="route('record.spreadsheet2', $user)" :active="request()->routeIs('record.spreadsheet2')">
+            <!-- <x-nav-link :href="route('record.spreadsheet2', $user)" :active="request()->routeIs('record.spreadsheet2')">
                 集計表２(年度区別なし)
-            </x-nav-link>
+            </x-nav-link> -->
             <x-nav-link :href="route('record.spreadsheet3', $user)" :active="request()->routeIs('record.spreadsheet3')">
-                <span style="color:red;">new!!</span>集計表３
+                集計表(表形式)
             </x-nav-link>
             <x-nav-link :href="route('workbook.answersheet')" :active="request()->routeIs('workbook.answersheet')">
                 解答用紙(配点記入済)

@@ -2,7 +2,7 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
-            過去問演習＞集計表１（年度-科目-大問ごと）
+            過去問演習＞集計表(一覧形式)
         </h2>
     </x-slot>
     <div class="mx-auto px-6">

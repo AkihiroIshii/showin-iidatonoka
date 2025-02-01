@@ -31,7 +31,10 @@ class WorkbookController extends Controller
     public function index(User $user) {
         $user = $this->targetUser(Auth::user());
 
-        $workbooks = Workbook::all();
+        $workbooks = Workbook::query()
+            ->orderBy('subject','asc')
+            ->orderBy('grade','desc')
+            ->get();
 
         return view('workbook.index', compact('user','workbooks'));
     }

@@ -28,7 +28,7 @@
                         <label for="year" class="font-semibold mt-4">過去問年度</label>
                         <select type="string" name="year" class="w-auto py-2 border border-gray-300 rounded-md" id="year">
                             <option value="">選択してください。</option>
-                            @for ($i = 2024; $i >= 2019; $i--)
+                            @for ($i = 2024; $i >= 2020; $i--)
                                 <option value="{{ $i }}" {{ old('year') == $i ? 'selected' : '' }}>
                                     {{ $i }}
                                 </option>

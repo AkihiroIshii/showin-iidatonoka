@@ -12,8 +12,7 @@ trait RecordTrait
 {
     public function getRecords(User $user) {
         //問題
-        $questions_sub = Question::where('id', '>', -1);
-        // $questions_sub = Question::all();
+        $questions_sub = Question::query();
 
         //目標点数
         $targets = Target::where('user_id', $user->id);
@@ -55,7 +54,8 @@ trait RecordTrait
             ->groupBy('user_id','question_id');
 
         //大問にログインユーザの記録を紐づけ
-        $questions = Question::leftjoinSub($records_sub, 'records_sub', function($join) {
+        $questions = Question::where('year', '!=', '2019')
+            ->leftjoinSub($records_sub, 'records_sub', function($join) {
                 $join->on('questions.id', '=', 'records_sub.question_id');
             })
             //ログインユーザの目標点を紐づけ
@@ -80,60 +80,60 @@ trait RecordTrait
         return $questions; 
     }
 
-    public function getSpreadsheet2Data(User $user) {
-        //目標点数
-        $targets = Target::where('user_id', $user->id);
+    // public function getSpreadsheet2Data(User $user) {
+    //     //目標点数
+    //     $targets = Target::where('user_id', $user->id);
 
-        //演習記録（ユーザごと、大問ごとの集計値）
-        $records_sub = Record::where('user_id', $user->id)
-            ->select('user_id', 'question_id')
-            ->selectRaw('
-                COUNT(score) as count,
-                MAX(score) as max_score,
-                ROUND(AVG(score),0) as avg_score,
-                MAX(date) as latest_date,
-                ROUND(AVG(minute),0) as avg_minute
-            ')
-            ->groupBy('user_id','question_id');
+    //     //演習記録（ユーザごと、大問ごとの集計値）
+    //     $records_sub = Record::where('user_id', $user->id)
+    //         ->select('user_id', 'question_id')
+    //         ->selectRaw('
+    //             COUNT(score) as count,
+    //             MAX(score) as max_score,
+    //             ROUND(AVG(score),0) as avg_score,
+    //             MAX(date) as latest_date,
+    //             ROUND(AVG(minute),0) as avg_minute
+    //         ')
+    //         ->groupBy('user_id','question_id');
         
-        $records = Record::where('user_id', $user->id);
+    //     $records = Record::where('user_id', $user->id);
 
-        //最新年度の大問
-        $q_latest = Question::where('year', Question::max('year'));
+    //     //最新年度の大問
+    //     $q_latest = Question::where('year', Question::max('year'));
 
-        //大問にログインユーザの記録を紐づけ
-        $questions = Question::leftjoinSub($records, 'records', function($join) {
-                $join->on('questions.id', '=', 'records.question_id');
-            })
-            //ログインユーザの目標点を紐づけ
-            ->leftjoinSub($targets, 'targets', function($join) {
-                $join->on('questions.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
-            })
-            ->leftjoinSub($q_latest, 'q_latest', function($join) {
-                $join->on('questions.subject', '=', 'q_latest.subject')->on('questions.no', '=', 'q_latest.no');
-            })
-            ->selectRaw('
-                questions.subject,
-                questions.no,
-                q_latest.content,
-                count(records.score) as count,
-                round(avg(questions.point)) as avg_point,
-                max(records.score) as max_score,
-                round(avg(records.score)) as avg_score,
-                round(avg(records.minute)) as avg_minute,
-                round(avg(targets.target_score)) as target_score,
-                round(avg(targets.target_minute)) as target_minute,
-                if(max(records.score)>avg(targets.target_score), "(^^)/◎", "") as max_mark,
-                if(avg(records.score)>avg(targets.target_score), "(^^)/◎", "") as avg_mark
-            ')
-            ->groupBy('questions.subject', 'questions.no', 'q_latest.content')
-            //並び替え
-            ->orderBy('questions.subject','asc')
-            ->orderBy('questions.no','asc')
-            ->get();
+    //     //大問にログインユーザの記録を紐づけ
+    //     $questions = Question::leftjoinSub($records, 'records', function($join) {
+    //             $join->on('questions.id', '=', 'records.question_id');
+    //         })
+    //         //ログインユーザの目標点を紐づけ
+    //         ->leftjoinSub($targets, 'targets', function($join) {
+    //             $join->on('questions.subject', '=', 'targets.subject')->on('questions.no', '=', 'targets.no');
+    //         })
+    //         ->leftjoinSub($q_latest, 'q_latest', function($join) {
+    //             $join->on('questions.subject', '=', 'q_latest.subject')->on('questions.no', '=', 'q_latest.no');
+    //         })
+    //         ->selectRaw('
+    //             questions.subject,
+    //             questions.no,
+    //             q_latest.content,
+    //             count(records.score) as count,
+    //             round(avg(questions.point)) as avg_point,
+    //             max(records.score) as max_score,
+    //             round(avg(records.score)) as avg_score,
+    //             round(avg(records.minute)) as avg_minute,
+    //             round(avg(targets.target_score)) as target_score,
+    //             round(avg(targets.target_minute)) as target_minute,
+    //             if(max(records.score)>avg(targets.target_score), "(^^)/◎", "") as max_mark,
+    //             if(avg(records.score)>avg(targets.target_score), "(^^)/◎", "") as avg_mark
+    //         ')
+    //         ->groupBy('questions.subject', 'questions.no', 'q_latest.content')
+    //         //並び替え
+    //         ->orderBy('questions.subject','asc')
+    //         ->orderBy('questions.no','asc')
+    //         ->get();
 
-            return $questions;
-    }
+    //         return $questions;
+    // }
 
 
     public function getSpreadsheet3Data(User $user) {
@@ -141,9 +141,10 @@ trait RecordTrait
         $targets = Target::where('user_id', $user->id);
 
         //大問に、このユーザの目標点数を結合(※１)
-        $questionsWithTargets = Question::leftjoinSub($targets, 'targets', function($join) {
-            $join->on('questions.subject', '=', 'targets.subject')
-                ->on('questions.no', '=', 'targets.no');
+        $questionsWithTargets = Question::where('year', '!=', '2019')
+            ->leftjoinSub($targets, 'targets', function($join) {
+                $join->on('questions.subject', '=', 'targets.subject')
+                    ->on('questions.no', '=', 'targets.no');
         })
         ->selectRaw('
             questions.id,
