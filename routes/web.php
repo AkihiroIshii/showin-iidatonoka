@@ -45,6 +45,18 @@ Route::get('/admin/event', [AdminController::class, 'event'])
 ->middleware(['auth', 'verified'])->name('admin.event');
 Route::get('/admin/maintain', [AdminController::class, 'maintain'])
 ->middleware(['auth', 'verified'])->name('admin.maintain');
+/* 管理者＞問題集 */
+Route::get('/admin/workbook', [AdminController::class, 'workbook'])
+->middleware(['auth', 'verified'])->name('admin.workbook');
+Route::get('/admin/workbook/create', [AdminController::class, 'create_workbook'])
+->middleware(['auth', 'verified'])->name('admin.workbook.create');
+Route::post('/admin/workbook/store', [AdminController::class, 'store_workbook'])
+->middleware(['auth', 'verified'])->name('admin.workbook.store');
+Route::get('/admin/workbook/{workbook}/edit', [AdminController::class, 'edit_workbook'])
+->middleware(['auth', 'verified'])->name('admin.workbook.edit');
+Route::patch('workbook/{workbook}', [AdminController::class, 'update_workbook'])
+->middleware(['auth', 'verified'])->name('admin.workbook.update');
+
 
 /* ログイン */
 Route::get('/', function () {

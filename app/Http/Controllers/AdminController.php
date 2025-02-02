@@ -11,6 +11,7 @@ use App\Models\Question;
 use App\Models\Target;
 use App\Models\Event;
 use App\Models\Usualtarget;
+use App\Models\Workbook;
 use Carbon\Carbon;
 
 class AdminController extends Controller
@@ -81,10 +82,6 @@ class AdminController extends Controller
         return view('admin.maintain');
     }
 
-    public function workbook() {
-        return view('admin.workbook');
-    }
-
     public function event() {
         $startDate = Carbon::today()->startOfDay();
         $endDate = Carbon::today()->addMonth(2)->endOfDay();  //２か月後
@@ -111,6 +108,7 @@ class AdminController extends Controller
         return view('event.index', compact('events'));
     }
 
+    /** 日々の目標 */
     public function usualtarget(User $user) {
         $today = Carbon::today();
         $usualtargets = Usualtarget::where('user_id', $user->id)
@@ -180,4 +178,57 @@ class AdminController extends Controller
         return back();
 
     }
+
+    /** 問題集 */
+    public function workbook() {
+        $workbooks = Workbook::query()
+            ->orderBy('subject','asc')
+            ->orderBy('grade','desc')
+            ->get();
+
+        return view('admin.workbook.index', compact('workbooks'));
+    }
+
+    public function edit_workbook(Workbook $workbook) {
+        return view('admin.workbook.edit', compact('workbook'));
+    }
+
+    public function create_workbook() {
+        return view('admin.workbook.create');
+    }
+
+    public function store_workbook(Request $request) {
+
+        $validated = $request->validate([
+            'subject' => 'required',
+            'field' => 'required',
+            'grade' => 'required',
+            'question' => 'required',
+            'answer' => 'required',
+            'reference' => 'nullable'
+        ]);
+
+        $workbook = Workbook::create($validated);
+
+        $request->session()->flash('message', '登録しました');
+        return back();
+    }
+
+    public function update_workbook(Request $request, Workbook $workbook) {
+
+        $validated = $request->validate([
+            'subject' => 'required',
+            'field' => 'required',
+            'grade' => 'required',
+            'question' => 'required',
+            'answer' => 'required',
+            'reference' => 'nullable'
+        ]);
+
+        $workbook->update($validated);
+
+        $request->session()->flash('message', '更新しました');
+        return back();
+    }
+
 }

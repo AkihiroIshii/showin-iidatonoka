@@ -25,6 +25,9 @@
                         <x-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
                             メンテナンス
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
+                            問題集
+                        </x-nav-link>
                     @else
                         @if(Auth::user()->grade == "中３")
                             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
@@ -37,6 +40,9 @@
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             日々の目標
                         </x-nav-link>
+                        <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
+                            問題集（作成中）
+                        </x-nav-link>
                     @endif
                     <!-- 管理者、生徒共通 -->
                     <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
@@ -44,9 +50,6 @@
                     </x-nav-link>
                     <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
                         中学英語
-                    </x-nav-link>
-                    <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
-                        問題集（作成中）
                     </x-nav-link>
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
                         景品
