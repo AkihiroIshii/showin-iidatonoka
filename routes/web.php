@@ -57,6 +57,16 @@ Route::get('/admin/workbook/{workbook}/edit', [AdminController::class, 'edit_wor
 Route::patch('workbook/{workbook}', [AdminController::class, 'update_workbook'])
 ->middleware(['auth', 'verified'])->name('admin.workbook.update');
 
+/* 管理者＞ユーザ */
+Route::get('/admin/user/create', [AdminController::class, 'create_user'])
+->middleware(['auth', 'verified'])->name('admin.user.create');
+Route::post('/admin/user/store', [AdminController::class, 'store_user'])
+->middleware(['auth', 'verified'])->name('admin.user.store');
+Route::get('/admin/user/{user}/edit', [AdminController::class, 'edit_user'])
+->middleware(['auth', 'verified'])->name('admin.user.edit');
+Route::patch('user/{user}', [AdminController::class, 'update_user'])
+->middleware(['auth', 'verified'])->name('admin.user.update');
+
 
 /* ログイン */
 Route::get('/', function () {

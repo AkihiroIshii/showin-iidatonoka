@@ -6,6 +6,8 @@
             </h2>
         </x-slot>
         <div class="mx-auto px-6">
+            <!-- 新規作成 -->
+            <a href="{{route('admin.user.create')}}" class="text-blue-600">新規ユーザ作成</a>           
             <div>
                 <table class="border-separate border border-slate-400 m-auto table-fixed">
                     <tr class="bg-gray-300">

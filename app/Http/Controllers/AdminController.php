@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Traits\UserTrait;
+use App\Models\School;
 use App\Models\Record;
 use App\Traits\RecordTrait;
 use App\Models\Question;
@@ -231,4 +233,52 @@ class AdminController extends Controller
         return back();
     }
 
+    /** ユーザ */
+    public function create_user() {
+        $schools = School::all();
+
+        return view('admin.user.create', compact('schools'));
+    }
+
+    public function edit_user(User $user) {
+        return view('admin.user.edit', compact('user'));
+    }
+
+    public function store_user(Request $request) {
+
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'password' => 'required',
+            'name' => 'required',
+            'school_id' => 'required',
+            'grade' => 'required',
+            'plan' => 'required'
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+        
+        User::create($validated);
+
+        $request->session()->flash('message', '登録しました');
+        return back();
+    }
+
+    public function update_user(Request $request, User $user) {
+
+        $validated = $request->validate([
+            'user_id' => 'required',
+            'password' => 'required',
+            'name' => 'required',
+            'school_id' => 'required',
+            'grade' => 'required',
+            'plan' => 'required'
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+
+        $user->update($validated);
+
+        $request->session()->flash('message', '更新しました');
+        return back();
+    }
 }
