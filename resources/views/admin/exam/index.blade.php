@@ -15,7 +15,7 @@
                 <table class="border-separate border border-slate-400 m-auto table-fixed">
                     <tr class="bg-gray-300">
                         <th colspan="6"></th>
-                        <th colspan="5">平均点</th>
+                        <th colspan="5">得点／平均点</th>
                     </tr>
                     <tr class="bg-gray-300">
                         <!-- <th></th> -->
@@ -31,22 +31,42 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">理科</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">英語</td>
                     </tr>
-                    @foreach($exams as $exam)
+                    @foreach($examresults as $examresult)
                         <tr>
                             <!-- <th class="border border-slate-300 px-4 w-1/12">
                                 <a href="{{--route('admin.usualtarget.edit', $usualtarget)--}}" class="text-blue-600">編集</a>
                             </td> -->
-                            <td class="border border-slate-300 px-4">{{$exam->schoolName}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->year}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->grade}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->no}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->exam_date}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->exam_name}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->avg_japanese}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->avg_society}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->avg_math}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->avg_science}}</td>
-                            <td class="border border-slate-300 px-4">{{$exam->avg_english}}</td>
+                            <td class="border border-slate-300 px-4">{{$examresult->schoolName}}</td>
+                            <td class="border border-slate-300 px-4">{{$examresult->year}}</td>
+                            <td class="border border-slate-300 px-4">{{$examresult->grade}}</td>
+                            <td class="border border-slate-300 px-4">{{$examresult->no}}</td>
+                            <td class="border border-slate-300 px-4">{{$examresult->exam_date}}</td>
+                            <td class="border border-slate-300 px-4">{{$examresult->exam_name}}</td>
+                            <td class="border border-slate-300 px-4">
+                                <p>{{$examresult->score_japanese}}／{{$examresult->avg_japanese}}</p>
+                                <p>平均 {{$examresult->avg_diff_japanese}}</p>
+                                <p>前回 {{$examresult->prev_diff_japanese}}</p>
+                            </td>
+                            <td class="border border-slate-300 px-4">
+                                <p>{{$examresult->score_society}}／{{$examresult->avg_society}}</p>
+                                <p>平均 {{$examresult->avg_diff_society}}</p>
+                                <p>前回 {{$examresult->prev_diff_society}}</p>
+                            </td>
+                            <td class="border border-slate-300 px-4">
+                                <p>{{$examresult->score_math}}／{{$examresult->avg_math}}</p>
+                                <p>平均 {{$examresult->avg_diff_math}}</p>
+                                <p>前回 {{$examresult->prev_diff_math}}</p>
+                            </td>
+                            <td class="border border-slate-300 px-4">
+                                <p>{{$examresult->score_science}}／{{$examresult->avg_science}}</p>
+                                <p>平均 {{$examresult->avg_diff_science}}</p>
+                                <p>前回 {{$examresult->prev_diff_science}}</p>
+                            </td>
+                            <td class="border border-slate-300 px-4">
+                                <p>{{$examresult->score_english}}／{{$examresult->avg_english}}</p>
+                                <p>平均 {{$examresult->avg_diff_english}}</p>
+                                <p>前回 {{$examresult->prev_diff_english}}</p>
+                            </td>
                         </tr>
                     @endforeach
                 </table>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Traits\UserTrait;
 use App\Models\School;
@@ -15,12 +16,15 @@ use App\Models\Event;
 use App\Models\Usualtarget;
 use App\Models\Workbook;
 use App\Models\Exam;
+use App\Traits\ExamTrait;
+use App\Models\ExamResult;
 use Carbon\Carbon;
 
 class AdminController extends Controller
 {
     use UserTrait;
     use RecordTrait;
+    use ExamTrait;
 
     public function show (User $user) {
         $records = $this->getRecords($user);
@@ -184,17 +188,8 @@ class AdminController extends Controller
 
     /** テスト結果 */
     public function exam(User $user) {
-        $exams = Exam::where('school_id', $user->school_id)
-            ->leftJoin('schools', function($join) {
-                $join->on('exams.school_id', '=', 'schools.id');
-            })
-            ->selectRaw('
-                exams.*,
-                schools.name as schoolName
-            ')
-            ->get();
-
-        return view('admin.exam.index', compact('user','exams'));
+        $examresults = $this->getExamResults($user);
+        return view('admin.exam.index', compact('user','examresults'));
     }
 
     // public function edit_usualtarget(Usualtarget $usualtarget) {

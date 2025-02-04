@@ -11,6 +11,7 @@ use App\Http\Controllers\WorkbookController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsualtargetController;
+use App\Http\Controllers\ExamController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -145,6 +146,10 @@ Route::get('gift/howtoget', [GiftController::class, 'howtoget'])
 /* 普段の目標 */
 Route::get('usualtarget', [UsualtargetController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('usualtarget');
+
+/* テスト結果 */
+Route::get('exam', [ExamController::class, 'index'])
+->middleware(['auth', 'verified'])->name('exam');
 
 /* 問題集 */
 Route::get('workbook', [WorkbookController::class, 'index'])
