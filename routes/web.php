@@ -25,27 +25,39 @@ Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
 ->middleware(['auth', 'verified'])->name('admin.spreadsheet');
 Route::get('/admin/spreadsheet3/{user}', [AdminController::class, 'spreadsheet3'])
 ->middleware(['auth', 'verified'])->name('admin.spreadsheet3');
+
+/** 管理者＞日々の目標 */
 Route::get('/admin/usualtarget/{user}', [AdminController::class, 'usualtarget'])
 ->middleware(['auth', 'verified'])->name('admin.usualtarget');
-
 Route::get('admin/usualtarget/create/{user}', [AdminController::class, 'create_usualtarget'])
 ->middleware(['auth', 'verified'])->name('admin.usualtarget.create');
 Route::post('admin/usualtarget/store/{user}', [AdminController::class, 'store_usualtarget'])
 ->middleware(['auth', 'verified'])->name('admin.usualtarget.store');
-// Route::post('/admin/usualtarget', [UsualtargetController::class, 'store'])
-//     ->name('admin.usualtarget.store');
-
 Route::get('admin/usualtarget/{usualtarget}/edit', [AdminController::class, 'edit_usualtarget'])
 ->middleware(['auth', 'verified'])->name('admin.usualtarget.edit');
 Route::patch('admin/usualtarget/{usualtarget}/update', [AdminController::class, 'update_usualtarget'])
 ->middleware(['auth', 'verified'])->name('admin.usualtarget.update');
+
+/** 管理者＞テスト結果 */
+Route::get('/admin/exam/{user}', [AdminController::class, 'exam'])
+->middleware(['auth', 'verified'])->name('admin.exam');
+// Route::get('admin/usualtarget/create/{user}', [AdminController::class, 'create_usualtarget'])
+// ->middleware(['auth', 'verified'])->name('admin.usualtarget.create');
+// Route::post('admin/usualtarget/store/{user}', [AdminController::class, 'store_usualtarget'])
+// ->middleware(['auth', 'verified'])->name('admin.usualtarget.store');
+// Route::get('admin/usualtarget/{usualtarget}/edit', [AdminController::class, 'edit_usualtarget'])
+// ->middleware(['auth', 'verified'])->name('admin.usualtarget.edit');
+// Route::patch('admin/usualtarget/{usualtarget}/update', [AdminController::class, 'update_usualtarget'])
+// ->middleware(['auth', 'verified'])->name('admin.usualtarget.update');
+
 Route::get('/admin/link', [AdminController::class, 'link'])
 ->middleware(['auth', 'verified'])->name('admin.link');
 Route::get('/admin/event', [AdminController::class, 'event'])
 ->middleware(['auth', 'verified'])->name('admin.event');
 Route::get('/admin/maintain', [AdminController::class, 'maintain'])
 ->middleware(['auth', 'verified'])->name('admin.maintain');
-/* 管理者＞問題集 */
+
+/** 管理者＞問題集 */
 Route::get('/admin/workbook', [AdminController::class, 'workbook'])
 ->middleware(['auth', 'verified'])->name('admin.workbook');
 Route::get('/admin/workbook/create', [AdminController::class, 'create_workbook'])

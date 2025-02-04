@@ -12,4 +12,7 @@
             <x-nav-link :href="route('admin.usualtarget', $user)" :active="request()->routeIs('admin.usualtarget')">
                 日々の目標
             </x-nav-link>
+            <x-nav-link :href="route('admin.exam', $user)" :active="request()->routeIs('admin.exam')">
+                テスト結果
+            </x-nav-link>
         </div>

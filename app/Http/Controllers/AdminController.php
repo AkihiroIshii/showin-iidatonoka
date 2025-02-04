@@ -14,6 +14,7 @@ use App\Models\Target;
 use App\Models\Event;
 use App\Models\Usualtarget;
 use App\Models\Workbook;
+use App\Models\Exam;
 use Carbon\Carbon;
 
 class AdminController extends Controller
@@ -180,6 +181,64 @@ class AdminController extends Controller
         return back();
 
     }
+
+    /** テスト結果 */
+    public function exam(User $user) {
+        $exams = Exam::where('school_id', $user->school_id)
+            ->leftJoin('schools', function($join) {
+                $join->on('exams.school_id', '=', 'schools.id');
+            })
+            ->selectRaw('
+                exams.*,
+                schools.name as schoolName
+            ')
+            ->get();
+
+        return view('admin.exam.index', compact('user','exams'));
+    }
+
+    // public function edit_usualtarget(Usualtarget $usualtarget) {
+    //     $user = User::where('id', $usualtarget->user_id)->first();
+    //     return view('admin.usualtarget.edit', compact('usualtarget','user'));
+    // }
+
+    // public function create_usualtarget(User $user) {
+    //     return view('admin.usualtarget.create', compact('user'));
+    // }
+
+    // public function store_usualtarget(Request $request, User $user) {
+
+    //     $validated = $request->validate([
+    //         'content' => 'required',
+    //         'due_date' => 'required'
+    //     ]);
+
+    //     $today = Carbon::today();
+
+    //     $validated['user_id'] = $user->id;
+    //     $validated['set_date'] = $today;
+
+    //     $usualtarget = Usualtarget::create($validated);
+
+    //     $request->session()->flash('message', '登録しました');
+    //     return back();
+    // }
+
+    // public function update_usualtarget(Request $request, Usualtarget $usualtarget) {
+
+    //     $validated = $request->validate([
+    //         'content' => 'required',
+    //         'achieve_flg' => 'boolean',
+    //         'coin' => 'required|integer',
+    //         'comment' => 'required'
+    //     ]);
+
+    //     $usualtarget->update($validated);
+
+    //     $request->session()->flash('message', '更新しました');
+    //     return back();
+
+    // }
 
     /** 問題集 */
     public function workbook() {
