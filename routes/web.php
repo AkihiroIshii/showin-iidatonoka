@@ -180,5 +180,13 @@ Route::get('workbook/reading', [WorkbookController::class, 'reading'])
 /* ワーク演習 */
 Route::get('workrecord', [WorkrecordController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('workrecord');
+Route::get('workrecord/create', [WorkrecordController::class, 'create'])
+->middleware(['auth', 'verified'])->name('workrecord.create');
+Route::post('workrecord/store', [WorkrecordController::class, 'store'])
+->middleware(['auth', 'verified'])->name('workrecord.store');
+Route::get('workrecord/{workrecord}/edit', [WorkrecordController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('workrecord.edit');
+Route::patch('workrecord/{workrecord}', [WorkrecordController::class, 'update'])
+->middleware(['auth', 'verified'])->name('workrecord.update');
 
 require __DIR__.'/auth.php';

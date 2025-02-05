@@ -4,10 +4,13 @@
             ワーク演習＞記録一覧
         </h2>
     </x-slot>
+    <div class="ml-4 mt-2 mb-2">
+        <a href="{{route('workrecord.create')}}" :active="request()->routeIs('workrecord.create')" class="text-blue-600 font-bold">新規登録</a>
+    </div>
     <div class="mx-auto px-6">
         <x-h3>演習記録一覧</x-h3>
-        <p class="ml-8 mt-4 mb-4">１週するごとに先生に報告してください。</p>
         <div>
+            <p class="ml-8 mt-4 mb-4">１週するごとに先生に報告してください。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
                     <th colspan="7"></th>
@@ -28,7 +31,7 @@
                 @foreach($workrecords as $workrecord)
                     <tr>
                         <th class="border border-slate-300 px-4 w-1/12">
-                            <!-- <a href="{{--route('record.edit', $record)--}}" class="text-blue-600">編集</a> -->
+                            <a href="{{route('workrecord.edit', $workrecord)}}" class="text-blue-600">編集</a>
                         </th>
                         <td class="border border-slate-300 px-4">{{$workrecord->exam_date}}</td>
                         <td class="border border-slate-300 px-4">{{$workrecord->exam_name}}</td>
@@ -40,7 +43,7 @@
                         <td class="border border-slate-300 px-4">{{$workrecord->date_2nd}}</td>
                         <td class="border border-slate-300 px-4">{{$workrecord->date_3rd}}</td>
                     </tr>
-                    @endforeach
+                @endforeach
             </table>
         </div>
     </div>
