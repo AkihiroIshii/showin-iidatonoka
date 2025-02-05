@@ -32,7 +32,10 @@
         <!-- 普段の目標を表示 -->
         <x-h3>日々の目標</x-h3>
         <div class="mb-6">
-            <table class="border-separate border border-slate-400 m-auto table-fixed">
+            <p>獲得コイン数は、次の条件を満たすと多くもらえるかも、、？　(※)評価基準は変わることがあります。</p>
+            <p>⇒目標や振り返りが具体的である。／無理のない目標設定ができている。／計画性がある。／意欲的に挑戦している。／柔軟に軌道修正ができている。など</p>
+
+            <table class="border-separate border border-slate-400 m-auto table-fixed mt-2">
                 <tr class="bg-gray-300">
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">設定日</td>
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">目標</td>

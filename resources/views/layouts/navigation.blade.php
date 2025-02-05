@@ -40,23 +40,27 @@
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             日々の目標
                         </x-nav-link>
-                        <x-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
-                            テスト結果
-                        </x-nav-link>
-                        <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
-                            ワーク演習
-                        </x-nav-link>
+                        @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
+                            <x-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
+                                テスト結果
+                            </x-nav-link>
+                            <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
+                                ワーク演習
+                            </x-nav-link>
+                        @endif
                         <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
                             問題集（作成中）
                         </x-nav-link>
                     @endif
                     <!-- 管理者、生徒共通 -->
-                    <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
-                        公式集
-                    </x-nav-link>
-                    <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
-                        中学英語
-                    </x-nav-link>
+                    @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
+                        <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
+                            公式集
+                        </x-nav-link>
+                        <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
+                            中学英語
+                        </x-nav-link>
+                    @endif
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
                         景品
                     </x-nav-link>                 
