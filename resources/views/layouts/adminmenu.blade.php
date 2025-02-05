@@ -15,4 +15,7 @@
             <x-nav-link :href="route('admin.exam', $user)" :active="request()->routeIs('admin.exam')">
                 テスト結果
             </x-nav-link>
+            <x-nav-link :href="route('admin.workrecord', $user)" :active="request()->routeIs('admin.workrecord')">
+                ワーク演習
+            </x-nav-link>
         </div>

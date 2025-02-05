@@ -61,4 +61,12 @@ class User extends Authenticatable
     public function usualtargets() {
         return $this->hasMany(Usualtarget::class);
     }
+
+    public function examresults() {
+        return $this->hasMany(Examresult::class);
+    }
+
+    public function workrecords() {
+        return $this->hasMany(Wordrecord::class);
+    }
 }

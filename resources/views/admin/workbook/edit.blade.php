@@ -63,7 +63,7 @@
                     <div class="mt-8">
                         <div>
                             <x-input-error :messages="$errors->get('question')" class="mt-2" />
-                            <label for="guestion" class="font-semibold mt-4">問題</label>
+                            <label for="question" class="font-semibold mt-4">問題</label>
                             <textarea name="question" class="w-full py-2 border border-gray-300 rounded-md" id="question">{{old('question', $workbook->question)}}</textarea>
                         </div>
                     </div>

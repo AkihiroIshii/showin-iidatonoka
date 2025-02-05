@@ -12,6 +12,7 @@ use App\Http\Controllers\GiftController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsualtargetController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\WorkrecordController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -50,6 +51,19 @@ Route::get('/admin/exam/{user}', [AdminController::class, 'exam'])
 // ->middleware(['auth', 'verified'])->name('admin.usualtarget.edit');
 // Route::patch('admin/usualtarget/{usualtarget}/update', [AdminController::class, 'update_usualtarget'])
 // ->middleware(['auth', 'verified'])->name('admin.usualtarget.update');
+
+/** 管理者＞ワーク演習 */
+Route::get('admin/wordrecord/{user}', [AdminController::class, 'workrecord'])
+->middleware(['auth', 'verified'])->name('admin.workrecord');
+Route::get('admin/workrecord/create/{user}', [AdminController::class, 'create_workrecord'])
+->middleware(['auth', 'verified'])->name('admin.workrecord.create');
+Route::post('admin/workrecord/store/{user}', [AdminController::class, 'store_workrecord'])
+->middleware(['auth', 'verified'])->name('admin.workrecord.store');
+Route::get('admin/workrecord/{workrecord}/edit', [AdminController::class, 'edit_workrecord'])
+->middleware(['auth', 'verified'])->name('admin.workrecord.edit');
+Route::patch('admin/workrecord/{workrecord}/update', [AdminController::class, 'update_workrecord'])
+->middleware(['auth', 'verified'])->name('admin.workrecord.update');
+
 
 Route::get('/admin/link', [AdminController::class, 'link'])
 ->middleware(['auth', 'verified'])->name('admin.link');
@@ -163,5 +177,8 @@ Route::get('workbook/answersheet', [WorkbookController::class, 'answersheet'])
 Route::get('workbook/reading', [WorkbookController::class, 'reading'])
 ->middleware(['auth', 'verified'])->name('workbook.reading');
 
+/* ワーク演習 */
+Route::get('workrecord', [WorkrecordController::class, 'index'])
+->middleware(['auth', 'verified'])->name('workrecord');
 
 require __DIR__.'/auth.php';
