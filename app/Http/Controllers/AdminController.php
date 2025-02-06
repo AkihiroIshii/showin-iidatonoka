@@ -14,6 +14,7 @@ use App\Models\Question;
 use App\Models\Target;
 use App\Models\Event;
 use App\Models\Usualtarget;
+use App\Traits\UsualtargetTrait;
 use App\Models\Workbook;
 use App\Models\Exam;
 use App\Traits\ExamTrait;
@@ -26,6 +27,7 @@ class AdminController extends Controller
     use UserTrait;
     use RecordTrait;
     use ExamTrait;
+    use UsualtargetTrait;
 
     public function show (User $user) {
         $records = $this->getRecords($user);
@@ -118,30 +120,11 @@ class AdminController extends Controller
 
     /** 日々の目標 */
     public function usualtarget(User $user) {
-        $today = Carbon::today();
-        $usualtargets = Usualtarget::where('user_id', $user->id)
-            ->selectRaw("
-                id,
-                user_id,
-                DATE_FORMAT(set_date, '%c/%e') as formatted_set_date,
-                DATE_FORMAT(due_date, '%c/%e') as formatted_due_date,
-                content,
-                achieve_flg,
-                IF(
-                    achieve_flg = 1,
-                    '目標達成！(^^)/◎',
-                    IF(
-                        due_date < ?,
-                        '期限切れ(´・ω・｀)',
-                        '挑戦中'
-                    )
-                ) as achieve_mark,
-                comment,
-                coin
-            ", [$today])
-            ->get();
+            $usualtargets = $this->getUsualtargets($user);
+            $lastMonthCoinSum = $this->getLastMonthCoinSum($user);
+            $thisMonthCoinSum = $this->getThisMonthCoinSum($user);
 
-        return view('admin.usualtarget.index', compact('user','usualtargets'));
+        return view('admin.usualtarget.index', compact('user','usualtargets','lastMonthCoinSum','thisMonthCoinSum'));
     }
 
     public function edit_usualtarget(Usualtarget $usualtarget) {

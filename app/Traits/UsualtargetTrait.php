@@ -16,10 +16,12 @@ trait UsualtargetTrait
         $today = Carbon::today();
         $usualtargets = Usualtarget::where('user_id', $user->id)
             ->selectRaw("
+                id,
                 user_id,
                 DATE_FORMAT(set_date, '%c/%e') as formatted_set_date,
                 DATE_FORMAT(due_date, '%c/%e') as formatted_due_date,
                 content,
+                achieve_flg,
                 IF(
                     achieve_flg = 1,
                     '目標達成！(^^)/◎',
