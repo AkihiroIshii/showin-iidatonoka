@@ -1,18 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.workbook_submenu') <!-- 問題集　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            中学英語（英文法）
+            英文法(中学)
             <span style="font-size:1rem;color:green;">　　スッと理解できない文があれば、早急に文法を確認しよう(`・ω・´)</span>
         </h2>
     </x-slot>
-    <div style="display:flex;">
-        <div class="px-6 py-4 text-lg font-semibold">
-            ＞ 英文法
-        </div>
-        <div class="px-6 py-4 text-lg">
-            <a href="{{route('workbook.reading')}}" class="text-blue-600 font-semibold">英文読解</a>
-        </div>
-    </div>
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
             <x-h3>中１</x-h3>

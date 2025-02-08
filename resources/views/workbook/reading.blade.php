@@ -1,19 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.workbook_submenu') <!-- 問題集　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            中学英語（英文読解）
+            英文読解(中学)
         </h2>
     </x-slot>
     @auth
-        <div style="display:flex;">
-            <div class="px-6 py-4 text-lg font-semibold">
-                <a href="{{route('workbook.grammar')}}" class="text-blue-600 font-semibold">英文法</a>
-            </div>
-            <div class="px-6 py-4 text-lg font-semibold">
-                ＞英文読解
-            </div>
-        </div>
-
         <div class="content-block">
             <p>◎高校入試過去問を題材にして、読解練習をしてみよう！</p>
 

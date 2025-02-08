@@ -54,14 +54,8 @@
                     @endif
                     <!-- 管理者、生徒共通 -->
                     @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
-                        <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
-                            公式集
-                        </x-nav-link>
-                        <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
-                            中学英語
-                        </x-nav-link>
                         <x-nav-link :href="route('examratio')" :active="request()->routeIs('examratio')">
-                            高校入試倍率
+                            <span style="color:red;">new!</span>高校入試倍率
                         </x-nav-link>
                     @endif
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">

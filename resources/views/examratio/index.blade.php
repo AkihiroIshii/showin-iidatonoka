@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            入試倍率
+            高校入試倍率
         </h2>
     </x-slot>
     <div class="mx-auto px-6 py-4">

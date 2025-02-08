@@ -1,5 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.workbook_submenu') <!-- 問題集　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             練習問題
         </h2>
@@ -14,7 +15,6 @@
             $trClass = '';
             $message = '';
         @endphp
-
         <!-- 問題表示 -->
         <div>
             <table class="border-separate border border-slate-400 m-auto table-fixed">

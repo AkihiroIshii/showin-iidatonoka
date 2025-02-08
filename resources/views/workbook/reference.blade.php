@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.workbook_submenu') <!-- 問題集　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            基本の公式集
+            公式集(中学)
             <span style="font-size:1rem;color:green;">　　ピンとこない式があったら早急に確認しよう(`・ω・´)</span>
         </h2>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
