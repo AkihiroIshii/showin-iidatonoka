@@ -12,6 +12,7 @@ use App\Http\Controllers\GiftController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsualtargetController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\WorkrecordController;
 
 //管理者ページ
@@ -188,5 +189,12 @@ Route::get('workrecord/{workrecord}/edit', [WorkrecordController::class, 'edit']
 ->middleware(['auth', 'verified'])->name('workrecord.edit');
 Route::patch('workrecord/{workrecord}', [WorkrecordController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('workrecord.update');
+
+/* 高校入試倍率 */
+Route::get('examratio', [ExamratioController::class, 'index'])
+->middleware(['auth', 'verified'])->name('examratio');
+Route::get('examratio/school', [ExamratioController::class, 'school'])
+->middleware(['auth', 'verified'])->name('examratio.school');
+
 
 require __DIR__.'/auth.php';

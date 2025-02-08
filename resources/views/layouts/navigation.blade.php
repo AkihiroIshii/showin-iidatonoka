@@ -49,7 +49,7 @@
                             </x-nav-link>
                         @endif
                         <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
-                            問題集（作成中）
+                            問題集
                         </x-nav-link>
                     @endif
                     <!-- 管理者、生徒共通 -->
@@ -59,6 +59,9 @@
                         </x-nav-link>
                         <x-nav-link :href="route('workbook.grammar')" :active="request()->routeIs('workbook.grammar')">
                             中学英語
+                        </x-nav-link>
+                        <x-nav-link :href="route('examratio')" :active="request()->routeIs('examratio')">
+                            高校入試倍率
                         </x-nav-link>
                     @endif
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
