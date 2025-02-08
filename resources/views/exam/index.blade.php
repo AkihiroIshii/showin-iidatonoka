@@ -18,13 +18,13 @@
         <div class="mb-6">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
-                    <th colspan="5"></th>
-                    <th colspan="5">得点／平均点</th>
+                    <th colspan="3"></th>
+                    <th colspan="6">得点／平均点</th>
                 </tr>
                 <tr class="bg-gray-300">
                     <!-- <th></th> -->
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">学校名</td>
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">年度</td>
+                    <!-- <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">学校名</td> -->
+                    <!-- <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">年度</td> -->
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">学年</td>
                     <!-- <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">項番</td> -->
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">試験日</td>
@@ -34,14 +34,15 @@
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">数学</td>
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">理科</td>
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">英語</td>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">５教科</td>
                 </tr>
                 @foreach($examresults as $examresult)
                     <tr>
                         <!-- <th class="border border-slate-300 px-4 w-1/12">
                             <a href="{{--route('admin.usualtarget.edit', $usualtarget)--}}" class="text-blue-600">編集</a>
                         </td> -->
-                        <td class="border border-slate-300 px-4">{{$examresult->schoolName}}</td>
-                        <td class="border border-slate-300 px-4">{{$examresult->year}}</td>
+                        <!-- <td class="border border-slate-300 px-4">{{$examresult->schoolName}}</td> -->
+                        <!-- <td class="border border-slate-300 px-4">{{$examresult->year}}</td> -->
                         <td class="border border-slate-300 px-4">{{$examresult->grade}}</td>
                         <!-- <td class="border border-slate-300 px-4">{{$examresult->no}}</td> -->
                         <td class="border border-slate-300 px-4">{{$examresult->exam_date}}</td>
@@ -70,6 +71,11 @@
                             <p>{{$examresult->score_english}}／{{$examresult->avg_english}}</p>
                             <p>平均 {{$examresult->avg_diff_english}}</p>
                             <p>前回 {{$examresult->prev_diff_english}}</p>
+                        </td>
+                        <td class="border border-slate-300 px-4">
+                            <p>{{$examresult->sum_score}}／{{$examresult->sum_avg}}</p>
+                            <p>平均 {{$examresult->avg_diff_all}}</p>
+                            <p>前回 {{$examresult->prev_diff_all}}</p>
                         </td>
                     </tr>
                 @endforeach

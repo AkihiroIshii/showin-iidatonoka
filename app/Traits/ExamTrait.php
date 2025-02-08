@@ -48,6 +48,8 @@ trait ExamTrait
             r1.score_math,
             r1.score_science,
             r1.score_english,
+            (r1.score_japanese + r1.score_society + r1.score_math + r1.score_science + r1.score_english) as sum_score,
+            (ex1.avg_japanese + ex1.avg_society + ex1.avg_math + ex1.avg_science + ex1.avg_english) as sum_avg,
             CONCAT(
                 CASE WHEN r1.score_japanese - ex1.avg_japanese >= 0 THEN '+' ELSE '' END,
                 ROUND(r1.score_japanese - ex1.avg_japanese, 1)
@@ -69,6 +71,10 @@ trait ExamTrait
                 ROUND(r1.score_english - ex1.avg_english, 1)
             ) as avg_diff_english,
             CONCAT(
+                CASE WHEN (r1.score_japanese + r1.score_society + r1.score_math + r1.score_science + r1.score_english) - (ex1.avg_japanese + ex1.avg_society + ex1.avg_math + ex1.avg_science + ex1.avg_english) >= 0 THEN '+' ELSE '' END,
+                ROUND((r1.score_japanese + r1.score_society + r1.score_math + r1.score_science + r1.score_english) - (ex1.avg_japanese + ex1.avg_society + ex1.avg_math + ex1.avg_science + ex1.avg_english), 1)
+            ) as avg_diff_all,
+            CONCAT(
                 CASE WHEN r1.score_japanese - r2.score_japanese >= 0 THEN '+' ELSE '' END,
                 r1.score_japanese - r2.score_japanese
             ) as prev_diff_japanese,
@@ -87,7 +93,11 @@ trait ExamTrait
             CONCAT(
                 CASE WHEN r1.score_english - r2.score_english >= 0 THEN '+' ELSE '' END,
                 r1.score_english - r2.score_english
-            ) as prev_diff_english
+            ) as prev_diff_english,
+             CONCAT(
+                CASE WHEN (r1.score_japanese + r1.score_society + r1.score_math + r1.score_science + r1.score_english) - (r2.score_japanese + r2.score_society + r2.score_math + r2.score_science + r2.score_english) >= 0 THEN '+' ELSE '' END,
+                (r1.score_japanese + r1.score_society + r1.score_math + r1.score_science + r1.score_english) - (r2.score_japanese + r2.score_society + r2.score_math + r2.score_science + r2.score_english)
+            ) as prev_diff_all
         ")
         ->get();
 
