@@ -23,7 +23,6 @@ trait ExamratioTrait
                 ROUND(examratios.num_applicants/examratios.num_capacity, 1) as examRatio
             ')
             ->orderBy('school_id','asc')
-            ->orderBy('department','asc')
             ->orderBy('period','asc')
             ->orderBy('year','desc')
             ->orderBy('type','asc')
