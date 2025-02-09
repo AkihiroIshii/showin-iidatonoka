@@ -200,5 +200,7 @@ Route::get('examratio/school', [ExamratioController::class, 'school'])
 /* その他（共通） */
 Route::get('link', [CommonController::class, 'link'])
 ->middleware(['auth', 'verified'])->name('link');
+Route::get('audiofile', [CommonController::class, 'audiofile'])
+->middleware('auth', 'verified')->name('audiofile');
 
 require __DIR__.'/auth.php';

@@ -38,11 +38,11 @@
                             日々の目標
                         </x-nav-link>
                         @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
-                            <x-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
-                                テスト結果
-                            </x-nav-link>
                             <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                                 ワーク演習
+                            </x-nav-link>
+                            <x-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
+                                試験結果
                             </x-nav-link>
                         @endif
                         <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
@@ -52,11 +52,14 @@
                     <!-- 管理者、生徒共通 -->
                     @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                         <x-nav-link :href="route('examratio')" :active="request()->routeIs('examratio')">
-                            <span style="color:red;">new!</span>高校入試倍率
+                            入試倍率
                         </x-nav-link>
                     @endif
                     <x-nav-link :href="route('link')" :active="request()->routeIs('link')">
                         リンク集
+                    </x-nav-link>
+                    <x-nav-link :href="route('audiofile')" :active="request()->routeIs('audiofile')">
+                        音源
                     </x-nav-link>
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
                         景品
