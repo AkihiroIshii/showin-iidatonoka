@@ -51,7 +51,7 @@
                     <ul class="flex ml-30 list-none">
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://secure.sakura.ad.jp/rs/cp/" target="_blank">さくらレンタルサーバ</a></li>
                         <li class="flex-auto text-center py-0 border-r border-black"><a href="https://secure.sakura.ad.jp/rs/db/mysql5/index.php?route=/database/structure&db=ishii-akihiro_showin&server=135" target="_blank">phpmyadmin</a></li>
-                        <li class="flex-auto text-center py-0 border-r border-black"><a href="https://github.com/AkihiroIshii/showin-iidatonoka" target="_blank">github</a></li>
+                        <li class="flex-auto text-center py-0 border-r"><a href="https://github.com/AkihiroIshii/showin-iidatonoka" target="_blank">github</a></li>
                     </ul>
                 </div>
                 <!-- 生徒募集 -->
@@ -99,6 +99,12 @@
                         </li>
                         <li class="flex-auto text-center py-0 border-r border-black">
                             <a href="https://maps.ontarget.cc/azmap/" target="_blank">正距方位図</a>
+                        </li>
+                        <li class="flex-auto text-center py-0 border-r border-black">
+                            <a href="https://www.sokunousokudoku.net/hakarukun/" target="_blank">読書速度ハカルくん</a>
+                        </li>
+                        <li class="flex-auto text-center py-0 border-r">
+                            <a href="https://www.sokunousokudoku.net/measuresan/" target="_blank">英語総合読解力測定</a>
                         </li>
                     </ul>
                 </div>
