@@ -24,9 +24,9 @@ class WorkbookController extends Controller
         return view('workbook.reading');
     }
 
-    public function answersheet() {
-        return redirect(asset('pdf/answersheet.pdf'));
-    }
+    // public function answersheet() {
+    //     return redirect(asset('pdf/answersheet.pdf'));
+    // }
 
     public function index(User $user) {
         $user = $this->targetUser(Auth::user());

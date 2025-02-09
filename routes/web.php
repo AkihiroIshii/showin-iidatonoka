@@ -126,6 +126,8 @@ Route::get('record/spreadsheet2/{user}', [RecordController::class, 'spreadsheet2
 ->middleware(['auth', 'verified'])->name('record.spreadsheet2');
 Route::get('record/spreadsheet3/{user}', [RecordController::class, 'spreadsheet3'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet3');
+Route::get('record/answersheet/{user}', [RecordController::class, 'answersheet'])
+->middleware(['auth', 'verified'])->name('record.answersheet');
 Route::get('record/create', [RecordController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('record.create');
 // Route::get('record/create', [RecordController::class, 'create'])
@@ -174,8 +176,6 @@ Route::get('workbook/reference', [WorkbookController::class, 'reference'])
 ->middleware(['auth', 'verified'])->name('workbook.reference');
 Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
 ->middleware(['auth', 'verified'])->name('workbook.grammar');
-Route::get('workbook/answersheet', [WorkbookController::class, 'answersheet'])
-->middleware(['auth', 'verified'])->name('workbook.answersheet');
 Route::get('workbook/reading', [WorkbookController::class, 'reading'])
 ->middleware(['auth', 'verified'])->name('workbook.reading');
 
@@ -202,5 +202,6 @@ Route::get('link', [CommonController::class, 'link'])
 ->middleware(['auth', 'verified'])->name('link');
 Route::get('audiofile', [CommonController::class, 'audiofile'])
 ->middleware('auth', 'verified')->name('audiofile');
+
 
 require __DIR__.'/auth.php';

@@ -16,6 +16,8 @@ class CommonController extends Controller
         return view('audiofile');
     }
 
+
+
     // public function openFile(Request $request) {
     //     $filename = $request->query('filename');
     //     $path = "common/{$filename}";

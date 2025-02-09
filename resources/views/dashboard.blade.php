@@ -11,6 +11,14 @@
             $message = '';
         @endphp
 
+        <!-- 更新情報 -->
+        <p class="bg-yellow-200 px-4">2/9 更新情報</p>
+        <ul style="list-style:circle;" class="px-4">
+            <li>過去問の解答用紙を年度別科目別に分けました。</li>
+            <li>「リンク集」メニューを新設しました。</li>
+            <li>「音源」メニューを新設しました。</li>
+        </ul>
+
         <!-- 普段の目標を表示 -->
         <x-h3>挑戦中の目標</x-h3>
         <div class="mb-6">

@@ -18,7 +18,7 @@
             <x-nav-link :href="route('record.spreadsheet3', $user)" :active="request()->routeIs('record.spreadsheet3')">
                 集計表(表形式)
             </x-nav-link>
-            <x-nav-link :href="route('workbook.answersheet')" :active="request()->routeIs('workbook.answersheet')">
+            <x-nav-link :href="route('record.answersheet', $user)" :active="request()->routeIs('record.answersheet')">
                 解答用紙(配点記入済)
             </x-nav-link>
         </div>
