@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\WorkbookController;
@@ -66,8 +67,8 @@ Route::patch('admin/workrecord/{workrecord}/update', [AdminController::class, 'u
 ->middleware(['auth', 'verified'])->name('admin.workrecord.update');
 
 
-Route::get('/admin/link', [AdminController::class, 'link'])
-->middleware(['auth', 'verified'])->name('admin.link');
+// Route::get('/admin/link', [AdminController::class, 'link'])
+// ->middleware(['auth', 'verified'])->name('admin.link');
 Route::get('/admin/event', [AdminController::class, 'event'])
 ->middleware(['auth', 'verified'])->name('admin.event');
 Route::get('/admin/maintain', [AdminController::class, 'maintain'])
@@ -196,5 +197,8 @@ Route::get('examratio', [ExamratioController::class, 'index'])
 Route::get('examratio/school', [ExamratioController::class, 'school'])
 ->middleware(['auth', 'verified'])->name('examratio.school');
 
+/* その他（共通） */
+Route::get('link', [CommonController::class, 'link'])
+->middleware(['auth', 'verified'])->name('link');
 
 require __DIR__.'/auth.php';

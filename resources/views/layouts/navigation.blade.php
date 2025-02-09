@@ -16,9 +16,6 @@
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             生徒一覧
                         </x-nav-link>
-                        <x-nav-link :href="route('admin.link')" :active="request()->routeIs('admin.link')">
-                            リンク集
-                        </x-nav-link>
                         <x-nav-link :href="route('admin.event')" :active="request()->routeIs('admin.event')">
                             イベント
                         </x-nav-link>
@@ -58,6 +55,9 @@
                             <span style="color:red;">new!</span>高校入試倍率
                         </x-nav-link>
                     @endif
+                    <x-nav-link :href="route('link')" :active="request()->routeIs('link')">
+                        リンク集
+                    </x-nav-link>
                     <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
                         景品
                     </x-nav-link>                 
