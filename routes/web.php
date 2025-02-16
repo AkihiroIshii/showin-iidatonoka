@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AishowinController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\TargetController;
 use App\Http\Controllers\EventController;
@@ -29,6 +30,19 @@ Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
 ->middleware(['auth', 'verified'])->name('admin.spreadsheet');
 Route::get('/admin/spreadsheet3/{user}', [AdminController::class, 'spreadsheet3'])
 ->middleware(['auth', 'verified'])->name('admin.spreadsheet3');
+
+/** 管理者＞過去問目標点数 */
+Route::get('/admin/target/{user}', [AdminController::class, 'target'])
+->middleware(['auth', 'verified'])->name('admin.target');
+// Route::get('admin/target/create/{user}', [AdminController::class, 'create_target'])
+// ->middleware(['auth', 'verified'])->name('admin.target.create');
+// Route::post('admin/target/store/{user}', [AdminController::class, 'store_target'])
+// ->middleware(['auth', 'verified'])->name('admin.target.store');
+// Route::get('admin/target/{target}/edit', [AdminController::class, 'edit_target'])
+// ->middleware(['auth', 'verified'])->name('admin.target.edit');
+// Route::patch('admin/target/{target}/update', [AdminController::class, 'update_target'])
+// ->middleware(['auth', 'verified'])->name('admin.target.update');
+
 
 /** 管理者＞日々の目標 */
 Route::get('/admin/usualtarget/{user}', [AdminController::class, 'usualtarget'])
@@ -190,6 +204,11 @@ Route::get('workrecord/{workrecord}/edit', [WorkrecordController::class, 'edit']
 ->middleware(['auth', 'verified'])->name('workrecord.edit');
 Route::patch('workrecord/{workrecord}', [WorkrecordController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('workrecord.update');
+
+/* AI-Showin */
+Route::get('aishowin', [AishowinController::class, 'index'])
+->middleware(['auth', 'verified'])->name('aishowin');
+
 
 /* 高校入試倍率 */
 Route::get('examratio', [ExamratioController::class, 'index'])

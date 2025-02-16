@@ -118,6 +118,48 @@ class AdminController extends Controller
         return view('event.index', compact('events'));
     }
 
+    /** 過去問目標点数 */
+    public function target(User $user) {
+        
+        //科目ごと大問ごとに、記録の平均点と最高点を集計
+        $record_set = Record::where('records.user_id', $user->id)
+            ->leftJoin('questions', function($join) {
+                $join->on('records.question_id', '=', 'questions.id');
+            })
+            ->selectRaw('
+                records.user_id,
+                questions.subject,
+                questions.no,
+                count(*) as count,
+                max(records.score) as max_score,
+                round(avg(records.score)) as avg_score,
+                round(avg(questions.point)) as avg_point
+            ')
+            ->groupBy('records.user_id', 'questions.subject', 'questions.no');
+
+        //目標設定にrecord_setを結合
+        $targets = Target::where('targets.user_id', $user->id)
+            ->leftjoinSub($record_set, 'record_set', function($join) {
+                $join->on('targets.subject', '=', 'record_set.subject')->on('targets.no', '=', 'record_set.no');
+            })
+            ->selectRaw('
+                targets.id,
+                targets.subject,
+                targets.no,
+                targets.target_score,
+                targets.target_minute,
+                record_set.count,
+                record_set.max_score,
+                record_set.avg_score,
+                record_set.avg_point,
+                IF(record_set.max_score > targets.target_score, "(^^)/◎", "") as max_mark,
+                IF(record_set.avg_score > targets.target_score, "(^^)/◎", "") as avg_mark
+            ')
+            ->get();
+
+        return view('admin.target.index', compact('user','targets'));
+    }    
+
     /** 日々の目標 */
     public function usualtarget(User $user) {
             $usualtargets = $this->getUsualtargets($user);

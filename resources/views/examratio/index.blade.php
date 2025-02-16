@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.infomenu') <!-- その他情報　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            高校入試倍率
+            その他情報 ＞ 高校入試倍率
         </h2>
     </x-slot>
     <div class="mx-auto px-6 py-4">

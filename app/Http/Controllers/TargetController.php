@@ -49,29 +49,7 @@ class TargetController extends Controller
                 IF(record_set.avg_score > targets.target_score, "(^^)/◎", "") as avg_mark
             ')
             ->get();
-// dd($targets);
 
-            // $targets = Target::where('targets.user_id', auth()->id())
-            // ->leftJoin('questions', function($join) {
-            //     $join->on('targets.subject', '=', 'questions.subject')->on('targets.no', '=', 'questions.no');
-            // })
-            // ->leftjoin('records', function($join) {
-            //     $join->on('targets.user_id', '=', 'records.user_id')
-            //         ->on('questions.id', '=', 'records.question_id');
-            // })
-            // ->select('targets.user_id', 'targets.subject', 'targets.no', 'targets.target_score', 'targets.target_minute')
-            // ->selectRaw('
-            //     COUNT(records.score) as count,
-            //     MAX(records.score) as max_score,
-            //     ROUND(AVG(records.score)) as avg_score,
-            //     IF(MAX(records.score) > targets.target_score, "(^^)/◎", "") as max_mark,
-            //     IF(AVG(records.score) > targets.target_score, "(^^)/◎", "") as avg_mark,
-            //     ROUND(AVG(questions.point)) as avg_point
-            // ')
-            // ->groupBy('targets.user_id', 'targets.subject', 'targets.no', 'targets.target_score', 'targets.target_minute')
-            // ->get();
-
-            // dd($targets);
         return view('target.index', compact('user','targets'));
     }
 

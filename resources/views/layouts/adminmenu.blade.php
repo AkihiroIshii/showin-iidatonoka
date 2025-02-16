@@ -9,6 +9,9 @@
             <x-nav-link :href="route('admin.spreadsheet3', $user)" :active="request()->routeIs('admin.spreadsheet3')">
                 集計表(表形式)
             </x-nav-link>
+            <x-nav-link :href="route('admin.target', $user)" :active="request()->routeIs('admin.target')">
+                過去問目標点数
+            </x-nav-link>
             <x-nav-link :href="route('admin.usualtarget', $user)" :active="request()->routeIs('admin.usualtarget')">
                 日々の目標
             </x-nav-link>

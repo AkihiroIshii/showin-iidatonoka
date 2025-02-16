@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+        @include('layouts.infomenu') <!-- その他情報　共通メニュー -->
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            イベント一覧
+            その他情報 ＞ イベント一覧
         </h2>
     </x-slot>
     <div class="mx-auto px-6 py-4">

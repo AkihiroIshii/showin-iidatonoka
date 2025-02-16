@@ -10,7 +10,11 @@
     <div class="mx-auto px-6">
         <x-h3>演習記録一覧</x-h3>
         <div>
-            <p class="ml-8 mt-4 mb-4">１週するごとに先生に報告してください。塾以外で進めたときは、自分で入力してもよいです。</p>
+            <ul class="list-disc ml-8 mb-6">
+                <li>１周するごとに学習完了日を入力しましょう。</li>
+                <li>試験範囲が広い場合、ページを分割して登録してもOKです。</li>
+            </ul>
+
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
                     <th colspan="7"></th>
