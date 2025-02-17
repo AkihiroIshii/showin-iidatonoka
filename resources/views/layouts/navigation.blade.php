@@ -102,11 +102,50 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
+            <p>　まだスマホ表示に非対応です。すみません(＞＜;)</p>
+            <!-- <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
                 一覧
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                 新規登録
+            </x-responsive-nav-link> -->
+            @if(Auth::user()->role == "admin")
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    生徒一覧
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.event')" :active="request()->routeIs('admin.event')">
+                    イベント
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
+                    メンテナンス
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
+                    問題集
+                </x-responsive-nav-link>
+            @else
+                @if(Auth::user()->grade == "中３")
+                    <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
+                        過去問演習
+                    </x-responsive-nav-link>
+                @endif
+                @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
+                    <x-responsive-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
+                        ワーク演習
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
+                        試験結果
+                    </x-responsive-nav-link>
+                @endif
+                <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                    日々の目標
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
+                    問題集
+                </x-responsive-nav-link>
+            @endif
+            <!-- 管理者、生徒共通 -->
+            <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                <span class="text-orange-500">new! </span>その他情報
             </x-responsive-nav-link>
         </div>
 
