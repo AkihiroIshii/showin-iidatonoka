@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -29,8 +30,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $today = Carbon::today();
+
         if (Auth::user() == null) {
             return redirect()->route('login');
+        }
+        if(Auth::user()->expiration_date != null & Auth::user()->expiration_date < $today) {
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+    
+            $request->session()->regenerateToken();
+    
+            // return redirect('/');
+            return redirect('login');
         }
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
