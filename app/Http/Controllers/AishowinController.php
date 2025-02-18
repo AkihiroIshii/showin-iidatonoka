@@ -14,9 +14,12 @@ class AishowinController extends Controller
         $scienceUnits = Aishowin::where('tag', '=', '中学理科')
             ->get();
 
-        $societyUnits = Aishowin::where('tag', '=', '中学社会')
+            $societyUnits = Aishowin::where('tag', '=', '中学社会')
             ->get();
 
-        return view('aishowin.index', compact('trainUnits','scienceUnits','societyUnits'));
+            $appliedUnits = Aishowin::where('tag', '=', '応用問題')
+            ->get();
+
+        return view('aishowin.index', compact('trainUnits','scienceUnits','societyUnits','appliedUnits'));
     }
 }
