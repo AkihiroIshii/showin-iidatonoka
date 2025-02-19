@@ -54,7 +54,7 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">科目</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">大問</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">内容</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="borｓder border-slate-300 px-4">初回</td>
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">初回</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">得点/配点</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">得点/目標点</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">解答時間(分)</td>
