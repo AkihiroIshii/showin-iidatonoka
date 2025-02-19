@@ -65,6 +65,8 @@ class AdminController extends Controller
 
 
     public function index() {
+        $today = Carbon::today();
+
         //生徒
         $users = User::leftJoin('schools', function($join) {
                 $join->on('users.school_id', '=', 'schools.id');
@@ -77,11 +79,23 @@ class AdminController extends Controller
                 users.plan
             ')
             ->orderBy('users.grade','desc')
-            ->orderBy('users.plan','asc')
-            ->orderBy('users.id','asc')
+            ->orderBy('users.user_id','asc')
             ->orderBy('schools.name','asc')
             ->get();
-        return view('admin.dashboard', compact('users')); //管理者専用ページのビュー
+
+        //本日が期限の目標
+        $usualtargets = Usualtarget::where('due_date', '=', $today)
+            ->leftJoin('users', function($join) {
+                $join->on('usualtargets.user_id', '=', 'users.id');
+            })
+            ->selectRaw('
+                users.name,
+                usualtargets.content,
+                usualtargets.due_date
+            ')
+            ->get();
+
+        return view('admin.dashboard', compact('users','usualtargets')); //管理者専用ページのビュー
     }
 
     public function link() {

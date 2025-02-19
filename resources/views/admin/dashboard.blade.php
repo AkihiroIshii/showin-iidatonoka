@@ -6,6 +6,26 @@
             </h2>
         </x-slot>
         <div class="mx-auto px-6">
+
+            <x-h3>本日が期限の目標</x-h3>
+            <div class="mb-6">
+                <table class="border-separate border border-slate-400 m-auto table-fixed">
+                    <tr class="bg-gray-300">
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">生徒名</td>
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">挑戦中の目標</td>
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">目標期限</td>
+                    </tr>
+                    @foreach($usualtargets as $usualtarget)
+                        <tr>
+                            <td class="border border-slate-300 px-4">{{$usualtarget->name}}</td>
+                            <td class="border border-slate-300 px-4">{{$usualtarget->content}}</td>
+                            <td class="border border-slate-300 px-4">{{$usualtarget->due_date}}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            </div>
+
+            <x-h3>生徒一覧</x-h3>
             <!-- 新規作成 -->
             <a href="{{route('admin.user.create')}}" class="text-blue-600">新規ユーザ作成</a>           
             <div>
