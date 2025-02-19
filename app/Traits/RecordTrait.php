@@ -17,18 +17,37 @@ trait RecordTrait
         //目標点数
         $targets = Target::where('user_id', $user->id);
 
+        //演習記録（ユーザごと、大問ごとの集計値）
+        $records_sub = Record::where('user_id', $user->id)
+            ->select('user_id', 'question_id')
+            ->selectRaw('
+                COUNT(score) as count,
+                MIN(date) as first_date,
+                MAX(score) as max_score,
+                ROUND(AVG(score),0) as avg_score,
+                MAX(date) as latest_date,
+                ROUND(AVG(minute),0) as avg_minute
+                ')
+            ->groupBy('user_id','question_id');
+
         //演習記録
         $records = Record::leftjoinSub($questions_sub, 'questions_sub', function($join) {
                 $join->on('records.question_id', '=', 'questions_sub.id');
-            })->leftjoinSub($targets, 'targets', function($join) {
+            })
+            ->leftjoinSub($targets, 'targets', function($join) {
                 $join->on('questions_sub.subject', '=', 'targets.subject')->on('questions_sub.no', '=', 'targets.no');
-            })->where('records.user_id', $user->id)
+            })
+            ->leftjoinSub($records_sub, 'rec_sub', function($join) {
+                $join->on('records.question_id', '=', 'rec_sub.question_id');
+            })
+            ->where('records.user_id', $user->id)
             ->selectRaw('
                 records.*,
                 questions_sub.year, questions_sub.type, questions_sub.subject, questions_sub.no, questions_sub.point,
                 targets.target_score, targets.target_minute,
-                IF((target_score IS NOT NULL) AND (ROUND(100*score/target_score) >= 100), " (^^)/◎", "") as target_mark
-                ')
+                IF((target_score IS NOT NULL) AND (ROUND(100*score/target_score) >= 100), " (^^)/◎", "") as target_mark,
+                IF(records.date = rec_sub.first_date, "○", "") as first_charange
+            ')
             //並び替え
             ->orderBy('date','desc')
             ->orderBy('records.id','desc')
