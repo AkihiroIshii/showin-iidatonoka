@@ -42,8 +42,8 @@
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             日々の目標
                         </x-nav-link>
-                        <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
-                            問題集
+                        <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
+                            公式集
                         </x-nav-link>
                     @endif
                     <!-- 管理者、生徒共通 -->
