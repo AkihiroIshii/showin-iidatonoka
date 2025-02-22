@@ -7,6 +7,11 @@
         <h2 class="mb-4">
             松陰塾飯田殿岡校
         </h2>
+        <!-- 退塾した生徒がログインしようとしたら表示 -->
+        @if(session('errMsg'))
+        <p class="text-red-400">{{ session('errMsg') }}</p>
+        @endif
+
         <div>
             <x-input-label for="user_id" :value="__('ユーザーID')" />
             <x-text-input id="user_id" class="block mt-1 w-full" name="user_id" :value="old('user_id')" required autofocus autocomplete="user_id" />
@@ -23,7 +28,7 @@
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
-        <!-- <p class="mb-4 text-xs">(※)ID・パスワードが違う場合や、退塾した生徒はログインできません。</p> -->
+
         <div class="flex items-center justify-end mt-4">
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}

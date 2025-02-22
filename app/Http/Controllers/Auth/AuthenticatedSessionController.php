@@ -42,8 +42,11 @@ class AuthenticatedSessionController extends Controller
     
             $request->session()->regenerateToken();
     
+            $errMsg = '退塾した生徒はログインできません。';
+
             // return redirect('/');
-            return redirect('login');
+            return redirect('login')->with('errMsg', $errMsg);
+            dd($errMsg);
         }
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
