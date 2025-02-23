@@ -21,6 +21,9 @@ use App\Traits\ExamTrait;
 use App\Models\ExamResult;
 use App\Models\Workrecord;
 use Carbon\Carbon;
+use App\Http\Requests\WorkrecordRequest;
+use App\Http\Requests\WorkbookRequest;
+use App\Http\Requests\UserRequest;
 
 class AdminController extends Controller
 {
@@ -293,36 +296,14 @@ class AdminController extends Controller
         return view('admin.workbook.create');
     }
 
-    public function store_workbook(Request $request) {
-
-        $validated = $request->validate([
-            'subject' => 'required',
-            'field' => 'required',
-            'grade' => 'required',
-            'question' => 'required',
-            'answer' => 'required',
-            'reference' => 'nullable'
-        ]);
-
-        $workbook = Workbook::create($validated);
-
+    public function store_workbook(WorkbookRequest $request) {
+        $workbook = Workbook::create($request->all());
         $request->session()->flash('message', '登録しました');
         return back();
     }
 
-    public function update_workbook(Request $request, Workbook $workbook) {
-
-        $validated = $request->validate([
-            'subject' => 'required',
-            'field' => 'required',
-            'grade' => 'required',
-            'question' => 'required',
-            'answer' => 'required',
-            'reference' => 'nullable'
-        ]);
-
-        $workbook->update($validated);
-
+    public function update_workbook(WorkbookRequest $request, Workbook $workbook) {
+        $workbook->update($request->all());
         $request->session()->flash('message', '更新しました');
         return back();
     }
@@ -338,40 +319,16 @@ class AdminController extends Controller
         return view('admin.user.edit', compact('user'));
     }
 
-    public function store_user(Request $request) {
-
-        $validated = $request->validate([
-            'user_id' => 'required',
-            'password' => 'required',
-            'name' => 'required',
-            'school_id' => 'required',
-            'grade' => 'required',
-            'plan' => 'required'
-        ]);
-
-        $validated['password'] = Hash::make($validated['password']);
-        
-        User::create($validated);
-
+    public function store_user(UserRequest $request) {
+        $request['password'] = Hash::make($request['password']);        
+        User::create($request->all());
         $request->session()->flash('message', '登録しました');
         return back();
     }
 
-    public function update_user(Request $request, User $user) {
-
-        $validated = $request->validate([
-            'user_id' => 'required',
-            'password' => 'required',
-            'name' => 'required',
-            'school_id' => 'required',
-            'grade' => 'required',
-            'plan' => 'required'
-        ]);
-
-        $validated['password'] = Hash::make($validated['password']);
-
-        $user->update($validated);
-
+    public function update_user(UserRequest $request, User $user) {
+        $request['password'] = Hash::make($request['password']);
+        $user->update($request->all());
         $request->session()->flash('message', '更新しました');
         return back();
     }
@@ -410,42 +367,14 @@ class AdminController extends Controller
         return view('admin.workrecord.edit', compact('user', 'exams', 'workrecord'));
     }
 
-    public function store_workrecord(Request $request) {
-
-        $validated = $request->validate([
-            'user_id' => 'required',
-            'exam_id' => 'required',
-            'subject' => 'required',
-            'work_name' => 'nullable',
-            'work_range' => 'nullable',
-            'memo' => 'nullable',
-            'date_1st' => 'nullable',
-            'date_2nd' => 'nullable',
-            'date_3rd' => 'nullable',
-        ]);
-
-        Workrecord::create($validated);
-
+    public function store_workrecord(WorkrecordRequest $request) {
+        Workrecord::create($request->all());
         $request->session()->flash('message', '登録しました');
         return back();
     }
 
-    public function update_workrecord(Request $request, Workrecord $workrecord) {
-
-        $validated = $request->validate([
-            'user_id' => 'required',
-            'exam_id' => 'required',
-            'subject' => 'required',
-            'work_name' => 'nullable',
-            'work_range' => 'nullable',
-            'memo' => 'nullable',
-            'date_1st' => 'nullable',
-            'date_2nd' => 'nullable',
-            'date_3rd' => 'nullable',
-        ]);
-
-        $workrecord->update($validated);
-
+    public function update_workrecord(WorkrecordRequest $request, Workrecord $workrecord) {
+        $workrecord->update($request->all());
         $request->session()->flash('message', '更新しました');
         return back();
     }

@@ -12,6 +12,7 @@ use App\Models\Target;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\RecordRequest;
 
 class RecordController extends Controller
 {
@@ -88,53 +89,31 @@ class RecordController extends Controller
         return view('record.create', compact('user'));
     }
 
-    public function store(Request $request) {
-        $validated = $request->validate([
-            // 'user_id' => 'required',
-            // 'question_id' => 'required',
-            'date' => 'required',
-            'year' => 'required',
-            'subject' => 'required',
-            'no' => 'required',
-            'score' => 'required|integer',
-            'minute' => 'required|integer',
-            // 'memo' => 'nullable',
-        ]);
-
+    public function store(RecordRequest $request) {
         //問題IDを取得
-        $question = Question::where('year', '=', $validated['year'])
-            ->where('subject', '=', $validated['subject'])
-            ->where('no', '=', $validated['no'])
+        $question = Question::where('year', '=', $request['year'])
+            ->where('subject', '=', $request['subject'])
+            ->where('no', '=', $request['no'])
             ->first();
 
-        $validated['user_id'] = auth()->id();
+        $request['user_id'] = auth()->id();
         // $validated['question_id'] = $request->question_id();
-        $validated['question_id'] = $question->id;
-        $record = Record::create($validated);
+        $request['question_id'] = $question->id;
+        $record = Record::create($request->all());
         $request->session()->flash('message', '登録しました');
         return back();
     }
 
-    public function update(Request $request, Record $record) {
-
-        $validated = $request->validate([
-            'date' => 'required',
-            'year' => 'required',
-            'subject' => 'required',
-            'no' => 'required',
-            'score' => 'required|integer',
-            'minute' => 'required|integer',
-        ]);
-
+    public function update(RecordRequest $request, Record $record) {
         //問題IDを取得
-        $question = Question::where('year', '=', $validated['year'])
-            ->where('subject', '=', $validated['subject'])
-            ->where('no', '=', $validated['no'])
+        $question = Question::where('year', '=', $request['year'])
+            ->where('subject', '=', $request['subject'])
+            ->where('no', '=', $request['no'])
             ->first();
 
-        $validated['user_id'] = auth()->id();
-        $validated['question_id'] = $question->id;
-        $record->update($validated);
+        $request['user_id'] = auth()->id();
+        $request['question_id'] = $question->id;
+        $record->update($request->all());
 
         $request->session()->flash('message', '更新しました');
         return back();
