@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\WorkrecordRequest;
 use App\Models\Workrecord;
 use App\Models\User;
@@ -47,6 +48,8 @@ class WorkrecordController extends Controller
     }
 
     public function store(WorkrecordRequest $request) {
+        Storage::disk('local')->putFile('files', $request->file('file'));
+        return back();
         Workrecord::create($request);
         $request->session()->flash('message', '登録しました');
         return back();

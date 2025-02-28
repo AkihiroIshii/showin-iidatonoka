@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Carbon\Carbon;
+use App\Models\Family;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -48,6 +49,17 @@ class AuthenticatedSessionController extends Controller
             return redirect('login')->with('errMsg', $errMsg);
             dd($errMsg);
         }
+
+        /*保護者の場合、閲覧対象のユーザ（生徒）をセッションに保存*/
+        if (Auth::user()->grade == '保護者') {
+            $target_students = Family::where('parent_id', Auth::user()->id)
+                ->orderBy('student_id','asc')
+                ->pluck('student_id')
+                ->toArray();
+  
+            $request->session()->put('target_students', $target_students);
+        }
+
         if (Auth::user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }

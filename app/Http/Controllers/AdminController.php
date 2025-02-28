@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Traits\UserTrait;
 use App\Models\School;
@@ -34,6 +35,9 @@ class AdminController extends Controller
 
     public function show (User $user) {
         $records = $this->getRecords($user);
+
+        //閲覧対象とする生徒IDをセッションに記録
+        Session::put('target_students', $user->id);
 
         //演習記録（該当ユーザの集計値）
         $records_sum_per_user = Record::select('user_id')
@@ -71,7 +75,8 @@ class AdminController extends Controller
         $today = Carbon::today();
 
         //生徒
-        $users = User::leftJoin('schools', function($join) {
+        $users = User::where('grade', '!=', '保護者')
+            ->leftJoin('schools', function($join) {
                 $join->on('users.school_id', '=', 'schools.id');
             })
             ->selectRaw('
@@ -179,7 +184,10 @@ class AdminController extends Controller
 
     /** 日々の目標 */
     public function usualtarget(User $user) {
-            $usualtargets = $this->getUsualtargets($user);
+            $user_ids = [Session::get('target_students', null)]; //配列で取得
+
+            $usualtargets = $this->getUsualtargets($user_ids);
+ 
             $lastMonthCoinSum = $this->getLastMonthCoinSum($user);
             $thisMonthCoinSum = $this->getThisMonthCoinSum($user);
 

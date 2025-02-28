@@ -25,6 +25,10 @@
                         <x-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
                             問題集
                         </x-nav-link>
+                    @elseif(Auth::user()->grade == "保護者")
+                        <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                            日々の目標
+                        </x-nav-link>
                     @else
                         @if(Auth::user()->grade == "中３")
                             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">

@@ -19,6 +19,7 @@
                 ] //本試験の平均点
             @endphp
             <x-h3>解答用紙</x-h3>
+            <a class="font-semibold text-blue-600" href="{{ asset('storage/public/2020eng.pdf') }}">○</a>
             <p>○をクリックするとPDFが開きます。</p>
             <table class="border-separate border border-slate-400 m-auto mb-4 table-fixed w-auto">
                 <tr class="bg-gray-300">
