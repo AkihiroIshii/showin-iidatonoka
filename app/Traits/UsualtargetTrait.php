@@ -48,12 +48,31 @@ trait UsualtargetTrait
         if($current_flg == true) {
             $usualtargets = $usualtargets
                 ->where('due_date', '>=', $today)
-                ->whereNotNull('achieve_flg');
+                ->whereNull('achieve_flg');
         }
 
         $usualtargets = $usualtargets
             ->orderBy('usualtargets.due_date','desc')
             ->orderBy('usualtargets.set_date','desc')
+            ->get();
+
+        return $usualtargets;
+    }
+
+    // 本日が期限でかつ仕掛かり中の目標を取得
+    public function getTargetsByToday()
+    {
+        $today = Carbon::today();
+        $usualtargets = Usualtarget::where('due_date', '=', $today)
+            ->whereNull('achieve_flg') //仕掛かり中
+            ->leftJoin('users', function($join) {
+                $join->on('usualtargets.user_id', '=', 'users.id');
+            })
+            ->selectRaw('
+                users.name,
+                usualtargets.content,
+                usualtargets.due_date
+            ')
             ->get();
 
         return $usualtargets;

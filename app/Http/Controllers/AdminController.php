@@ -72,7 +72,7 @@ class AdminController extends Controller
 
 
     public function index() {
-        $today = Carbon::today();
+        // $today = Carbon::today();
 
         //生徒
         $users = User::where('grade', '!=', '保護者')
@@ -92,16 +92,17 @@ class AdminController extends Controller
             ->get();
 
         //本日が期限の目標
-        $usualtargets = Usualtarget::where('due_date', '=', $today)
-            ->leftJoin('users', function($join) {
-                $join->on('usualtargets.user_id', '=', 'users.id');
-            })
-            ->selectRaw('
-                users.name,
-                usualtargets.content,
-                usualtargets.due_date
-            ')
-            ->get();
+        // $usualtargets = Usualtarget::where('due_date', '=', $today)
+        //     ->leftJoin('users', function($join) {
+        //         $join->on('usualtargets.user_id', '=', 'users.id');
+        //     })
+        //     ->selectRaw('
+        //         users.name,
+        //         usualtargets.content,
+        //         usualtargets.due_date
+        //     ')
+        //     ->get();
+        $usualtargets = $this->getTargetsByToday();
 
         return view('admin.dashboard', compact('users','usualtargets')); //管理者専用ページのビュー
     }
