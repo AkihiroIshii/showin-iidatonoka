@@ -4,53 +4,70 @@
             {{$user->name}}さんのダッシュボード
         </h2>
     </x-slot>
-    <div class="mx-auto px-6 py-4">
-        <!-- 変数定義 -->
-        @php
-            $trClass = '';
-            $message = '';
-        @endphp
+    <!-- 変数定義 -->
+    @php
+        $trClass = '';
+        $message = '';
+    @endphp
 
-        <!-- 更新情報 -->
+    <!-- 更新情報 -->
+    @if(Auth::user()->grade == "保護者")
+        <p class="bg-yellow-200 px-4">3/1 更新情報</p>
+        <p>一部スマホ表示に対応しました。</p>
+    @else
         <p class="bg-yellow-200 px-4">2/16 更新情報</p>
         <ul style="list-style:circle;" class="px-4">
             <li>「イベント」、「リンク集」、「高校入試倍率」、「音源」、「景品」のメニューを、「その他情報」に集約しました。</li>
             <li>「その他情報」メニュー内に、「目的別対策」を追加しました。</li>
         </ul>
+    @endif
 
+    <!-- スマホ表示用 -->
+    <div class="sm:hidden">
         <!-- 普段の目標を表示 -->
-        @if(Auth::user()->grade != "保護者")
-            <x-h3>挑戦中の目標</x-h3>
-            <div class="mb-6">
-                <table class="border-separate border border-slate-400 m-auto table-fixed">
-                    <tr class="bg-gray-300">
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">目標</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">目標期限</td>
-                    </tr>
-                    @foreach($usualtargets as $usualtarget)
-                        <tr>
-                            <td class="border border-slate-300 px-4">{{$usualtarget->content}}</td>
-                            <td class="border border-slate-300 px-4">{{$usualtarget->formatted_due_date}}</td>
-                        </tr>
-                    @endforeach
-                </table>
+        <x-h3>挑戦中の目標</x-h3>
+        @foreach($usualtargets as $usualtarget)
+            <div class="bg-sky-100 mb-4">
+                <p>
+                    <span class="font-bold">{{$usualtarget->name}}</span>
+                    目標期限：{{$usualtarget->formatted_due_date}}
+                </p>
+                <p>{{$usualtarget->content}}</p>
             </div>
-        @endif
+        @endforeach
         
         <x-h3>直近２ヵ月間のイベント</x-h3>
-        <!-- イベントが登録されていない場合のメッセージ表示 -->
-        @if(Auth::user()->role != "admin")
-            @if($numEvent == 0)
-                <div class="ml-4 mb-4">
-                    <p>
-                        <span style="font-size:1rem;color:red;font-weight:bold;">
-                            (※)自分の学校の試験日などが表示されない人は、学校の年間予定表を先生に持ってきてください。先生が登録しておきます。
-                        </span>
-                    </p>
-                </div>
-            @endif
-        @endif
+        @foreach($events as $event)
+            <div class="bg-blue-100 mb-4">
+                <p class="font-bold">{{$event->formatted_date}}：{{$event->name}}<p>
+                <p>{{$event->content}}</p>
+            </div>
+        @endforeach
+    </div>
 
+    <!-- PC表示用 -->
+    <div class="hidden sm:block mx-auto px-6 py-4">
+
+        <!-- 普段の目標を表示 -->
+        <x-h3>挑戦中の目標</x-h3>
+        <div class="mb-6">
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <tr class="bg-gray-300">
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">生徒名</td>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">目標期限</td>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">目標</td>
+                </tr>
+                @foreach($usualtargets as $usualtarget)
+                    <tr>
+                        <td class="border border-slate-300 px-4">{{$usualtarget->name}}</td>
+                        <td class="border border-slate-300 px-4">{{$usualtarget->formatted_due_date}}</td>
+                        <td class="border border-slate-300 px-4">{{$usualtarget->content}}</td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+        
+        <x-h3>直近２ヵ月間のイベント</x-h3>
         <!-- イベント表示 -->
         <div>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
@@ -91,6 +108,15 @@
                 @endforeach
             </table>
         </div>
+    </div>
+
+    <!-- イベントが登録されていない場合のメッセージ表示 -->
+    <div class="ml-4 mb-4">
+        <p>
+            <span style="font-size:1rem;color:red;font-weight:bold;">
+                (※)自分の学校の試験日などが表示されない人は、学校の年間予定表を先生に持ってきてください。先生が登録しておきます。
+            </span>
+        </p>
     </div>
 
 </x-app-layout>

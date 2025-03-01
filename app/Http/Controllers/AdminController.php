@@ -13,7 +13,7 @@ use App\Models\Record;
 use App\Traits\RecordTrait;
 use App\Models\Question;
 use App\Models\Target;
-use App\Models\Event;
+// use App\Models\Event;
 use App\Models\Usualtarget;
 use App\Traits\UsualtargetTrait;
 use App\Models\Workbook;
@@ -114,32 +114,6 @@ class AdminController extends Controller
         return view('admin.maintain');
     }
 
-    public function event() {
-        $startDate = Carbon::today()->startOfDay();
-        $endDate = Carbon::today()->addMonth(2)->endOfDay();  //２か月後
-        
-        //イベント（本日から１か月間）
-        $events = Event::whereBetween('events.date_from', [$startDate, $endDate])
-            ->leftJoin('schools', function ($join) {
-                $join->on('events.school_id', '=', 'schools.id');
-            })
-            ->selectRaw("
-                events.*,
-                schools.name,
-                IF(events.date_from = events.date_to,
-                    DATE_FORMAT(events.date_from, '%c/%e'),
-                    CONCAT(
-                        CONCAT(DATE_FORMAT(events.date_from, '%c/%e'), '～'),
-                        DATE_FORMAT(events.date_to, '%c/%e')
-                    )
-                ) as formatted_date
-            ")
-            ->orderBy('events.date_from', 'asc')
-            ->get();
-            
-        return view('event.index', compact('events'));
-    }
-
     /** 過去問目標点数 */
     public function target(User $user) {
         
@@ -182,109 +156,12 @@ class AdminController extends Controller
         return view('admin.target.index', compact('user','targets'));
     }    
 
-    /** 日々の目標 */
-    public function usualtarget(User $user) {
-            $user_ids = [Session::get('target_students', null)]; //配列で取得
-
-            $usualtargets = $this->getUsualtargets($user_ids);
- 
-            $lastMonthCoinSum = $this->getLastMonthCoinSum($user);
-            $thisMonthCoinSum = $this->getThisMonthCoinSum($user);
-
-        return view('admin.usualtarget.index', compact('user','usualtargets','lastMonthCoinSum','thisMonthCoinSum'));
-    }
-
-    public function edit_usualtarget(Usualtarget $usualtarget) {
-        $user = User::where('id', $usualtarget->user_id)->first();
-        return view('admin.usualtarget.edit', compact('usualtarget','user'));
-    }
-
-    public function create_usualtarget(User $user) {
-        return view('admin.usualtarget.create', compact('user'));
-    }
-
-    public function store_usualtarget(Request $request, User $user) {
-
-        $validated = $request->validate([
-            'content' => 'required',
-            'due_date' => 'required'
-        ]);
-
-        $today = Carbon::today();
-
-        $validated['user_id'] = $user->id;
-        $validated['set_date'] = $today;
-
-        $usualtarget = Usualtarget::create($validated);
-
-        $request->session()->flash('message', '登録しました');
-        return back();
-    }
-
-    public function update_usualtarget(Request $request, Usualtarget $usualtarget) {
-
-        $validated = $request->validate([
-            'content' => 'required',
-            'achieve_flg' => 'boolean',
-            'coin' => 'required|integer',
-            'comment' => 'required'
-        ]);
-
-        $usualtarget->update($validated);
-
-        $request->session()->flash('message', '更新しました');
-        return back();
-
-    }
-
     /** テスト結果 */
     public function exam(User $user) {
         $examresults = $this->getExamResults($user);
         return view('admin.exam.index', compact('user','examresults'));
     }
 
-    // public function edit_usualtarget(Usualtarget $usualtarget) {
-    //     $user = User::where('id', $usualtarget->user_id)->first();
-    //     return view('admin.usualtarget.edit', compact('usualtarget','user'));
-    // }
-
-    // public function create_usualtarget(User $user) {
-    //     return view('admin.usualtarget.create', compact('user'));
-    // }
-
-    // public function store_usualtarget(Request $request, User $user) {
-
-    //     $validated = $request->validate([
-    //         'content' => 'required',
-    //         'due_date' => 'required'
-    //     ]);
-
-    //     $today = Carbon::today();
-
-    //     $validated['user_id'] = $user->id;
-    //     $validated['set_date'] = $today;
-
-    //     $usualtarget = Usualtarget::create($validated);
-
-    //     $request->session()->flash('message', '登録しました');
-    //     return back();
-    // }
-
-    // public function update_usualtarget(Request $request, Usualtarget $usualtarget) {
-
-    //     $validated = $request->validate([
-    //         'content' => 'required',
-    //         'achieve_flg' => 'boolean',
-    //         'coin' => 'required|integer',
-    //         'comment' => 'required'
-    //     ]);
-
-    //     $usualtarget->update($validated);
-
-    //     $request->session()->flash('message', '更新しました');
-    //     return back();
-
-    // }
 
     /** 問題集 */
     public function workbook() {

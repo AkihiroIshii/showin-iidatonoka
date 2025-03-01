@@ -4,47 +4,21 @@ namespace App\Traits;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Arr;
 use App\Models\User;
 use App\Models\Usualtarget;
 use Carbon\Carbon;
 
 trait UsualtargetTrait
 {
-    // /** 日々の目標の一覧取得 */
-    // public function getUsualtargets($user) {
-    //     //普段の目標も表示するため取得
-    //     $today = Carbon::today();
-    //     $usualtargets = Usualtarget::where('user_id', $user->id)
-    //         ->selectRaw("
-    //             id,
-    //             user_id,
-    //             DATE_FORMAT(set_date, '%c/%e') as formatted_set_date,
-    //             DATE_FORMAT(due_date, '%c/%e') as formatted_due_date,
-    //             content,
-    //             achieve_flg,
-    //             IF(
-    //                 achieve_flg = 1,
-    //                 '目標達成！(^^)/◎',
-    //                 IF(
-    //                     due_date < ?,
-    //                     '期限切れ(´・ω・｀)',
-    //                     '挑戦中'
-    //                 )
-    //             ) as achieve_mark,
-    //             comment,
-    //             coin
-    //         ", [$today])
-    //         ->orderBy('set_date','desc')
-    //         ->orderBy('due_date','asc')
-    //         ->get();
-
-    //     return $usualtargets;
-    // }
-
     /** 日々の目標の一覧取得 */
-    public function getUsualtargets($user_ids) {
+    public function getUsualtargets($current_flg) {
         //普段の目標も表示するため取得
         $today = Carbon::today();
+
+        $user_ids = Session::get('target_students', null); //セッションから対象の生徒を取得。
+        $user_ids = Arr::wrap($user_ids); //配列に統一
 
         $usualtargets = Usualtarget::whereIn('usualtargets.user_id', $user_ids)
             ->leftJoin('users', function($join) {
@@ -68,18 +42,19 @@ trait UsualtargetTrait
                 ) as achieve_mark,
                 usualtargets.comment,
                 usualtargets.coin
-            ", [$today])
-            ->orderBy('usualtargets.set_date','desc')
-            ->orderBy('usualtargets.due_date','asc')
-            ->get();
+            ", [$today]);
 
-        // $results = [];
-        // foreach($user_ids as $user_id) {
-        //     $results += $usualtargets->where('user_id', $user_id)->toArray();
-        // }
-      
-        // $usualtargets->groupBy('user_id');
-        // dd($usualtargets);
+        // 挑戦中の目標のみに絞り込む
+        if($current_flg == true) {
+            $usualtargets = $usualtargets
+                ->where('due_date', '>=', $today)
+                ->whereNotNull('achieve_flg');
+        }
+
+        $usualtargets = $usualtargets
+            ->orderBy('usualtargets.due_date','desc')
+            ->orderBy('usualtargets.set_date','desc')
+            ->get();
 
         return $usualtargets;
     }

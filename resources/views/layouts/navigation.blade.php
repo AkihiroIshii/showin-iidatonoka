@@ -16,7 +16,7 @@
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                             生徒一覧
                         </x-nav-link>
-                        <x-nav-link :href="route('admin.event')" :active="request()->routeIs('admin.event')">
+                        <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                             イベント
                         </x-nav-link>
                         <x-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
@@ -117,7 +117,7 @@
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                     生徒一覧
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.event')" :active="request()->routeIs('admin.event')">
+                <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
                     イベント
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">

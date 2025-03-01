@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use Carbon\Carbon;
 use App\Models\Family;
@@ -31,7 +32,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $today = Carbon::today();
+        $today = Carbon::today()->toDateString();
 
         if (Auth::user() == null) {
             return redirect()->route('login');
@@ -57,7 +58,11 @@ class AuthenticatedSessionController extends Controller
                 ->pluck('student_id')
                 ->toArray();
   
-            $request->session()->put('target_students', $target_students);
+            Session::put('target_students', $target_students);
+            // $request->session()->put('target_students', $target_students);
+        } else {
+            // 保護者以外は、自分のIDを対象ユーザとしてセッションに保存
+            Session::put('target_students', Auth::user()->id);
         }
 
         if (Auth::user()->role === 'admin') {

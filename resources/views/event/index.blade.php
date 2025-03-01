@@ -14,7 +14,7 @@
 
         <!-- イベントが登録されていない場合のメッセージ表示 -->
         @if(Auth::user()->role != "admin")
-            @if($numEvent == 0)
+            @if(count($events) == 0)
                 <div class="ml-4 mb-4">
                     <p>
                         <span style="font-size:1rem;color:red;font-weight:bold;">
@@ -25,8 +25,19 @@
             @endif
         @endif
 
+        <!-- スマホ表示用のコード -->
+        <div class="sm:hidden">
+            @foreach($events as $event)
+                <div class="bg-sky-100 mb-4">
+                    <p class="font-bold">{{$event->formatted_date}}：{{$event->name}}<p>
+                    <p>{{$event->content}}</p>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- PC表示用のコード -->
         <!-- イベント表示 -->
-        <div>
+        <div class="hidden sm:block">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">日付</td>
