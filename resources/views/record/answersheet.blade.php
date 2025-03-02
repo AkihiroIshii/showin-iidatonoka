@@ -1,6 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
-        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
+        @if(Auth::user()->role == "admin")
+            @include('layouts.adminmenu')
+        @else
+            @include('layouts.pastexam')
+        @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             解答用紙(配点記入済)
         </h2>
@@ -19,7 +23,7 @@
                 ] //本試験の平均点
             @endphp
             <x-h3>解答用紙</x-h3>
-            <a class="font-semibold text-blue-600" href="{{ asset('storage/public/2020eng.pdf') }}">○</a>
+            <a class="font-semibold text-blue-600" href="{{ asset('storage/2020eng.pdf') }}">○</a>
             <p>○をクリックするとPDFが開きます。</p>
             <table class="border-separate border border-slate-400 m-auto mb-4 table-fixed w-auto">
                 <tr class="bg-gray-300">
@@ -36,6 +40,7 @@
                         @for($j = 0; $j < 5; $j++)
                             <td class="border border-slate-300 px-8 py-2">
                                 <a class="font-semibold text-blue-600" href="{{ asset('pdf/' . $years[$i] . $subjects[$j] . '.pdf') }}">○</a>
+                                {{-- <a class="font-semibold text-blue-600" href="{{ asset('storage/pdf/' . $years[$i] . $subjects[$j] . '.pdf') }}">○</a> --}}
                             </td>
                         @endfor
                     </tr>

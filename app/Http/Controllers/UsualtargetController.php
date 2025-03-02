@@ -17,10 +17,18 @@ class UsualtargetController extends Controller
 {
     use UserTrait;
     use UsualtargetTrait;
+    private $user;
+
+    public function __construct()
+    {
+        // セッション情報から対象生徒を取得
+        $this->user = User::where('id', Session::get('target_students'))->first();
+    }
 
     public function index() {
         //ログインユーザ
-        $user = $this->targetUser(Auth::user());
+        // $user = $this->targetUser(Auth::user());
+        $user = $this->user;
 
         $lastMonthCoinSum = $this->getLastMonthCoinSum($user);
         $thisMonthCoinSum = $this->getThisMonthCoinSum($user);

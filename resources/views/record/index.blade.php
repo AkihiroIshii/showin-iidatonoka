@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
+        @if(Auth::user()->role == "admin")
+            @include('layouts.adminmenu')
+        @else
+            @include('layouts.pastexam')
+        @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             過去問演習＞記録一覧
+            @if(Auth::user()->role == "admin")
+                ：{{$user->name}}
+            @endif
         </h2>
     </x-slot>
     <div class="mx-auto px-6">
@@ -44,7 +51,23 @@
         </div>
 
         <x-h3>演習記録一覧</x-h3>
-        <div>
+        <!-- スマホ表示用 -->
+        <div class="sm:hidden">
+            @foreach($records as $record)
+                <div class="bg-sky-100 mb-4">
+                    <p>
+                        <span class="font-bold">{{$record->date}}</span>
+                    </p>
+                    <p>{{$record->question->year}}年度　{{$record->question->subject}}　{{$record->question->no}}</p>
+                    <p>{{$record->question->content}}</p>
+                    <p>得点：{{$record->score}}点（目標：{{$record->target_score}}点、配点：{{$record->question->point}}点）</p>
+                    <p>解答時間：{{$record->minute}}分</p>
+                </div>
+            @endforeach
+        </div>
+
+        <!-- PC表示用 -->
+        <div class="hidden sm:block mb-6">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
                     <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4"></td>

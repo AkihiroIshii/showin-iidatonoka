@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Session;
 use App\Http\Requests\WorkrecordRequest;
 use App\Models\Workrecord;
 use App\Models\User;
@@ -11,9 +12,18 @@ use App\Models\Exam;
 
 class WorkrecordController extends Controller
 {
+    private $user;
+
+    public function __construct()
+    {
+        // セッション情報から対象生徒を取得
+        $this->user = User::where('id', Session::get('target_students'))->first();
+    }
+
     /** ワーク演習結果 */
     public function index() {
-        $user = User::where('id', auth()->id())->first();
+        $user = User::where('id', $this->user->id)->first();
+        
         $workrecords = Workrecord::where('user_id', $user->id)
             ->leftJoin('exams', function($join){
                 $join->on('workrecords.exam_id', '=', 'exams.id');
@@ -31,7 +41,7 @@ class WorkrecordController extends Controller
     }
 
     public function create() {
-        $user = User::where('id', auth()->id())->first();
+        $user = User::where('id', $this->user->id)->first();
         $exams = Exam::where('school_id', $user->school_id)
             ->where('grade', $user->grade)
             ->get();

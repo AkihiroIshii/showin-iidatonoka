@@ -8,6 +8,26 @@ use App\Models\User;
 
 trait UserTrait
 {
+    public function getUsers() {
+        $users = User::where('grade', '!=', '保護者')
+            ->leftJoin('schools', function($join) {
+                $join->on('users.school_id', '=', 'schools.id');
+            })
+            ->selectRaw('
+                users.id,
+                users.name as user_name,
+                schools.name as school_name,
+                users.grade,
+                users.plan
+            ')
+            ->orderBy('users.grade','desc')
+            ->orderBy('users.user_id','asc')
+            ->orderBy('schools.name','asc')
+            ->get();
+
+        return $users;
+    }
+
     public function targetUser($user) {
         // ログインユーザーを取得
         $loggedInUser = Auth::user();

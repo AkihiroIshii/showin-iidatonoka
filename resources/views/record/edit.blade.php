@@ -1,18 +1,24 @@
 <x-app-layout>
     <x-slot name="header">
+        @if(Auth::user()->role == "admin")
+            @include('layouts.adminmenu')
+        @else
+            @include('layouts.pastexam')
+        @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             過去問演習＞編集
+            @if(Auth::user()->role == "admin")
+                ：{{$user->name}}
+            @endif
         </h2>
     </x-slot>
     <div class="maxw-7xl mx-auto px-6">
-        @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
-
         @if(session('message'))
             <div class="text-red-600 font-bold">
                 {{session('message')}}
             </div>
         @endif
-        @if($record->user->id==Auth::id())
+        @if($record->user->id == $user->id)
             <form method="post" action="{{ route('record.update', $record) }}">
                 @csrf
                 @method('patch')

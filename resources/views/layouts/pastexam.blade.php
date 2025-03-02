@@ -3,19 +3,19 @@
             <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                 新規登録
             </x-nav-link>
-            <x-nav-link :href="route('record', $user)" :active="request()->routeIs('record')">
+            <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
                 記録一覧
             </x-nav-link>
             <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
                 目標点数
             </x-nav-link>
-            <x-nav-link :href="route('record.spreadsheet', $user)" :active="request()->routeIs('record.spreadsheet')">
+            <x-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
                 集計表(一覧形式)
             </x-nav-link>
-            <x-nav-link :href="route('record.spreadsheet3', $user)" :active="request()->routeIs('record.spreadsheet3')">
+            <x-nav-link :href="route('record.spreadsheet3')" :active="request()->routeIs('record.spreadsheet3')">
                 集計表(表形式)
             </x-nav-link>
-            <x-nav-link :href="route('record.answersheet', $user)" :active="request()->routeIs('record.answersheet')">
+            <x-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
                 解答用紙(配点記入済)
             </x-nav-link>
         </div>
@@ -26,19 +26,19 @@
                 <x-responsive-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                     新規登録
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('record', $user)" :active="request()->routeIs('record')">
+                <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
                     記録一覧
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('target')" :active="request()->routeIs('target')">
                     目標点数
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('record.spreadsheet', $user)" :active="request()->routeIs('record.spreadsheet')">
+                <x-responsive-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
                     集計表(一覧形式)
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('record.spreadsheet3', $user)" :active="request()->routeIs('record.spreadsheet3')">
+                <x-responsive-nav-link :href="route('record.spreadsheet3')" :active="request()->routeIs('record.spreadsheet3')">
                     集計表(表形式)
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('record.answersheet', $user)" :active="request()->routeIs('record.answersheet')">
+                <x-responsive-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
                     解答用紙(配点記入済)
                 </x-responsive-nav-link>
             </div>

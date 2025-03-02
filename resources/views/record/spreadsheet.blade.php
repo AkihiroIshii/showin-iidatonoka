@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
+        @if(Auth::user()->role == "admin")
+            @include('layouts.adminmenu')
+        @else
+            @include('layouts.pastexam')
+        @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            @include('layouts.pastexam') <!-- 過去問演習　共通メニュー -->
             過去問演習＞集計表(一覧形式)
+            @if(Auth::user()->role == "admin")
+                ：{{$user->name}}
+            @endif
         </h2>
     </x-slot>
     <div class="mx-auto px-6">

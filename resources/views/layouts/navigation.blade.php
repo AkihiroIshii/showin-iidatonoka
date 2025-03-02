@@ -5,15 +5,21 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
-                    </a>
+                    @if(Auth::user()->role == "admin")
+                        <a href="{{ route('admin.dashboard') }}">
+                            <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
+                        </a>
+                    @else
+                        <a href="{{ route('dashboard') }}">
+                            <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
+                        </a>
+                    @endif
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if(Auth::user()->role == "admin")
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                        <x-nav-link :href="route('admin.students')" :active="request()->routeIs('admin.students')">
                             生徒一覧
                         </x-nav-link>
                         <x-nav-link :href="route('event')" :active="request()->routeIs('event')">

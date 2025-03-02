@@ -10,6 +10,7 @@ use App\Models\Record;
 use App\Models\Question;
 use App\Models\Target;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RecordRequest;
@@ -19,9 +20,18 @@ class RecordController extends Controller
     use UserTrait;
     use RecordTrait;
 
+    private $user;
+
+    public function __construct()
+    {
+        // セッション情報から対象生徒を取得
+        $this->user = User::where('id', Session::get('target_students'))->first();
+    }
+
     public function index() {
         //管理者なら対象ユーザを、ほかのユーザなら自分を対象とする。
-        $user = $this->targetUser(Auth::user());
+        //$user = $this->targetUser(Auth::user());
+        $user = User::where('id', Session::get('target_students'))->first();
 
         $records = $this->getRecords($user);
 
@@ -35,7 +45,7 @@ class RecordController extends Controller
             ->get();
 
         //この生徒の集計値
-        $records_sum_this_user = $records_sum_per_user->firstWhere('user_id', auth()->id());
+        $records_sum_this_user = $records_sum_per_user->firstWhere('user_id', $user->id);
         //演習時間トップの生徒の集計値
         $maxMinute = $records_sum_per_user->max('sum_hour');
         $records_sum_top_user = $records_sum_per_user->firstWhere('sum_hour', $maxMinute);
@@ -44,32 +54,23 @@ class RecordController extends Controller
     }
 
     //レコード集計１
-    public function spreadsheet(User $user) {
+    public function spreadsheet() {
+        $user = User::where('id', Session::get('target_students'))->first();
         $questions = $this->getSpreadsheetData($user); //app/Traits/RecordTrait.phpを参照
         return view('record.spreadsheet', compact('user','questions'));
     }
 
-    //レコード集計２（年度も集約）
-    public function spreadsheet2(User $user) {
-        $questions = $this->getSpreadsheet2Data($user);
-
-        $groupedQuestions = $questions->groupBy('subject')->map(function ($group) {
-            return $group->chunk(6);
-        });
-
-        return view('record.spreadsheet2', compact('user','groupedQuestions','questions'));
-    }
-
     //レコード集計３（科目ごと）
-    public function spreadsheet3(User $user) {
+    public function spreadsheet3() {
+        $user = User::where('id', Session::get('target_students'))->first();
         $questionsSet = $this->getSpreadsheet3Data($user);
         return view('record.spreadsheet3', compact('user','questionsSet'));
     }
 
     //解答用紙
-    public function answersheet(User $user) {
-        $questionsSet = $this->getSpreadsheet3Data($user);
-        return view('record.answersheet', compact('user'));
+    public function answersheet() {
+        // $questionsSet = $this->getSpreadsheet3Data($user);
+        return view('record.answersheet');
     }
 
     // public function show (Record $record) {
@@ -79,14 +80,13 @@ class RecordController extends Controller
 
     public function edit(Record $record) {
         //ログインユーザ
-        $user = User::where('id', auth()->id())->get();
+        $user = User::where('id', $this->user->id)->first();
         return view('record.edit', compact('record', 'user'));
     }
-
+    
     public function create() {
         //ログインユーザ
-        $user = User::where('id', auth()->id())->get();
-        return view('record.create', compact('user'));
+        return view('record.create', ['user' => $this->user]);
     }
 
     public function store(RecordRequest $request) {
@@ -96,7 +96,7 @@ class RecordController extends Controller
             ->where('no', '=', $request['no'])
             ->first();
 
-        $request['user_id'] = auth()->id();
+        $request['user_id'] = $this->user->id;
         // $validated['question_id'] = $request->question_id();
         $request['question_id'] = $question->id;
         $record = Record::create($request->all());
@@ -111,7 +111,7 @@ class RecordController extends Controller
             ->where('no', '=', $request['no'])
             ->first();
 
-        $request['user_id'] = auth()->id();
+        $request['user_id'] = $this->user->id;
         $request['question_id'] = $question->id;
         $record->update($request->all());
 

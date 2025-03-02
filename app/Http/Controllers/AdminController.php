@@ -13,7 +13,6 @@ use App\Models\Record;
 use App\Traits\RecordTrait;
 use App\Models\Question;
 use App\Models\Target;
-// use App\Models\Event;
 use App\Models\Usualtarget;
 use App\Traits\UsualtargetTrait;
 use App\Models\Workbook;
@@ -33,129 +32,35 @@ class AdminController extends Controller
     use ExamTrait;
     use UsualtargetTrait;
 
-    public function show (User $user) {
-        $records = $this->getRecords($user);
-
+    public function setStudent (User $user) {
         //閲覧対象とする生徒IDをセッションに記録
         Session::put('target_students', $user->id);
 
-        //演習記録（該当ユーザの集計値）
-        $records_sum_per_user = Record::select('user_id')
-            ->selectRaw('
-                COUNT(score) as count,
-                ROUND(SUM(minute)/60, 1) as sum_hour
-            ')
-            ->groupBy('user_id')
-            ->get();
-
-        //この生徒の集計値
-        $records_sum_this_user = $records_sum_per_user->firstWhere('user_id', $user->id);
-
-        //演習時間トップの生徒の集計値
-        $maxMinute = $records_sum_per_user->max('sum_hour');
-        $records_sum_top_user = $records_sum_per_user->firstWhere('sum_hour', $maxMinute);
-
-        return view('admin.show', compact('user','records','records_sum_this_user','records_sum_top_user'));
+        return redirect()->route('record');
     }
 
-    public function spreadsheet (User $user) {
-        $questions = $this->getSpreadsheetData($user);
-
-        return view('admin.spreadsheet', compact('user', 'questions'));
-    }
-
-    public function spreadsheet3 (User $user) {
-        $questionsSet = $this->getSpreadsheet3Data($user);
-
-        return view('admin.spreadsheet3', compact('user','questionsSet'));
-    }
-
-
+    // adminのdashboard
     public function index() {
-        // $today = Carbon::today();
-
         //生徒
-        $users = User::where('grade', '!=', '保護者')
-            ->leftJoin('schools', function($join) {
-                $join->on('users.school_id', '=', 'schools.id');
-            })
-            ->selectRaw('
-                users.id,
-                users.name as user_name,
-                schools.name as school_name,
-                users.grade,
-                users.plan
-            ')
-            ->orderBy('users.grade','desc')
-            ->orderBy('users.user_id','asc')
-            ->orderBy('schools.name','asc')
-            ->get();
+        $users = $this->getUsers();
 
-        //本日が期限の目標
-        // $usualtargets = Usualtarget::where('due_date', '=', $today)
-        //     ->leftJoin('users', function($join) {
-        //         $join->on('usualtargets.user_id', '=', 'users.id');
-        //     })
-        //     ->selectRaw('
-        //         users.name,
-        //         usualtargets.content,
-        //         usualtargets.due_date
-        //     ')
-        //     ->get();
         $usualtargets = $this->getTargetsByToday();
 
         return view('admin.dashboard', compact('users','usualtargets')); //管理者専用ページのビュー
     }
 
-    public function link() {
-        return view('admin.link');
+    public function students() {
+        //生徒
+        $users = $this->getUsers();
+
+        $usualtargets = $this->getTargetsByToday();
+
+        return view('admin.students', compact('users','usualtargets')); //管理者専用ページのビュー
     }
 
     public function maintain() {
         return view('admin.maintain');
     }
-
-    /** 過去問目標点数 */
-    public function target(User $user) {
-        
-        //科目ごと大問ごとに、記録の平均点と最高点を集計
-        $record_set = Record::where('records.user_id', $user->id)
-            ->leftJoin('questions', function($join) {
-                $join->on('records.question_id', '=', 'questions.id');
-            })
-            ->selectRaw('
-                records.user_id,
-                questions.subject,
-                questions.no,
-                count(*) as count,
-                max(records.score) as max_score,
-                round(avg(records.score)) as avg_score,
-                round(avg(questions.point)) as avg_point
-            ')
-            ->groupBy('records.user_id', 'questions.subject', 'questions.no');
-
-        //目標設定にrecord_setを結合
-        $targets = Target::where('targets.user_id', $user->id)
-            ->leftjoinSub($record_set, 'record_set', function($join) {
-                $join->on('targets.subject', '=', 'record_set.subject')->on('targets.no', '=', 'record_set.no');
-            })
-            ->selectRaw('
-                targets.id,
-                targets.subject,
-                targets.no,
-                targets.target_score,
-                targets.target_minute,
-                record_set.count,
-                record_set.max_score,
-                record_set.avg_score,
-                record_set.avg_point,
-                IF(record_set.max_score > targets.target_score, "(^^)/◎", "") as max_mark,
-                IF(record_set.avg_score > targets.target_score, "(^^)/◎", "") as avg_mark
-            ')
-            ->get();
-
-        return view('admin.target.index', compact('user','targets'));
-    }    
 
     /** テスト結果 */
     public function exam(User $user) {

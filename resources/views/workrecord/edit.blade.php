@@ -1,7 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
+        @if(Auth::user()->role == "admin")
+            @include('layouts.adminmenu')
+        @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            ワーク演習＞新規登録
+            ワーク演習＞編集
+            @if(Auth::user()->role == "admin")
+                ：{{$user->name}}
+            @endif
         </h2>
     </x-slot>
     <div class="maxw-7xl mx-auto px-6"> 

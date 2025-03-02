@@ -24,16 +24,20 @@ use App\Http\Controllers\WorkrecordController;
 Route::middleware(['auth', 'admin'])->group(function (){
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });
-Route::get('/admin/show/{user}', [AdminController::class, 'show'])
-->middleware(['auth', 'verified'])->name('admin.show');
-Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
-->middleware(['auth', 'verified'])->name('admin.spreadsheet');
-Route::get('/admin/spreadsheet3/{user}', [AdminController::class, 'spreadsheet3'])
-->middleware(['auth', 'verified'])->name('admin.spreadsheet3');
+Route::get('/admin/students', [AdminController::class, 'students'])
+->middleware(['auth', 'verified'])->name('admin.students');
+Route::get('/admin/setStudent/{user}', [AdminController::class, 'setStudent'])
+->middleware(['auth', 'verified'])->name('admin.setStudent');
+// Route::get('/admin/show/{user}', [AdminController::class, 'show'])
+// ->middleware(['auth', 'verified'])->name('admin.show');
+// Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
+// ->middleware(['auth', 'verified'])->name('admin.spreadsheet');
+// Route::get('/admin/spreadsheet3/{user}', [AdminController::class, 'spreadsheet3'])
+// ->middleware(['auth', 'verified'])->name('admin.spreadsheet3');
 
 /** 管理者＞過去問目標点数 */
-Route::get('/admin/target/{user}', [AdminController::class, 'target'])
-->middleware(['auth', 'verified'])->name('admin.target');
+// Route::get('/admin/target/{user}', [AdminController::class, 'target'])
+// ->middleware(['auth', 'verified'])->name('admin.target');
 // Route::get('admin/target/create/{user}', [AdminController::class, 'create_target'])
 // ->middleware(['auth', 'verified'])->name('admin.target.create');
 // Route::post('admin/target/store/{user}', [AdminController::class, 'store_target'])
@@ -81,10 +85,6 @@ Route::patch('admin/workrecord/{workrecord}/update', [AdminController::class, 'u
 ->middleware(['auth', 'verified'])->name('admin.workrecord.update');
 
 
-// Route::get('/admin/link', [AdminController::class, 'link'])
-// ->middleware(['auth', 'verified'])->name('admin.link');
-// Route::get('/admin/event', [AdminController::class, 'event'])
-// ->middleware(['auth', 'verified'])->name('admin.event');
 Route::get('/admin/maintain', [AdminController::class, 'maintain'])
 ->middleware(['auth', 'verified'])->name('admin.maintain');
 
@@ -134,13 +134,11 @@ Route::middleware('auth')->group(function () {
 /* レコード管理 */
 Route::get('record', [RecordController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('record');
-Route::get('record/spreadsheet/{user}', [RecordController::class, 'spreadsheet'])
+Route::get('record/spreadsheet/', [RecordController::class, 'spreadsheet'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet');
-Route::get('record/spreadsheet2/{user}', [RecordController::class, 'spreadsheet2'])
-->middleware(['auth', 'verified'])->name('record.spreadsheet2');
-Route::get('record/spreadsheet3/{user}', [RecordController::class, 'spreadsheet3'])
+Route::get('record/spreadsheet3/', [RecordController::class, 'spreadsheet3'])
 ->middleware(['auth', 'verified'])->name('record.spreadsheet3');
-Route::get('record/answersheet/{user}', [RecordController::class, 'answersheet'])
+Route::get('record/answersheet/', [RecordController::class, 'answersheet'])
 ->middleware(['auth', 'verified'])->name('record.answersheet');
 Route::get('record/create', [RecordController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('record.create');
