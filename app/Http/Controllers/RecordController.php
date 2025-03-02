@@ -69,8 +69,8 @@ class RecordController extends Controller
 
     //解答用紙
     public function answersheet() {
-        // $questionsSet = $this->getSpreadsheet3Data($user);
-        return view('record.answersheet');
+        $user = $this->user;
+        return view('record.answersheet', compact('user'));
     }
 
     // public function show (Record $record) {
