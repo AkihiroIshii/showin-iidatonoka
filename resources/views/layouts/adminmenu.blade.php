@@ -1,6 +1,6 @@
         <!-- 管理者 生徒別メニュー -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-            @if($user->grade == "中３")
+            @if(isset($user) && $user->grade == "中３")
                 <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                     新規登録
                 </x-nav-link>
@@ -20,7 +20,7 @@
                     解答用紙(配点記入済)
                 </x-nav-link>
             @endif
-            @if(strpos($user->grade, '小') === false)
+            @if(isset($user) && strpos($user->grade, '小') === false)
                 <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                     ワーク演習
                 </x-nav-link>

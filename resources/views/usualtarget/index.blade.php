@@ -88,10 +88,10 @@
                         @endif
                         <td class="border border-slate-300 px-4">{{$usualtarget->name}}</td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->formatted_set_date}}</td>
-                        <td class="border border-slate-300 px-4">{{$usualtarget->content}}</td>
+                        <td class="border border-slate-300 px-4"><pre>{{$usualtarget->content}}</pre></td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->formatted_due_date}}</td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->achieve_mark}}</td>
-                        <td class="border border-slate-300 px-4">{{$usualtarget->comment}}</td>
+                        <td class="border border-slate-300 px-4"><pre>{{$usualtarget->comment}}</pre></td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->coin}}</td>
                         </tr>
                 @endforeach

@@ -62,11 +62,11 @@ class AdminController extends Controller
         return view('admin.maintain');
     }
 
-    /** テスト結果 */
-    public function exam(User $user) {
-        $examresults = $this->getExamResults($user);
-        return view('admin.exam.index', compact('user','examresults'));
-    }
+    // /** 試験一覧 */
+    // public function examList() {
+    //     $examresults = $this->getExamResults($user);
+    //     return view('admin.exam.index', compact('user','examresults'));
+    // }
 
 
     /** 問題集 */

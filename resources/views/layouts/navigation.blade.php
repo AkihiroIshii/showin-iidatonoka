@@ -31,6 +31,9 @@
                         <x-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
                             問題集
                         </x-nav-link>
+                        <x-nav-link :href="route('exam.list')" :active="request()->routeIs('exam.list')">
+                            試験
+                        </x-nav-link>
                     @elseif(Auth::user()->grade == "保護者")
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             日々の目標

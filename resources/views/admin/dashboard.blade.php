@@ -18,7 +18,7 @@
                     @foreach($usualtargets as $usualtarget)
                         <tr>
                             <td class="border border-slate-300 px-4">{{$usualtarget->name}}</td>
-                            <td class="border border-slate-300 px-4">{{$usualtarget->content}}</td>
+                            <td class="border border-slate-300 px-4"><pre>{{$usualtarget->content}}</pre></td>
                             <td class="border border-slate-300 px-4">{{$usualtarget->due_date}}</td>
                         </tr>
                     @endforeach

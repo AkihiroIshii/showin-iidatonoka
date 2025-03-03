@@ -72,17 +72,6 @@ class RecordController extends Controller
         $user = $this->user;
         return view('record.answersheet', compact('user'));
     }
-
-    // public function show (Record $record) {
-    //     // dd($record);
-    //     return view('record.show', compact('record'));
-    // }
-
-    public function edit(Record $record) {
-        //ログインユーザ
-        $user = User::where('id', $this->user->id)->first();
-        return view('record.edit', compact('record', 'user'));
-    }
     
     public function create() {
         //ログインユーザ
@@ -102,6 +91,12 @@ class RecordController extends Controller
         $record = Record::create($request->all());
         $request->session()->flash('message', '登録しました');
         return back();
+    }
+
+    public function edit(Record $record) {
+        //ログインユーザ
+        $user = User::where('id', $this->user->id)->first();
+        return view('record.edit', compact('record', 'user'));
     }
 
     public function update(RecordRequest $request, Record $record) {

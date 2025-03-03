@@ -86,33 +86,6 @@ class TargetController extends Controller
         return view('target.edit', compact('target','user'));
     }
 
-    // public function store(Request $request) {
-    //     $validated = $request->validate([
-    //         // 'user_id' => 'required',
-    //         // 'question_id' => 'required',
-    //         'date' => 'required',
-    //         'year' => 'required',
-    //         'subject' => 'required',
-    //         'no' => 'required',
-    //         'score' => 'required|integer',
-    //         'minute' => 'required|integer',
-    //         // 'memo' => 'nullable',
-    //     ]);
-
-    //     //問題IDを取得
-    //     $question = Question::where('year', '=', $validated['year'])
-    //         ->where('subject', '=', $validated['subject'])
-    //         ->where('no', '=', $validated['no'])
-    //         ->first();
-
-    //     $validated['user_id'] = $this->user->id;
-    //     // $validated['question_id'] = $request->question_id();
-    //     $validated['question_id'] = $question->id;
-    //     $record = Record::create($validated);
-    //     $request->session()->flash('message', '登録しました');
-    //     return back();
-    // }
-
     public function update(Request $request, Target $target) {
 
         $validated = $request->validate([

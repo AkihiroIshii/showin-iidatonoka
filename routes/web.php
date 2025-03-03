@@ -35,6 +35,9 @@ Route::get('/admin/setStudent/{user}', [AdminController::class, 'setStudent'])
 // Route::get('/admin/spreadsheet3/{user}', [AdminController::class, 'spreadsheet3'])
 // ->middleware(['auth', 'verified'])->name('admin.spreadsheet3');
 
+
+
+
 /** 管理者＞過去問目標点数 */
 // Route::get('/admin/target/{user}', [AdminController::class, 'target'])
 // ->middleware(['auth', 'verified'])->name('admin.target');
@@ -61,8 +64,8 @@ Route::get('/admin/setStudent/{user}', [AdminController::class, 'setStudent'])
 // ->middleware(['auth', 'verified'])->name('admin.usualtarget.update');
 
 /** 管理者＞テスト結果 */
-Route::get('/admin/exam/{user}', [AdminController::class, 'exam'])
-->middleware(['auth', 'verified'])->name('admin.exam');
+// Route::get('/admin/exam/{user}', [AdminController::class, 'exam'])
+// ->middleware(['auth', 'verified'])->name('admin.exam');
 // Route::get('admin/usualtarget/create/{user}', [AdminController::class, 'create_usualtarget'])
 // ->middleware(['auth', 'verified'])->name('admin.usualtarget.create');
 // Route::post('admin/usualtarget/store/{user}', [AdminController::class, 'store_usualtarget'])
@@ -188,6 +191,17 @@ Route::patch('usualtarget/{usualtarget}/update', [UsualtargetController::class, 
 /* テスト結果 */
 Route::get('exam', [ExamController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('exam');
+Route::get('/exam/list', [ExamController::class, 'getAllExams'])
+->middleware(['auth', 'verified'])->name('exam.list');
+Route::get('/exam/create', [ExamController::class, 'create'])
+->middleware(['auth', 'verified'])->name('exam.create');
+Route::post('/exam', [ExamController::class, 'store'])
+->middleware(['auth', 'verified'])->name('exam.store');
+Route::get('/exam/{exam}/edit', [ExamController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('exam.edit');
+Route::patch('/exam/{exam}', [ExamController::class, 'update'])
+->middleware(['auth', 'verified'])->name('exam.update');
+
 
 /* 問題集 */
 Route::get('workbook', [WorkbookController::class, 'index'])
