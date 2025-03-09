@@ -28,7 +28,7 @@
         <!-- スマホ表示用のコード -->
         <div class="sm:hidden">
             @foreach($events as $event)
-                <div class="bg-sky-100 mb-4">
+                <div class="bg-sky-100 mb-4 p-2">
                     <p class="font-bold">{{$event->formatted_date}}：{{$event->name}}<p>
                     <p>{{$event->content}}</p>
                 </div>

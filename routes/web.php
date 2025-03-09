@@ -254,6 +254,8 @@ Route::get('link', [CommonController::class, 'link'])
 ->middleware(['auth', 'verified'])->name('link');
 Route::get('audiofile', [CommonController::class, 'audiofile'])
 ->middleware('auth', 'verified')->name('audiofile');
+Route::get('info/plan', [CommonController::class, 'plan'])
+->middleware(['auth', 'verified'])->name('plan');
 
 
 require __DIR__.'/auth.php';

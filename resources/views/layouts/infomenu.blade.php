@@ -18,6 +18,9 @@
             <x-nav-link :href="route('aishowin')" :active="request()->routeIs('aishowin')">
                 目的別対策
             </x-nav-link>                 
+            <x-nav-link :href="route('plan')" :active="request()->routeIs('plan')">
+                通塾コース
+            </x-nav-link>                 
         </div>
 
         <!-- responsive -->
@@ -40,6 +43,9 @@
                 </x-responsive-nav-link>                 
                 <x-responsive-nav-link :href="route('aishowin')" :active="request()->routeIs('aishowin')">
                     目的別対策
+                </x-responsive-nav-link>  
+                <x-responsive-nav-link :href="route('plan')" :active="request()->routeIs('plan')">
+                    通塾コース
                 </x-responsive-nav-link>                 
             </div>
         </div>

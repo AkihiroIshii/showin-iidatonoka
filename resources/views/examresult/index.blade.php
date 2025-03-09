@@ -25,7 +25,7 @@
         <!-- スマホ表示用のコード -->
         <div class="sm:hidden">
             @foreach($examresults as $examresult)
-                <div class="bg-sky-100 mb-4">
+                <div class="bg-sky-100 mb-4 p-2">
                     <p class="font-bold">{{$examresult->exam_date}}：{{$examresult->exam_name}}（{{$examresult->name}}）<p>
                     <div class="ml-4">
                         国語　{{$examresult->score_japanese}}

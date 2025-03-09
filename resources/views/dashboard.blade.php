@@ -26,7 +26,7 @@
         <!-- 普段の目標を表示 -->
         <x-h3>挑戦中の目標</x-h3>
         @foreach($usualtargets as $usualtarget)
-            <div class="bg-sky-100 mb-4">
+            <div class="bg-sky-100 mb-4 p-2">
                 <p>
                     <span class="font-bold">{{$usualtarget->name}}</span>
                     目標期限：{{$usualtarget->formatted_due_date}}
@@ -37,7 +37,7 @@
         
         <x-h3>直近２ヵ月間のイベント</x-h3>
         @foreach($events as $event)
-            <div class="bg-blue-100 mb-4">
+            <div class="bg-blue-100 mb-4 p-2">
                 <p class="font-bold">{{$event->formatted_date}}：{{$event->name}}<p>
                 <p>{{$event->content}}</p>
             </div>

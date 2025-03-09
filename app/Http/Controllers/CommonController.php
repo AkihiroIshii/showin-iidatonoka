@@ -16,6 +16,9 @@ class CommonController extends Controller
         return view('audiofile');
     }
 
+    public function plan() {
+        return view('info.plan');
+    }
 
 
     // public function openFile(Request $request) {

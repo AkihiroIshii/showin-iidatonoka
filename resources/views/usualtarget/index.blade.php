@@ -48,7 +48,7 @@
         <div class="sm:hidden">
             <!-- 普段の目標を表示 -->
             @foreach($usualtargets as $usualtarget)
-                <div class="bg-sky-100 mb-4">
+                <div class="bg-sky-100 mb-4 p-2">
                     <p>
                         <span class="font-bold">{{$usualtarget->name}}</span>
                         目標期限：{{$usualtarget->formatted_due_date}}
