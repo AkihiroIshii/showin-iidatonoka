@@ -62,7 +62,7 @@
         </div>
 
         <!-- PC表示用 -->
-        <div class="hidden sm:block mb-6">
+        <div class="hidden sm:block mb-6 max-w-full">
             <p>獲得コイン数は、次の条件を満たすと多くもらえるかも、、？　(※)評価基準は変わることがあります。</p>
             <p>⇒目標や振り返りが具体的である。／無理のない目標設定ができている。／計画性がある。／意欲的に挑戦している。／柔軟に軌道修正ができている。など</p>
 
@@ -88,10 +88,10 @@
                         @endif
                         <td class="border border-slate-300 px-4">{{$usualtarget->name}}</td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->formatted_set_date}}</td>
-                        <td class="border border-slate-300 px-4"><pre>{{$usualtarget->content}}</pre></td>
+                        <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->content}}</pre></td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->formatted_due_date}}</td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->achieve_mark}}</td>
-                        <td class="border border-slate-300 px-4"><pre>{{$usualtarget->comment}}</pre></td>
+                        <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->comment}}</pre></td>
                         <td class="border border-slate-300 px-4">{{$usualtarget->coin}}</td>
                         </tr>
                 @endforeach

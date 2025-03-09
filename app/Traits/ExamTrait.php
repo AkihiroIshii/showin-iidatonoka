@@ -43,6 +43,7 @@ trait ExamTrait
         })
         ->selectRaw("
             ex1.*,
+            r1.id as examresult_id, // ☆examresultを外部結合しているため、nullの場合がある。examではなく、examresultを基にして、examを結合できないか？
             r1.score_japanese,
             r1.score_society,
             r1.score_math,
@@ -100,7 +101,7 @@ trait ExamTrait
             ) as prev_diff_all
         ")
         ->get();
-
+// dd($examresults);
         return $examresults;
     }
 }

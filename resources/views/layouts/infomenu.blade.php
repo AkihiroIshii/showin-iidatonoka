@@ -16,7 +16,7 @@
                 景品
             </x-nav-link>                 
             <x-nav-link :href="route('aishowin')" :active="request()->routeIs('aishowin')">
-                <span class="text-orange-500">new! </span>目的別対策
+                目的別対策
             </x-nav-link>                 
         </div>
 
@@ -39,7 +39,7 @@
                     景品
                 </x-responsive-nav-link>                 
                 <x-responsive-nav-link :href="route('aishowin')" :active="request()->routeIs('aishowin')">
-                    <span class="text-orange-500">new! </span>目的別対策
+                    目的別対策
                 </x-responsive-nav-link>                 
             </div>
         </div>

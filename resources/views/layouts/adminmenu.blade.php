@@ -24,7 +24,7 @@
                 <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                     ワーク演習
                 </x-nav-link>
-                <x-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
+                <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                     試験結果
                 </x-nav-link>
             @endif

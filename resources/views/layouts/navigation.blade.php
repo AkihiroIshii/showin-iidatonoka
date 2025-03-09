@@ -38,6 +38,9 @@
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             日々の目標
                         </x-nav-link>
+                        <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
+                            試験結果
+                        </x-nav-link>
                     @else
                         @if(Auth::user()->grade == "中３")
                             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
@@ -48,7 +51,7 @@
                             <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                                 ワーク演習
                             </x-nav-link>
-                            <x-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
+                            <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                                 試験結果
                             </x-nav-link>
                         @endif
@@ -61,7 +64,7 @@
                     @endif
                     <!-- 管理者、生徒共通 -->
                     <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
-                        <span class="text-orange-500">new! </span>その他情報
+                        その他情報
                     </x-nav-link>
                 </div>
             </div>
@@ -115,7 +118,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <p>　まだスマホ表示に非対応です。すみません(＞＜;)</p>
+            <p class="text-xs">　一部、スマホ表示に未対応です。すみません(＞＜;)</p>
             <!-- <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
                 一覧
             </x-responsive-nav-link>
@@ -135,6 +138,13 @@
                 <x-responsive-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
                     問題集
                 </x-responsive-nav-link>
+            @elseif(Auth::user()->grade == "保護者")
+                <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                    日々の目標
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
+                    試験結果
+                </x-responsive-nav-link>
             @else
                 @if(Auth::user()->grade == "中３")
                     <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
@@ -145,7 +155,7 @@
                     <x-responsive-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                         ワーク演習
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('exam')" :active="request()->routeIs('exam')">
+                    <x-responsive-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                         試験結果
                     </x-responsive-nav-link>
                 @endif
@@ -158,7 +168,7 @@
             @endif
             <!-- 管理者、生徒共通 -->
             <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
-                <span class="text-orange-500">new! </span>その他情報
+                その他情報
             </x-responsive-nav-link>
         </div>
 

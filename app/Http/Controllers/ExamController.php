@@ -21,11 +21,11 @@ class ExamController extends Controller
         $this->user = User::where('id', Session::get('target_students'))->first();
     }
 
-    public function index() {
-        $user = User::where('id', $this->user->id)->first();
-        $examresults = $this->getExamResults($user);
-        return view('exam.index', compact('user','examresults'));
-    }
+    // public function index() {
+    //     $user = User::where('id', $this->user->id)->first();
+    //     $examresults = $this->getExamResults($user);
+    //     return view('exam.index', compact('user','examresults'));
+    // }
 
     /* 管理者用 */
     public function getAllExams() {

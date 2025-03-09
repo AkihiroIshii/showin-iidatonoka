@@ -14,6 +14,7 @@ use App\Http\Controllers\GiftController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsualtargetController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\ExamresultController;
 use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\WorkrecordController;
 
@@ -188,9 +189,9 @@ Route::get('usualtarget/{usualtarget}/edit', [UsualtargetController::class, 'edi
 Route::patch('usualtarget/{usualtarget}/update', [UsualtargetController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('usualtarget.update');
 
-/* テスト結果 */
-Route::get('exam', [ExamController::class, 'index'])
-->middleware(['auth', 'verified'])->name('exam');
+/* 試験 */
+// Route::get('exam', [ExamController::class, 'index'])
+// ->middleware(['auth', 'verified'])->name('exam');
 Route::get('/exam/list', [ExamController::class, 'getAllExams'])
 ->middleware(['auth', 'verified'])->name('exam.list');
 Route::get('/exam/create', [ExamController::class, 'create'])
@@ -201,6 +202,18 @@ Route::get('/exam/{exam}/edit', [ExamController::class, 'edit'])
 ->middleware(['auth', 'verified'])->name('exam.edit');
 Route::patch('/exam/{exam}', [ExamController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('exam.update');
+
+/* 試験結果 */
+Route::get('examresult', [ExamresultController::class, 'index'])
+->middleware(['auth', 'verified'])->name('examresult');
+Route::get('/examresult/create', [ExamresultController::class, 'create'])
+->middleware(['auth', 'verified'])->name('examresult.create');
+Route::post('/examresult', [ExamresultController::class, 'store'])
+->middleware(['auth', 'verified'])->name('examresult.store');
+Route::get('/examresult/{examresult}/edit', [ExamresultController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('examresult.edit');
+Route::patch('/examresult/{examresult}', [ExamresultController::class, 'update'])
+->middleware(['auth', 'verified'])->name('examresult.update');
 
 
 /* 問題集 */
