@@ -81,4 +81,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'families', 'parent_id', 'child_id');
     }
+
+    public function top_choices() {
+        return $this->hasMany(TopChoice::class);
+    }
 }

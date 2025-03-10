@@ -31,6 +31,9 @@
             <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                 日々の目標
             </x-nav-link>
+            <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
+                志望校
+            </x-nav-link>
         </div>
 
         <!-- responsive -->

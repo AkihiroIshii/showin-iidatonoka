@@ -29,6 +29,7 @@
                     </div>
                 </div>
                 <div class="py-4 text-center">
+                    <p class="text-center">もう一度ログインしてみてください。</p>
                     <x-primary-button class="py-4">
                         <a href="{{route('login')}}" class="text-blue-600">ホーム画面へ</a>
                     </x-primary-button>

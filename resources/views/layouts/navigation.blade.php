@@ -41,6 +41,9 @@
                         <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                             試験結果
                         </x-nav-link>
+                        <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
+                            志望校
+                        </x-nav-link>
                     @else
                         @if(Auth::user()->grade == "中３")
                             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">

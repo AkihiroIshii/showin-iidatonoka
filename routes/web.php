@@ -17,6 +17,7 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamresultController;
 use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\WorkrecordController;
+use App\Http\Controllers\TopChoiceController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -237,6 +238,19 @@ Route::get('workrecord/{workrecord}/edit', [WorkrecordController::class, 'edit']
 ->middleware(['auth', 'verified'])->name('workrecord.edit');
 Route::patch('workrecord/{workrecord}', [WorkrecordController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('workrecord.update');
+
+/* 志望校 */
+Route::get('top_choice', [TopChoiceController::class, 'index'])
+->middleware(['auth', 'verified'])->name('top_choice');
+Route::get('/top_choice/create', [TopChoiceController::class, 'create'])
+->middleware(['auth', 'verified'])->name('top_choice.create');
+Route::post('/top_choice', [TopChoiceController::class, 'store'])
+->middleware(['auth', 'verified'])->name('top_choice.store');
+Route::get('/top_choice/{top_choice}/edit', [TopChoiceController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('top_choice.edit');
+Route::patch('/top_choice/{top_choice}', [TopChoiceController::class, 'update'])
+->middleware(['auth', 'verified'])->name('top_choice.update');
+
 
 /* AI-Showin */
 Route::get('aishowin', [AishowinController::class, 'index'])
