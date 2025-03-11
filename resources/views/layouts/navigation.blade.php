@@ -41,6 +41,9 @@
                         <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                             試験結果
                         </x-nav-link>
+                        <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
+                            検定
+                        </x-nav-link>
                         <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                             志望校
                         </x-nav-link>
@@ -50,6 +53,9 @@
                                 過去問演習
                             </x-nav-link>
                         @endif
+                        <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                            日々の目標
+                        </x-nav-link>
                         @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                             <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                                 ワーク演習
@@ -58,8 +64,8 @@
                                 試験結果
                             </x-nav-link>
                         @endif
-                        <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
-                            日々の目標
+                        <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
+                            検定
                         </x-nav-link>
                         <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
                             公式集
@@ -148,12 +154,21 @@
                 <x-responsive-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                     試験結果
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
+                    検定
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
+                    志望校
+                </x-responsive-nav-link>
             @else
                 @if(Auth::user()->grade == "中３")
                     <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
                         過去問演習
                     </x-responsive-nav-link>
                 @endif
+                <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                    日々の目標
+                </x-responsive-nav-link>
                 @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                     <x-responsive-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                         ワーク演習
@@ -162,8 +177,8 @@
                         試験結果
                     </x-responsive-nav-link>
                 @endif
-                <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
-                    日々の目標
+                <x-responsive-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
+                    検定
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
                     問題集

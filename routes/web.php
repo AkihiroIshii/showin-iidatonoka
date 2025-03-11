@@ -18,6 +18,7 @@ use App\Http\Controllers\ExamresultController;
 use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\WorkrecordController;
 use App\Http\Controllers\TopChoiceController;
+use App\Http\Controllers\KenteiController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -250,6 +251,18 @@ Route::get('/top_choice/{top_choice}/edit', [TopChoiceController::class, 'edit']
 ->middleware(['auth', 'verified'])->name('top_choice.edit');
 Route::patch('/top_choice/{top_choice}', [TopChoiceController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('top_choice.update');
+
+/* 検定試験 */
+Route::get('kentei', [KenteiController::class, 'index'])
+->middleware(['auth', 'verified'])->name('kentei');
+Route::get('/kentei/create', [KenteiController::class, 'create'])
+->middleware(['auth', 'verified'])->name('kentei.create');
+Route::post('/kentei', [KenteiController::class, 'store'])
+->middleware(['auth', 'verified'])->name('kentei.store');
+Route::get('/kentei/{kentei}/edit', [KenteiController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('kentei.edit');
+Route::patch('/kentei/{kentei}', [KenteiController::class, 'update'])
+->middleware(['auth', 'verified'])->name('kentei.update');
 
 
 /* AI-Showin */

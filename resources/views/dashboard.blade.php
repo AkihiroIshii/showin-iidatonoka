@@ -12,12 +12,18 @@
 
     <!-- 更新情報 -->
     @if(Auth::user()->grade == "保護者")
-        <p class="bg-yellow-200 px-4">3/9 更新情報</p>
-        <p>メニューに「試験結果」を追加しました。（中高生対象）</p>
+        <p class="bg-yellow-200 px-4">更新情報</p>
+        <ul class="list-disc px-8">
+            <li>3/11 メニューに「検定」を追加しました。</li>
+            <li>3/11 メニューに「志望校」を追加しました。（中高生対象）</li>
+            <li>3/9  メニューに「試験結果」を追加しました。（中高生対象）</li>
+        </ul>
     @else
         {{-- <p class="bg-yellow-200 px-4">更新情報</p>
-        <ul style="list-style:circle;" class="px-4">
-            <li></li>
+        <ul class="list-disc px-8">
+            <li>3/11 メニューに「検定」を追加しました。</li>
+            <li>3/11 メニューに「志望校」を追加しました。（中高生対象）</li>
+            <li>3/9  メニューに「試験結果」を追加しました。（中高生対象）</li>
         </ul> --}}
     @endif
 
