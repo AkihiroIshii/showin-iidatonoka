@@ -41,7 +41,7 @@
                 <div class="mt-8">
                     <div>
                         <label for="comment" class="font-semibold mt-4">振り返り</label>
-                        <textarea name="comment" class="w-full py-2 border border-gray-300 rounded-md" id="comment">{{old('comment', $usualtarget->comment)}}"</textarea>
+                        <textarea name="comment" class="w-full py-2 border border-gray-300 rounded-md" id="comment">{{old('comment', $usualtarget->comment)}}</textarea>
                     </div>
                 </div>
                 <div class="mt-8">

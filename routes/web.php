@@ -19,6 +19,7 @@ use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\WorkrecordController;
 use App\Http\Controllers\TopChoiceController;
 use App\Http\Controllers\KenteiController;
+use App\Http\Controllers\TransferController;
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -31,52 +32,7 @@ Route::get('/admin/students', [AdminController::class, 'students'])
 ->middleware(['auth', 'verified'])->name('admin.students');
 Route::get('/admin/setStudent/{user}', [AdminController::class, 'setStudent'])
 ->middleware(['auth', 'verified'])->name('admin.setStudent');
-// Route::get('/admin/show/{user}', [AdminController::class, 'show'])
-// ->middleware(['auth', 'verified'])->name('admin.show');
-// Route::get('/admin/spreadsheet/{user}', [AdminController::class, 'spreadsheet'])
-// ->middleware(['auth', 'verified'])->name('admin.spreadsheet');
-// Route::get('/admin/spreadsheet3/{user}', [AdminController::class, 'spreadsheet3'])
-// ->middleware(['auth', 'verified'])->name('admin.spreadsheet3');
 
-
-
-
-/** 管理者＞過去問目標点数 */
-// Route::get('/admin/target/{user}', [AdminController::class, 'target'])
-// ->middleware(['auth', 'verified'])->name('admin.target');
-// Route::get('admin/target/create/{user}', [AdminController::class, 'create_target'])
-// ->middleware(['auth', 'verified'])->name('admin.target.create');
-// Route::post('admin/target/store/{user}', [AdminController::class, 'store_target'])
-// ->middleware(['auth', 'verified'])->name('admin.target.store');
-// Route::get('admin/target/{target}/edit', [AdminController::class, 'edit_target'])
-// ->middleware(['auth', 'verified'])->name('admin.target.edit');
-// Route::patch('admin/target/{target}/update', [AdminController::class, 'update_target'])
-// ->middleware(['auth', 'verified'])->name('admin.target.update');
-
-
-/** 管理者＞日々の目標 */
-// Route::get('/usualtarget/{user}', [AdminController::class, 'usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget');
-// Route::get('admin/usualtarget/create/{user}', [AdminController::class, 'create_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.create');
-// Route::post('admin/usualtarget/store/{user}', [AdminController::class, 'store_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.store');
-// Route::get('admin/usualtarget/{usualtarget}/edit', [AdminController::class, 'edit_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.edit');
-// Route::patch('admin/usualtarget/{usualtarget}/update', [AdminController::class, 'update_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.update');
-
-/** 管理者＞テスト結果 */
-// Route::get('/admin/exam/{user}', [AdminController::class, 'exam'])
-// ->middleware(['auth', 'verified'])->name('admin.exam');
-// Route::get('admin/usualtarget/create/{user}', [AdminController::class, 'create_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.create');
-// Route::post('admin/usualtarget/store/{user}', [AdminController::class, 'store_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.store');
-// Route::get('admin/usualtarget/{usualtarget}/edit', [AdminController::class, 'edit_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.edit');
-// Route::patch('admin/usualtarget/{usualtarget}/update', [AdminController::class, 'update_usualtarget'])
-// ->middleware(['auth', 'verified'])->name('admin.usualtarget.update');
 
 /** 管理者＞ワーク演習 */
 Route::get('admin/wordrecord/{user}', [AdminController::class, 'workrecord'])
@@ -264,6 +220,17 @@ Route::get('/kentei/{kentei}/edit', [KenteiController::class, 'edit'])
 Route::patch('/kentei/{kentei}', [KenteiController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('kentei.update');
 
+/* 振替 */
+Route::get('transfer', [TransferController::class, 'index'])
+->middleware(['auth', 'verified'])->name('transfer');
+Route::get('/transfer/create', [TransferController::class, 'create'])
+->middleware(['auth', 'verified'])->name('transfer.create');
+Route::post('/transfer', [TransferController::class, 'store'])
+->middleware(['auth', 'verified'])->name('transfer.store');
+Route::get('/transfer/{transfer}/edit', [TransferController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('transfer.edit');
+Route::patch('/transfer/{transfer}', [TransferController::class, 'update'])
+->middleware(['auth', 'verified'])->name('transfer.update');
 
 /* AI-Showin */
 Route::get('aishowin', [AishowinController::class, 'index'])

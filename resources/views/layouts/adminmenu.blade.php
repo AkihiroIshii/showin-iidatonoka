@@ -37,6 +37,9 @@
             <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                 検定
             </x-nav-link>
+            <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
+                振替
+            </x-nav-link>
         </div>
 
         <!-- responsive -->
