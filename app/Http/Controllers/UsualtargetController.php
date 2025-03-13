@@ -73,9 +73,10 @@ class UsualtargetController extends Controller
 
         $validated = $request->validate([
             'content' => 'required',
-            'achieve_flg' => 'boolean',
-            'coin' => 'required|integer',
-            'comment' => 'required'
+            'due_date' => 'required',
+            'achieve_flg' => 'nullable|boolean',
+            'coin' => 'nullable|integer',
+            'comment' => 'nullable'
         ]);
 
         $usualtarget->update($validated);

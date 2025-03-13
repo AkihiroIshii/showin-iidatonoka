@@ -14,6 +14,7 @@ use App\Traits\RecordTrait;
 use App\Models\Question;
 use App\Models\Target;
 use App\Models\Usualtarget;
+use App\Models\Transfer;
 use App\Traits\UsualtargetTrait;
 use App\Models\Workbook;
 use App\Models\Exam;
@@ -46,7 +47,27 @@ class AdminController extends Controller
 
         $usualtargets = $this->getTargetsByToday();
 
-        return view('admin.dashboard', compact('users','usualtargets')); //管理者専用ページのビュー
+        $transfers = Transfer::from('transfers as t')
+            ->where('t.status', '申請中')
+            ->LeftJoin('users', 'users.id', '=', 't.user_id')
+            ->selectRaw('
+                t.*,
+                ROUND(
+                    (TIME_TO_SEC(COALESCE(t.time_to_absence_1, 0)) - TIME_TO_SEC(COALESCE(t.time_from_absence_1, 0))) / 60
+                    + (TIME_TO_SEC(COALESCE(t.time_to_absence_2, 0)) - TIME_TO_SEC(COALESCE(t.time_from_absence_2, 0))) / 60
+                    + (TIME_TO_SEC(COALESCE(t.time_to_absence_3, 0)) - TIME_TO_SEC(COALESCE(t.time_from_absence_3, 0))) / 60
+                , 0) as sum_t_abs,
+                ROUND(
+                    (TIME_TO_SEC(COALESCE(t.time_to_alternative_1, 0)) - TIME_TO_SEC(COALESCE(t.time_from_alternative_1, 0))) / 60
+                    + (TIME_TO_SEC(COALESCE(t.time_to_alternative_2, 0)) - TIME_TO_SEC(COALESCE(t.time_from_alternative_2, 0))) / 60
+                    + (TIME_TO_SEC(COALESCE(t.time_to_alternative_3, 0)) - TIME_TO_SEC(COALESCE(t.time_from_alternative_3, 0))) / 60
+                , 0) as sum_t_alt,
+                users.name as user_name
+            ')
+            ->orderBy('t.alternative_day_1','asc')
+            ->orderBy('t.user_id','asc')
+            ->get();
+        return view('admin.dashboard', compact('users','usualtargets','transfers')); //管理者専用ページのビュー
     }
 
     public function students() {

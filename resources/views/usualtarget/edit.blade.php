@@ -34,6 +34,12 @@
                 </div>
                 <div class="mt-8">
                     <div>
+                        <label for="due_date" class="font-semibold mt-4">目標期限</label>
+                        <input type="date" name="due_date" class="w-full py-2 border border-gray-300 rounded-md" id="due_date" value="{{old('due_date', $usualtarget->due_date)}}">
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <div>
                         <label for="achieve_flg" class="font-semibold mt-4">状況</label>1:目標達成、0:未達成
                         <input type="text" name="achieve_flg" class="py-2 border border-gray-300 rounded-md" id="achieve_flg" value="{{old('achieve_flg', $usualtarget->achieve_flg)}}">
                     </div>
