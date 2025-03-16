@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AdminController;
@@ -20,6 +23,23 @@ use App\Http\Controllers\WorkrecordController;
 use App\Http\Controllers\TopChoiceController;
 use App\Http\Controllers\KenteiController;
 use App\Http\Controllers\TransferController;
+
+// ファイルへのアクセス
+Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
+    // 認証チェック
+    if (!auth()->check()) {
+        abort(403, 'Unauthorized');
+    }
+
+    $path = storage_path("app/private/{$folder}/{$filename}");
+
+    // ファイルが存在しない場合は 404
+    if (!file_exists($path)) {
+        abort(404, 'File not found');
+    }
+
+    return response()->file($path);
+})->middleware('auth')->name('secure.file');
 
 //管理者ページ
 // Route::get('/admin', function() {
