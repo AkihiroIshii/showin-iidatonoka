@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +21,7 @@ class ExamController extends Controller
     {
         // セッション情報から対象生徒を取得
         $this->user = User::where('id', Session::get('target_students'))->first();
+        $this->user_ids = Arr::wrap(Session::get('target_students'));
     }
 
     // public function index() {
@@ -40,6 +43,27 @@ class ExamController extends Controller
         ->orderBy('exams.grade','desc')
         ->get();
         return view('exam.list', compact('exams'));
+    }
+
+    public function show(int $exam_id) {
+        if(Auth::user()->role == "admin") {
+            $exam = Exam::where('exams.id', $exam_id)
+                ->first();
+        } else {
+            $exam = Exam::where('exams.id', $exam_id)
+                ->join('examresults as r', 'exams.id', '=', 'r.exam_id')
+                ->whereIn('r.user_id', $this->user_ids) //ログインユーザのexamresultにあるexam_idの試験のみ抽出
+                ->selectRaw('
+                    exams.*
+                ')
+                ->first();
+
+            // URL直打ちで自分が受けていない試験にアクセスしようとしたら404エラーにする。
+            if(!isset($exam)) {
+                abort(404);
+            }
+        }
+        return view('exam.show', compact('exam'));
     }
 
     public function create() {

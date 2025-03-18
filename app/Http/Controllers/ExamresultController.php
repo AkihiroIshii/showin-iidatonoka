@@ -29,6 +29,11 @@ class ExamresultController extends Controller
         return view('examresult.index', compact('user','examresults'));
     }
 
+    // public function show(int $exam_id) {
+    //     Session::put('exam_id', $exam_id);
+    //     return redirect(route('exam.show'));
+    // }
+
     public function create() {
         $exams = Exam::where('school_id', $this->school->id)
         ->orderBy('grade', 'desc')

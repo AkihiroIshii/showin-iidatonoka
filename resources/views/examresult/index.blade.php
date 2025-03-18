@@ -18,6 +18,7 @@
         <div class="ml-4 mt-4 mb-4 pl-4">
             <ul style="list-style:circle;">
                 <li>５教科とも先生に答案を提出した回のみ表示されます。</li>
+                <li>試験名をクリックすると、問題と解答が見られます（スマホ不可）。</li>
                 <li>平均点が表示されない場合は、テスト成績表などを提出してください。</li>
             </ul>
         </div>
@@ -92,7 +93,11 @@
                         <td class="border border-slate-300 px-4">{{$examresult->name}}</td>
                         <td class="border border-slate-300 px-4">{{$examresult->grade}}</td>
                         <td class="border border-slate-300 px-4">{{$examresult->exam_date}}</td>
-                        <td class="border border-slate-300 px-4">{{$examresult->exam_name}}</td>
+                        <td class="border border-slate-300 px-4">
+                            <a class="font-semibold text-blue-600" href="{{ route('exam.show', $examresult->exam_id) }}">
+                                {{$examresult->exam_name}}
+                            </a>
+                        </td>
                         <td class="border border-slate-300 px-4">
                             <p>{{$examresult->score_japanese}}／{{$examresult->avg_japanese}}</p>
                             <p>平均 {{$examresult->avg_diff_japanese}}</p>

@@ -26,20 +26,27 @@ use App\Http\Controllers\TransferController;
 
 // ファイルへのアクセス
 Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
-    // 認証チェック
-    if (!auth()->check()) {
-        abort(403, 'Unauthorized');
+    // URL デコード
+    $decodedFolder = urldecode($folder);
+
+    // スラッシュを区切り文字に変換（必要な場合）
+    $folderPath = str_replace('/', DIRECTORY_SEPARATOR, $decodedFolder);
+
+    // ファイルパスを組み立て
+    $filePath = "{$folderPath}/{$filename}";
+    // $filePath = "private/{$folderPath}/{$filename}";
+// dd($filePath);
+    if (!Storage::disk('local')->exists($filePath)) {
+        session()->flash('error_type', 'pdf_not_found');
+        abort(404); // ファイルが存在しない場合は 404 エラー
     }
 
-    $path = storage_path("app/private/{$folder}/{$filename}");
-
-    // ファイルが存在しない場合は 404
-    if (!file_exists($path)) {
-        abort(404, 'File not found');
-    }
-
-    return response()->file($path);
+    return Response::make(Storage::get($filePath), 200, [
+        'Content-Type' => Storage::mimeType($filePath),
+        'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+    ]);
 })->middleware('auth')->name('secure.file');
+
 
 //管理者ページ
 // Route::get('/admin', function() {
@@ -172,6 +179,8 @@ Route::patch('usualtarget/{usualtarget}/update', [UsualtargetController::class, 
 // ->middleware(['auth', 'verified'])->name('exam');
 Route::get('/exam/list', [ExamController::class, 'getAllExams'])
 ->middleware(['auth', 'verified'])->name('exam.list');
+Route::get('/exam/show/{exam_id}', [ExamController::class, 'show'])
+->middleware(['auth', 'verified'])->name('exam.show');
 Route::get('/exam/create', [ExamController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('exam.create');
 Route::post('/exam', [ExamController::class, 'store'])
@@ -184,6 +193,8 @@ Route::patch('/exam/{exam}', [ExamController::class, 'update'])
 /* 試験結果 */
 Route::get('examresult', [ExamresultController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('examresult');
+// Route::get('examresult/show/{exam_id}', [ExamresultController::class, 'show'])
+// ->middleware(['auth', 'verified'])->name('examresult.show');
 Route::get('/examresult/create', [ExamresultController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('examresult.create');
 Route::post('/examresult', [ExamresultController::class, 'store'])

@@ -49,6 +49,7 @@ trait ExamresultTrait
             'schools.name as school_name',
             'tr.user_id',
             'users.name',
+            'te.id as exam_id',
             'te.year',
             'te.grade',
             'te.exam_date',

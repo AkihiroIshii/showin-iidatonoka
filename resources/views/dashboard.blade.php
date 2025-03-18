@@ -19,22 +19,22 @@
             <li>3/9  メニューに「試験結果」を追加しました。（中高生対象）</li>
         </ul>
     @else
-        {{-- <p class="bg-yellow-200 px-4">更新情報</p>
+        <p class="bg-yellow-200 px-4">更新情報</p>
         <ul class="list-disc px-8">
+            <li>3/18 「試験結果」から問題と解答を閲覧できるようにしました。</li>
             <li>3/11 メニューに「検定」を追加しました。</li>
             <li>3/11 メニューに「志望校」を追加しました。（中高生対象）</li>
-            <li>3/9  メニューに「試験結果」を追加しました。（中高生対象）</li>
-        </ul> --}}
+        </ul>
     @endif
 
     <!-- スマホ表示用 -->
     <div class="sm:hidden">
         <!-- 志望校を表示 -->
-        @if(Str::contains(Auth::user()->grade, ['中１','中２','高','保護者']))
+        @if(Str::contains(Auth::user()->grade, ['中','高','保護者']))
         <x-h3>志望校</x-h3>
         <div class="mb-6">
             @if(Auth::user()->grade != '保護者')
-                <p><a href="{{route('top_choice.create', $user)}}" class="text-blue-600">新規作成</a></p>
+                <p><a href="{{route('top_choice.create', $user)}}" class="text-blue-600 font-bold">新規作成</a></p>
             @endif
             @foreach($top_choices as $choice)
                 <div class="bg-sky-100 mb-4 p-2">
@@ -84,11 +84,11 @@
     <div class="hidden sm:block mx-auto px-6 py-4">
 
         <!-- 志望校を表示 -->
-        @if(Str::contains(Auth::user()->grade, ['中１','中２','高','保護者']))
+        @if(Str::contains(Auth::user()->grade, ['中','高','保護者']))
             <x-h3>志望校</x-h3>
             <div class="mb-6">
                 @if(Auth::user()->grade != '保護者')
-                    <a href="{{route('top_choice.create', $user)}}" class="text-blue-600">新規作成</a>
+                    <a href="{{route('top_choice.create', $user)}}" class="text-blue-600 font-bold">新規作成</a>
                 @endif
                 <table class="border-separate border border-slate-400 m-auto table-fixed">
                     <tr class="bg-gray-300">

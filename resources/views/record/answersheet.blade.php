@@ -22,9 +22,8 @@
                     2020 => ['jap' => 72.7, 'math' => 55.9, 'soc' => 68.1, 'sci' => 53.2, 'eng' => 53.6]
                 ] //本試験の平均点
             @endphp
-            <x-h3>解答用紙</x-h3>            
-            {{-- <a class="font-semibold text-blue-600" href="{{ route('secure.file', ['folder' => 'pastexam', 'filename' => '2020eng_a.pdf']) }}">○</a> --}}
-        
+
+            <x-h3>解答用紙</x-h3>                    
             <p>○をクリックするとPDFが開きます。</p>
             <table class="border-separate border border-slate-400 m-auto mb-4 table-fixed w-auto">
                 <tr class="bg-gray-300">
@@ -41,8 +40,6 @@
                         @for($j = 0; $j < 5; $j++)
                             <td class="border border-slate-300 px-8 py-2">
                                 <a class="font-semibold text-blue-600" href="{{ route('secure.file', ['folder' => 'pastexam', 'filename' => $years[$i] . $subjects[$j] . '_a.pdf']) }}">○</a>
-                                {{-- <a class="font-semibold text-blue-600" href="{{ asset('pdf/' . $years[$i] . $subjects[$j] . '.pdf') }}">○</a> --}}
-                                {{-- <a class="font-semibold text-blue-600" href="{{ asset('storage/pdf/' . $years[$i] . $subjects[$j] . '.pdf') }}">○</a> --}}
                             </td>
                         @endfor
                     </tr>

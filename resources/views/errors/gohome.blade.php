@@ -29,7 +29,11 @@
                     </div>
                 </div>
                 <div class="py-4 text-center">
-                    <p class="text-center">もう一度ログインしてみてください。</p>
+                    @if(session('error_type') == 'pdf_not_found')
+                        <p>指定された PDF ファイルが見つかりません。先生に提出していないのかも？</p>
+                    @else
+                        <p>ページが見つかりません。</p>
+                    @endif
                     <x-primary-button class="py-4">
                         <a href="{{route('login')}}" class="text-blue-600">ホーム画面へ</a>
                     </x-primary-button>

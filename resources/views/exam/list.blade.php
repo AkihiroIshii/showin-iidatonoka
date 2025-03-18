@@ -2,7 +2,7 @@
     @if(Auth::user()->role == "admin")
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                テスト一覧（管理者）
+                試験一覧（管理者）
             </h2>
         </x-slot>
         <div class="mx-auto px-6">
@@ -18,6 +18,7 @@
                     </tr>
                     <tr class="bg-gray-300">
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4"></th>
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">ID</th>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">学校名</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">年度</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">学年</td>
@@ -35,6 +36,11 @@
                             <th class="border border-slate-300 px-4 w-1/12">
                                 <a href="{{route('exam.edit', $exam)}}" class="text-blue-600">編集</a>
                             </th>
+                            <td class="border border-slate-300 px-4">
+                                <a class="font-semibold text-blue-600" href="{{ route('exam.show', $exam->id) }}">
+                                    {{$exam->id}}
+                                </a>
+                            </td>
                             <td class="border border-slate-300 px-4">{{$exam->schoolName}}</td>
                             <td class="border border-slate-300 px-4">{{$exam->year}}</td>
                             <td class="border border-slate-300 px-4">{{$exam->grade}}</td>
