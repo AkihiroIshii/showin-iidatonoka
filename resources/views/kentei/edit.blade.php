@@ -51,16 +51,30 @@
                 </div>
                 <div class="mt-8">
                     <div>
+                        <x-input-error :messages="$errors->get('first_point')" class="mt-2" />
+                        <label for="first_point" class="font-semibold mt-4">一次試験配点</label>
+                        <input type="number" name="first_point" class="w-auto py-2 border border-gray-300 rounded-md" id="first_point" value="{{old('first_point', $kentei->first_point)}}">
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <div>
                         <x-input-error :messages="$errors->get('second_date')" class="mt-2" />
                         <label for="second_date" class="font-semibold mt-4">二次試験日</label>
                         <input type="date" name="second_date" class="w-auto py-2 border border-gray-300 rounded-md" id="second_date" value="{{old('second_date', $kentei->second_date)}}">
                     </div>
                 </div>
                 <div class="mt-8">
-                    <div>
+                    <div>   
                         <x-input-error :messages="$errors->get('second_score')" class="mt-2" />
                         <label for="second_score" class="font-semibold mt-4">二次試験得点</label>
                         <input type="number" name="second_score" class="w-auto py-2 border border-gray-300 rounded-md" id="second_score" value="{{old('second_score', $kentei->second_score)}}">
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <div>
+                        <x-input-error :messages="$errors->get('second_point')" class="mt-2" />
+                        <label for="second_point" class="font-semibold mt-4">二次試験配点</label>
+                        <input type="number" name="second_point" class="w-auto py-2 border border-gray-300 rounded-md" id="second_point" value="{{old('second_point', $kentei->second_point)}}">
                     </div>
                 </div>
                 <div class="mt-8">

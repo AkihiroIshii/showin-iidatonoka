@@ -39,7 +39,7 @@ class TransferRequest extends FormRequest
         $f_alt_3 = strtotime($this->input('time_from_alternative_3'));
         $t_alt_1 = strtotime($this->input('time_to_alternative_1'));
         $t_alt_2 = strtotime($this->input('time_to_alternative_2'));
-        $t_alt_3 = strtotime($this->input('time_to_alternative_3s'));
+        $t_alt_3 = strtotime($this->input('time_to_alternative_3'));
 
         //終了時刻 - 開始時刻
         $diff_abs_1 = $t_abs_1 - $f_abs_1;

@@ -15,6 +15,8 @@ class Kentei extends Model
         'second_date',
         'first_score',
         'second_score',
+        'first_point',
+        'second_point',
         'result',
         'memo', 
     ];

@@ -27,9 +27,11 @@ class KenteiController extends Controller
             ->LeftJoin('users', 'users.id', '=', 'kenteis.user_id')
             ->selectRaw('
                 kenteis.*,
+                ROUND(100 * kenteis.first_score / kenteis.first_point) as first_rate,
+                ROUND(100 * kenteis.second_score / kenteis.second_point) as second_rate,
                 users.name as user_name
             ')
-            ->orderBy('first_date','asc')
+            ->orderBy('first_date','desc')
             ->get();
         return view('kentei.index',compact('user','kenteis'));
     }
@@ -47,6 +49,8 @@ class KenteiController extends Controller
             'second_date' => 'nullable',
             'first_score' => 'nullable',
             'second_score' => 'nullable',
+            'first_point' => 'nullable',
+            'second_point' => 'nullable',
             'result' => 'nullable',
             'memo' => 'nullable', 
         ]);
@@ -69,6 +73,8 @@ class KenteiController extends Controller
             'second_date' => 'nullable',
             'first_score' => 'nullable',
             'second_score' => 'nullable',
+            'first_point' => 'nullable',
+            'second_point' => 'nullable',
             'result' => 'nullable',
             'memo' => 'nullable', 
         ]);

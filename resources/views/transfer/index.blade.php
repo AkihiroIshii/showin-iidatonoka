@@ -90,37 +90,57 @@
                             <td class="border border-slate-300 px-4">
                                 <ul class="ml-2 list-decimal text-center">
                                     <li>{{$transfer->day_of_absence_1}}</li>
-                                    <li>{{$transfer->day_of_absence_2}}</li>
-                                    <li>{{$transfer->day_of_absence_3}}</li>
+                                    @if(isset($transfer->day_of_absence_2))
+                                        <li>{{$transfer->day_of_absence_2}}</li>
+                                    @endif
+                                    @if(isset($transfer->day_of_absence_3))
+                                        <li>{{$transfer->day_of_absence_3}}</li>
+                                    @endif
                                 </ul>                                
                             </td>
                             <td class="border border-slate-300 px-4">
                                 <ul class="ml-2 list-decimal text-center">
                                     <li>{{$transfer->formatted_time_from_absence_1}}～{{$transfer->formatted_time_to_absence_1}}</li>
-                                    <li>{{$transfer->formatted_time_from_absence_2}}～{{$transfer->formatted_time_to_absence_2}}</li>
-                                    <li>{{$transfer->formatted_time_from_absence_3}}～{{$transfer->formatted_time_to_absence_3}}</li>
+                                    @if(isset($transfer->formatted_time_from_absence_2))
+                                        <li>{{$transfer->formatted_time_from_absence_2}}～{{$transfer->formatted_time_to_absence_2}}</li>
+                                    @endif
+                                    @if(isset($transfer->formatted_time_from_absence_3))
+                                        <li>{{$transfer->formatted_time_from_absence_3}}～{{$transfer->formatted_time_to_absence_3}}</li>
+                                    @endif
                                 </ul>
                             </td>
                             <td class="border border-slate-300 px-4">{{$transfer->sum_t_abs}}分</td>
                             <td class="border border-slate-300 px-4">
                                 <ul class="ml-2 list-decimal text-center">
                                     <li>{{$transfer->reason_of_absence_1}}</li>
-                                    <li>{{$transfer->reason_of_absence_2}}</li>
-                                    <li>{{$transfer->reason_of_absence_3}}</li>
+                                    @if(isset($transfer->reason_of_absence_2))
+                                        <li>{{$transfer->reason_of_absence_2}}</li>
+                                    @endif
+                                    @if(isset($transfer->reason_of_absence_3))
+                                        <li>{{$transfer->reason_of_absence_3}}</li>
+                                    @endif
                                 </ul>                                
                             </td>
                             <td class="border border-slate-300 px-4">
                                 <ul class="ml-2 list-decimal text-center">
                                     <li>{{$transfer->alternative_day_1}}</li>
-                                    <li>{{$transfer->alternative_day_2}}</li>
-                                    <li>{{$transfer->alternative_day_3}}</li>
+                                    @if(isset($transfer->alternative_day_2))
+                                        <li>{{$transfer->alternative_day_2}}</li>
+                                    @endif
+                                    @if(isset($transfer->alternative_day_3))
+                                        <li>{{$transfer->alternative_day_3}}</li>
+                                    @endif
                                 </ul>                                
                             </td>
                             <td class="border border-slate-300 px-4">
                                 <ul class="ml-2 list-decimal text-center">
                                     <li>{{$transfer->formatted_time_from_alternative_1}}～{{$transfer->formatted_time_to_alternative_1}}</li>
-                                    <li>{{$transfer->formatted_time_from_alternative_2}}～{{$transfer->formatted_time_to_alternative_2}}</li>
-                                    <li>{{$transfer->formatted_time_from_alternative_3}}～{{$transfer->formatted_time_to_alternative_3}}</li>
+                                    @if(isset($transfer->formatted_time_from_alternative_2))
+                                        <li>{{$transfer->formatted_time_from_alternative_2}}～{{$transfer->formatted_time_to_alternative_2}}</li>
+                                    @endif
+                                    @if(isset($transfer->formatted_time_from_alternative_3))
+                                        <li>{{$transfer->formatted_time_from_alternative_3}}～{{$transfer->formatted_time_to_alternative_3}}</li>
+                                    @endif
                                 </ul>                                
                             </td>
                             <td class="border border-slate-300 px-4">{{$transfer->sum_t_alt}}分</td>

@@ -15,7 +15,7 @@
 
         <!-- スマホ表示用 -->
         <div class="sm:hidden">
-            @if(Str::contains(Auth::user()->grade, ['中１','中２','高','保護者']))
+            @if(Str::contains(Auth::user()->grade, ['中１','中２','高','保護者','管理者']))
             <div class="mb-6">
                 @if(Auth::user()->grade != '保護者')
                     <p><a href="{{route('kentei.create', $user)}}" class="text-blue-600">新規作成</a></p>
@@ -29,8 +29,8 @@
                         </p>
                         <div class="ml-4">
                             <p>{{$kentei->name}}　{{$kentei->grade}}</p>
-                            <p>一次試験：{{$kentei->first_date}}　{{$kentei->first_score}}点</p>
-                            <p>二次試験：{{$kentei->second_date}}　{{$kentei->second_score}}点</p>
+                            <p>一次試験：{{$kentei->first_date}}　{{$kentei->first_score}}点／{{$kentei->first_point}}点 ({{$kentei->first_rate}}%)</p>
+                            <p>二次試験：{{$kentei->second_date}}　{{$kentei->second_score}}点／{{$kentei->second_point}}点 ({{$kentei->second_rate}}%)</p>
                             <p>結果：{{$kentei->result}}</p>
                             <p>メモ：{{$kentei->memo}}</p>
                             @if(Auth::user()->grade != '保護者')
@@ -85,9 +85,9 @@
                             <td class="border border-slate-300 px-4">{{$kentei->name}}</td>
                             <td class="border border-slate-300 px-4">{{$kentei->grade}}</td>
                             <td class="border border-slate-300 px-4">{{$kentei->first_date}}</td>
-                            <td class="border border-slate-300 px-4">{{$kentei->first_score}}</td>
+                            <td class="border border-slate-300 px-4">{{$kentei->first_score}}／{{$kentei->first_point}} ({{$kentei->first_rate}}%)</td>
                             <td class="border border-slate-300 px-4">{{$kentei->second_date}}</td>
-                            <td class="border border-slate-300 px-4">{{$kentei->second_score}}</td>
+                            <td class="border border-slate-300 px-4">{{$kentei->second_score}}／{{$kentei->second_point}} ({{$kentei->second_rate}}%)</td>
                             <td class="border border-slate-300 px-4">{{$kentei->result}}</td>
                             <td class="border border-slate-300 px-4">{{$kentei->memo}}</td>
                         </tr>
