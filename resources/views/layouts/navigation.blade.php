@@ -83,9 +83,17 @@
                     <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                         その他情報
                     </x-nav-link>
-                    <x-nav-link :href="route('jitsi')" :active="request()->routeIs('jitsi')">
-                        通話
-                    </x-nav-link>
+                    <!-- テスト運用 -->
+                    @if(Auth::user()->role == "admin")
+                        <x-nav-link :href="route('jitsi')" :active="request()->routeIs('jitsi')">
+                            通話
+                        </x-nav-link>
+                    @endif
+                    @if(Auth::user()->user_id == "sample")
+                        <x-nav-link :href="route('meeting.join')" :active="request()->routeIs('meeting.join')">
+                            通話(guest)
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
