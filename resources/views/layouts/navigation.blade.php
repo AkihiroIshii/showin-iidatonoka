@@ -83,6 +83,9 @@
                     <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                         その他情報
                     </x-nav-link>
+                    <x-nav-link :href="route('jitsi')" :active="request()->routeIs('jitsi')">
+                        通話
+                    </x-nav-link>
                 </div>
             </div>
 

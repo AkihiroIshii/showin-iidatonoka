@@ -47,6 +47,10 @@ Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
     ]);
 })->middleware('auth')->name('secure.file');
 
+// jitsiのビデオ通話
+Route::get('/meeting', function () {
+    return view('meeting.jitsi');
+})->name('jitsi');
 
 //管理者ページ
 // Route::get('/admin', function() {
