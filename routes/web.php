@@ -51,6 +51,9 @@ Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
 Route::get('/meeting', function () {
     return view('meeting.jitsi');
 })->name('jitsi');
+Route::get('/meeting/guest', function() {
+    return view('meeting.guest');
+})->name('meeting.guest');
 Route::get('/join-meeting', function (Request $request) {
     $roomName = $request->query('roomName', 'default-room'); // デフォルト値を設定
     return view('meeting.join', compact('roomName'));

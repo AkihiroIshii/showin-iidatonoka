@@ -17,8 +17,10 @@
 
         function startMeeting() {
             const domain = "meet.jit.si";
+            const roomName = "showin_iidatonoka_2009j020";
+
             const options = {
-                roomName: "LaravelJitsiMeeting_{{ uniqid() }}", // 一意のルーム名
+                // roomName: "LaravelJitsiMeeting_{{ uniqid() }}", // 一意のルーム名
                 parentNode: document.getElementById("meet"),
                 width: 800,
                 height: 600,

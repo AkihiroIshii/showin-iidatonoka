@@ -90,7 +90,7 @@
                         </x-nav-link>
                     @endif
                     @if(Auth::user()->user_id == "sample")
-                        <x-nav-link :href="route('meeting.join')" :active="request()->routeIs('meeting.join')">
+                        <x-nav-link :href="route('meeting.guest')" :active="request()->routeIs('meeting.guest')">
                             通話(guest)
                         </x-nav-link>
                     @endif
