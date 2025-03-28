@@ -84,14 +84,14 @@
                         その他情報
                     </x-nav-link>
                     <!-- テスト運用 -->
-                    @if(Auth::user()->role == "admin")
-                        <x-nav-link :href="route('jitsi')" :active="request()->routeIs('jitsi')">
+                    {{-- @if(Auth::user()->role == "admin")
+                        <x-nav-link :href="route('meeting.host')" :active="request()->routeIs('meeting.host')">
                             通話
                         </x-nav-link>
-                    @endif
-                    @if(Auth::user()->user_id == "sample")
-                        <x-nav-link :href="route('meeting.guest')" :active="request()->routeIs('meeting.guest')">
-                            通話(guest)
+                    @endif --}}
+                    @if(Auth::user()->role != "admin")
+                        <x-nav-link :href="route('meeting.video')" :active="request()->routeIs('meeting.video')">
+                            通話
                         </x-nav-link>
                     @endif
                 </div>

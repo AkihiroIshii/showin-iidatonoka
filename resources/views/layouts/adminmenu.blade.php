@@ -40,6 +40,9 @@
             <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                 振替
             </x-nav-link>
+            <x-nav-link :href="route('meeting.video')" :active="request()->routeIs('meeting.vido')">
+                通話
+            </x-nav-link>
         </div>
 
         <!-- responsive -->
