@@ -16,6 +16,10 @@ trait TopChoiceTrait
         $user_ids = Arr::wrap($user_ids); //配列に統一
         $top_choices = TopChoice::whereIn('student_id', $user_ids)
             ->LeftJoin('users', 'users.id', '=', 'top_choices.student_id')
+            ->selectRaw('
+                top_choices.*,
+                users.name
+            ')
             ->orderBy('users.id','asc')
             ->orderBy('exam_date','asc')
             ->orderBy('desired_ranking','asc')
