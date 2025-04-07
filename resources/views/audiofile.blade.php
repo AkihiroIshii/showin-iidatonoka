@@ -7,44 +7,47 @@
     </x-slot>
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
+            <!-- なが模試 英語リスニング音声 -->
+            <x-h3>なが模試　英語リスニング音声</x-h3>
+            <details class="mt-2 border border-gray-300 p-2 rounded-lg">
+                <summary class="cursor-pointer text-blue-500 font-semibold">一覧</summary>
+                <table class="border-separate border border-slate-400 m-auto mb-6 table-fixed w-full">
+                    <tr class="bg-gray-300">
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">ファイル名</th>
+                    </tr>
+                    @php
+                        $numbers = ['1'];
+                    @endphp
+                    @foreach($numbers as $number)
+                        <tr>
+                            <td class="border border-slate-300 px-4 cursor-pointer text-blue-500 font-semibold">
+                                <a href="{{ route('secure.file', ['folder' => 'mp3/nagamoshi_listening', 'filename' => '2025_' . $number . '.mp3']) }}">なが模試2025年度　第{{$number}}回</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            </details>
+
             <!-- 英語リスニング音声 -->
-            <x-h3>過去問　英語リスニング音声</x-h3>
-            <table class="border-separate border border-slate-400 m-auto mb-6 table-fixed w-full">
-                <tr class="bg-gray-300">
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">ファイル名</th>
-                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">音声プレイヤー</th>
-                </tr>
-                <tr>
-                    <td class="border border-slate-300 px-4">公立高校入試過去問　2024年</td>
-                    <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/02_公立高校入試過去問/公立高校入試過去問2024年.mp3') }}" type="audio/mpeg"></audio>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border border-slate-300 px-4">公立高校入試過去問　2023年</td>
-                    <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/02_公立高校入試過去問/公立高校入試過去問2023年.mp3') }}" type="audio/mpeg"></audio>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border border-slate-300 px-4">公立高校入試過去問　2022年</td>
-                    <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/02_公立高校入試過去問/公立高校入試過去問2022年.mp3') }}" type="audio/mpeg"></audio>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border border-slate-300 px-4">公立高校入試過去問　2021年</td>
-                    <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/02_公立高校入試過去問/公立高校入試過去問2021年.mp3') }}" type="audio/mpeg"></audio>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border border-slate-300 px-4">公立高校入試過去問　2020年</td>
-                    <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/02_公立高校入試過去問/公立高校入試過去問2020年.mp3') }}" type="audio/mpeg"></audio>
-                    </td>
-                </tr>
-            </table>
+            <x-h3>公立高校過去問　英語リスニング音声</x-h3>
+            <details class="mt-2 border border-gray-300 p-2 rounded-lg">
+                <summary class="cursor-pointer text-blue-500 font-semibold">一覧</summary>
+                <table class="border-separate border border-slate-400 m-auto mb-6 table-fixed w-full">
+                    <tr class="bg-gray-300">
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">ファイル名</th>
+                    </tr>
+                    @php
+                        $years = ['2024','2023','2022','2021','2020','2019','H30'];
+                    @endphp
+                    @foreach($years as $year)
+                        <tr>
+                            <td class="border border-slate-300 px-4 cursor-pointer text-blue-500 font-semibold">
+                                <a href="{{ route('secure.file', ['folder' => 'mp3/pastexam_listening', 'filename' => 'listening_' . $year . '.mp3']) }}">公立高校入試過去問　{{$year}}年</button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            </details>
 
             <!-- 古典朗読 -->
             <x-h3>古典朗読</x-h3>
