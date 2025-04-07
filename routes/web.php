@@ -1,29 +1,31 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\RecordController;
+use App\Events\ChatEvent;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AishowinController;
 use App\Http\Controllers\CommonController;
-use App\Http\Controllers\TargetController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\WorkbookController;
-use App\Http\Controllers\GiftController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\UsualtargetController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamresultController;
 use App\Http\Controllers\ExamratioController;
-use App\Http\Controllers\WorkrecordController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\GiftController;
 use App\Http\Controllers\KenteiController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecordController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\TargetController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\TopChoiceController;
 use App\Http\Controllers\TransferController;
+use App\Http\Controllers\UsualtargetController;
+use App\Http\Controllers\WorkbookController;
+use App\Http\Controllers\WorkrecordController;
 
 // ファイルへのアクセス
 Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
@@ -46,23 +48,19 @@ Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
         'Content-Type' => Storage::mimeType($filePath),
         'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
     ]);
-})->middleware('auth')->name('secure.file');
+})->middleware('auth')->where('filename', '.*')->name('secure.file');
 
 // jitsiのビデオ通話
-// Route::get('/meeting', function () {
-//     return view('meeting.host');
-// })->name('meeting.host');
-// Route::get('/meeting/guest', function() {
-//     return view('meeting.guest');
-// })->name('meeting.guest');
 Route::get('/meeting/video', [RoomController::class, 'video'])
 ->middleware(['auth', 'verified'])->name('meeting.video');
-// Route::get('/meeting/guest', [RoomController::class, 'guest'])
-// ->middleware(['auth', 'verified'])->name('meeting.guest');
-// Route::get('/join-meeting', function (Request $request) {
-//     $roomName = $request->query('roomName', 'default-room'); // デフォルト値を設定
-//     return view('meeting.join', compact('roomName'));
-// })->name('meeting.join');
+
+//チャット
+Route::get('/message', [MessageController::class, 'index'])
+->middleware(['auth', 'verified'])->name('message');
+// Route::post('/message/send', [MessageController::class, 'sendMessage']);
+Route::post('/message/send', function (Request $request) {
+    return response()->json(['message' => 'Received: ' . $request->message]);
+});
 
 //管理者ページ
 // Route::get('/admin', function() {
