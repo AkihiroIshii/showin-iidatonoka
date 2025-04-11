@@ -15,6 +15,7 @@ use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\KenteiController;
+use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecordController;
@@ -170,6 +171,10 @@ Route::patch('target/{target}', [TargetController::class, 'update'])
 Route::get('event', [EventController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('event');
 
+/* リンク */
+Route::get('link', [LinkController::class, 'index'])
+->middleware(['auth', 'verified'])->name('link');
+
 /* 景品 */
 Route::get('gift', [GiftController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('gift');
@@ -289,8 +294,8 @@ Route::get('examratio/school', [ExamratioController::class, 'school'])
 ->middleware(['auth', 'verified'])->name('examratio.school');
 
 /* その他（共通） */
-Route::get('link', [CommonController::class, 'link'])
-->middleware(['auth', 'verified'])->name('link');
+// Route::get('link', [CommonController::class, 'link'])
+// ->middleware(['auth', 'verified'])->name('link');
 Route::get('audiofile', [CommonController::class, 'audiofile'])
 ->middleware('auth', 'verified')->name('audiofile');
 Route::get('info/plan', [CommonController::class, 'plan'])
