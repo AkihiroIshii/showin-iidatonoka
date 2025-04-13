@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Response;
 use App\Events\ChatEvent;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AishowinController;
+use App\Http\Controllers\CoinController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
@@ -281,6 +282,18 @@ Route::get('/transfer/{transfer}/edit', [TransferController::class, 'edit'])
 ->middleware(['auth', 'verified'])->name('transfer.edit');
 Route::patch('/transfer/{transfer}', [TransferController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('transfer.update');
+
+/* コイン */
+Route::get('coin', [CoinController::class, 'index'])
+->middleware(['auth', 'verified'])->name('coin');
+Route::get('/coin/create', [CoinController::class, 'create'])
+->middleware(['auth', 'verified'])->name('coin.create');
+Route::post('/coin', [CoinController::class, 'store'])
+->middleware(['auth', 'verified'])->name('coin.store');
+Route::get('/coin/{coin}/edit', [CoinController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('coin.edit');
+Route::patch('/coin/{coin}', [CoinController::class, 'update'])
+->middleware(['auth', 'verified'])->name('coin.update');
 
 /* AI-Showin */
 Route::get('aishowin', [AishowinController::class, 'index'])
