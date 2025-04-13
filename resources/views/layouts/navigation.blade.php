@@ -47,6 +47,9 @@
                         <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                             志望校
                         </x-nav-link>
+                        <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
+                            コイン
+                        </x-nav-link>
                         <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                             振替
                         </x-nav-link>
@@ -73,6 +76,9 @@
                         <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
                             公式集
                         </x-nav-link>
+                        <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
+                            コイン
+                        </x-nav-link>
                         @if(strpos(Auth::user()->grade, '高') !== false) <!-- 高校生なら表示する -->
                             <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                                 振替
@@ -94,6 +100,11 @@
                             通話
                         </x-nav-link>
                     @endif
+                    {{-- @if(Auth::user()->role != "admin")
+                        <x-nav-link :href="route('message')" :active="request()->routeIs('message')">
+                            チャット（開発中）
+                        </x-nav-link>
+                    @endif --}}
                 </div>
             </div>
 
@@ -179,6 +190,9 @@
                 <x-responsive-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                     志望校
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
+                    コイン
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                     振替
                 </x-responsive-nav-link>
@@ -204,6 +218,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
                     問題集
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
+                    コイン
                 </x-responsive-nav-link>
             @endif
             @if(strpos(Auth::user()->grade, '高') !== false) <!-- 高校生なら表示する -->

@@ -1,9 +1,9 @@
         <!-- 管理者 生徒別メニュー -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
             @if(isset($user) && $user->grade == "中３")
-                <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
+                {{-- <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                     新規登録
-                </x-nav-link>
+                </x-nav-link> --}}
                 <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
                     記録一覧
                 </x-nav-link>
@@ -37,11 +37,17 @@
             <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                 検定
             </x-nav-link>
+            <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
+                コイン
+            </x-nav-link>
             <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                 振替
             </x-nav-link>
             <x-nav-link :href="route('meeting.video')" :active="request()->routeIs('meeting.vido')">
                 通話
+            </x-nav-link>
+            <x-nav-link :href="route('message')" :active="request()->routeIs('message')">
+                チャット
             </x-nav-link>
         </div>
 
