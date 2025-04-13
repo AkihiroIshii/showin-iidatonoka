@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use App\Models\Coin;
 use App\Models\User;
 use App\Traits\UserTrait;
 use App\Models\School;
@@ -70,7 +71,11 @@ class UsualtargetController extends Controller
     }
 
     public function update(Request $request, Usualtarget $usualtarget) {
+        // 更新前のコインの値を取得
+        $usualtarget_old_coin = Usualtarget::where('id', $usualtarget->id)->value('coin');
+        // $usualtarget_old_coin = $usualtarget->value('coin');
 
+        // 日々の目標を更新
         $validated = $request->validate([
             'content' => 'required',
             'due_date' => 'required',
@@ -80,6 +85,18 @@ class UsualtargetController extends Controller
         ]);
 
         $usualtarget->update($validated);
+
+        //コインを新たに付与する場合、コインテーブルにも追加。
+        if(is_null($usualtarget_old_coin) && !is_null($validated['coin'])) {
+            $user_id = Session::get('target_students', null);
+            // $user = User::where('id', $user_id)->first();
+            Coin::create([
+                'user_id' => $user_id,
+                'coin' => $validated['coin'],
+                'memo' => '目標ボーナス',
+                'change_date' => Carbon::today(), 
+            ]);
+        }
 
         $request->session()->flash('message', '更新しました');
         return back();
