@@ -15,7 +15,7 @@ trait EventTrait
 {
     public function getEvents() {
         $startDate = Carbon::today()->startOfDay();
-        $endDate = Carbon::today()->addMonth(2)->endOfDay();  //２か月後
+        $endDate = Carbon::today()->addMonth(3)->endOfDay();  //３か月後
 
         $user_ids = Arr::wrap(Session::get('target_students'));
         $school_ids = User::whereIn('id', $user_ids)->pluck('school_id')->toArray();
