@@ -31,12 +31,20 @@ trait ExamresultTrait
         ->leftJoin('examresults as pr', function ($join) {
             $join->on('tr.user_id', '=', 'pr.user_id')
                  ->whereRaw('pr.exam_id = (
-                     SELECT exam_id FROM examresults 
+                     SELECT exam_id FROM examresults
+                     LEFT JOIN exams ON examresults.exam_id = exams.id 
                      WHERE user_id = tr.user_id 
                      AND exam_id IN (SELECT id FROM exams WHERE exam_date < te.exam_date) 
-                     ORDER BY exam_date DESC 
+                     ORDER BY exams.exam_date DESC 
                      LIMIT 1
                  )');
+                //  ->whereRaw('pr.exam_id = (
+                //     SELECT exam_id FROM examresults 
+                //     WHERE user_id = tr.user_id 
+                //     AND exam_id IN (SELECT id FROM exams WHERE exam_date < te.exam_date) 
+                //     ORDER BY exam_date DESC 
+                //     LIMIT 1
+                // )');
         })
         ->leftJoin('exams as pe', 'pr.exam_id', '=', 'pe.id')
         ->leftJoin('users', 'tr.user_id', '=', 'users.id')
