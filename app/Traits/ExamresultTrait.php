@@ -34,7 +34,7 @@ trait ExamresultTrait
                      SELECT exam_id FROM examresults 
                      WHERE user_id = tr.user_id 
                      AND exam_id IN (SELECT id FROM exams WHERE exam_date < te.exam_date) 
-                     ORDER BY exam_id DESC 
+                     ORDER BY exam_date DESC 
                      LIMIT 1
                  )');
         })
