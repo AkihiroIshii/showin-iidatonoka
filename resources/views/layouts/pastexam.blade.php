@@ -1,8 +1,8 @@
         <!-- 過去問演習記録 共通メニュー -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-            <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
+            {{-- <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                 新規登録
-            </x-nav-link>
+            </x-nav-link> --}}
             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
                 記録一覧
             </x-nav-link>

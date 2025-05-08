@@ -15,7 +15,7 @@
             </x-nav-link>
             <x-nav-link :href="route('gift')" :active="request()->routeIs('gift')">
                 景品
-            </x-nav-link>                 
+            </x-nav-link>                               
             <x-nav-link :href="route('aishowin')" :active="request()->routeIs('aishowin')">
                 目的別対策
             </x-nav-link>

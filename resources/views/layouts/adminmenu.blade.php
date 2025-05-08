@@ -46,9 +46,9 @@
             <x-nav-link :href="route('meeting.video')" :active="request()->routeIs('meeting.vido')">
                 通話
             </x-nav-link>
-            <x-nav-link :href="route('message')" :active="request()->routeIs('message')">
+            {{-- <x-nav-link :href="route('message')" :active="request()->routeIs('message')">
                 チャット
-            </x-nav-link>
+            </x-nav-link> --}}
         </div>
 
         <!-- responsive -->

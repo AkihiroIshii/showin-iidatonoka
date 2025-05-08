@@ -57,12 +57,15 @@ Route::get('/meeting/video', [RoomController::class, 'video'])
 ->middleware(['auth', 'verified'])->name('meeting.video');
 
 //チャット
-Route::get('/message', [MessageController::class, 'index'])
-->middleware(['auth', 'verified'])->name('message');
-// Route::post('/message/send', [MessageController::class, 'sendMessage']);
-Route::post('/message/send', function (Request $request) {
-    return response()->json(['message' => 'Received: ' . $request->message]);
-});
+// Route::get('/message/test', [MessageController::class, 'test']);
+// Route::get('/message', [MessageController::class, 'index'])
+// ->middleware(['auth', 'verified'])->name('message');
+// Route::post('/messages', [MessageController::class, 'store']);
+// Route::post('/message/send', [MessageController::class, 'sendMessage'])
+// ->middleware(['auth', 'verified'])->name('message.send');
+// Route::post('/message/send', function (Request $request) {
+//     return response()->json(['message' => 'Received: ' . $request->message]);
+// });
 
 //管理者ページ
 // Route::get('/admin', function() {

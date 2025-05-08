@@ -25,7 +25,7 @@ class RoomController extends Controller
         $user = $this->user;
         $jwtToken = JaasTokenService::generateToken($room_name, $user);
         // dd($jwtToken);
-        return view('meeting.video', compact('room_name', 'jwtToken'));
+        return view('meeting.video', compact('room_name', 'jwtToken', 'user'));
     }
 
     // public function joinRoom($roomName)

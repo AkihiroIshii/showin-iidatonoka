@@ -51,7 +51,7 @@
                     <tr class="{!! $trClass !!}">
                         <th class="border border-slate-300 px-4">
                             <a href="{{route('admin.setStudent', $user)}}" class="text-blue-600">詳細</a>
-                        </td>
+                        </th>
                         <td class="border border-slate-300 px-4">{{$user->user_name}}</td>
                         <td class="border border-slate-300 px-4">{{$user->grade}}</td>
                         <td class="border border-slate-300 px-4">{{$user->plan}}</td>

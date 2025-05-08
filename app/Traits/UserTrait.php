@@ -10,6 +10,7 @@ trait UserTrait
 {
     public function getUsers() {
         $users = User::where('grade', '!=', '保護者')
+            // ->whereNull('expiration_date')
             ->leftJoin('schools', function($join) {
                 $join->on('users.school_id', '=', 'schools.id');
             })

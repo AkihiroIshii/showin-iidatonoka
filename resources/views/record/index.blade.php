@@ -51,6 +51,9 @@
         </div>
 
         <x-h3>演習記録一覧</x-h3>
+        <!-- 新規作成 -->
+        <a href="{{route('record.create', $user)}}" class="text-blue-600 font-bold">新規作成</a>
+
         <!-- スマホ表示用 -->
         <div class="sm:hidden">
             @foreach($records as $record)
