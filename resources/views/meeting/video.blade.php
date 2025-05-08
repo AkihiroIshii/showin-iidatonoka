@@ -7,11 +7,68 @@
             テレ・スタディ（ビデオ通話）
         </h2>
     </x-slot>
-    <div class="mx-auto px-6 py-10">
+    <div class="mx-auto px-6 py-4">
+        <!-- テレ・スタディについて -->
+        <div class="mt-8">
+            <x-h3>テレ・スタディについて</x-h3>
+            <ul>
+                <li>・悪天候などで塾に行けないときは、先生とビデオ通話をしながらご自宅で学習できます。</li>
+                <li>・ビデオ通話を利用するには、先生の許可が必要です。事前にご連絡ください。</li>
+                <li class="ml-4">(※)ビデオ通話には、Jitsiを使います（メールアドレス不要）。</li>
+            </ul>
+        </div>
+
         @if($room_name->isEmpty())
             <p>通話用のルームが存在しません。塾長に確認してください。</p>
         @else
-            <div>
+            <div class="mt-8">
+                <x-h3>テレ・スタディの準備</x-h3>
+                <u1 class="list-decimal">
+                    <li>始める時間を、事前に塾長と決めておいてください。授業開始までに、下に書いてある通話の準備をしておきましょう。</li>
+                    <li>
+                        右のボタンをクリックし、ルーム名をコピーします。
+                        <x-primary-button class="mt-4" onclick="copyButton('roomName')">
+                            ルーム名をコピー
+                        </x-primary-button>
+                        　(※)ルーム名：<span id="roomName">showin_iidatonoka_{{$room_name[0]}}</span>
+                    </li>
+                    <li>
+                        右のボタンを押して、Jitsi Meetのページを開きます。
+                        <x-primary-button class="mt-4">
+                            <a href="https://meet.jit.si/" target="_blank">Jitsi Meetを開く(外部)</a>
+                        </x-primary-button>        
+                    </li>
+                    <li>コピーしたルーム名を画面中央のボックスに貼り付け、すぐ右の「ミーティングを開始」をクリックします。</li>
+                    <li>「あなたの名前を入力して下さい」と書かれているボックスに、名前を入れます（ひらがな、ニックネームでもOK）。</li>
+                    <li>
+                        カメラはオフにしてもOKです。「ミーティングに参加」を押します。
+                        <ul class="ml-4">
+                            <li>(※)<span class="font-bold">英語の画面が出てきたら、下の方の「Join in browser」を押してください。</span>その後、「ミーティングを開始」します。</li>
+                            <li>(※)「ホストの到着を待っています...」が出たら、そのまま先生が参加するまで待っていてください。</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mt-8">
+                <x-h3>テレ・スタディの進め方</x-h3>
+                <ul class="list-decimal ml-4">
+                    <li>接続したら、学習する内容を先生と決めます。</li>
+                    <li>
+                        学習を進めます。
+                        <ul class="ml-4">
+                            <li>(※)カメラとマイクはオフ（ミュート）にしてもよいです。</li>
+                            <li>(※)質問したいときは、マイクをオンにして話しかけてください。（先生はイヤホンをつけているので、映っていなくても聞こえます。）</li>
+                            <li class="font-bold">(※)先生が声をかけるときもあるので、スピーカーはオンにしておいてください。</li>
+                        </ul>
+                    </li>
+                    <li>最後に学習内容を振り返ります。</li>
+                    <li>あいさつをしたら、ブラウザのタブを閉じて通話を終わります。</li>
+                </ul>
+            </div>
+
+
+            {{-- <div>
                 ルーム名：<span id="roomName">showin_iidatonoka_{{$room_name[0]}}</span>
                 <x-primary-button class="mt-4" onclick="copyButton('roomName')">
                     ルーム名をコピー
@@ -22,7 +79,7 @@
                 <x-primary-button class="mt-4">
                     <a href="https://meet.jit.si/" target="_blank">Jitsi Meetを開く(外部)</a>
                 </x-primary-button>    
-            </div>
+            </div> --}}
 
             <script>
                 function copyButton(elementId) {
@@ -83,14 +140,6 @@
             </script>
         @endif
 
-        <!-- テレ・スタディについて -->
-        <div class="mt-8">
-            <p class="font-bold">テレ・スタディについて</p>
-            <ul>
-                <li>・悪天候などで塾に行けないときは、ご自宅で学習できます。</li>
-                <li>・ビデオ通話を利用するには、先生の許可が必要です。事前にご連絡ください。</li>
-            </ul>
-        </div>
     </div>
 </x-app-layout>
 
