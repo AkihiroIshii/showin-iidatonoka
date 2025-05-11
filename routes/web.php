@@ -203,7 +203,9 @@ Route::patch('usualtarget/{usualtarget}/update', [UsualtargetController::class, 
 // ->middleware(['auth', 'verified'])->name('exam');
 Route::get('/exam/list', [ExamController::class, 'getAllExams'])
 ->middleware(['auth', 'verified'])->name('exam.list');
-Route::get('/exam/show/{exam_id}', [ExamController::class, 'show'])
+// Route::get('/exam/show/{exam_id}', [ExamController::class, 'show'])
+// ->middleware(['auth', 'verified'])->name('exam.show');
+Route::get('/exam/show/{exam_id}/{folder}', [ExamController::class, 'show'])
 ->middleware(['auth', 'verified'])->name('exam.show');
 Route::get('/exam/create', [ExamController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('exam.create');

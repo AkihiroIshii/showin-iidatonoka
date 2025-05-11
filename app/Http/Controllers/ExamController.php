@@ -45,7 +45,7 @@ class ExamController extends Controller
         return view('exam.list', compact('exams'));
     }
 
-    public function show(int $exam_id) {
+    public function show(int $exam_id, string $folder) {
         if(Auth::user()->role == "admin") {
             $exam = Exam::where('exams.id', $exam_id)
                 ->first();
@@ -63,7 +63,7 @@ class ExamController extends Controller
                 abort(404);
             }
         }
-        return view('exam.show', compact('exam'));
+        return view('exam.show', compact('exam','folder'));
     }
 
     public function create() {
