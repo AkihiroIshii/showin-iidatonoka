@@ -114,10 +114,12 @@
                     </tr>
                     @foreach($users as $user)
                     @php
-                        if(strpos($user->grade, '中３') !== false) {
-                            $trClass = 'bg-sky-100';
-                        } elseif(strpos($user->grade, '中') !== false) {
+                        if(isset($user->expiration_date)) {
+                            $trClass = 'bg-gray-300';
+                        } elseif(strpos($user->grade, '中３') !== false) {
                             $trClass = 'bg-sky-200';
+                        } elseif(strpos($user->grade, '中') !== false) {
+                            $trClass = 'bg-sky-100';
                         } elseif(strpos($user->grade, '小') !== false) {
                             $trClass = 'bg-yellow-100';
                         } elseif(strpos($user->grade, '高') !== false)  {

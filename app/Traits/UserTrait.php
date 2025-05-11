@@ -19,7 +19,8 @@ trait UserTrait
                 users.name as user_name,
                 schools.name as school_name,
                 users.grade,
-                users.plan
+                users.plan,
+                users.expiration_date
             ')
             ->orderBy('users.expiration_date','asc')
             ->orderBy('users.grade','desc')

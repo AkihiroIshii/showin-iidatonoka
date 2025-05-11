@@ -37,25 +37,27 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">通塾頻度</td>
                     </tr>
                     @foreach($users as $user)
-                    @php
-                        if(strpos($user->grade, '中３') !== false) {
-                            $trClass = 'bg-sky-100';
-                        } elseif(strpos($user->grade, '中') !== false) {
-                            $trClass = 'bg-sky-200';
-                        } elseif(strpos($user->grade, '小') !== false) {
-                            $trClass = 'bg-yellow-100';
-                        } elseif(strpos($user->grade, '高') !== false)  {
-                            $trClass = 'bg-pink-100';
-                        }
-                    @endphp
-                    <tr class="{!! $trClass !!}">
-                        <th class="border border-slate-300 px-4">
-                            <a href="{{route('admin.setStudent', $user)}}" class="text-blue-600">詳細</a>
-                        </th>
-                        <td class="border border-slate-300 px-4">{{$user->user_name}}</td>
-                        <td class="border border-slate-300 px-4">{{$user->grade}}</td>
-                        <td class="border border-slate-300 px-4">{{$user->plan}}</td>
-                    </tr>
+                        @php
+                            if(isset($user->expiration_date)) {
+                                $trClass = 'bg-gray-300';
+                            } elseif(strpos($user->grade, '中３') !== false) {
+                                $trClass = 'bg-sky-200';
+                            } elseif(strpos($user->grade, '中') !== false) {
+                                $trClass = 'bg-sky-100';
+                            } elseif(strpos($user->grade, '小') !== false) {
+                                $trClass = 'bg-yellow-100';
+                            } elseif(strpos($user->grade, '高') !== false)  {
+                                $trClass = 'bg-pink-100';
+                            }
+                        @endphp
+                        <tr class="{!! $trClass !!}">
+                            <th class="border border-slate-300 px-4">
+                                <a href="{{route('admin.setStudent', $user)}}" class="text-blue-600">詳細</a>
+                            </th>
+                            <td class="border border-slate-300 px-4">{{$user->user_name}}</td>
+                            <td class="border border-slate-300 px-4">{{$user->grade}}</td>
+                            <td class="border border-slate-300 px-4">{{$user->plan}}</td>
+                        </tr>
                     @endforeach
                 </table>
             </div>

@@ -32,12 +32,27 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">英語</td>
                     </tr>
                     @foreach($exams as $exam)
-                        <tr>
+                        @php
+                            if ($exam->schoolName == "外部") { //なが模試の場合
+                                $folder = 'moshi';
+                                $tr_color = 'bg-green-100';
+                            } else {
+                                $folder = 'schoolexam';
+                                if (strpos($exam->grade, '高') !== false) {
+                                    $tr_color = 'bg-pink-100';
+                                } elseif (strpos($exam->grade, '中３') !== false) {
+                                    $tr_color = 'bg-sky-200';
+                                } else {
+                                    $tr_color = 'bg-sky-100';
+                                }
+                            }
+                        @endphp
+                        <tr class="{!!$tr_color!!}">
                             <th class="border border-slate-300 px-4 w-1/12">
                                 <a href="{{route('exam.edit', $exam)}}" class="text-blue-600">編集</a>
                             </th>
                             <td class="border border-slate-300 px-4">
-                                <a class="font-semibold text-blue-600" href="{{ route('exam.show', $exam->id) }}">
+                                <a class="font-semibold text-blue-600" href="{{ route('exam.show', ['exam_id' => $exam->id, 'folder' => $folder]) }}">
                                     {{$exam->id}}
                                 </a>
                             </td>
