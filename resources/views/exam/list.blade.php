@@ -13,7 +13,7 @@
             <div class="mb-6">
                 <table class="border-separate border border-slate-400 m-auto table-fixed">
                     <tr class="bg-gray-300">
-                        <th colspan="7"></th>
+                        <th colspan="8"></th>
                         <th colspan="5">平均点</th>
                     </tr>
                     <tr class="bg-gray-300">

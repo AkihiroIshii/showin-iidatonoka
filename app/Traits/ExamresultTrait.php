@@ -34,10 +34,11 @@ trait ExamresultTrait
                      SELECT exam_id FROM examresults
                      LEFT JOIN exams ON examresults.exam_id = exams.id 
                      WHERE user_id = tr.user_id 
-                     AND exam_id IN (SELECT id FROM exams WHERE exam_date < te.exam_date) 
+                     AND exam_id IN (SELECT id FROM exams WHERE exam_date < te.exam_date)
+                     AND exams.school_id != 902
                      ORDER BY exams.exam_date DESC 
                      LIMIT 1
-                 )');
+                 )'); //なが模試（school_id = 902）は除く
                 //  ->whereRaw('pr.exam_id = (
                 //     SELECT exam_id FROM examresults 
                 //     WHERE user_id = tr.user_id 
@@ -48,10 +49,9 @@ trait ExamresultTrait
         })
         ->leftJoin('exams as pe', 'pr.exam_id', '=', 'pe.id')
         ->leftJoin('users', 'tr.user_id', '=', 'users.id')
-        ->leftJoin('schools', function($join) {
-            $join->on('te.school_id', '=', 'schools.id');
-        })
+        ->leftJoin('schools', 'te.school_id', '=', 'schools.id')
         ->whereIn('tr.user_id', $user_ids)
+        ->where('te.school_id', '!=', 902) //なが模試は除く
         ->select(
             'tr.id as id',
             'schools.name as school_name',

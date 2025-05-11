@@ -76,7 +76,7 @@
                 <div>
                     <x-input-error :messages="$errors->get('exam_name')" class="mt-2" />
                     <label for="exam_name" class="font-semibold mt-4">試験名</label>
-                    <input type="text" name="exam_name" class="w-auto py-2 border border-gray-300 rounded-md" id="exam_name" value="{{old('exam_name', $exam->exam_name)}}">(※半角で入力)
+                    <input type="text" name="exam_name" class="w-auto py-2 border border-gray-300 rounded-md" id="exam_name" value="{{old('exam_name', $exam->exam_name)}}">
                 </div>
             </div>
 

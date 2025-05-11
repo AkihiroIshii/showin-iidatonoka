@@ -26,6 +26,7 @@ class ExamresultController extends Controller
     public function index() {
         $user = $this->user;
         $examresults = $this->getExamresultsWithAverage();
+        // dd($examresults);
         return view('examresult.index', compact('user','examresults'));
     }
 
@@ -36,6 +37,7 @@ class ExamresultController extends Controller
 
     public function create() {
         $exams = Exam::where('school_id', $this->school->id)
+        ->orWhere('school_id', 902) //外部（なが模試）
         ->orderBy('grade', 'desc')
         ->orderBy('exam_date', 'desc')
             ->get();
@@ -60,6 +62,7 @@ class ExamresultController extends Controller
 
     public function edit(Examresult $examresult) {
         $exams = Exam::where('school_id', $this->school->id)
+            ->orWhere('school_id', 902) //外部（なが模試）
             ->orderBy('grade', 'desc')
             ->orderBy('exam_date', 'desc')
             ->get();

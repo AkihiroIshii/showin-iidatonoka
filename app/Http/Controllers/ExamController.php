@@ -68,8 +68,7 @@ class ExamController extends Controller
 
     public function create() {
         //ログインユーザ
-        $schools = School::where('name', 'LIKE', '%中%')
-            ->orWhere('name', 'LIKE', '%高%')
+        $schools = School::where('name', 'NOT LIKE', '%小%')
             ->get();
         return view('exam.create', compact('schools'));
     }
@@ -96,8 +95,7 @@ class ExamController extends Controller
     public function edit(Exam $exam) {
         //ログインユーザ
         // $user = User::where('id', $this->user->id)->first();
-        $schools = School::where('name', 'LIKE', '%中%')
-            ->orWhere('name', 'LIKE', '%高%')
+        $schools = School::where('name', 'NOT LIKE', '%小%')
             ->get();
         return view('exam.edit', compact('exam','schools'));
     }
