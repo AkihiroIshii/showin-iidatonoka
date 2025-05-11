@@ -70,7 +70,7 @@
                                                 <li>挑戦回数：{{ $question->count }}回</li>
                                                 <li>平均：{{ $question->avg_score }}点</li>
                                                 <li>目標：{{ $question->target_score }}点</li>
-                                                @if($question->avg_score > $question->target_score)
+                                                @if($question->avg_score >= $question->target_score)
                                                     <li>(^^)/◎</li>
                                                 @endif
                                             </ul>
