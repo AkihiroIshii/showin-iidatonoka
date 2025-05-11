@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Record;
 use App\Models\Target;
 use App\Models\Question;
+use Carbon\Carbon;
 
 trait RecordTrait
 {
@@ -72,8 +73,11 @@ trait RecordTrait
                 ')
             ->groupBy('user_id','question_id');
 
+        $this_nendo = Carbon::now()->subMonthNoOverflow(3)->year; //今年度 
+        $nendo_from = $this_nendo - 5 + 1; //直近５ヵ年分の最初の年度
+                
         //大問にログインユーザの記録を紐づけ
-        $questions = Question::where('year', '!=', '2019')
+        $questions = Question::where('year', '>=', $nendo_from)
             ->leftjoinSub($records_sub, 'records_sub', function($join) {
                 $join->on('questions.id', '=', 'records_sub.question_id');
             })
@@ -159,8 +163,11 @@ trait RecordTrait
         //目標点数
         $targets = Target::where('user_id', $user->id);
 
+        $this_nendo = Carbon::now()->subMonthNoOverflow(3)->year; //今年度 
+        $nendo_from = $this_nendo - 5 + 1; //直近５ヵ年分の最初の年度
+
         //大問に、このユーザの目標点数を結合(※１)
-        $questionsWithTargets = Question::where('year', '!=', '2019')
+        $questionsWithTargets = Question::where('year', '>=', $nendo_from)
             ->leftjoinSub($targets, 'targets', function($join) {
                 $join->on('questions.subject', '=', 'targets.subject')
                     ->on('questions.no', '=', 'targets.no');

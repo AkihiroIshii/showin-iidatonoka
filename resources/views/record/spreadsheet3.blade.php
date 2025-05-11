@@ -14,9 +14,6 @@
     </x-slot>
     <div class="mx-auto px-6">
         @php
-            $maxNos = ['国語' => 6, '数学' => 5, '社会' => 4, '理科' => 5, '英語' => 5];
-            $nos = ['1','2','3','4','5','全問'];
-            $nosDisp = ['問１','問２','問３','問４','問５','全問'];
             $questionsSet = $questionsSet->groupBy('subject')->map(fn($group) => $group->groupBy('year'));
         @endphp
         <div>
@@ -25,12 +22,28 @@
             </div>
             @foreach($questionsSet as $subject => $years)
                 <x-h3 class="text-xl font-bold mt-4">{{ $subject }}</x-h3>
-                
-                <table class="border-collapse border border-gray-400 w-full">
+                @php
+                    $no_size = count($years[2025]); //教科ごとの大問の数
+                    $nos = [];
+                    $nosDisp = [];
+                    for($i = 1; $i <= $no_size - 1; $i++){
+                        $nos[] = $i;
+                        $nosDisp[] = "問" . $i;
+                    }
+                    $nos[] = "全問";
+                    $nosDisp[] = "全問";
+                @endphp
+                <table class="table-fixed w-full border-collapse border border-gray-400">
+                    <colgroup>
+                        <col class="w-24" />
+                        @for($i = 0; $i < $no_size; $i++)
+                            <col class="w-full" />
+                        @endfor 
+                    </colgroup>
                     <thead>
                         <tr>
                             <th class="border border-gray-400 px-4 py-2">年度</th>
-                            @for($i = 0; $i <= 5; $i++)
+                            @for($i = 0; $i < $no_size; $i++)
                                 <th class="border border-gray-400 px-4 py-2">{{ $nosDisp[$i] }}</th>
                             @endfor
                         </tr>
@@ -40,7 +53,7 @@
                             <tr>
                                 <td class="border border-gray-400 px-4 py-2">{{ $year }}</td>
                                 
-                                @for($i = 0; $i <= 5; $i++)
+                                @for($i = 0; $i < $no_size; $i++)
                                     @php
                                         $question = $questionsByYear->firstWhere('no', $nos[$i]);
                                     @endphp
@@ -55,13 +68,11 @@
                                             @endphp
                                             <ul class="{!! $ulClass !!}">
                                                 <li>挑戦回数：{{ $question->count }}回</li>
-                                                <li>
-                                                    平均：{{ $question->avg_score }}点
-                                                    ／目標：{{ $question->target_score }}点
-                                                    @if($question->avg_score > $question->target_score)
-                                                        (^^)/◎
-                                                    @endif
-                                                </li>
+                                                <li>平均：{{ $question->avg_score }}点</li>
+                                                <li>目標：{{ $question->target_score }}点</li>
+                                                @if($question->avg_score > $question->target_score)
+                                                    <li>(^^)/◎</li>
+                                                @endif
                                             </ul>
                                         @else
                                             &nbsp; {{-- 空白セル --}}

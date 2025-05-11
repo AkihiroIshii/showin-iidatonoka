@@ -33,13 +33,16 @@
                     <div>
                         <x-input-error :messages="$errors->get('year')" class="mt-2" />
                         <label for="year" class="font-semibold mt-4">過去問年度</label>
+                        @php
+                            $years = ['2025','2024','2023','2022','2021','2020','なが模試 第1回','なが模試 第2回','なが模試 第3回','なが模試 第4回','なが模試 第5回','なが模試 第6回','なが模試 第7回','なが模試 第8回'];
+                        @endphp
                         <select type="string" name="year" class="w-auto py-2 border border-gray-300 rounded-md" id="year">
                             <option value="">選択してください。</option>
-                            @for ($i = 2024; $i >= 2020; $i--)
-                                <option value="{{ $i }}" {{ old('year') == $i ? 'selected' : '' }}>
-                                    {{ $i }}
+                            @foreach($years as $year)
+                                <option value="{{ $year }}" {{ old('year') == $year ? 'selected' : '' }}>
+                                    {{ $year }}
                                 </option>
-                            @endfor
+                            @endforeach
                         </select>     
                     </div>
                 </div>
@@ -67,12 +70,12 @@
                         <x-input-error :messages="$errors->get('no')" class="mt-2" />
                         <label for="no" class="font-semibold mt-4">大問番号</label>
                         @php
-                            $noValues = ['1','2','3','4','5','全問'];
-                            $noDisplays = ['問１','問２','問３','問４','問５','全問'];
+                            $noValues = ['1','2','3','4','5','6','7','8','9','全問'];
+                            $noDisplays = ['問１','問２','問３','問４','問５','問６','問７','問８','問９','全問'];
                         @endphp
                         <select type="string" name="no" class="w-auto py-2 border border-gray-300 rounded-md" id="no">
                             <option value="">選択してください。</option>
-                            @for($i = 0; $i < 6; $i++)
+                            @for($i = 0; $i < 10; $i++)
                                 <option value="{{ $noValues[$i] }}" {{ old('no') == $noValues[$i] ? 'selected' : '' }}>
                                     {{ $noDisplays[$i] }}
                                 </option>
