@@ -20,6 +20,7 @@ use App\Models\Workbook;
 use App\Models\Exam;
 use App\Traits\ExamTrait;
 use App\Models\ExamResult;
+use App\Models\Information;
 use App\Models\Workrecord;
 use Carbon\Carbon;
 use App\Http\Requests\WorkrecordRequest;
@@ -45,6 +46,10 @@ class AdminController extends Controller
         //生徒
         $users = $this->getUsers();
 
+        $informations = Information::query()
+            ->orderBy('updated_at','desc')
+            ->get();
+
         $usualtargets = $this->getTargetsByToday();
 
         $transfers = Transfer::from('transfers as t')
@@ -67,7 +72,7 @@ class AdminController extends Controller
             ->orderBy('t.alternative_day_1','asc')
             ->orderBy('t.user_id','asc')
             ->get();
-        return view('admin.dashboard', compact('users','usualtargets','transfers')); //管理者専用ページのビュー
+        return view('admin.dashboard', compact('users','informations','usualtargets','transfers')); //管理者専用ページのビュー
     }
 
     public function students() {

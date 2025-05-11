@@ -10,8 +10,7 @@
         $message = '';
     @endphp
 
-    <!-- 更新情報 -->
-    @if(Auth::user()->grade == "保護者")
+    {{-- @if(Auth::user()->grade == "保護者")
         <p class="bg-yellow-200 px-4">更新情報</p>
         <ul class="list-disc px-8">
             <li>3/11 メニューに「検定」を追加しました。</li>
@@ -25,10 +24,20 @@
             <li>3/11 メニューに「検定」を追加しました。</li>
             <li>3/11 メニューに「志望校」を追加しました。（中高生対象）</li>
         </ul>
-    @endif
+    @endif --}}
 
     <!-- スマホ表示用 -->
     <div class="sm:hidden">
+        <!-- お知らせ -->
+        <x-h3>お知らせ</x-h3>
+        <div class="mb-6 mt-4">
+            @foreach($informations as $info)
+                <ul class="list-disc px-8">
+                    <li>{{$info->content}}</li>
+                </ul>
+            @endforeach
+        </div>
+
         <!-- 志望校を表示 -->
         @if(Str::contains(Auth::user()->grade, ['中','高','保護者']))
         <x-h3>志望校</x-h3>
@@ -82,6 +91,16 @@
 
     <!-- PC表示用 -->
     <div class="hidden sm:block mx-auto px-6 py-4">
+
+        <!-- お知らせ -->
+        <x-h3>お知らせ</x-h3>
+        <div class="mb-6 mt-4">
+            @foreach($informations as $info)
+                <ul class="list-disc px-8">
+                    <li>{{$info->content}}</li>
+                </ul>
+            @endforeach
+        </div>
 
         <!-- 志望校を表示 -->
         @if(Str::contains(Auth::user()->grade, ['中','高','保護者']))

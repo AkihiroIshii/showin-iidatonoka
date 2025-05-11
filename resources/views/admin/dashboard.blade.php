@@ -6,6 +6,16 @@
             </h2>
         </x-slot>
         <div class="mx-auto px-6">
+            <!-- お知らせ -->
+            <x-h3>お知らせ</x-h3>
+            <div class="mb-6 mt-4">
+                @foreach($informations as $info)
+                    <ul class="list-disc px-8">
+                        <li>{{$info->content}}</li>
+                    </ul>
+                @endforeach
+            </div>
+
             <!-- 振替申請中 -->
             <x-h3>振替申請中</x-h3>
             <div class="mb-6 mt-4">

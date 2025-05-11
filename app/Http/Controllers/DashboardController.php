@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\School;
 use App\Models\Event;
+use App\Models\Information;
 use App\Models\Usualtarget;
 use App\Models\TopChoice;
 use App\Traits\EventTrait;
@@ -32,7 +33,12 @@ class DashboardController extends Controller
 
         // イベントを取得
         $events = $this->getEvents();
+        
+        // お知らせを取得
+        $informations = Information::query()
+            ->orderBy('updated_at','desc')
+            ->get();
 
-        return view('dashboard', compact('user','top_choices','events','usualtargets'));
+        return view('dashboard', compact('user','top_choices','events','usualtargets','informations'));
     } 
 }

@@ -56,7 +56,7 @@
                     @else
                         @if(Auth::user()->grade == "中３")
                             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
-                                過去問演習
+                                過去問
                             </x-nav-link>
                         @endif
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
@@ -64,7 +64,7 @@
                         </x-nav-link>
                         @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                             <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
-                                ワーク演習
+                                ワーク
                             </x-nav-link>
                             <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                                 試験結果
@@ -207,7 +207,7 @@
                 </x-responsive-nav-link>
                 @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                     <x-responsive-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
-                        ワーク演習
+                        ワーク
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                         試験結果

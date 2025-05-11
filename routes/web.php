@@ -15,6 +15,7 @@ use App\Http\Controllers\ExamresultController;
 use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GiftController;
+use App\Http\Controllers\InformationController;
 use App\Http\Controllers\KenteiController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MessageController;
@@ -297,6 +298,18 @@ Route::get('/coin/{coin}/edit', [CoinController::class, 'edit'])
 ->middleware(['auth', 'verified'])->name('coin.edit');
 Route::patch('/coin/{coin}', [CoinController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('coin.update');
+
+/* お知らせ */
+Route::get('information', [InformationController::class, 'index'])
+->middleware(['auth', 'verified'])->name('information');
+Route::get('/information/create', [InformationController::class, 'create'])
+->middleware(['auth', 'verified'])->name('information.create');
+Route::post('/information', [InformationController::class, 'store'])
+->middleware(['auth', 'verified'])->name('information.store');
+Route::get('/information/{information}/edit', [InformationController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('information.edit');
+Route::patch('/information/{information}', [InformationController::class, 'update'])
+->middleware(['auth', 'verified'])->name('information.update');
 
 /* AI-Showin */
 Route::get('aishowin', [AishowinController::class, 'index'])
