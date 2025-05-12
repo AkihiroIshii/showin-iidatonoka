@@ -28,7 +28,7 @@
 
     <!-- スマホ表示用 -->
     <div class="sm:hidden">
-        <!-- お知らせ -->
+        {{-- <!-- お知らせ -->
         <x-h3>お知らせ</x-h3>
         <div class="mb-6 mt-4">
             @foreach($informations as $info)
@@ -36,7 +36,7 @@
                     <li>{{$info->content}}</li>
                 </ul>
             @endforeach
-        </div>
+        </div> --}}
 
         <!-- 志望校を表示 -->
         @if(Str::contains(Auth::user()->grade, ['中','高','保護者']))
@@ -92,7 +92,7 @@
     <!-- PC表示用 -->
     <div class="hidden sm:block mx-auto px-6 py-4">
 
-        <!-- お知らせ -->
+        {{-- <!-- お知らせ -->
         <x-h3>お知らせ</x-h3>
         <div class="mb-6 mt-4">
             @foreach($informations as $info)
@@ -100,7 +100,7 @@
                     <li>{{$info->content}}</li>
                 </ul>
             @endforeach
-        </div>
+        </div> --}}
 
         <!-- 志望校を表示 -->
         @if(Str::contains(Auth::user()->grade, ['中','高','保護者']))

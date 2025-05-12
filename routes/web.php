@@ -30,6 +30,12 @@ use App\Http\Controllers\UsualtargetController;
 use App\Http\Controllers\WorkbookController;
 use App\Http\Controllers\WorkrecordController;
 
+/* ログイン */
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+// Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+
 // ファイルへのアクセス
 Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
     // URL デコード
@@ -118,13 +124,6 @@ Route::get('/admin/user/{user}/edit', [AdminController::class, 'edit_user'])
 ->middleware(['auth', 'verified'])->name('admin.user.edit');
 Route::patch('user/{user}', [AdminController::class, 'update_user'])
 ->middleware(['auth', 'verified'])->name('admin.user.update');
-
-
-/* ログイン */
-Route::get('/', function () {
-    // return view('welcome');
-    return redirect()->route('login');
-});
 
 /* ダッシュボード */
 Route::get('dashboard', [DashboardController::class, 'index'])
