@@ -22,7 +22,7 @@
             @endif
             @if(isset($user) && strpos($user->grade, '小') === false)
                 <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
-                    ワーク演習
+                    ワーク
                 </x-nav-link>
                 <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                     試験結果
@@ -30,6 +30,9 @@
             @endif
             <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                 日々の目標
+            </x-nav-link>
+            <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
+                クリア済
             </x-nav-link>
             <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                 志望校

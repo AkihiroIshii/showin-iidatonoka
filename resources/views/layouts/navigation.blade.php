@@ -38,6 +38,9 @@
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             日々の目標
                         </x-nav-link>
+                        <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
+                            クリア済
+                        </x-nav-link>
                         <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                             試験結果
                         </x-nav-link>
@@ -61,6 +64,9 @@
                         @endif
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             日々の目標
+                        </x-nav-link>
+                        <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
+                            クリア済
                         </x-nav-link>
                         @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                             <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">

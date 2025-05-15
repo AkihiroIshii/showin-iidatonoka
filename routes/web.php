@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AishowinController;
 use App\Http\Controllers\CoinController;
 use App\Http\Controllers\CommonController;
+use App\Http\Controllers\CompletedUnitController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamresultController;
@@ -196,6 +197,18 @@ Route::get('usualtarget/{usualtarget}/edit', [UsualtargetController::class, 'edi
 ->middleware(['auth', 'verified'])->name('usualtarget.edit');
 Route::patch('usualtarget/{usualtarget}/update', [UsualtargetController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('usualtarget.update');
+
+/* クリアした単元 */
+Route::get('completedunit', [CompletedUnitController::class, 'index'])
+->middleware(['auth', 'verified'])->name('completedunit');
+Route::get('completedunit/create', [CompletedUnitController::class, 'create'])
+->middleware(['auth', 'verified'])->name('completedunit.create');
+Route::post('completedunit/store', [CompletedUnitController::class, 'store'])
+->middleware(['auth', 'verified'])->name('completedunit.store');
+Route::get('completedunit/{completedunit}/edit', [CompletedUnitController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('completedunit.edit');
+Route::patch('completedunit/{completedunit}/update', [CompletedUnitController::class, 'update'])
+->middleware(['auth', 'verified'])->name('completedunit.update');
 
 /* 試験 */
 // Route::get('exam', [ExamController::class, 'index'])
