@@ -91,6 +91,9 @@
                     @if(Auth::user()->role == "admin")
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4"></th>
                     @endif
+                    @if(Auth::user()->grade == "保護者")
+                        <x-th>生徒名</x-th>
+                    @endif
                     <x-th>単元名</x-th>
                     <x-th>レベル数</x-th>
                     <x-th>学習モード周回数</x-th>
@@ -103,6 +106,9 @@
                             <x-td>
                                 <a href="{{route('completedunit.edit', $completed_unit_aishowin->id)}}" class="text-blue-600">編集</a>
                             </x-td>
+                        @endif
+                        @if(Auth::user()->grade == "保護者")
+                            <x-td>{{$completed_unit_aishowin->name}}</x-td>
                         @endif
                         <x-td>{{$completed_unit_aishowin->unit}}</x-td>
                         <x-td>{{$completed_unit_aishowin->num_level}}</x-td>

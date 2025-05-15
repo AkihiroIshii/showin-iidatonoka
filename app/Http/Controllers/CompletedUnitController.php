@@ -25,15 +25,17 @@ class CompletedUnitController extends Controller
         $user = $this->user;
 
         // AI-Showin
-        $completed_unit_aishowins = CompletedUnit::where('user_id', $user->id)
-            ->where('teaching_material', 'AI-Showin')
+        $completed_unit_aishowins = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
+            ->where('completed_units.teaching_material', 'AI-Showin')
             ->leftJoin('aishowins', 'completed_units.unit_id_aishowin', '=', 'aishowins.id')
+            ->leftJoin('users', 'completed_units.user_id', '=', 'users.id')
             ->selectRaw('
                 completed_units.*,
                 aishowins.grade,
                 aishowins.unit,
                 aishowins.num_level,
-                aishowins.explanation       
+                aishowins.explanation,
+                users.name
             ')
             ->orderBy('completed_units.completed_date', 'desc')
             ->get();
