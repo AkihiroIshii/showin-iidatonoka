@@ -23,7 +23,8 @@ class TopChoiceController extends Controller
     public function index() {
         $user = $this->user;
         $top_choices = $this->get_top_choices();
-        return view('top_choice.index',compact('user','top_choices'));
+        $grouped_top_choices = $top_choices->groupBy('name');
+        return view('top_choice.index',compact('user','grouped_top_choices'));
     }
 
     public function create() {

@@ -36,8 +36,9 @@ class UsualtargetController extends Controller
 
         $current_flg = false;
         $usualtargets = $this->getUsualtargets($current_flg);
+        $grouped_usualtargets = $usualtargets->groupBy('user');
 
-        return view('usualtarget.index', compact('user','usualtargets','lastMonthCoinSum','thisMonthCoinSum'));
+        return view('usualtarget.index', compact('user','grouped_usualtargets','lastMonthCoinSum','thisMonthCoinSum'));
     }
 
     public function create() {
