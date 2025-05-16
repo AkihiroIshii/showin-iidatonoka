@@ -25,7 +25,7 @@ class CompletedUnitController extends Controller
         $user = $this->user;
 
         // AI-Showin
-        $completed_unit_aishowins = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
+        $grouped_completed_unit_aishowins = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
             ->where('completed_units.teaching_material', 'AI-Showin')
             ->leftJoin('aishowins', 'completed_units.unit_id_aishowin', '=', 'aishowins.id')
             ->leftJoin('users', 'completed_units.user_id', '=', 'users.id')
@@ -38,7 +38,8 @@ class CompletedUnitController extends Controller
                 users.name
             ')
             ->orderBy('completed_units.completed_date', 'desc')
-            ->get();
+            ->get()
+            ->groupBy('name');
 
         // moji蔵
         // $completed_unit_aishowins = CompletedUnit::where('user_id', $user->id)
@@ -54,7 +55,7 @@ class CompletedUnitController extends Controller
         //     ->orderBy('completed_units.completed_date', 'desc')
         //     ->get();
 
-        return view('completedunit.index', compact('completed_unit_aishowins','user'));
+        return view('completedunit.index', compact('grouped_completed_unit_aishowins','user'));
     }
 
     public function create() {
