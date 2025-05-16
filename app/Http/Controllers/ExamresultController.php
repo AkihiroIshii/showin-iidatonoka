@@ -26,8 +26,10 @@ class ExamresultController extends Controller
     public function index() {
         $user = $this->user;
         $examresults = $this->getExamresultsWithAverage();
-        $moshiresults = $this->getMoshiresultsWithAverage();        
-        return view('examresult.index', compact('user','examresults','moshiresults'));
+        $grouped_examresults = $examresults->groupBy('name');
+        $moshiresults = $this->getMoshiresultsWithAverage();
+        $grouped_moshiresults = $moshiresults->groupBy('name');       
+        return view('examresult.index', compact('user','grouped_examresults','grouped_moshiresults'));
     }
 
     // public function show(int $exam_id) {

@@ -33,7 +33,8 @@ class KenteiController extends Controller
             ')
             ->orderBy('first_date','desc')
             ->get();
-        return view('kentei.index',compact('user','kenteis'));
+        $grouped_kenteis = $kenteis->groupBy('user_name');
+        return view('kentei.index',compact('user','grouped_kenteis'));
     }
 
     public function create() {
