@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('top_choices', function (Blueprint $table) {
-            $table->integer('num_capacity')->nullable(true);
+        Schema::table('kawaijukuones', function (Blueprint $table) {
+            $table->dropColumn('topic');
+            $table->integer('num_topic')->nullable(true);
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('top_choices', function (Blueprint $table) {
-            $table->dropColumn('num_capacity');
+        Schema::table('kawaijukuones', function (Blueprint $table) {
+            $table->string('topic');
+            $table->dropColumn('num_topic');
         });
     }
 };

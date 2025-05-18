@@ -88,7 +88,7 @@
                         <option value="">選択してください。</option>
                         @foreach($kawaijukuones as $kawaijukuone)
                             <option value="{{ $kawaijukuone->id }}" {{ old('unit_id_kawaijukuone') == $kawaijukuone->id ? 'selected' : '' }}>
-                                {{$kawaijukuone->subject_1}}：{{$kawaijukuone->subject_2}}：{{$kawaijukuone->section}}：{{$kawaijukuone->topic}}
+                                {{$kawaijukuone->subject_1}}：{{$kawaijukuone->subject_2}}：{{$kawaijukuone->section}}
                             </option>
                         @endforeach
                     </select>     

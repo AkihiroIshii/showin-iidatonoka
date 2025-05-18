@@ -70,7 +70,7 @@ class CompletedUnitController extends Controller
                 kawaijukuones.subject_1,
                 kawaijukuones.subject_2,
                 kawaijukuones.section,
-                kawaijukuones.topic,
+                kawaijukuones.num_topic,
                 users.name
             ')
             ->orderBy('completed_units.completed_date', 'desc')

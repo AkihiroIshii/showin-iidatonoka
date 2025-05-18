@@ -30,7 +30,7 @@
                         <p class="font-bold">完了日：{{$completed_unit_kawaijukuone->completed_date}}</p>
                         <p class="font-bold">単元名：{{$completed_unit_kawaijukuone->subject_1}} - {{$completed_unit_kawaijukuone->subject_2}} - {{$completed_unit_kawaijukuone->section}}<p>
                         <div class="ml-4">
-                            <p>{{$completed_unit_kawaijukuone->topic}}</p>
+                            <p>トピック数：{{$completed_unit_kawaijukuone->num_topic}}</p>
                         </div>
                     </div>
                 @endforeach
@@ -100,7 +100,7 @@
                         <x-th>教科</x-th>
                         <x-th>科目</x-th>
                         <x-th>分野</x-th>
-                        <x-th>トピック</x-th>
+                        <x-th>トピック数</x-th>
                         <x-th>クリアした日</x-th>
                     </tr>
                     @foreach($completed_unit_kawaijukuones as $completed_unit_kawaijukuone)
@@ -113,7 +113,7 @@
                             <x-td>{{$completed_unit_kawaijukuone->subject_1}}</x-td>
                             <x-td>{{$completed_unit_kawaijukuone->subject_2}}</x-td>
                             <x-td>{{$completed_unit_kawaijukuone->section}}</x-td>
-                            <x-td>{{$completed_unit_kawaijukuone->topic}}</x-td>
+                            <x-td>{{$completed_unit_kawaijukuone->num_topic}}</x-td>
                             <x-td>{{$completed_unit_kawaijukuone->completed_date}}</x-td>
                         </tr>
                     @endforeach

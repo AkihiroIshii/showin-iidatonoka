@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('kenteis', function (Blueprint $table) {
-            $table->dropColomns('first_point');
-            $table->dropColomns('second_point');
+            $table->dropColumn('first_point');
+            $table->dropColumn('second_point');
         });
     }
 };
