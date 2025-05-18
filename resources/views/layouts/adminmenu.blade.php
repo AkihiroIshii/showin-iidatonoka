@@ -75,5 +75,11 @@
                 <x-responsive-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
                     解答用紙(配点記入済)
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                    日々の目標
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
+                    クリア済
+                </x-responsive-nav-link>
             </div>
         </div>

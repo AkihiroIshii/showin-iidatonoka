@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Arr;
 use App\Models\Aishowin;
+use App\Models\Mojizou;
+use App\Models\Kawaijukuone;
 use App\Models\CompletedUnit;
 use App\Models\User;
 
@@ -42,26 +44,48 @@ class CompletedUnitController extends Controller
             ->groupBy('name');
 
         // moji蔵
-        // $completed_unit_aishowins = CompletedUnit::where('user_id', $user->id)
-        //     ->where('teaching_material', 'AI-Showin')
-        //     ->leftJoin('aishowins', 'completed_units.unit_id_aishowin', '=', 'aishowins.id')
-        //     ->selectRaw('
-        //         completed_units.*,
-        //         aishowins.grade,
-        //         aishowins.unit,
-        //         aishowins.num_level,
-        //         aishowins.explanation       
-        //     ')
-        //     ->orderBy('completed_units.completed_date', 'desc')
-        //     ->get();
+        $grouped_completed_unit_mojizous = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
+            ->where('teaching_material', 'moji蔵')
+            ->leftJoin('mojizous', 'completed_units.unit_id_mojizou', '=', 'mojizous.id')
+            ->leftJoin('users', 'completed_units.user_id', '=', 'users.id')
+            ->selectRaw('
+                completed_units.*,
+                mojizous.grade,
+                mojizous.category,
+                mojizous.topic,
+                mojizous.num_question,
+                users.name
+            ')
+            ->orderBy('completed_units.completed_date', 'desc')
+            ->get()
+            ->groupBy('name');
 
-        return view('completedunit.index', compact('grouped_completed_unit_aishowins','user'));
+        // 河合塾One
+        $grouped_completed_unit_kawaijukuones = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
+            ->where('teaching_material', '河合塾One')
+            ->leftJoin('kawaijukuones', 'completed_units.unit_id_kawaijukuone', '=', 'kawaijukuones.id')
+            ->leftJoin('users', 'completed_units.user_id', '=', 'users.id')
+            ->selectRaw('
+                completed_units.*,
+                kawaijukuones.subject_1,
+                kawaijukuones.subject_2,
+                kawaijukuones.section,
+                kawaijukuones.topic,
+                users.name
+            ')
+            ->orderBy('completed_units.completed_date', 'desc')
+            ->get()
+            ->groupBy('name');
+
+        return view('completedunit.index', compact('grouped_completed_unit_aishowins', 'grouped_completed_unit_mojizous','grouped_completed_unit_kawaijukuones', 'user'));
     }
 
     public function create() {
         $user = $this->user;
         $aishowins = Aishowin::all();
-        return view('completedunit.create', compact('user','aishowins'));
+        $mojizous = Mojizou::all();
+        $kawaijukuones = Kawaijukuone::all();
+        return view('completedunit.create', compact('user','aishowins','mojizous','kawaijukuones'));
     }
 
     public function store(Request $request) {
@@ -69,6 +93,8 @@ class CompletedUnitController extends Controller
             'teaching_material' => 'required',
             'unit_id_aishowin' => 'nullable',
             'num_loop' => 'nullable', 
+            'unit_id_mojizou' => 'nullable',
+            'unit_id_kawaijukuone' => 'nullable',
             'completed_date' => 'required', 
             'memo' => 'nullable'
         ]);
@@ -85,7 +111,9 @@ class CompletedUnitController extends Controller
     public function edit(CompletedUnit $completedunit) {
         $user = $this->user;
         $aishowins = Aishowin::all();
-        return view('completedunit.edit', compact('completedunit','user','aishowins'));
+        $mojizous = Mojizou::all();
+        $kawaijukuones = Kawaijukuone::all();
+        return view('completedunit.edit', compact('completedunit','user','aishowins','mojizous','kawaijukuones'));
     }
 
     public function update(Request $request, CompletedUnit $completedunit) {
@@ -93,6 +121,8 @@ class CompletedUnitController extends Controller
             'teaching_material' => 'required',
             'unit_id_aishowin' => 'nullable',
             'num_loop' => 'nullable', 
+            'unit_id_mojizou' => 'nullable',
+            'unit_id_kawaijukuone' => 'nullable',
             'completed_date' => 'required', 
             'memo' => 'nullable'
         ]);

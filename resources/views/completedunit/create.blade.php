@@ -67,6 +67,36 @@
 
             <div class="mt-8">
                 <div>
+                    <x-input-error :messages="$errors->get('unit_id_mojizou')" class="mt-2" />
+                    <label for="unit_id_mojizou" class="font-semibold mt-4">moji蔵の単元</label>
+                    <select type="string" name="unit_id_mojizou" class="w-auto py-2 border border-gray-300 rounded-md" id="unit_id_mojizou">
+                        <option value="">選択してください。</option>
+                        @foreach($mojizous as $mojizou)
+                            <option value="{{ $mojizou->id }}" {{ old('unit_id_mojizou') == $mojizou->id ? 'selected' : '' }}>
+                                {{$mojizou->grade}}：{{$mojizou->category}}：{{$mojizou->topic}}
+                            </option>
+                        @endforeach
+                    </select>     
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <div>
+                    <x-input-error :messages="$errors->get('unit_id_kawaijukuone')" class="mt-2" />
+                    <label for="unit_id_kawaijukuone" class="font-semibold mt-4">河合塾Oneの単元</label>
+                    <select type="string" name="unit_id_kawaijukuone" class="w-auto py-2 border border-gray-300 rounded-md" id="unit_id_kawaijukuone">
+                        <option value="">選択してください。</option>
+                        @foreach($kawaijukuones as $kawaijukuone)
+                            <option value="{{ $kawaijukuone->id }}" {{ old('unit_id_kawaijukuone') == $kawaijukuone->id ? 'selected' : '' }}>
+                                {{$kawaijukuone->subject_1}}：{{$kawaijukuone->subject_2}}：{{$kawaijukuone->section}}：{{$kawaijukuone->topic}}
+                            </option>
+                        @endforeach
+                    </select>     
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <div>
                     <x-input-error :messages="$errors->get('completed_date')" class="mt-2" />
                     <label for="completed_date" class="font-semibold mt-4">クリアした日</label>
                     <input type="date" name="completed_date" class="w-auto py-2 border border-gray-300 rounded-md" id="completed_date" value="{{old('completed_date')}}">

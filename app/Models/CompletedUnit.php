@@ -12,6 +12,8 @@ class CompletedUnit extends Model
         'user_id',
         'unit_id_aishowin',
         'num_loop', 
+        'unit_id_mojizou',
+        'unit_id_kawaijukuone',
         'completed_date', 
         'memo',
     ];
