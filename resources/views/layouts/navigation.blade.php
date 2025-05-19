@@ -75,6 +75,9 @@
                             <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                                 試験結果
                             </x-nav-link>
+                            <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
+                                志望校
+                            </x-nav-link>
                         @endif
                         <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                             検定
@@ -223,6 +226,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                         試験結果
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
+                        志望校
                     </x-responsive-nav-link>
                 @endif
                 <x-responsive-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">

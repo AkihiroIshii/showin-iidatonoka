@@ -53,7 +53,7 @@
         <!-- PC表示用 -->
         <div class="hidden sm:block mx-auto px-6 py-4">
             <div class="mb-6 mt-4">
-                @if(Auth::user()->role == "admin")
+                @if(Auth::user()->grade != "保護者")
                     <a href="{{route('top_choice.create', $user)}}" class="text-blue-600">新規作成</a>
                 @endif
                 @foreach($grouped_top_choices as $top_choices)
