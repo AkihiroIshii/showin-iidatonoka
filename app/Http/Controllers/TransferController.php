@@ -48,6 +48,7 @@ class TransferController extends Controller
             ->orderBy('t.alternative_day_1','asc')
             ->orderBy('t.user_id','asc')
             ->get();
+
         return view('transfer.index',compact('user','transfers'));
     }
 

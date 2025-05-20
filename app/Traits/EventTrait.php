@@ -21,7 +21,7 @@ trait EventTrait
         $school_ids = User::whereIn('id', $user_ids)->pluck('school_id')->toArray();
         $school_ids = array_merge($school_ids, [901, 902]); //松陰塾と外部のIDを追加。
         $user_grades = User::whereIn('id', $user_ids)->pluck('grade')->toArray();
-
+     
         // 直近２ヵ月のイベントを取得
         $events = Event::whereBetween('events.date_from', [$startDate, $endDate])
         ->leftJoin('schools', function ($join) {
@@ -31,10 +31,25 @@ trait EventTrait
             events.*,
             schools.name,
             IF(events.date_from = events.date_to,
-                DATE_FORMAT(events.date_from, '%c/%e'),
                 CONCAT(
-                    CONCAT(DATE_FORMAT(events.date_from, '%c/%e'), '～'),
-                    DATE_FORMAT(events.date_to, '%c/%e')
+                    DATE_FORMAT(events.date_from, '%c/%e'),
+                    '(', 
+                    ELT(WEEKDAY(events.date_from) + 1, '月', '火', '水', '木', '金', '土', '日'),
+                    ')'
+                ),
+                CONCAT(
+                    CONCAT(
+                        DATE_FORMAT(events.date_from, '%c/%e'),
+                        '(',
+                        ELT(WEEKDAY(events.date_from) + 1, '月', '火', '水', '木', '金', '土', '日'),
+                        ')～'
+                    ),
+                    CONCAT(
+                        DATE_FORMAT(events.date_to, '%c/%e'),
+                        '(',
+                        ELT(WEEKDAY(events.date_to) + 1, '月', '火', '水', '木', '金', '土', '日'),
+                        ')'
+                    )
                 )
             ) as formatted_date
         ");
