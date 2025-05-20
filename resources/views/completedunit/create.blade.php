@@ -97,6 +97,14 @@
             
             <div class="mt-8">
                 <div>
+                    <x-input-error :messages="$errors->get('target_date')" class="mt-2" />
+                    <label for="target_date" class="font-semibold mt-4">クリア目標日</label>
+                    <input type="date" name="target_date" class="w-auto py-2 border border-gray-300 rounded-md" id="target_date" value="{{old('target_date')}}">
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <div>
                     <x-input-error :messages="$errors->get('completed_date')" class="mt-2" />
                     <label for="completed_date" class="font-semibold mt-4">クリアした日</label>
                     <input type="date" name="completed_date" class="w-auto py-2 border border-gray-300 rounded-md" id="completed_date" value="{{old('completed_date')}}">

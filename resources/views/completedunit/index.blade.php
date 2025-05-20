@@ -27,6 +27,7 @@
                 @endif
                 @foreach($completed_unit_kawaijukuones as $completed_unit_kawaijukuone)
                     <div class="mb-4 p-2 bg-pink-100">
+                        <p class="font-bold">目標日：{{$completed_unit_kawaijukuone->target_date}}</p>
                         <p class="font-bold">完了日：{{$completed_unit_kawaijukuone->completed_date}}</p>
                         <p class="font-bold">単元名：{{$completed_unit_kawaijukuone->subject_1}} - {{$completed_unit_kawaijukuone->subject_2}} - {{$completed_unit_kawaijukuone->section}}<p>
                         <div class="ml-4">
@@ -52,6 +53,7 @@
                         }
                     @endphp
                     <div class="mb-4 p-2 {!!$bg_color!!}">
+                        <p class="font-bold">目標日：{{$completed_unit_aishowin->target_date}}</p>
                         <p class="font-bold">完了日：{{$completed_unit_aishowin->completed_date}}</p>
                         <p class="font-bold">単元名：{{$completed_unit_aishowin->unit}} ({{$completed_unit_aishowin->grade}})<p>
                         <div class="ml-4">
@@ -73,6 +75,7 @@
                 @endif
                 @foreach($completed_unit_mojizous as $completed_unit_mojizou)
                     <div class="mb-4 p-2 bg-sky-100">
+                        <p class="font-bold">目標日：{{$completed_unit_mojizou->target_date}}</p>
                         <p class="font-bold">完了日：{{$completed_unit_mojizou->completed_date}}</p>
                         <p class="font-bold">
                             項目：{{$completed_unit_mojizou->grade}} - {{$completed_unit_mojizou->category}} - {{$completed_unit_mojizou->topic}}
@@ -101,6 +104,7 @@
                         <x-th>科目</x-th>
                         <x-th>分野</x-th>
                         <x-th>トピック数</x-th>
+                        <x-th>クリア目標日</x-th>
                         <x-th>クリアした日</x-th>
                     </tr>
                     @foreach($completed_unit_kawaijukuones as $completed_unit_kawaijukuone)
@@ -114,6 +118,7 @@
                             <x-td>{{$completed_unit_kawaijukuone->subject_2}}</x-td>
                             <x-td>{{$completed_unit_kawaijukuone->section}}</x-td>
                             <x-td>{{$completed_unit_kawaijukuone->num_topic}}</x-td>
+                            <x-td>{{$completed_unit_kawaijukuone->target_date}}</x-td>
                             <x-td>{{$completed_unit_kawaijukuone->completed_date}}</x-td>
                         </tr>
                     @endforeach
@@ -136,6 +141,7 @@
                         <x-th>単元名 (学年)</x-th>
                         <x-th>レベル数</x-th>
                         <x-th>周回数</x-th>
+                        <x-th>クリア目標日</x-th>
                         <x-th>クリアした日</x-th>
                         <x-th>内容</x-th>
                     </tr>
@@ -156,6 +162,7 @@
                             <x-td>{{$completed_unit_aishowin->unit}} ({{$completed_unit_aishowin->grade}})</x-td>
                             <x-td>{{$completed_unit_aishowin->num_level}}</x-td>
                             <x-td>{{$completed_unit_aishowin->num_loop}}</x-td>
+                            <x-td>{{$completed_unit_aishowin->target_date}}</x-td>
                             <x-td>{{$completed_unit_aishowin->completed_date}}</x-td>
                             <x-td>{{$completed_unit_aishowin->explanation}}</x-td>
                         </tr>
@@ -179,6 +186,7 @@
                         <x-th>分野</x-th>
                         <x-th>項目</x-th>
                         <x-th>問題数</x-th>
+                        <x-th>クリア目標日</x-th>
                         <x-th>クリアした日</x-th>
                     </tr>
                     @foreach($completed_unit_mojizous as $completed_unit_mojizou)
@@ -199,6 +207,7 @@
                             <x-td>{{$completed_unit_mojizou->category}}</x-td>
                             <x-td>{{$completed_unit_mojizou->topic}}</x-td>
                             <x-td>{{$completed_unit_mojizou->num_question}}</x-td>
+                            <x-td>{{$completed_unit_mojizou->target_date}}</x-td>
                             <x-td>{{$completed_unit_mojizou->completed_date}}</x-td>
                         </tr>
                     @endforeach

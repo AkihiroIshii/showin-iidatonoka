@@ -32,7 +32,7 @@
                 日々の目標
             </x-nav-link>
             <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
-                クリア済
+                単元
             </x-nav-link>
             <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                 志望校
@@ -79,7 +79,7 @@
                     日々の目標
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
-                    クリア済
+                    単元
                 </x-responsive-nav-link>
             </div>
         </div>

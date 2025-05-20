@@ -20,6 +20,7 @@ class CompletedUnitController extends Controller
         // セッション情報から対象生徒を取得
         $this->user = User::where('id', Session::get('target_students'))->first();
         $this->user_ids = Arr::wrap(Session::get('target_students'));
+        $this->user_grades = User::whereIn('id', $this->user_ids)->pluck('grade');
     }
 
     public function index()
@@ -27,6 +28,25 @@ class CompletedUnitController extends Controller
         $user = $this->user;
 
         // AI-Showin
+        // $grouped_completed_unit_aishowins = Aishowin::whereIn('aishowins.grade', $this->user_grades)
+        //     ->leftJoin('completed_units', function($join){
+        //         $join->on('completed_units.unit_id_aishowin', '=', 'aishowins.id')
+        //             ->where('completed_units.teaching_material', 'AI-Showin')
+        //             ->whereIn('completed_units.user_id', $this->user_ids);
+        //     })
+        //     ->leftJoin('users', 'completed_units.user_id', '=', 'users.id')
+        //     ->selectRaw('
+        //         completed_units.*,
+        //         aishowins.grade,
+        //         aishowins.unit,
+        //         aishowins.num_level,
+        //         aishowins.explanation,
+        //         IF(users.name = '', 
+        //     ')
+        //     ->orderBy('completed_units.completed_date', 'desc')
+        //     ->get()
+        //     ->groupBy('name');
+
         $grouped_completed_unit_aishowins = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
             ->where('completed_units.teaching_material', 'AI-Showin')
             ->leftJoin('aishowins', 'completed_units.unit_id_aishowin', '=', 'aishowins.id')
@@ -39,6 +59,7 @@ class CompletedUnitController extends Controller
                 aishowins.explanation,
                 users.name
             ')
+            ->orderBy('completed_units.target_date', 'desc')
             ->orderBy('completed_units.completed_date', 'desc')
             ->get()
             ->groupBy('name');
@@ -56,6 +77,7 @@ class CompletedUnitController extends Controller
                 mojizous.num_question,
                 users.name
             ')
+            ->orderBy('completed_units.target_date', 'desc')
             ->orderBy('completed_units.completed_date', 'desc')
             ->get()
             ->groupBy('name');
@@ -73,6 +95,7 @@ class CompletedUnitController extends Controller
                 kawaijukuones.num_topic,
                 users.name
             ')
+            ->orderBy('completed_units.target_date', 'desc')
             ->orderBy('completed_units.completed_date', 'desc')
             ->get()
             ->groupBy('name');
@@ -95,7 +118,8 @@ class CompletedUnitController extends Controller
             'num_loop' => 'nullable', 
             'unit_id_mojizou' => 'nullable',
             'unit_id_kawaijukuone' => 'nullable',
-            'completed_date' => 'required', 
+            'target_date' => 'nullable', 
+            'completed_date' => 'nullable', 
             'memo' => 'nullable'
         ]);
 
@@ -123,7 +147,8 @@ class CompletedUnitController extends Controller
             'num_loop' => 'nullable', 
             'unit_id_mojizou' => 'nullable',
             'unit_id_kawaijukuone' => 'nullable',
-            'completed_date' => 'required', 
+            'target_date' => 'nullable', 
+            'completed_date' => 'nullable', 
             'memo' => 'nullable'
         ]);
 

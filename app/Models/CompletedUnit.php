@@ -14,6 +14,7 @@ class CompletedUnit extends Model
         'num_loop', 
         'unit_id_mojizou',
         'unit_id_kawaijukuone',
+        'target_date', 
         'completed_date', 
         'memo',
     ];
