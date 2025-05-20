@@ -26,7 +26,14 @@
                     </div>
                 @endif
                 @foreach($completed_unit_kawaijukuones as $completed_unit_kawaijukuone)
-                    <div class="mb-4 p-2 bg-pink-100">
+                    @php
+                        if(isset($completed_unit_kawaijukuone->completed_date)) {
+                            $bg_color = "bg-pink-300";
+                        } else {
+                            $bg_color = "bg-pink-100";
+                        }
+                    @endphp
+                    <div class="mb-4 p-2 {!!$bg_color!!}">
                         <p class="font-bold">目標日：{{$completed_unit_kawaijukuone->target_date}}</p>
                         <p class="font-bold">完了日：{{$completed_unit_kawaijukuone->completed_date}}</p>
                         <p class="font-bold">単元名：{{$completed_unit_kawaijukuone->subject_1}} - {{$completed_unit_kawaijukuone->subject_2}} - {{$completed_unit_kawaijukuone->section}}<p>
@@ -45,13 +52,21 @@
                     </div>
                 @endif
                 @foreach($completed_unit_aishowins as $completed_unit_aishowin)
-                    @php
-                        if(strpos($completed_unit_aishowin->grade, "小") !== false) {
-                            $bg_color = "bg-yellow-100";
-                        } else {
-                            $bg_color = "bg-sky-100";
-                        }
-                    @endphp
+                        @php
+                            if(strpos($completed_unit_aishowin->grade, "小") !== false) {
+                                if(isset($completed_unit_aishowin->completed_date)) {
+                                    $bg_color = "bg-yellow-300";
+                                } else {
+                                    $bg_color = "bg-yellow-100";
+                                }
+                            } else {
+                                if(isset($completed_unit_aishowin->completed_date)) {
+                                    $bg_color = "bg-sky-300";
+                                } else {
+                                    $bg_color = "bg-sky-100";
+                                }
+                            }
+                        @endphp
                     <div class="mb-4 p-2 {!!$bg_color!!}">
                         <p class="font-bold">目標日：{{$completed_unit_aishowin->target_date}}</p>
                         <p class="font-bold">完了日：{{$completed_unit_aishowin->completed_date}}</p>
@@ -74,7 +89,22 @@
                     </div>
                 @endif
                 @foreach($completed_unit_mojizous as $completed_unit_mojizou)
-                    <div class="mb-4 p-2 bg-sky-100">
+                    @php
+                        if(strpos($completed_unit_mojizou->grade, "１") !== false || strpos($completed_unit_mojizou->grade, "２") !== false) {
+                            if(isset($completed_unit_mojizou->completed_date)) {
+                                $bg_color = "bg-sky-300";
+                            } else {
+                                $bg_color = "bg-sky-100";
+                            }
+                        } else {
+                            if(isset($completed_unit_mojizou->completed_date)) {
+                                $bg_color = "bg-yellow-300";
+                            } else {
+                                $bg_color = "bg-yellow-100";
+                            }
+                        }
+                    @endphp
+                    <div class="mb-4 p-2 {!!$bg_color!!}">
                         <p class="font-bold">目標日：{{$completed_unit_mojizou->target_date}}</p>
                         <p class="font-bold">完了日：{{$completed_unit_mojizou->completed_date}}</p>
                         <p class="font-bold">
@@ -108,7 +138,14 @@
                         <x-th>クリアした日</x-th>
                     </tr>
                     @foreach($completed_unit_kawaijukuones as $completed_unit_kawaijukuone)
-                        <tr class="bg-pink-100">
+                        @php
+                            if(isset($completed_unit_kawaijukuone->completed_date)) {
+                                $bg_color = "bg-pink-300";
+                            } else {
+                                $bg_color = "bg-pink-100";
+                            }
+                        @endphp
+                        <tr class="{!!$bg_color!!}">
                             @if(Auth::user()->role == "admin")
                                 <x-td>
                                     <a href="{{route('completedunit.edit', $completed_unit_kawaijukuone->id)}}" class="text-blue-600">編集</a>
@@ -148,9 +185,17 @@
                     @foreach($completed_unit_aishowins as $completed_unit_aishowin)
                         @php
                             if(strpos($completed_unit_aishowin->grade, "小") !== false) {
-                                $bg_color = "bg-yellow-100";
+                                if(isset($completed_unit_aishowin->completed_date)) {
+                                    $bg_color = "bg-yellow-300";
+                                } else {
+                                    $bg_color = "bg-yellow-100";
+                                }
                             } else {
-                                $bg_color = "bg-sky-100";
+                                if(isset($completed_unit_aishowin->completed_date)) {
+                                    $bg_color = "bg-sky-300";
+                                } else {
+                                    $bg_color = "bg-sky-100";
+                                }
                             }
                         @endphp
                         <tr class="{!! $bg_color !!}">
@@ -192,9 +237,17 @@
                     @foreach($completed_unit_mojizous as $completed_unit_mojizou)
                         @php
                             if(strpos($completed_unit_mojizou->grade, "１") !== false || strpos($completed_unit_mojizou->grade, "２") !== false) {
-                                $bg_color = "bg-sky-100";
+                                if(isset($completed_unit_mojizou->completed_date)) {
+                                    $bg_color = "bg-sky-300";
+                                } else {
+                                    $bg_color = "bg-sky-100";
+                                }
                             } else {
-                                $bg_color = "bg-yellow-100";
+                                if(isset($completed_unit_mojizou->completed_date)) {
+                                    $bg_color = "bg-yellow-300";
+                                } else {
+                                    $bg_color = "bg-yellow-100";
+                                }
                             }
                         @endphp
                         <tr class="{!!$bg_color!!}">
