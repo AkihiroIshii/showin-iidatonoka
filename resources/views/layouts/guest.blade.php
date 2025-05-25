@@ -37,6 +37,13 @@
                 </div>
             @endif
 
+            <!-- 書く蔵セクション -->
+            @if(\Carbon\Carbon::now()->day <= 15)
+                <div class="mb-4 text-center bg-blue-100 text-blue-800 px-4 py-2 rounded">
+                    <p>月例作文「書く蔵」申込受付中（毎月1日～15日）</p>
+                </div>
+            @endif
+
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>

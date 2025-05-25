@@ -35,7 +35,7 @@
         </div>
         <footer>
             <div class="bg-gray-100 p-4 text-center">
-                <small><a href="https://showin-juku.jp/iida-tonoka/" target="_blank">&copy;2025 松陰塾飯田殿岡校</a></small>
+                <small><a href="https://showin-juku.jp/iida-tonoka/" target="_blank">&copy;2025 Akihiro Ishii</a></small>
             </div>
         </footer>
     </body>

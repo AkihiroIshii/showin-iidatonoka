@@ -10,7 +10,11 @@ class School extends Model
         return $this->hasMany(Exam::class);
     }
 
-    public function examratios() {
-        return $this->hasMany(Examratio::class);
+    public function entrance_exam_data_highschools() {
+        return $this->hasMany(EntranceExamDataHighschool::class);
     }
+
+    // public function examratios() {
+    //     return $this->hasMany(Examratio::class);
+    // }
 }

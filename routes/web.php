@@ -11,9 +11,10 @@ use App\Http\Controllers\CoinController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompletedUnitController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EntranceExamDataHighschoolController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamresultController;
-use App\Http\Controllers\ExamratioController;
+// use App\Http\Controllers\ExamratioController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\InformationController;
@@ -331,10 +332,14 @@ Route::get('aishowin', [AishowinController::class, 'index'])
 
 
 /* 高校入試倍率 */
-Route::get('examratio', [ExamratioController::class, 'index'])
-->middleware(['auth', 'verified'])->name('examratio');
-Route::get('examratio/school', [ExamratioController::class, 'school'])
-->middleware(['auth', 'verified'])->name('examratio.school');
+// Route::get('examratio', [ExamratioController::class, 'index'])
+// ->middleware(['auth', 'verified'])->name('examratio');
+// Route::get('examratio/school', [ExamratioController::class, 'school'])
+// ->middleware(['auth', 'verified'])->name('examratio.school');
+Route::get('entrance_exam_data_highschool/years', [EntranceExamDataHighschoolController::class, 'years'])
+->middleware(['auth', 'verified'])->name('entrance_exam_data_highschool.years');
+Route::get('entrance_exam_data_highschool/schools', [EntranceExamDataHighschoolController::class, 'schools'])
+->middleware(['auth', 'verified'])->name('entrance_exam_data_highschool.schools');
 
 /* その他（共通） */
 // Route::get('link', [CommonController::class, 'link'])
