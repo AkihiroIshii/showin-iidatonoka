@@ -171,7 +171,13 @@
                                     @endif
                                     <x-td class="{!!$early_bg_color!!}">{{$entrance_exam_data_highschool->early_ratio}}</x-td>
                                     <x-td>{{$entrance_exam_data_highschool->late_capacity}}人</x-td>
-                                    <x-td>{{$entrance_exam_data_highschool->late_post_applicants}}人 ⇒ {{$entrance_exam_data_highschool->late_admission}}人</x-td>
+                                    <x-td>
+                                        @if($entrance_exam_data_highschool->late_admission == 0)
+                                            {{$entrance_exam_data_highschool->late_post_applicants}}人 ⇒ 不明
+                                        @else
+                                            {{$entrance_exam_data_highschool->late_post_applicants}}人 ⇒ {{$entrance_exam_data_highschool->late_admission}}人
+                                        @endif
+                                    </x-td>
                                     <x-td class="{!!$late_bg_color!!}">{{$entrance_exam_data_highschool->late_ratio}}</x-td>
                                     <x-td>
                                         @if($entrance_exam_data_highschool->rerecruitment == 0)
