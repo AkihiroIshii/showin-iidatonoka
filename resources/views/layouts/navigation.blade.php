@@ -166,7 +166,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <p class="text-xs">　一部、スマホ表示に未対応です。すみません(＞＜;)</p>
+            {{-- <p class="text-xs">　一部、スマホ表示に未対応です。すみません(＞＜;)</p> --}}
             <!-- <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
                 一覧
             </x-responsive-nav-link>
@@ -250,6 +250,11 @@
             <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
                 その他情報
             </x-responsive-nav-link>
+            @if(Auth::user()->role != "admin")
+                <x-responsive-nav-link :href="route('meeting.video')" :active="request()->routeIs('meeting.video')">
+                    通話
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

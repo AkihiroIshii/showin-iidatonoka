@@ -6,6 +6,9 @@
         </h2>
     </x-slot>
     <div class="mx-auto px-6 py-4">
+
+        <!-- おすすめのコース -->
+        <x-h3>おすすめのコース</x-h3>
         <!-- スマホ、PC共通 -->
         <ul class="list-disc ml-4 mb-4">
             <li class="ml-4">コース変更のご相談は塾長まで。</li>
@@ -99,6 +102,44 @@
                     </x-td>
                 </tr>
             </table>
+        </div>
+
+        <!-- 月謝表 -->
+        <x-h3>月謝（小中学生）</x-h3>
+        <ul class="text-xs">
+            <li>・別途、教材費3,300円（税込）がかかります。</li>
+            <li>・夏期講習費、冬期講習費、春期講習費は別料金です。</li>
+            <li>・兄弟姉妹は金額が低い方が２割引きになります。</li>
+            <li>・表の()内は税込みの金額です。</li>
+        </ul>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <x-h4>小学生</x-h4>
+                <img src="{{ route('secure.file', ['folder' => 'info', 'filename' => 'price_e.png']) }}">
+            </div>
+            <div>
+                <x-h4>中１</x-h4>
+                <img src="{{ route('secure.file', ['folder' => 'info', 'filename' => 'price_j1.png']) }}">
+            </div>
+            <div>
+                <x-h4>中２</x-h4>
+                <img src="{{ route('secure.file', ['folder' => 'info', 'filename' => 'price_j2.png']) }}">
+            </div>
+            <div>
+                <x-h4>中３</x-h4>
+                <img src="{{ route('secure.file', ['folder' => 'info', 'filename' => 'price_j3.png']) }}">
+            </div>
+        </div>
+
+
+        <x-h3>月謝（高校生）</x-h3>
+        <ul class="text-xs">
+            <li>・ベリタスは教科ごとに教材費が別途かかる場合があります。</li>
+            <li>・夏期講習費、冬期講習費、春期講習費は別料金です。</li>
+            <li>・兄弟姉妹は金額が低い方が２割引きになります。</li>
+        </ul>
+        <div class="flex justify-center">
+            <img src="{{ route('secure.file', ['folder' => 'info', 'filename' => 'price_h.png']) }}">
         </div>
     </div>
 </x-app-layout>
