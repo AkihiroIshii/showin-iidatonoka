@@ -59,8 +59,8 @@ class CompletedUnitController extends Controller
                 aishowins.explanation,
                 users.name
             ')
-            ->orderBy('completed_units.target_date', 'desc')
             ->orderBy('completed_units.completed_date', 'desc')
+            ->orderBy('completed_units.target_date', 'desc')
             ->get()
             ->groupBy('name');
 
@@ -77,8 +77,8 @@ class CompletedUnitController extends Controller
                 mojizous.num_question,
                 users.name
             ')
-            ->orderBy('completed_units.target_date', 'desc')
             ->orderBy('completed_units.completed_date', 'desc')
+            ->orderBy('completed_units.target_date', 'desc')
             ->get()
             ->groupBy('name');
 
@@ -95,8 +95,8 @@ class CompletedUnitController extends Controller
                 kawaijukuones.num_topic,
                 users.name
             ')
-            ->orderBy('completed_units.target_date', 'desc')
             ->orderBy('completed_units.completed_date', 'desc')
+            ->orderBy('completed_units.target_date', 'desc')
             ->get()
             ->groupBy('name');
 
