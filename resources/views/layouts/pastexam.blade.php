@@ -16,7 +16,7 @@
                 集計表
             </x-nav-link>
             <x-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
-                解答用紙
+                問題・解答
             </x-nav-link>
         </div>
 
@@ -33,13 +33,13 @@
                     目標点数
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
-                    集計表(一覧形式)
+                    大問一覧
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('record.spreadsheet3')" :active="request()->routeIs('record.spreadsheet3')">
-                    集計表(表形式)
+                    集計表
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
-                    解答用紙(配点記入済)
+                    問題・解答
                 </x-responsive-nav-link>
             </div>
         </div>
