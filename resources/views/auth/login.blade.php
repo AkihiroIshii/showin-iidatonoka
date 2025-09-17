@@ -35,4 +35,7 @@
             </x-primary-button>
         </div>
     </form>
+        <div class="text-lg font-semibold">
+            <a href="{{route('readme')}}" class="text-blue-600 text-sm font-semibold">このアプリについて</a>
+        </div>
 </x-guest-layout>

@@ -53,9 +53,9 @@
                         <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                             コイン
                         </x-nav-link>
-                        <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
+                        {{-- <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                             振替
-                        </x-nav-link>
+                        </x-nav-link> --}}
                     @else
                         @if(Auth::user()->grade == "中３")
                             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
@@ -88,11 +88,11 @@
                         <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                             コイン
                         </x-nav-link>
-                        @if(strpos(Auth::user()->grade, '高') !== false) <!-- 高校生なら表示する -->
+                        {{-- @if(strpos(Auth::user()->grade, '高') !== false) <!-- 高校生なら表示する -->
                             <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                                 振替
                             </x-nav-link>
-                        @endif
+                        @endif --}}
                     @endif
                     <!-- 管理者、生徒共通 -->
                     <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
@@ -205,9 +205,9 @@
                 <x-responsive-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                     コイン
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
+                {{-- <x-responsive-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                     振替
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> --}}
             @else
                 @if(Auth::user()->grade == "中３")
                     <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
@@ -241,11 +241,11 @@
                     コイン
                 </x-responsive-nav-link>
             @endif
-            @if(strpos(Auth::user()->grade, '高') !== false) <!-- 高校生なら表示する -->
+            {{-- @if(strpos(Auth::user()->grade, '高') !== false) <!-- 高校生なら表示する -->
                 <x-responsive-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                     振替
                 </x-responsive-nav-link>
-            @endif
+            @endif --}}
             <!-- 管理者、生徒共通 -->
             <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
                 その他情報

@@ -27,6 +27,7 @@
             @endphp
 
             <!-- 表示部分 -->
+            <p class="text-center">平均は、年度ごとの受験者の平均点です。</p>
             @for($i=0; $i<count($years); $i++)
                 <!-- テスト結果を表示 -->
                 <x-h3>{{$years[$i]}}年度</x-h3>

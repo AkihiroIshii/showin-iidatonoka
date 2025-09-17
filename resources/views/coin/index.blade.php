@@ -20,7 +20,7 @@
         <!-- コイン合計 -->
         <div class="text-center">
             <p class="text-xl">合計：<span>{{$allCoins}}コイン</span></p>
-            <p class="text-sm">AI-Showinのコインと同じように使えます(^^)/</p>
+            <p class="text-sm">AI-Showinのコインと合算して使えます(^^)/</p>
         </div>
 
         <!-- 新規作成 -->

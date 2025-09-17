@@ -119,6 +119,7 @@
         <!-- PC表示用のコード -->
         <div class="hidden sm:block">
             <x-h3>河合塾One</x-h3>
+            <p>最終更新日：{{$latest_date_updated_kawaijukuones}}</p>
             @foreach($grouped_completed_unit_kawaijukuones as $completed_unit_kawaijukuones)
                 @if(Auth::user()->grade == "保護者")
                     <div class="mt-6">
@@ -163,6 +164,7 @@
             @endforeach
 
             <x-h3>AI-Showin</x-h3>
+            <p>最終更新日：{{$latest_date_updated_aishowins}}</p>
             <p class="text-center">(※)周回数は、学習モードの周回数です。学習モードで80点未満だと、その単元をもう１周学習します。</p>
             @foreach($grouped_completed_unit_aishowins as $completed_unit_aishowins)
                 @if(Auth::user()->grade == "保護者")
@@ -216,6 +218,7 @@
             @endforeach
 
             <x-h3>moji蔵</x-h3>
+            <p>最終更新日：{{$latest_date_updated_mojizous}}</p>
             @foreach($grouped_completed_unit_mojizous as $completed_unit_mojizous)
                 @if(Auth::user()->grade == "保護者")
                     <div class="mt-6">

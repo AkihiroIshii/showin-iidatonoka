@@ -37,6 +37,10 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 // Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+/* はじめに */
+Route::get('readme', function() {
+    return view('readme');
+})->name('readme');
 
 // ファイルへのアクセス
 Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
@@ -348,6 +352,5 @@ Route::get('audiofile', [CommonController::class, 'audiofile'])
 ->middleware('auth', 'verified')->name('audiofile');
 Route::get('info/plan', [CommonController::class, 'plan'])
 ->middleware(['auth', 'verified'])->name('plan');
-
 
 require __DIR__.'/auth.php';

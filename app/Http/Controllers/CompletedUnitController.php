@@ -63,6 +63,7 @@ class CompletedUnitController extends Controller
             ->orderBy('completed_units.target_date', 'desc')
             ->get()
             ->groupBy('name');
+        $latest_date_updated_aishowins = $grouped_completed_unit_aishowins->flatten()->whereNotNull('updated_at')->max('updated_at');;
 
         // moji蔵
         $grouped_completed_unit_mojizous = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
@@ -81,6 +82,7 @@ class CompletedUnitController extends Controller
             ->orderBy('completed_units.target_date', 'desc')
             ->get()
             ->groupBy('name');
+        $latest_date_updated_mojizous = $grouped_completed_unit_mojizous->flatten()->whereNotNull('updated_at')->max('updated_at');;
 
         // 河合塾One
         $grouped_completed_unit_kawaijukuones = CompletedUnit::whereIn('completed_units.user_id', $this->user_ids)
@@ -99,8 +101,12 @@ class CompletedUnitController extends Controller
             ->orderBy('completed_units.target_date', 'desc')
             ->get()
             ->groupBy('name');
+        $latest_date_updated_kawaijukuones = $grouped_completed_unit_kawaijukuones->flatten()->whereNotNull('updated_at')->max('updated_at');
 
-        return view('completedunit.index', compact('grouped_completed_unit_aishowins', 'grouped_completed_unit_mojizous','grouped_completed_unit_kawaijukuones', 'user'));
+        return view('completedunit.index', compact(
+            'grouped_completed_unit_aishowins', 'grouped_completed_unit_mojizous','grouped_completed_unit_kawaijukuones',
+            'latest_date_updated_aishowins', 'latest_date_updated_mojizous', 'latest_date_updated_kawaijukuones',
+            'user'));
     }
 
     public function create() {
