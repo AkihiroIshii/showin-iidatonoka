@@ -35,6 +35,7 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">生徒名</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">学年</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">挑戦中の目標</td>
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">単元更新日</td>
                     </tr>
                     @foreach($users as $user)
                         @php
@@ -61,6 +62,7 @@
                                     {{$user->due_date}}：{{$user->content}}
                                 @endif
                             </td>
+                            <td class="border border-slate-300 px-4">{{$user->updated_at}}</td>
                         </tr>
                     @endforeach
                 </table>

@@ -24,6 +24,18 @@ trait UserTrait
             LIMIT 1
         )');
 
+        // 単元の最終更新日を取得
+        $subUnit = DB::table('completed_units as cu1')
+        ->select('cu1.*')
+        ->whereNotNull('cu1.updated_at')
+        ->whereRaw('cu1.id = (
+            SELECT cu2.id FROM completed_units as cu2
+            WHERE cu2.user_id = cu1.user_id AND cu2.updated_at IS NOT NULL
+            ORDER BY cu2.updated_at DESC
+            LIMIT 1
+        )');
+        // dd($subUnit);
+
         // ユーザ一覧を取得
         $users = User::where('grade', '!=', '保護者')
             // ->whereNull('expiration_date')
@@ -33,6 +45,9 @@ trait UserTrait
             ->leftJoinSub($subQuery, 'ut', function($join) {
                 $join->on('users.id', '=', 'ut.user_id');
             })
+            ->leftJoinSub($subUnit, 'cu', function($join) {
+                $join->on('users.id', '=', 'cu.user_id');
+            })
             ->selectRaw('
                 users.id,
                 users.name as user_name,
@@ -41,7 +56,8 @@ trait UserTrait
                 users.plan,
                 users.expiration_date,
                 ut.content,
-                ut.due_date
+                ut.due_date,
+                cu.updated_at
             ')
             ->orderBy('users.expiration_date','asc')
             ->orderBy('users.grade','desc')
