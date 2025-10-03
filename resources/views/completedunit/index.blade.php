@@ -19,6 +19,7 @@
         <!-- スマホ表示用のコード -->
         <div class="sm:hidden mb-8">
             <x-h3>河合塾One</x-h3>
+            <p>最終更新日：{{$latest_date_updated_kawaijukuones}}</p>
             @foreach($grouped_completed_unit_kawaijukuones as $completed_unit_kawaijukuones)
                 @if(Auth::user()->grade == "保護者")
                     <div class="mt-6">
@@ -45,6 +46,7 @@
             @endforeach
 
             <x-h3>AI-Showin</x-h3>
+            <p>最終更新日：{{$latest_date_updated_aishowins}}</p>
             @foreach($grouped_completed_unit_aishowins as $completed_unit_aishowins)
                 @if(Auth::user()->grade == "保護者")
                     <div class="mt-6">
@@ -82,6 +84,7 @@
             @endforeach
 
             <x-h3>moji蔵</x-h3>
+            <p>最終更新日：{{$latest_date_updated_mojizous}}</p>
             @foreach($grouped_completed_unit_mojizous as $completed_unit_mojizous)
                 @if(Auth::user()->grade == "保護者")
                     <div class="mt-6">
