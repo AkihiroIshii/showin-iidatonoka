@@ -41,6 +41,9 @@
                         <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                             単元
                         </x-nav-link>
+                        <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
+                            過去問
+                        </x-nav-link>
                         <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                             試験結果
                         </x-nav-link>
