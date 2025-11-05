@@ -19,11 +19,9 @@
             <x-nav-link :href="route('aishowin')" :active="request()->routeIs('aishowin')">
                 目的別対策
             </x-nav-link>
-            @if(Str::contains(Auth::user()->grade, ['中','保護者','管理者']))
-                <x-nav-link :href="route('entrance_exam_data_highschool.years')" :active="request()->routeIs('entrance_exam_data_highschool.years')">
-                    高校入試倍率
-                </x-nav-link>                
-            @endif
+            <x-nav-link :href="route('entrance_exam_data_highschool.years')" :active="request()->routeIs('entrance_exam_data_highschool.years')">
+                高校入試倍率
+            </x-nav-link>                
             @if(Str::contains(Auth::user()->grade, ['保護者','管理者']))
                 <x-nav-link :href="route('plan')" :active="request()->routeIs('plan')">
                     通塾コース
@@ -49,11 +47,9 @@
                 <x-responsive-nav-link :href="route('aishowin')" :active="request()->routeIs('aishowin')">
                     目的別対策
                 </x-responsive-nav-link>  
-                @if(Str::contains(Auth::user()->grade, ['中','保護者']))
-                    <x-responsive-nav-link :href="route('entrance_exam_data_highschool.years')" :active="request()->routeIs('entrance_exam_data_highschool.years')">
-                        高校入試倍率
-                    </x-responsive-nav-link>
-                @endif
+                <x-responsive-nav-link :href="route('entrance_exam_data_highschool.years')" :active="request()->routeIs('entrance_exam_data_highschool.years')">
+                    高校入試倍率
+                </x-responsive-nav-link>
                 @if(Auth::user()->grade == "保護者")
                     <x-responsive-nav-link :href="route('plan')" :active="request()->routeIs('plan')">
                         通塾コース
