@@ -21,6 +21,7 @@
             <li>前期の「入学予定者数」は、飯田女子および公立（2024年度まで）は「合格者」の数を表示しています。</li>
             <li>後期の「志願数」は、志願変更受付後のデータを表示しています。</li>
             <li>飯田女子は、推薦入試のデータを「前期」に、一般入試のデータを「後期」に表示しています。</li>
+            <li class="font-bold">スマホでは本試験の倍率のみ表示されますが、PCやタブレットでは第1回・第2回調査の倍率も見られます。</li>
         </ul>
         </ul>
 
@@ -40,9 +41,6 @@
                                 <th colspan="2">志願数/募集人員（倍率）</th>
                             </tr>
                             <tr class="bg-gray-300">
-                                @if(Auth::user()->role == "admin")
-                                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4"></th>
-                                @endif
                                 <x-th>年度</x-th>
                                 <x-th>前期</x-th>
                                 <x-th>後期</x-th>
@@ -67,11 +65,6 @@
                                     }
                                 @endphp
                                 <tr class="text-center">
-                                    @if(Auth::user()->role == "admin")
-                                        <x-td>
-                                            <a href="{{route('completedunit.edit', $completed_unit_kawaijukuone->id)}}" class="text-blue-600">編集</a>
-                                        </x-td>
-                                    @endif 
                                     <x-td>{{$entrance_exam_data_highschool->year}}</x-td>
                                     <x-td>
                                         @if($entrance_exam_data_highschool->early_capacity == 0)
@@ -118,9 +111,12 @@
 
                         <table class="border-separate border border-slate-400 m-auto table-fixed">
                             <tr class="bg-gray-300">
+                                @if(Auth::user()->role == "admin")
+                                    <th></th>
+                                @endif 
                                 <th colspan="1"></th>
-                                <th colspan="3">前期</th>
-                                <th colspan="3">後期</th>
+                                <th colspan="4">前期</th>
+                                <th colspan="4">後期</th>
                                 <th colspan="1">再募集</th>
                             </tr>
                             <tr class="bg-gray-300">
@@ -129,24 +125,96 @@
                                 @endif
                                 <x-th>年度</x-th>
                                 <x-th>募集人員</x-th>
+                                <x-th>
+                                    <ul>
+                                        <li>志願数</li>
+                                        <li>調査１</li>
+                                    </ul>
+                                </x-th>
+                                <x-th>
+                                    <ul>
+                                        <li>志願数</li>
+                                        <li>調査２</li>
+                                    </ul>
+                                </x-th>
+                                <x-th>
+                                    <ul>
+                                        <li>志願数</li>
+                                        <li>本試験</li>
+                                    </ul>
+                                </x-th>
+                                {{-- <x-th>入学予定</x-th> --}}
+                                <!-- 後期 -->
+                                <x-th>募集人員</x-th>
+                                <x-th>
+                                    <ul>
+                                        <li>志願数</li>
+                                        <li>調査１</li>
+                                    </ul>
+                                </x-th>
+                                <x-th>
+                                    <ul>
+                                        <li>志願数</li>
+                                        <li>調査２</li>
+                                    </ul>
+                                </x-th>
+                                <x-th>
+                                    <ul>
+                                        <li>志願数</li>
+                                        <li>本試験</li>
+                                    </ul>
+                                </x-th>
+                                {{-- <x-th>募集人員</x-th>
                                 <x-th>志願数⇒入学予定者数</x-th>
                                 <x-th>倍率</x-th>
                                 <x-th>募集人員</x-th>
                                 <x-th>志願数⇒入学予定者数</x-th>
-                                <x-th>倍率</x-th>
+                                <x-th>倍率</x-th> --}}
                                 <x-th>募集人員</x-th>
                             </tr>
                             @foreach($department as $entrance_exam_data_highschool)
                                 @php
-                                    // 前期倍率
+                                    // 前期倍率（調査１）
+                                    if($entrance_exam_data_highschool->early_survey1_ratio >= 2.0) {
+                                        $early_sv1_bg_color = "bg-pink-100";
+                                    } elseif($entrance_exam_data_highschool->early_survey1_ratio > 1.0) {
+                                        $early_sv1_bg_color = "bg-yellow-100";
+                                    } else {
+                                        $early_sv1_bg_color = "bg-white-100";
+                                    }
+                                    // 前期倍率（調査２）
+                                    if($entrance_exam_data_highschool->early_survey2_ratio >= 2.0) {
+                                        $early_sv2_bg_color = "bg-pink-100";
+                                    } elseif($entrance_exam_data_highschool->early_survey2_ratio > 1.0) {
+                                        $early_sv2_bg_color = "bg-yellow-100";
+                                    } else {
+                                        $early_sv2_bg_color = "bg-white-100";
+                                    }
+                                    // 前期倍率（本試験）
                                     if($entrance_exam_data_highschool->early_ratio >= 2.0) {
                                         $early_bg_color = "bg-pink-100";
                                     } elseif($entrance_exam_data_highschool->early_ratio > 1.0) {
                                         $early_bg_color = "bg-yellow-100";
                                     } else {
                                         $early_bg_color = "bg-white-100";
+                                    }    
+                                    // 後期倍率（調査１）
+                                    if($entrance_exam_data_highschool->late_survey1_ratio >= 2.0) {
+                                        $late_sv1_bg_color = "bg-pink-100";
+                                    } elseif($entrance_exam_data_highschool->late_survey1_ratio > 1.0) {
+                                        $late_sv1_bg_color = "bg-yellow-100";
+                                    } else {
+                                        $late_sv1_bg_color = "bg-white-100";
                                     }
-                                    // 後期倍率
+                                    // 後期倍率（調査２）
+                                    if($entrance_exam_data_highschool->late_survey2_ratio >= 2.0) {
+                                        $late_sv2_bg_color = "bg-pink-100";
+                                    } elseif($entrance_exam_data_highschool->late_survey2_ratio > 1.0) {
+                                        $late_sv2_bg_color = "bg-yellow-100";
+                                    } else {
+                                        $late_sv2_bg_color = "bg-white-100";
+                                    }
+                                    // 後期倍率（本試験）
                                     if($entrance_exam_data_highschool->late_ratio >= 2.0) {
                                         $late_bg_color = "bg-pink-100";
                                     } elseif($entrance_exam_data_highschool->late_ratio > 1.0) {
@@ -158,11 +226,59 @@
                                 <tr class="text-center">
                                     @if(Auth::user()->role == "admin")
                                         <x-td>
-                                            <a href="{{route('completedunit.edit', $completed_unit_kawaijukuone->id)}}" class="text-blue-600">編集</a>
+                                            {{-- <a href="{{route('completedunit.edit', $completed_unit_kawaijukuone->id)}}" class="text-blue-600">編集</a> --}}
                                         </x-td>
                                     @endif 
                                     <x-td>{{$entrance_exam_data_highschool->year}}</x-td>
+                                    <!-- 前期 -->
                                     @if($entrance_exam_data_highschool->early_capacity == 0)
+                                        <x-td>募集なし</x-td>
+                                        <x-td></x-td>
+                                        <x-td></x-td>
+                                        <x-td></x-td>
+                                    @else
+                                        <x-td>{{$entrance_exam_data_highschool->early_capacity}}人</x-td>
+                                        <x-td>
+                                            <ul>
+                                                <li>{{$entrance_exam_data_highschool->early_survey1_applicants}}人</li>
+                                                <li class="{!!$early_sv1_bg_color!!}">（{{$entrance_exam_data_highschool->early_survey1_ratio}}倍）</li>
+                                            </ul>
+                                        </x-td>
+                                        <x-td>
+                                            <ul>
+                                                <li>{{$entrance_exam_data_highschool->early_survey2_applicants}}人</li>
+                                                <li class="{!!$early_sv2_bg_color!!}">（{{$entrance_exam_data_highschool->early_survey2_ratio}}倍）</li>
+                                            </ul>
+                                        </x-td>
+                                        <x-td>
+                                            <ul>
+                                                <li>{{$entrance_exam_data_highschool->early_applicants}}人</li>
+                                                <li class="{!!$early_bg_color!!}">（{{$entrance_exam_data_highschool->early_ratio}}倍）</li>
+                                            </ul>
+                                        </x-td>
+                                        {{-- <x-td>{{$entrance_exam_data_highschool->early_admission}}人</x-td> --}}
+                                    @endif
+                                    <!-- 後期 -->
+                                    <x-td>{{$entrance_exam_data_highschool->late_capacity}}人</x-td>
+                                    <x-td>
+                                        <ul>
+                                            <li>{{$entrance_exam_data_highschool->late_survey1_applicants}}人</li>
+                                            <li class="{!!$late_sv1_bg_color!!}">（{{$entrance_exam_data_highschool->late_survey1_ratio}}倍）</li>
+                                        </ul>
+                                    </x-td>
+                                    <x-td>
+                                        <ul>
+                                            <li>{{$entrance_exam_data_highschool->late_survey2_applicants}}人</li>
+                                            <li class="{!!$late_sv2_bg_color!!}">（{{$entrance_exam_data_highschool->late_survey2_ratio}}倍）</li>
+                                        </ul>
+                                    </x-td>
+                                    <x-td>
+                                        <ul>
+                                            <li>{{$entrance_exam_data_highschool->late_post_applicants}}人</li>
+                                            <li class="{!!$late_bg_color!!}">（{{$entrance_exam_data_highschool->late_ratio}}倍）</li>
+                                        </ul>
+                                    </x-td>
+                                    {{-- @if($entrance_exam_data_highschool->early_capacity == 0)
                                         <x-td>募集なし</x-td>
                                         <x-td></x-td>
                                     @else
@@ -178,7 +294,8 @@
                                             {{$entrance_exam_data_highschool->late_post_applicants}}人 ⇒ {{$entrance_exam_data_highschool->late_admission}}人
                                         @endif
                                     </x-td>
-                                    <x-td class="{!!$late_bg_color!!}">{{$entrance_exam_data_highschool->late_ratio}}</x-td>
+                                    <x-td class="{!!$late_bg_color!!}">{{$entrance_exam_data_highschool->late_ratio}}</x-td> --}}
+                                    <!-- 再募集 -->
                                     <x-td>
                                         @if($entrance_exam_data_highschool->rerecruitment == 0)
                                             募集なし

@@ -22,7 +22,11 @@ trait EntranceExamDataHighschoolTrait
                 schools.name as schoolName,
                 schools.shortname as schoolNameShort,
                 CONCAT(schools.name, "（", entrance_exam_data_highschools.department, "）") as school_department,
+                ROUND(entrance_exam_data_highschools.early_survey1_applicants/entrance_exam_data_highschools.early_capacity, 2) as early_survey1_ratio,
+                ROUND(entrance_exam_data_highschools.early_survey2_applicants/entrance_exam_data_highschools.early_capacity, 2) as early_survey2_ratio,
                 ROUND(entrance_exam_data_highschools.early_applicants/entrance_exam_data_highschools.early_capacity, 2) as early_ratio,
+                ROUND(entrance_exam_data_highschools.late_survey1_applicants/entrance_exam_data_highschools.late_capacity, 2) as late_survey1_ratio,
+                ROUND(entrance_exam_data_highschools.late_survey2_applicants/entrance_exam_data_highschools.late_capacity, 2) as late_survey2_ratio,
                 ROUND(entrance_exam_data_highschools.late_post_applicants/entrance_exam_data_highschools.late_capacity, 2) as late_ratio
             ')
             ->orderBy('year','desc')
