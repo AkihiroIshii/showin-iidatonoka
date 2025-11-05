@@ -117,6 +117,10 @@
 
                     <table class="border-separate border border-slate-400 m-auto table-fixed">
                         <tr class="bg-gray-300">
+                            @if(Auth::user()->role == "admin")
+                                <th>
+                                </th>
+                            @endif
                             <th colspan="1"></th>
                             <th colspan="3">前期</th>
                             <th colspan="3">後期</th>
@@ -165,11 +169,11 @@
                                 }
                             @endphp
                             <tr class="text-center">
-                                {{-- @if(Auth::user()->role == "admin")
+                                @if(Auth::user()->role == "admin")
                                     <x-td>
-                                        <a href="{{route('completedunit.edit', $completed_unit_kawaijukuone->id)}}" class="text-blue-600">編集</a>
+                                        {{-- <a href="{{route('completedunit.edit', $completed_unit_kawaijukuone->id)}}" class="text-blue-600">編集</a> --}}
                                     </x-td>
-                                @endif --}}
+                                @endif
                                 <x-td>
                                     <ul>
                                         <li>{{$entrance_exam_data_highschool->schoolName}}</li>
