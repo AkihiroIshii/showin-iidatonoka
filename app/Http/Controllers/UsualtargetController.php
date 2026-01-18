@@ -82,7 +82,8 @@ class UsualtargetController extends Controller
             'due_date' => 'required',
             'achieve_flg' => 'nullable|boolean',
             'coin' => 'nullable|integer',
-            'comment' => 'nullable'
+            'comment' => 'nullable',
+            'teacher_comment' => 'nullable',
         ]);
 
         $usualtarget->update($validated);

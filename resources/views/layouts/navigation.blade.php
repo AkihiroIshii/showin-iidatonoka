@@ -6,11 +6,11 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     @if(Auth::user()->role == "admin")
-                        <a href="{{ route('admin.dashboard') }}">
+                        <a href="{{ route('admin.students') }}">
                             <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
                         </a>
                     @else
-                        <a href="{{ route('dashboard') }}">
+                        <a href="{{ route('usualtarget') }}">
                             <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
                         </a>
                     @endif
@@ -36,7 +36,7 @@
                         </x-nav-link>
                     @elseif(Auth::user()->grade == "保護者")
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
-                            日々の目標
+                            月間目標
                         </x-nav-link>
                         <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                             単元
@@ -44,7 +44,7 @@
                         <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
                             過去問
                         </x-nav-link>
-                        <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
+                        {{-- <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                             試験結果
                         </x-nav-link>
                         <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
@@ -55,23 +55,23 @@
                         </x-nav-link>
                         <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                             コイン
-                        </x-nav-link>
+                        </x-nav-link> --}}
                         {{-- <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                             振替
                         </x-nav-link> --}}
                     @else
+                        <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                            月間目標
+                        </x-nav-link>
                         @if(Auth::user()->grade == "中３")
                             <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
                                 過去問
                             </x-nav-link>
                         @endif
-                        <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
-                            日々の目標
-                        </x-nav-link>
                         <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                             単元
                         </x-nav-link>
-                        @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
+                        {{-- @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                             <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                                 ワーク
                             </x-nav-link>
@@ -81,10 +81,10 @@
                             <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                                 志望校
                             </x-nav-link>
-                        @endif
-                        <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
+                        @endif --}}
+                        {{-- <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                             検定
-                        </x-nav-link>
+                        </x-nav-link> --}}
                         <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
                             公式集
                         </x-nav-link>
@@ -191,39 +191,42 @@
                 </x-responsive-nav-link>
             @elseif(Auth::user()->grade == "保護者")
                 <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
-                    日々の目標
+                    月間目標
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                     単元
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
+                <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
+                    過去問演習
+                </x-responsive-nav-link>
+                {{-- <x-responsive-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
                     試験結果
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                     検定
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
+                </x-responsive-nav-link> --}}
+                {{-- <x-responsive-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                     志望校
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                     コイン
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> --}}
                 {{-- <x-responsive-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                     振替
                 </x-responsive-nav-link> --}}
             @else
+                <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
+                    月間目標
+                </x-responsive-nav-link>
                 @if(Auth::user()->grade == "中３")
                     <x-responsive-nav-link :href="route('record')" :active="request()->routeIs('record')">
                         過去問演習
                     </x-responsive-nav-link>
                 @endif
-                <x-responsive-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
-                    日々の目標
-                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                     単元
                 </x-responsive-nav-link>
-                @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
+                {{-- @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                     <x-responsive-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                         ワーク
                     </x-responsive-nav-link>
@@ -233,13 +236,13 @@
                     <x-responsive-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                         志望校
                     </x-responsive-nav-link>
-                @endif
-                <x-responsive-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
+                @endif --}}
+                {{-- <x-responsive-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                     検定
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
                     問題集
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> --}}
                 <x-responsive-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                     コイン
                 </x-responsive-nav-link>

@@ -4,8 +4,9 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
         
-        <h2 class="mb-4">
-            松陰塾飯田殿岡校
+        <h2 class="mb-4 fs-2">
+            <p class="text-sm">松陰塾飯田殿岡校</p>
+            <p class="text-xl">目標管理システム</p>
         </h2>
         <!-- 退塾した生徒がログインしようとしたら表示 -->
         @if(session('errMsg'))

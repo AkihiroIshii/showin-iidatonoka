@@ -1,39 +1,41 @@
         <!-- 管理者 生徒別メニュー -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-            @if(isset($user) && $user->grade == "中３")
-                {{-- <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
-                    新規登録
-                </x-nav-link> --}}
-                <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
-                    記録一覧
-                </x-nav-link>
-                <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
-                    目標点数
-                </x-nav-link>
-                <x-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
-                    大問一覧
-                </x-nav-link>
-                <x-nav-link :href="route('record.spreadsheet3')" :active="request()->routeIs('record.spreadsheet3')">
-                    集計表
-                </x-nav-link>
-                <x-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
-                    解答用紙
-                </x-nav-link>
-            @endif
-            @if(isset($user) && strpos($user->grade, '小') === false)
-                <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
-                    ワーク
-                </x-nav-link>
-                <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
-                    試験結果
-                </x-nav-link>
-            @endif
             <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
-                日々の目標
+                月間目標
             </x-nav-link>
             <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                 単元
             </x-nav-link>
+            @if(isset($user) && $user->grade == "中３")
+                <div class="bg-pink-200">
+                    {{-- <x-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
+                        新規登録
+                    </x-nav-link> --}}
+                    <x-nav-link :href="route('record')" :active="request()->routeIs('record')">
+                        記録一覧
+                    </x-nav-link>
+                    <x-nav-link :href="route('target')" :active="request()->routeIs('target')">
+                        目標点数
+                    </x-nav-link>
+                    <x-nav-link :href="route('record.spreadsheet')" :active="request()->routeIs('record.spreadsheet')">
+                        大問一覧
+                    </x-nav-link>
+                    <x-nav-link :href="route('record.spreadsheet3')" :active="request()->routeIs('record.spreadsheet3')">
+                        集計表
+                    </x-nav-link>
+                    <x-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
+                        解答用紙
+                    </x-nav-link>
+                </div>
+            @endif
+            @if(isset($user) && strpos($user->grade, '小') === false)
+                {{-- <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
+                    ワーク
+                </x-nav-link> --}}
+                <x-nav-link :href="route('examresult')" :active="request()->routeIs('examresult')">
+                    試験結果
+                </x-nav-link>
+            @endif
             <x-nav-link :href="route('top_choice')" :active="request()->routeIs('top_choice')">
                 志望校
             </x-nav-link>
@@ -43,9 +45,9 @@
             <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                 コイン
             </x-nav-link>
-            <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
+            {{-- <x-nav-link :href="route('transfer')" :active="request()->routeIs('transfer')">
                 振替
-            </x-nav-link>
+            </x-nav-link> --}}
             <x-nav-link :href="route('meeting.video')" :active="request()->routeIs('meeting.vido')">
                 通話
             </x-nav-link>

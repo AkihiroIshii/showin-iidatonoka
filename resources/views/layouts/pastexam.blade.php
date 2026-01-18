@@ -16,7 +16,7 @@
                 集計表
             </x-nav-link>
             <x-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
-                問題・解答
+                正答・配点
             </x-nav-link>
         </div>
 
@@ -39,7 +39,7 @@
                     集計表
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('record.answersheet')" :active="request()->routeIs('record.answersheet')">
-                    問題・解答
+                    正答・配点
                 </x-responsive-nav-link>
             </div>
         </div>

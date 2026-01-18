@@ -4,7 +4,7 @@
             @include('layouts.adminmenu')
         @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            日々の目標
+            月間目標
             @if(Auth::user()->role == "admin")
                 ：{{$user->name}}
             @endif
@@ -22,7 +22,7 @@
             <a href="{{route('usualtarget.create', $user)}}" class="text-blue-600">新規作成</a>
         @endif
 
-        <!-- 獲得コイン数を表示 -->        
+        {{-- <!-- 獲得コイン数を表示 -->        
         @if(Auth::user()->grade != "保護者")
             <x-h3>目標達成で獲得したコイン</x-h3>
             <div>
@@ -40,10 +40,10 @@
                     (※)ここで獲得したコインは、毎月一日ごろに前月分をまとめてAI-Showinに反映します。
                 </div>
             </div>
-        @endif
+        @endif --}}
 
         <!-- 普段の目標を表示 -->
-        <x-h3>日々の目標</x-h3>
+        <x-h3>月間目標</x-h3>
         <!-- スマホ表示用 -->
         <div class="sm:hidden">
             <!-- 普段の目標を表示 -->
@@ -55,15 +55,16 @@
                 @endif
                 @foreach($usualtargets as $usualtarget)
                     <div class="bg-sky-100 mb-4 p-2">
-                        <p>目標期限：{{$usualtarget->formatted_due_date}}</p>
-                        <p class="mb-4 font-bold">{{$usualtarget->content}}</p>
-                        <p class="mb-4">
+                        {{-- <p>目標期限：{{$usualtarget->formatted_due_date}}</p> --}}
+                        <p class="mb-4"><span class="font-bold">目標：</span>{{$usualtarget->content}}</p>
+                        {{-- <p class="mb-4">
                             <ul>
                                 <li>⇒{{$usualtarget->achieve_mark}}</li>
                                 <li>{{$usualtarget->comment}}</li>
                             </ul>
-                        </p>
-                        <p>獲得コイン数：{{$usualtarget->coin}}</p>
+                        </p> --}}
+                        {{-- <p>獲得コイン数：{{$usualtarget->coin}}</p> --}}
+                        <p class="mb-4"><span class="font-bold">先生の評価：</span>{{$usualtarget->teacehr_comment}}</p>
                     </div>
                 @endforeach
             @endforeach
@@ -71,8 +72,8 @@
 
         <!-- PC表示用 -->
         <div class="hidden sm:block mb-6 max-w-full">
-            <p>獲得コイン数は、次の条件を満たすと多くもらえるかも、、？　(※)評価基準は変わることがあります。</p>
-            <p>⇒目標や振り返りが具体的である。／無理のない目標設定ができている。／計画性がある。／意欲的に挑戦している。／柔軟に軌道修正ができている。など</p>
+            {{-- <p>獲得コイン数は、次の条件を満たすと多くもらえるかも、、？　(※)評価基準は変わることがあります。</p>
+            <p>⇒目標や振り返りが具体的である。／無理のない目標設定ができている。／計画性がある。／意欲的に挑戦している。／柔軟に軌道修正ができている。など</p> --}}
 
             @foreach($grouped_usualtargets as $usualtargets)
                 @if(Auth::user()->grade == "保護者")
@@ -85,11 +86,12 @@
                         @if(Auth::user()->role == "admin")
                             <th></th>
                         @endif
-                        <x-th>設定日</x-th>
+                        {{-- <x-th>設定日</x-th> --}}
                         <x-th>目標</x-th>
-                        <x-th>目標期限</x-th>
-                        <x-th>振り返り</x-th>
-                        <x-th>獲得コイン数</x-th>
+                        {{-- <x-th>目標期限</x-th> --}}
+                        {{-- <x-th>振り返り</x-th> --}}
+                        <x-th>先生の評価</x-th>
+                        {{-- <x-th>獲得コイン数</x-th> --}}
                     </tr>
                     @foreach($usualtargets as $usualtarget)
                         <tr>
@@ -98,16 +100,17 @@
                                     <a href="{{route('usualtarget.edit', $usualtarget)}}" class="text-blue-600">編集</a>
                                 </th>
                             @endif
-                            <td class="border border-slate-300 px-4">{{$usualtarget->formatted_set_date}}</td>
+                            {{-- <td class="border border-slate-300 px-4">{{$usualtarget->formatted_set_date}}</td> --}}
                             <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->content}}</pre></td>
-                            <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->formatted_due_date}}</pre></td>
-                            <td class="border border-slate-300 px-4">
+                            {{-- <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->formatted_due_date}}</pre></td> --}}
+                            {{-- <td class="border border-slate-300 px-4">
                                 <ul>
                                     <li>{{$usualtarget->achieve_mark}}</li>
                                     <li>{{$usualtarget->comment}}</li>
                                 </ul>
-                            </td>
-                            <td class="border border-slate-300 px-4">{{$usualtarget->coin}}</td>
+                            </td> --}}
+                            <td class="border border-slate-300 px-4">{{$usualtarget->teacher_comment}}</td>
+                            {{-- <td class="border border-slate-300 px-4">{{$usualtarget->coin}}</td> --}}
                             </tr>
                     @endforeach
                 </table>

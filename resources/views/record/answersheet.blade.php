@@ -6,7 +6,7 @@
             @include('layouts.pastexam')
         @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            問題・解答
+            正答・配点
         </h2>
     </x-slot>
     <div class="mx-auto px-6 py-10">
@@ -47,7 +47,7 @@
                         <td class="border border-slate-300 px-4">平均：{{ $avg_score[$years[$i]]['sci'] }}</td>
                         <td class="border border-slate-300 px-4">平均：{{ $avg_score[$years[$i]]['eng'] }}</td>
                     </tr>
-                    <!-- 問題 -->
+                    {{-- <!-- 問題 -->
                     <tr>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'jap_q.pdf']) }}">問題</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'soc_q.pdf']) }}">問題</a></td>
@@ -62,7 +62,7 @@
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'math_a.pdf']) }}">解答用紙</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'sci_a.pdf']) }}">解答用紙</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'eng_a.pdf']) }}">解答用紙</a></td>
-                    </tr>
+                    </tr> --}}
                     <!-- 正答・配点 -->
                     <tr>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'jap_e.pdf']) }}">正答・配点</a></td>
@@ -71,14 +71,14 @@
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'sci_e.pdf']) }}">正答・配点</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'eng_e.pdf']) }}">正答・配点</a></td>
                     </tr>
-                    <!-- 石井コメント -->
+                    {{-- <!-- 石井コメント -->
                     <tr>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'jap_comment.pdf']) }}">補足解説</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'soc_comment.pdf']) }}">補足解説</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'math_comment.pdf']) }}">補足解説</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'sci_comment.pdf']) }}">補足解説</a></td>
                         <td class="border border-slate-300 px-4"><a class="font-semibold text-blue-600" target="_blank" href="{{ route('secure.file', ['folder' => $folder, 'filename' => $years[$i] . 'eng_comment.pdf']) }}">補足解説</a></td>
-                    </tr>
+                    </tr> --}}
                 </table>
                 
                 <!-- 学校の試験の場合 -->

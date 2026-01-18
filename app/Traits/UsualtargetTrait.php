@@ -41,6 +41,7 @@ trait UsualtargetTrait
                     )
                 ) as achieve_mark,
                 usualtargets.comment,
+                usualtargets.teacher_comment,
                 usualtargets.coin
             ", [$today]);
 

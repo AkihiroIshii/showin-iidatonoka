@@ -3,7 +3,7 @@
         <x-slot name="header">
             @include('layouts.adminmenu')
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                日々の目標（管理者）＞{{ $user->name }}＞編集
+                月間目標（管理者）＞{{ $user->name }}＞編集
             </h2>
         </x-slot>
 
@@ -28,7 +28,7 @@
 
                 <div class="mt-8">
                     <div>
-                        <label for="content" class="font-semibold mt-4">目標</label>
+                        <label for="content" class="font-semibold mt-4">月間目標</label>
                         <textarea type="text" name="content" class="w-full py-2 border border-gray-300 rounded-md" id="content">{{old('content', $usualtarget->content)}}</textarea>
                     </div>
                 </div>
@@ -44,10 +44,16 @@
                         <input type="text" name="achieve_flg" class="py-2 border border-gray-300 rounded-md" id="achieve_flg" value="{{old('achieve_flg', $usualtarget->achieve_flg)}}">
                     </div>
                 </div>
-                <div class="mt-8">
+                {{-- <div class="mt-8">
                     <div>
                         <label for="comment" class="font-semibold mt-4">振り返り</label>
                         <textarea name="comment" class="w-full py-2 border border-gray-300 rounded-md" id="comment">{{old('comment', $usualtarget->comment)}}</textarea>
+                    </div>
+                </div> --}}
+                <div class="mt-8">
+                    <div>
+                        <label for="teacher_comment" class="font-semibold mt-4">先生の評価</label>
+                        <textarea name="teacher_comment" class="w-full py-2 border border-gray-300 rounded-md" id="teacehr_comment">{{old('comment', $usualtarget->teacher_comment)}}</textarea>
                     </div>
                 </div>
                 <div class="mt-8">

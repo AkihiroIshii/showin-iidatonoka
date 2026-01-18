@@ -2,7 +2,7 @@
     <x-slot name="header">
         @include('layouts.adminmenu')
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            日々の目標（管理者）＞{{ $user->name }}＞登録
+            月間目標（管理者）＞{{ $user->name }}＞登録
         </h2>
     </x-slot>
 
@@ -26,7 +26,7 @@
 
             <div class="mt-8">
                 <div>
-                    <label for="content" class="font-semibold mt-4">目標</label>
+                    <label for="content" class="font-semibold mt-4">月間目標</label>
                     <textarea name="content" class="w-full py-2 border border-gray-300 rounded-md" id="content"></textarea>
                 </div>
             </div>

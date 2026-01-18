@@ -25,13 +25,13 @@
             </div>
         @endforeach
         
-        <x-h3>直近２ヵ月間のイベント</x-h3>
+        {{-- <x-h3>直近２ヵ月間のイベント</x-h3>
         @foreach($events as $event)
             <div class="bg-blue-100 mb-4 p-2">
                 <p class="font-bold">{{$event->formatted_date}}：{{$event->name}}<p>
                 <p>{{$event->content}}</p>
             </div>
-        @endforeach
+        @endforeach --}}
     </div>
 
     <!-- PC表示用 -->
@@ -56,7 +56,7 @@
             </table>
         </div>
         
-        <x-h3>直近２ヵ月間のイベント</x-h3>
+        {{-- <x-h3>直近２ヵ月間のイベント</x-h3>
         <!-- イベント表示 -->
         <div>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
@@ -96,16 +96,16 @@
                     </tr>
                 @endforeach
             </table>
-        </div>
+        </div> --}}
     </div>
 
-    <!-- イベントが登録されていない場合のメッセージ表示 -->
+    {{-- <!-- イベントが登録されていない場合のメッセージ表示 -->
     <div class="ml-4 mb-4">
         <p>
             <span style="font-size:1rem;color:red;font-weight:bold;">
                 (※)自分の学校の試験日などが表示されない人は、学校の年間予定表を先生に持ってきてください。先生が登録しておきます。
             </span>
         </p>
-    </div>
+    </div> --}}
 
 </x-app-layout>
