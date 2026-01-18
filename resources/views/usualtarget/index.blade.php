@@ -57,7 +57,7 @@
                     <div class="bg-sky-100 mb-4 p-2">
                         {{-- <p>目標期限：{{$usualtarget->formatted_due_date}}</p> --}}
                         <p class="mb-4"><span class="font-bold">目標：</span>{{$usualtarget->content}}</p>
-                        @if(!empty($usualtarget->comment))
+                        @if(!empty($usualtarget->achieve_mark))
                             <p class="mb-4">
                                 <span class="font-bold">コメント：</span>
                                 <ul>
@@ -109,7 +109,7 @@
                             <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->content}}</pre></td>
                             {{-- <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->formatted_due_date}}</pre></td> --}}
                             <td class="border border-slate-300 px-4">
-                                @if(!empty($usualtarget->comment))
+                                @if(!empty($usualtarget->achieve_mark))
                                     <ul>
                                         <li>{{$usualtarget->achieve_mark}}</li>
                                         <li>{{$usualtarget->comment}}</li>
