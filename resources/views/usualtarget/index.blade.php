@@ -57,15 +57,19 @@
                     <div class="bg-sky-100 mb-4 p-2">
                         {{-- <p>目標期限：{{$usualtarget->formatted_due_date}}</p> --}}
                         <p class="mb-4"><span class="font-bold">目標：</span>{{$usualtarget->content}}</p>
-                        <p class="mb-4">
-                            <span class="font-bold">コメント：</span>
-                            <ul>
-                                <li>⇒{{$usualtarget->achieve_mark}}</li>
-                                <li>{{$usualtarget->comment}}</li>
-                            </ul>
-                        </p>
+                        @if(!empty($usualtarget->comment))
+                            <p class="mb-4">
+                                <span class="font-bold">コメント：</span>
+                                <ul>
+                                    <li>⇒{{$usualtarget->achieve_mark}}</li>
+                                    <li>{{$usualtarget->comment}}</li>
+                                </ul>
+                            </p>
+                        @endif
                         {{-- <p>獲得コイン数：{{$usualtarget->coin}}</p> --}}
-                        <p class="mb-4"><span class="font-bold">先生の評価：</span>{{$usualtarget->teacehr_comment}}</p>
+                        @if(!empty($usualtarget->teacher_comment))
+                            <p class="mb-4"><span class="font-bold">先生の評価：</span>{{$usualtarget->teacher_comment}}</p>
+                        @endif
                     </div>
                 @endforeach
             @endforeach
@@ -91,7 +95,7 @@
                         <x-th>目標</x-th>
                         {{-- <x-th>目標期限</x-th> --}}
                         <x-th>振り返り</x-th>
-                        <x-th>先生の評価</x-th>
+                        {{-- <x-th>先生の評価</x-th> --}}
                         {{-- <x-th>獲得コイン数</x-th> --}}
                     </tr>
                     @foreach($usualtargets as $usualtarget)
@@ -105,14 +109,18 @@
                             <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->content}}</pre></td>
                             {{-- <td class="border border-slate-300 px-4"><pre class="whitespace-pre-wrap">{{$usualtarget->formatted_due_date}}</pre></td> --}}
                             <td class="border border-slate-300 px-4">
-                                <ul>
-                                    <li>{{$usualtarget->achieve_mark}}</li>
-                                    <li>{{$usualtarget->comment}}</li>
-                                </ul>
+                                @if(!empty($usualtarget->comment))
+                                    <ul>
+                                        <li>{{$usualtarget->achieve_mark}}</li>
+                                        <li>{{$usualtarget->comment}}</li>
+                                    </ul>
+                                @endif
+                                @if(!empty($usualtarget->teacher_comment))
+                                    <p><span class="font-bold">先生の評価：</span>{{$usualtarget->teacher_comment}}</p>
+                                @endif
                             </td>
-                            <td class="border border-slate-300 px-4">{{$usualtarget->teacher_comment}}</td>
                             {{-- <td class="border border-slate-300 px-4">{{$usualtarget->coin}}</td> --}}
-                            </tr>
+                        </tr>
                     @endforeach
                 </table>
             @endforeach
