@@ -37,7 +37,7 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">ファイル名</th>
                     </tr>
                     @php
-                        $years = ['2024','2023','2022','2021','2020','2019','H30'];
+                        $years = ['2025','2024','2023','2022','2021','2020','2019','H30'];
                     @endphp
                     @foreach($years as $year)
                         <tr>
