@@ -68,9 +68,9 @@
                                 過去問
                             </x-nav-link>
                         @endif
-                        <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
+                        {{-- <x-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                             単元
-                        </x-nav-link>
+                        </x-nav-link> --}}
                         {{-- @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                             <x-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                                 ワーク
@@ -223,9 +223,9 @@
                         過去問演習
                     </x-responsive-nav-link>
                 @endif
-                <x-responsive-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
+                {{-- <x-responsive-nav-link :href="route('completedunit')" :active="request()->routeIs('completedunit')">
                     単元
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> --}}
                 {{-- @if(strpos(Auth::user()->grade, '小') === false) <!-- 小学生でなければ表示する -->
                     <x-responsive-nav-link :href="route('workrecord')" :active="request()->routeIs('workrecord')">
                         ワーク
