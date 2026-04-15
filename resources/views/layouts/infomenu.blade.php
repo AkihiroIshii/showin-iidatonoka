@@ -4,9 +4,9 @@
         @endphp
     
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-            <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+            {{-- <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                 イベント
-            </x-nav-link>
+            </x-nav-link> --}}
             <x-nav-link :href="route('link')" :active="request()->routeIs('link')">
                 リンク集
             </x-nav-link>
@@ -32,9 +32,9 @@
         <!-- responsive -->
         <div class="pt-2 pb-3 space-y-1">
             <div class="sm:hidden">
-                <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                {{-- <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
                     イベント
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> --}}
                 <x-responsive-nav-link :href="route('link')" :active="request()->routeIs('link')">
                     リンク集
                 </x-responsive-nav-link>

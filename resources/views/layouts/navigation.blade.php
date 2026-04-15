@@ -98,7 +98,7 @@
                         @endif --}}
                     @endif
                     <!-- 管理者、生徒共通 -->
-                    <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                    <x-nav-link :href="route('link')" :active="request()->routeIs('link')">
                         その他情報
                     </x-nav-link>
                     <!-- テスト運用 -->
@@ -180,9 +180,9 @@
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                     生徒一覧
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                {{-- <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
                     イベント
-                </x-responsive-nav-link>
+                </x-responsive-nav-link> --}}
                 <x-responsive-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
                     メンテナンス
                 </x-responsive-nav-link>
@@ -253,7 +253,7 @@
                 </x-responsive-nav-link>
             @endif --}}
             <!-- 管理者、生徒共通 -->
-            <x-responsive-nav-link :href="route('event')" :active="request()->routeIs('event')">
+            <x-responsive-nav-link :href="route('link')" :active="request()->routeIs('link')">
                 その他情報
             </x-responsive-nav-link>
             @if(Auth::user()->role != "admin")
