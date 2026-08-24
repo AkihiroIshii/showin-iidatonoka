@@ -327,6 +327,48 @@ class WorkbookController extends Controller
         return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
     }
 
+    // 一次関数（グラフ描画）
+    public function plot_linear_function2() {
+        // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
+        $a = (-1)**rand(1,2) * rand(1,4);
+        $b = (-1)**rand(1,2) * rand(1,4);
+        $c = (-1)**rand(1,2) * rand(1,4);
+        
+        // a = c になっていたら c を変更
+        while ($a == $c) {
+            $c = (-1)**rand(1,2) * rand(1,4);
+        }
+
+        // 先に交点のx座標を決める。
+        $p_x = (-1)**rand(1,2) * rand(1,4);
+        $p_y = $a * $p_x + $b;
+
+        // y2の切片dが決まる。
+        $d = ($a - $c) * $p_x + $b;
+
+        // グラフ描画用
+        $size = 500;    //viewportの大きさ
+        $val_size = max(abs($p_x), abs($p_y)) * 4;   //実際の座標の大きさ 
+        $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
+        $plots = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+            'from_x' => -$size / 2,
+            'to_x' => $size / 2,
+
+            'from_y1' => $a * (-$size / 2) + ($b * $scale),
+            'to_y1' => $a * ($size / 2) + ($b * $scale),
+            'from_y2' => $c * (-$size / 2) + ($d * $scale),
+            'to_y2' => $c * ($size / 2) + ($d * $scale),
+
+            'p_x' => $p_x,
+            'p_y' => $p_y,
+            'scale' => $scale,        
+        ];
+
+        return view('workbook.unit.plot_linear_function2', compact('a','b','c','d','plots'));
+    }
+
     /******** 共通関数 **********/
     // 最大公約数
     private function gcd($a, $b)
@@ -808,5 +850,16 @@ class WorkbookController extends Controller
         $index = rand(0,count($questions)-1);
         $question = $questions[$index];
         return view('workbook.unit.preposition', compact('question'));
+    }
+
+
+    // 地図の縮尺
+    public function map_scale() {
+        $scale = 25000 * rand(1, 2);    //縮尺
+        $d_map_cm = rand(2, 10);  //地図上の距離(cm)
+        $d_real_cm = $scale * $d_map_cm;   //実際の距離(cm)
+        $d_real_km = $d_real_cm / 100 / 1000;   //実際の距離(km)
+
+        return view('workbook.unit.map_scale', compact('scale','d_map_cm','d_real_cm','d_real_km'));
     }
 }

@@ -12,7 +12,10 @@
 
     <!-- スマホ表示用 -->
     <div class="sm:hidden">
-
+        <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
+            単元別学習
+        </x-nav-link>
+        
         <!-- 普段の目標を表示 -->
         <x-h3>挑戦中の目標</x-h3>
         @foreach($usualtargets as $usualtarget)

@@ -99,6 +99,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.plot_linear_function')}}">グラフ描画</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.unit.plot_linear_function2')}}">交点の座標</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
@@ -170,6 +173,30 @@
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.preposition')}}">前置詞</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!---------------------------------------- 社会 ---------------------------------------->
+            <x-h3>社会</x-h3>
+            <x-h4>中１</x-h4>
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <thead>
+                    <tr class="bg-gray-300">
+                        <x-th>分野</x-th>
+                        <x-th>単元</x-th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <x-td>地理</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.unit.map_scale')}}">地図の縮尺</a>
                                 </x-button-link>
                             </div>
                         </x-td>

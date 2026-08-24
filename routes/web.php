@@ -285,6 +285,8 @@ Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figur
 // 数学（中2）
 Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_linear_function'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function');
+Route::get('workbook/plot_linear_function2', [WorkbookController::class, 'plot_linear_function2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function2');
 // 英語
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');
@@ -306,6 +308,9 @@ Route::get('workbook/pronoun', [WorkbookController::class, 'pronoun'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.pronoun');
 Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.preposition');
+// 社会
+Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
+->middleware(['auth', 'verified'])->name('workbook.unit.map_scale');
 /*************** 単元別学習　ここまで *************************/
 
 
