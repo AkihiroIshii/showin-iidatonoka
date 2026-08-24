@@ -42,6 +42,9 @@
             <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                 検定
             </x-nav-link>
+            <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
+                公式集
+            </x-nav-link>            
             <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                 コイン
             </x-nav-link>

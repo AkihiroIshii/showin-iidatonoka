@@ -384,13 +384,6 @@
 
 
 
-
-
-
-
-
-
-
             {{-- <div class="flex flex-wrap gap-4">
                 @foreach ($links as $link)
                     @php

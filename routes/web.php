@@ -257,6 +257,58 @@ Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
 ->middleware(['auth', 'verified'])->name('workbook.grammar');
 Route::get('workbook/reading', [WorkbookController::class, 'reading'])
 ->middleware(['auth', 'verified'])->name('workbook.reading');
+Route::get('workbook/randomsetting', [WorkbookController::class, 'randomsetting'])
+->middleware(['auth', 'verified'])->name('workbook.randomsetting');
+Route::get('workbook/unitbasedlist', [WorkbookController::class, 'unitbasedlist'])
+->middleware(['auth', 'verified'])->name('workbook.unitbasedlist');
+/*************** 単元別学習　ここから *************************/
+Route::get('workbook/distributive_law1', [WorkbookController::class, 'distributive_law1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.distributive_law1');
+Route::get('workbook/distributive_law2', [WorkbookController::class, 'distributive_law2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.distributive_law2');
+Route::get('workbook/fractional_expression', [WorkbookController::class, 'fractional_expression'])
+->middleware(['auth', 'verified'])->name('workbook.unit.fractional_expression');
+Route::get('workbook/linear_equation1', [WorkbookController::class, 'linear_equation1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation1');
+Route::get('workbook/linear_equation2', [WorkbookController::class, 'linear_equation2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation2');
+Route::get('workbook/linear_equation3', [WorkbookController::class, 'linear_equation3'])
+->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation3');
+Route::get('workbook/linear_equation4', [WorkbookController::class, 'linear_equation4'])
+->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation4');
+Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
+->middleware(['auth', 'verified'])->name('workbook.unit.plot_proportional_function');
+Route::get('workbook/plane_figure', [WorkbookController::class, 'plane_figure'])
+->middleware(['auth', 'verified'])->name('workbook.unit.plane_figure');
+Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figure'])
+->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
+// 数学（中2）
+Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_linear_function'])
+->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function');
+// 英語
+Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');
+Route::get('workbook/be_verb1', [WorkbookController::class, 'be_verb1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.be_verb1');
+Route::get('workbook/be_verb2', [WorkbookController::class, 'be_verb2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.be_verb2');
+Route::get('workbook/be_verb3', [WorkbookController::class, 'be_verb3'])
+->middleware(['auth', 'verified'])->name('workbook.unit.be_verb3');
+Route::get('workbook/general_verb1', [WorkbookController::class, 'general_verb1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.general_verb1');
+Route::get('workbook/general_verb2', [WorkbookController::class, 'general_verb2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.general_verb2');
+Route::get('workbook/general_verb3', [WorkbookController::class, 'general_verb3'])
+->middleware(['auth', 'verified'])->name('workbook.unit.general_verb3');
+Route::get('workbook/general_verb4', [WorkbookController::class, 'general_verb4'])
+->middleware(['auth', 'verified'])->name('workbook.unit.general_verb4');
+Route::get('workbook/pronoun', [WorkbookController::class, 'pronoun'])
+->middleware(['auth', 'verified'])->name('workbook.unit.pronoun');
+Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])
+->middleware(['auth', 'verified'])->name('workbook.unit.preposition');
+/*************** 単元別学習　ここまで *************************/
+
+
 
 /* ワーク演習 */
 Route::get('workrecord', [WorkrecordController::class, 'index'])

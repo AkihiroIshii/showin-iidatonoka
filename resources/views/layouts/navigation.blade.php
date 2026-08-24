@@ -5,15 +5,18 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    @if(Auth::user()->role == "admin")
+                    <a href="{{ route('dashboard') }}">
+                        <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
+                    </a>
+                    {{-- @if(Auth::user()->role == "admin")
                         <a href="{{ route('admin.students') }}">
                             <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
                         </a>
                     @else
-                        <a href="{{ route('usualtarget') }}">
+                        <a href="{{ route('dashboard') }}">
                             <img src="{{asset('logo/showin_logo.png')}}" style="max-height:50px">
                         </a>
-                    @endif
+                    @endif --}}
                 </div>
 
                 <!-- Navigation Links -->
@@ -85,9 +88,6 @@
                         {{-- <x-nav-link :href="route('kentei')" :active="request()->routeIs('kentei')">
                             検定
                         </x-nav-link> --}}
-                        <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
-                            公式集
-                        </x-nav-link>
                         <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                             コイン
                         </x-nav-link>
@@ -98,6 +98,9 @@
                         @endif --}}
                     @endif
                     <!-- 管理者、生徒共通 -->
+                    <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
+                        公式集
+                    </x-nav-link>
                     <x-nav-link :href="route('link')" :active="request()->routeIs('link')">
                         その他情報
                     </x-nav-link>

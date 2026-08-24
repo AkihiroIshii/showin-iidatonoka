@@ -37,6 +37,22 @@
     <!-- PC表示用 -->
     <div class="hidden sm:block mx-auto px-6 py-4">
 
+        <!-- Navigation Links -->
+        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+            <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
+                単元別学習
+            </x-nav-link>
+            {{-- <x-nav-link :href="route('workbook.randomsetting')" :active="request()->routeIs('workbook.randomsetting')">
+                ランダム出題
+            </x-nav-link> --}}
+            {{-- <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+                スケジュール管理
+            </x-nav-link>
+            <x-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
+                先生のおすすめ
+            </x-nav-link> --}}
+        </div>
+
         <!-- 普段の目標を表示 -->
         <x-h3>挑戦中の目標</x-h3>
         <div class="mb-6">
