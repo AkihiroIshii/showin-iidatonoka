@@ -64,10 +64,11 @@ class AuthenticatedSessionController extends Controller
             Session::put('target_students', Auth::user()->id);
         }
 
-        if (Auth::user()->role === 'admin') {
-            return redirect()->route('admin.students');
-        }
-        return redirect()->intended(route('usualtarget', absolute: false));
+        // if (Auth::user()->role === 'admin') {
+        //     return redirect()->route('admin.students');
+        // }
+        // return redirect()->intended(route('usualtarget', absolute: false));
+        return redirect()->route('dashboard');
     }
 
     /**
