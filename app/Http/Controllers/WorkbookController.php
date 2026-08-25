@@ -139,7 +139,7 @@ class WorkbookController extends Controller
                 'q' => "時速\,{$v_kh3}\,\mathrm{km}\,を秒速 [\mathrm{m/秒}] に直せ。",
                 'a' => "{$v_ms3}\,\mathrm{m/秒}",
                 'e' => "\mathrm{
-                            {$v_kh3}\,km/時 = \\frac{ \,{{ $v_kh3 }}\,[km]\, }{ 1\,[時間] }
+                            {$v_kh3}\,[km/時] = \\frac{ \,{{ $v_kh3 }}\,[km]\, }{ 1\,[時間] }
                             = \\frac{ \,{{ $v_kh3 }}\\times 1000\,[m]\, }{ 60 \\times 60\,[秒] }
                             = {$v_ms3}\,[m/秒]
                         }",
@@ -972,6 +972,38 @@ class WorkbookController extends Controller
         $index = rand(0,count($questions)-1);
         $question = $questions[$index];
         return view('workbook.unit.density', compact('question'));
+    }
+
+    // 水溶液１
+    public function aqueous1() {
+        // c = s/L * 100
+        $L = 10 * rand(5, 20);   //溶液の質量[g]
+        $c = 2 * rand(1, 5);   //濃度[%]
+        $s = $c * $L / 100;  //溶質の質量[g]
+
+        $questions = [
+            [
+                'q' => "食塩\,{$s}\,\mathrm{g}\,が溶けている、{$L}\,\mathrm{g}\,の食塩水がある。この水溶液の質量パーセント濃度を求めなさい。",
+                'a' => "{$c}\,\mathrm{\%}",
+                'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
+                        c=\\frac{s}{\,L\,}=\\frac{ \,{$s}\, }{ \,{$L}\, } \\times 100 = {$c}\,[\%]}。",
+            ],
+            [
+                'q' => "質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水\,{$L}\,\mathrm{g}\,には、何\,\mathrm{g}\,の食塩が溶けているか。",
+                'a' => "{$s}\,\mathrm{g}",
+                'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
+                        {$c}=\\frac{ \,s\, }{ \,{$L}\, } \\times 100。これを解いて、s={$s}\,g}。",
+            ],
+            [
+                'q' => "\,{$s}\,\mathrm{g}\,の食塩が溶けている、質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水の質量を求めなさい。",
+                'a' => "{$L}\,\mathrm{g}",
+                'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
+                        {$c}=\\frac{ \,{$s}\, }{ \,L\, } \\times 100。これを解いて、L={$L}\,g}。",
+            ],
+        ];
+        $index = rand(0,count($questions)-1);
+        $question = $questions[$index];
+        return view('workbook.unit.aqueous1', compact('question'));
     }
 
     // 電磁気

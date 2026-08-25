@@ -322,6 +322,8 @@ Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
 // 理科
 Route::get('workbook/density', [WorkbookController::class, 'density'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.density');
+Route::get('workbook/aqueous1', [WorkbookController::class, 'aqueous1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.aqueous1');
 Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
 /*************** 単元別学習　ここまで *************************/
