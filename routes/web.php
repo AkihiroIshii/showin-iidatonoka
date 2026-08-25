@@ -262,6 +262,14 @@ Route::get('workbook/randomsetting', [WorkbookController::class, 'randomsetting'
 Route::get('workbook/unitbasedlist', [WorkbookController::class, 'unitbasedlist'])
 ->middleware(['auth', 'verified'])->name('workbook.unitbasedlist');
 /*************** 単元別学習　ここから *************************/
+//算数
+Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
+->middleware(['auth', 'verified'])->name('workbook.unit.mul100');
+Route::get('workbook/velocity', [WorkbookController::class, 'velocity1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.velocity1');
+Route::get('workbook/velocity2', [WorkbookController::class, 'velocity2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.velocity2');
+//数学
 Route::get('workbook/distributive_law1', [WorkbookController::class, 'distributive_law1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.distributive_law1');
 Route::get('workbook/distributive_law2', [WorkbookController::class, 'distributive_law2'])
@@ -311,6 +319,11 @@ Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])
 // 社会
 Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.map_scale');
+// 理科
+Route::get('workbook/density', [WorkbookController::class, 'density'])
+->middleware(['auth', 'verified'])->name('workbook.unit.density');
+Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
+->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
 /*************** 単元別学習　ここまで *************************/
 
 

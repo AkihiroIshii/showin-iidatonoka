@@ -11,14 +11,64 @@
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
 
-            <!---------------------------------------- 数学 ---------------------------------------->
-            <x-h3>数学</x-h3>
-            <x-h4>中１</x-h4>
+            <!---------------------------------------- 小学生 ---------------------------------------->
+            <x-h3 color="lime">小学生</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
                         <x-th>分野</x-th>
-                        <x-th>単元</x-th>
+                        <x-th>小２</x-th>
+                        <x-th>小３</x-th>
+                        <x-th>小４</x-th>
+                        <x-th>小５</x-th>
+                        <x-th>小６</x-th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <x-td>算数</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.mul100')}}">10倍、100倍</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.velocity1')}}">速さ１</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.velocity2')}}">速さ２</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!---------------------------------------- 数学 ---------------------------------------->
+            <x-h3>数学</x-h3>
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <thead>
+                    <tr class="bg-gray-300">
+                        <x-th>分野</x-th>
+                        <x-th>中１</x-th>
+                        <x-th>中２</x-th>
+                        <x-th>中３</x-th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,11 +85,20 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.fractional_expression')}}">分数の文字式</a>
                                 </x-button-link>
+
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
                     </tr>
                     <tr>
-                        <x-td>一次方程式</x-td>
+                        <x-td>方程式</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
@@ -56,14 +115,36 @@
                                 </x-button-link>
                             </div>
                         </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
                     </tr>
                     <tr>
-                        <x-td>比例</x-td>
+                        <x-td>関数</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
-                                    <a href="{{route('workbook.unit.plot_proportional_function')}}">グラフ描画</a>
+                                    <a href="{{route('workbook.unit.plot_proportional_function')}}">比例（グラフ描画）</a>
                                 </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.unit.plot_linear_function')}}">一次関数（グラフ描画）</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.unit.plot_linear_function2')}}">交点の座標</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
                     </tr>
@@ -79,43 +160,28 @@
                                 </x-button-link>
                             </div>
                         </x-td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <x-h4>中２</x-h4>
-            <table class="border-separate border border-slate-400 m-auto table-fixed">
-                <thead>
-                    <tr class="bg-gray-300">
-                        <x-th>分野</x-th>
-                        <x-th>単元</x-th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <x-td>一次関数</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.plot_linear_function')}}">グラフ描画</a>
-                                </x-button-link>
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.plot_linear_function2')}}">交点の座標</a>
-                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
                     </tr>
                 </tbody>
             </table>
 
+
             <!---------------------------------------- 英語 ---------------------------------------->
-            <x-h3>英語</x-h3>
-            <x-h4>中１</x-h4>
+            <x-h3 color="purple">英語</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
                         <x-th>分野</x-th>
-                        <x-th>単元</x-th>
+                        <x-th>中１</x-th>
+                        <x-th>中２</x-th>
+                        <x-th>中３</x-th>
                     </tr>
                 </thead>
                 <tbody>
@@ -123,71 +189,164 @@
                         <x-td>英単語</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.unit.pronoun')}}">代名詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.unit.preposition')}}">前置詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
                                     <a href="{{route('workbook.unit.e_word_verb1')}}">動詞１</a>
                                 </x-button-link>
                             </div>
                         </x-td>
-                    </tr>
-                    <tr>
-                        <x-td>be動詞</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.be_verb1')}}">主語と動詞</a>
-                                </x-button-link>
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.be_verb2')}}">過去形</a>
-                                </x-button-link>
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.be_verb3')}}">疑問文・否定文</a>
-                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
                     </tr>
                     <tr>
-                        <x-td>一般動詞</x-td>
+                        <x-td>英文法</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.general_verb1')}}">肯定文・疑問文・否定文</a>
-                                </x-button-link>
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.general_verb2')}}">三単現</a>
-                                </x-button-link>
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.general_verb3')}}">過去形</a>
-                                </x-button-link>
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.general_verb4')}}">不規則動詞</a>
-                                </x-button-link>
+                                <div>
+                                    be動詞
+                                    <x-button-link color="purple">
+                                        <a href="{{route('workbook.unit.be_verb1')}}">主語と動詞</a>
+                                    </x-button-link>
+                                    <x-button-link color="purple">
+                                        <a href="{{route('workbook.unit.be_verb2')}}">過去形</a>
+                                    </x-button-link>
+                                    <x-button-link color="purple">
+                                        <a href="{{route('workbook.unit.be_verb3')}}">疑問文・否定文</a>
+                                    </x-button-link>
+                                </div>
+                                <div>
+                                    一般動詞
+                                    <x-button-link color="purple">
+                                        <a href="{{route('workbook.unit.general_verb1')}}">肯定文・疑問文・否定文</a>
+                                    </x-button-link>
+                                    <x-button-link color="purple">
+                                        <a href="{{route('workbook.unit.general_verb2')}}">三単現</a>
+                                    </x-button-link>
+                                    <x-button-link color="purple">
+                                        <a href="{{route('workbook.unit.general_verb3')}}">過去形</a>
+                                    </x-button-link>
+                                    <x-button-link color="purple">
+                                        <a href="{{route('workbook.unit.general_verb4')}}">不規則動詞</a>
+                                    </x-button-link>
+                                </div>
                             </div>
                         </x-td>
-                    </tr>
-                    <tr>
-                        <x-td>品詞</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.pronoun')}}">代名詞</a>
-                                </x-button-link>
-                                <x-button-link>
-                                    <a href="{{route('workbook.unit.preposition')}}">前置詞</a>
-                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
                     </tr>
                 </tbody>
             </table>
 
-            <!---------------------------------------- 社会 ---------------------------------------->
-            <x-h3>社会</x-h3>
-            <x-h4>中１</x-h4>
+
+            <!---------------------------------------- 理科 ---------------------------------------->
+            <x-h3 color="green">理科</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
                         <x-th>分野</x-th>
-                        <x-th>単元</x-th>
+                        <x-th>中１</x-th>
+                        <x-th>中２</x-th>
+                        <x-th>中３</x-th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <x-td>生物</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>化学</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.unit.density')}}">密度</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>地学</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>物理</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.unit.electromagnetism')}}">電磁気</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+
+            <!---------------------------------------- 社会 ---------------------------------------->
+            <x-h3 color="yellow">社会</x-h3>
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <thead>
+                    <tr class="bg-gray-300">
+                        <x-th>分野</x-th>
+                        <x-th>中１</x-th>
+                        <x-th>中２</x-th>
+                        <x-th>中３</x-th>
                     </tr>
                 </thead>
                 <tbody>
@@ -195,14 +354,53 @@
                         <x-td>地理</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
+                                <x-button-link color="yellow">
                                     <a href="{{route('workbook.unit.map_scale')}}">地図の縮尺</a>
                                 </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>歴史</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>公民</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
                     </tr>
                 </tbody>
             </table>
+
         </div>
     </div>
 </x-app-layout>

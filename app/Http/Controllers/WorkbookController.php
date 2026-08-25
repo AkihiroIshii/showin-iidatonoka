@@ -56,6 +56,100 @@ class WorkbookController extends Controller
     }
 
     /***************** 単元別問題作成 *****************/
+    // 10倍、100倍
+    public function mul100() {
+        $a = rand(2, 9);
+        $m1 = 10 ** rand(0, 2);
+        $b = rand(2, 9);
+        $m2 = 10 ** rand(1, 2);
+        $ans = $a * $m1 * $b * $m2;
+
+        return view('workbook.unit.mul100', compact('a','b','m1','m2','ans'));
+    }
+    
+    // 速さ１
+    public function velocity1() {
+        $v = rand(2, 9);    // m/s
+        $t = 10 * rand(1, 9);    // s
+        $d = $v * $t;   // m
+
+        $questions = [
+            [
+                'q' => "\,{$d}\,\mathrm{m}\,の距離を\,{$t}\,秒で通過する物体の速さ（秒速）を求めなさい。",
+                'a' => "{$v}\,\mathrm{m/秒}",
+                'e' => "秒速とは、１秒あたりに進む距離のことである。よって、\mathrm{秒速[m/秒] = 距離[m] \div 時間[秒] = {$d}[m] \div {$t}[秒] = {$v}[m/秒] }。",
+            ],
+            [
+                'q' => "\,{$d}\,\mathrm{m}\,の距離を、秒速\,{$v}\,\mathrm{m}で通過するのにかかる時間を求めなさい。",
+                'a' => "{$t}\,秒",
+                'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
+                        よって、\mathrm{かかる時間[秒] = 距離[m] \div 速さ[m/秒] = {$d}[m] \div {$v}[m/秒] = {$t}[秒] }。",
+            ],
+            [
+                'q' => "秒速\,{$v}\,\mathrm{m}で\,{$t}\,秒間動き続けると、何\,\mathrm{m}\,進むか。",
+                'a' => "{$d}\,\mathrm{m}",
+                'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
+                        よって、\mathrm{{$t}秒あればその\,{$t}\,倍進めるので、{$v}[m/秒] \\times {$t}[秒] = {$d}[m] }。",
+            ],
+        ];
+        $index = rand(0,count($questions)-1);
+        $question = $questions[$index];
+        return view('workbook.unit.velocity1', compact('question'));
+    }
+
+    // 速さ２
+    public function velocity2() {
+        $v_ms = rand(2, 9);    // m/s
+        $t_s = 10 * rand(1, 9);    // s
+        $d_m = $v_ms * $t_s;   // m
+
+        $v_mm = $v_ms * 60; // m/min
+        $v_km = $v_mm / 1000; // km/min
+
+        // 時速算出用（上記の変数と独立）
+        $v_km2 = rand(2, 9);    //km/min
+        $v_kh2 = $v_km2 * 60; // km/h
+
+        // さらに独立な変数
+        $v_kh3 = 18 * rand(1, 20);   // km/h
+        $v_ms3 = $v_kh3 * 1000 / 3600;   // m/s
+
+        $questions = [
+            [
+                'q' => "秒速\,{$v_ms}\,\mathrm{m}\,を分速 [\mathrm{m/分}] に直せ。",
+                'a' => "{$v_mm}\,\mathrm{m/分}",
+                'e' => "\mathrm{秒速\,{$v_ms}\,m\,では1秒間に\,{$v_ms}\,m\,進むので、1分間（60秒間）あれば\,{$v_ms} \\times 60 = {$v_mm}\,m\,進める。}",
+            ],
+            [
+                'q' => "分速\,{$v_mm}\,\mathrm{m}\,を秒速 [\mathrm{m/秒}] に直せ。",
+                'a' => "{$v_ms}\,\mathrm{m/秒}",
+                'e' => "\mathrm{分速\,{$v_mm}\,m\,では1分間（60秒間)に\,{$v_mm}\,m\,進む。1秒間では\,{$v_mm} \div 60 = {$v_ms}\,m\,しか進まない。}",
+            ],
+            [
+                'q' => "分速\,{$v_mm}\,\mathrm{m}\,を、\mathrm{km}\,単位の分速 [\mathrm{km/分}] に直せ。",
+                'a' => "{$v_km}\,\mathrm{km/分}",
+                'e' => "\mathrm{分速であることに変わりはないので、距離の単位の違いだけ考えればよい。1km=1000mなので、{$v_mm} \div 1000 = {$v_km}。}",
+            ],
+            [
+                'q' => "分速\,{$v_km2}\,\mathrm{km}\,を時速 [\mathrm{km/時}] に直せ。",
+                'a' => "{$v_kh2}\,\mathrm{km/時}",
+                'e' => "\mathrm{分速\,{$v_km2}\,km\,では1分間に\,{$v_km2}\,km\,進むので、1時間（60分間）あれば\,{$v_km2} \\times 60 = {$v_kh2}\,km\,進める。}",
+            ],
+            [
+                'q' => "時速\,{$v_kh3}\,\mathrm{km}\,を秒速 [\mathrm{m/秒}] に直せ。",
+                'a' => "{$v_ms3}\,\mathrm{m/秒}",
+                'e' => "\mathrm{
+                            {$v_kh3}\,km/時 = \\frac{ \,{{ $v_kh3 }}\,[km]\, }{ 1\,[時間] }
+                            = \\frac{ \,{{ $v_kh3 }}\\times 1000\,[m]\, }{ 60 \\times 60\,[秒] }
+                            = {$v_ms3}\,[m/秒]
+                        }",
+            ],
+        ];
+        $index = rand(0,count($questions)-1);
+        $question = $questions[$index];
+        return view('workbook.unit.velocity2', compact('question'));
+    }
+
     // 分配法則１
     public function distributive_law1() {
         $a = (-1)**rand(1,2) * rand(2, 9);
@@ -850,6 +944,137 @@ class WorkbookController extends Controller
         $index = rand(0,count($questions)-1);
         $question = $questions[$index];
         return view('workbook.unit.preposition', compact('question'));
+    }
+
+    // 密度
+    public function density() {
+        $v = rand(1, 10);   //体積[cm^3]
+        $d = 0.1 * rand(1, 20);   //密度
+        $m = $d * $v;  //質量[g]
+
+        $questions = [
+            [
+                'q' => "質量\,{$m}\,\mathrm{g}、体積\,{$v}\,\mathrm{cm}^3\,の物体の密度を求めなさい。",
+                'a' => "{$d}\,\mathrm{g/cm}^3",
+                'e' => "\mathrm{密度\,d[g/cm^3] = \\frac{質量\,m[g]}{\,体積\,V[cm^3]\,}より、d = \\frac{ {$m} }{ \,{$v}\, } = {$d}\,g/cm^3}。",
+            ],
+            [
+                'q' => "密度\,{$d}\,\mathrm{g/cm^3}、体積\,{$v}\,\mathrm{cm}^3\,の物体の質量を求めなさい。",
+                'a' => "{$m}\,\mathrm{g}",
+                'e' => "\mathrm{密度\,d[g/cm^3] = \\frac{質量\,m[g]}{\,体積\,V[cm^3]\,}より、m = dV = {$d} \\times {$v} = {$m}\,g}。",
+            ],
+            [
+                'q' => "密度\,{$d}\,\mathrm{g/cm^3}、質量\,{$m}\,\mathrm{g}\,の物体の体積を求めなさい。",
+                'a' => "{$v}\,\mathrm{cm^3}",
+                'e' => "\mathrm{密度\,d[g/cm^3] = \\frac{質量\,m[g]}{\,体積\,V[cm^3]\,}より、V = \\frac{m}{\,d\,} = \\frac{ {$m} }{ \,{$d}\, } = {$v}\,cm^3}。",
+            ],
+        ];
+        $index = rand(0,count($questions)-1);
+        $question = $questions[$index];
+        return view('workbook.unit.density', compact('question'));
+    }
+
+    // 電磁気
+    public function electromagnetism() {
+        $i1 = 0.2 * rand(1, 10);
+        $r1 = 0.5 * rand(1, 10);
+        if ( is_float($i1) && is_float($r1) ){
+            $r1 = rand(1, 5);   // I,R がともに小数だと V が細かくなるため、R だけ整数にする。
+        }
+        $v1 = $r1 * $i1;
+        $w1 = $v1 * $i1;
+
+        $i2 = 0.1 * rand(1, 10);
+        $r2 = 0.5 * rand(1, 10);
+        if ( is_float($i2) && is_float($r2) ){
+            $r2 = rand(1, 5);   // I,R がともに小数だと V が細かくなるため、R だけ整数にする。
+        }
+        $v2 = $r2 * $i2;
+
+        $w3 = 100 * rand(1, 6); //熱量計算用の電力
+        $t3 = rand(1, 5);   // 時間（分）
+        $q3 = $w3 * ($t3 * 60);
+
+        $V_series = $v1 + $v2;
+        $R_series = $r1 + $r2;
+        $I_series = $i1 + $i2;
+        // 並列回路の合成抵抗用（整数のみ） 1/R = 1/r3 + 1/r4
+        $r3 = rand(1,10);
+        $r4 = rand(1,10);
+        $R_para_numerator = $r3 + $r4;
+        $R_para_denominator = $r3 * $r4;
+        // 最大公約数を求める
+        $gcd = $this->gcd($R_para_numerator, $R_para_denominator);
+        // 約分
+        $R_para_numerator /= $gcd;
+        $R_para_denominator /= $gcd;
+        $R_para_answer = ($R_para_numerator == 1)
+            ? "{$R_para_denominator}\,\mathrm{\Omega}"
+            : "\\frac{{$R_para_denominator}}{\,{$R_para_numerator}\,}\,\mathrm{\Omega}";
+
+        $questions = [
+            [
+                'q' => "ある素子に、{$v1}\,\mathrm{V}\,の電圧がかかっており、{$i1}\,\mathrm{A}\,の電流が流れている。この素子の抵抗は何\,\Omega\,か。",
+                'a' => "{$r1}\,\mathrm{\Omega}",
+                'e' => "オームの法則より、V=RI。よって、R=\\frac{V}{\,I\,}=\\frac{ {$v1} }{ \,{$i1}\, } = {$r1}\,\mathrm{\Omega}。",
+            ],
+            [
+                'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$v1}\,\mathrm{V}\,の電圧がかかっているとき、何\,\mathrm{A}\,の電流が流れているか。",
+                'a' => "{$i1}\,\mathrm{A}",
+                'e' => "オームの法則より、V=RI。よって、I=\\frac{V}{\,R\,}=\\frac{ {$v1} }{ \,{$r1}\, } = {$i1} \,\mathrm{A}。",
+            ],
+            [
+                'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$i1}\,\mathrm{A}\,の電流が流れているとき、何\,\mathrm{V}\,の電圧がかかっているか。",
+                'a' => "{$v1}\,\mathrm{V}",
+                'e' => "オームの法則より、V=RI。よって、V=RI={$r1}\\times{$i1}  = {$v1} \,\mathrm{V}。",
+            ],
+            [
+                'q' => "{$r1}\,\mathrm{\Omega}\,の素子と、{$r2}\,\mathrm{\Omega}\,の素子が、直列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
+                'a' => "{$R_series}\,\Omega",
+                'e' => "直列回路の合成抵抗は、各素子の抵抗の和になるので、{$r1}+{$r2}={$R_series}\,\mathrm{\Omega}。",
+            ],
+            [
+                'q' => "{$r3}\,\mathrm{\Omega}\,の素子と、{$r4}\,\mathrm{\Omega}\,の素子が、並列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
+                'a' => "{$R_para_answer}",
+                'e' => "並列回路の合成抵抗\,R\,は、各素子の抵抗の逆数の和になるので、
+                        \\frac{1}{\,R\,} = \\frac{1}{\,{$r3}\,} + \\frac{1}{\,{$r4}\,} 
+                        = \\frac{ \,{$R_para_numerator}\, }{ {$R_para_denominator} }。
+                        よって、R={$R_para_answer}。",
+            ],
+            [
+                'q' => "２つの素子が直列に繋がれており、それぞれ\,{$v1}\,\mathrm{V}, \,{$v2}\,\mathrm{V}\,の電圧がかかっている。全体の電圧は何\,\mathrm{V}\,か。",
+                'a' => "{$V_series}\,\mathrm{V}",
+                'e' => "直列回路全体の電圧は、各素子にかかる電圧の和になるので、{$v1}+{$v2}={$V_series}\,\mathrm{V}。",
+            ],
+            [
+                'q' => "２つの素子が並列に繋がれており、それぞれ\,{$i1}\,\mathrm{A}, \,{$i2}\,\mathrm{A}\,の電流が流れている。全体の電流は何\,\mathrm{A}\,か。",
+                'a' => "{$I_series}\,\mathrm{A}",
+                'e' => "並列回路全体の電流は、各素子に流れる電流の和になるので、{$i1}+{$i2}={$I_series}\,\mathrm{A}。",
+            ],
+            [
+                'q' => "電熱線に\,{$v1}\,\mathrm{V}\,の電圧をかけると、\,{$i1}\,\mathrm{A}\,の電流が流れた。この電熱線に生じる電力は何\,\mathrm{W}\,か。",
+                'a' => "{$w1}\,\mathrm{W}",
+                'e' => "W=VI= {$v1}\\times{$i1} = {$w1}\,\mathrm{W}",
+            ],
+            [
+                'q' => "{$w3}\mathrm{W}\,の電化製品を\,{$t3}\,分使った時、生じる熱量は何\,\mathrm{J}\,か。",
+                'a' => "{$q3}\,\mathrm{J}",
+                'e' => "Q=Wt = {$w3}\\times ({$t3} \\times 60)  = {$q3} \,\mathrm{J}\,（t\,は秒であることに注意）。",
+            ],
+            [
+                'q' => "直線状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
+                'a' => "右手を「いいね」にしたときの親指の指す向きを電流の方向として、他の４本の指の向きが磁界の向きになる。",
+                'e' => "試験では図が載っていると思います。右手を「いいね」にして色々な向きで考えられるようにしましょう。",
+            ],
+            [
+                'q' => "コイル状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
+                'a' => "右手を「いいね」にしたときの親指以外の４本の指が指す向きを電流の方向として、親指の向きが磁界の向きになる。",
+                'e' => "コイルの外側では回り込むように磁界が生じます。教科書などで図のイメージを確認しておきましょう。",
+            ],
+        ];
+        $index = rand(0,count($questions)-1);
+        $question = $questions[$index];
+        return view('workbook.unit.electromagnetism', compact('v1','i1','r1','question'));
     }
 
 
