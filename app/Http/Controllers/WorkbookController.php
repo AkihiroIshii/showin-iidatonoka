@@ -66,7 +66,65 @@ class WorkbookController extends Controller
 
         return view('workbook.unit.mul100', compact('a','b','m1','m2','ans'));
     }
-    
+ 
+    // 割合
+    public function ratio1() {
+        $num = 10 * rand(1, 20);
+        $wari = rand(1, 9); //割
+        $waribiki = 10 - $wari;     //例：6割＝4割引
+        $bu = rand(1, 9); //分
+        $per_array = [1, 2, 4, 5, 10, 12, 20, 25, 50, 80];  // % の候補
+        $per_idx = array_rand($per_array);
+        $per = $per_array[$per_idx];
+        $val1 = $num * (0.1 * $wari); 
+        $val2 = $num * (0.01 * $bu);
+        $val_waribiki = $num * (1 - 0.1 * $wari);
+        $val_1wari = $num * 0.1;
+        $val_1bu = $num * 0.01;
+        $val_1per = $num * 0.01;
+        $val_per = $num * 0.01 * $per;
+        
+        $questions = [
+            [
+                'q' => "\({$num}\,の\,{$wari}\,割はいくつか。\)",
+                'a' => "{$val1}",
+                'e' => "<div>
+                            <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
+                            <p>\(\displaystyle {$num}\,の\,1\,割（0.1倍）が\,{$val_1wari}\,なので、{$val_1wari}\,\\times{$wari} = {$val1}\,と計算してもよい.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\({$num}\,の\,{$bu}\,分（ぶ）はいくつか。\)",
+                'a' => "{$val2}",
+                'e' => "<div>
+                            <p>\(\displaystyle {$bu}\,分は\,0.0{$bu}\\left(=\\frac{{$bu}}{\,100\,} \\right)倍なので、{$num}\,\\times\,0.0{$bu} = {$val2}.\)</p>
+                            <p>\(\displaystyle {$num}\,の\,1\,分（0.01倍）が\,{$val_1bu}\,なので、{$val_1bu}\,\\times{$bu} = {$val2}\,と計算してもよい.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\({$num}\,の\,{$per}\,\%\,はいくつか。\)",
+                'a' => "{$val_per}",
+                'e' => "<div>
+                            <p>\(\displaystyle {$per}\,\%\,は\,\\frac{{$per}}{\,100\,}\,倍なので、{$num}\,\\times\\frac{{$per}}{\,100\,}\, = {$val_per}.\)</p>
+                            <p>\(\displaystyle {$num}\,の\,1\,\%（0.01倍）が\,{$val_1per}\,なので、{$val_1per}\,\\times{$per} = {$val_per}\,と計算してもよい.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\({$num}\,の\,{$wari}\,割引はいくつか。\)",
+                'a' => "{$val_waribiki}",
+                'e' => "<div>
+                            <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
+                            <p>\(これをもとの値から割り引くと、{$num} - {$val1} = {$val_waribiki}.\)</p>
+                            <p>\(また、{$wari}\,割引はもとの値の{$waribiki}\,割と同じなので、{$num} \\times 0.{$waribiki} = {$val_waribiki}\,と計算してもよい.\)</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "割合";
+        return view('workbook.unit.child', compact('unitname','question'));
+    }
+
     // 速さ１
     public function velocity1() {
         $v = rand(2, 9);    // m/s
@@ -148,6 +206,147 @@ class WorkbookController extends Controller
         $index = rand(0,count($questions)-1);
         $question = $questions[$index];
         return view('workbook.unit.velocity2', compact('question'));
+    }
+
+    // 分数の乗除
+    public function fraction_muldiv() {
+        $primes1 = $this->get_primes(4, 11);
+        $a = $primes1[0];
+        $b = $primes1[1];
+        $c = $primes1[2];
+        $d = $primes1[3];
+        $numerator = $b * $d;
+        $denominator = $a * $c;
+
+        $primes2 = $this->get_primes(2, 11);
+        $m = $primes2[0];
+        $n = $primes2[1];
+        $ma = $m * $a;
+        $md = $m * $d;
+        $nb = $n * $b;
+        $nc = $n * $c;
+
+        $questions = [
+            [
+                'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,を計算しなさい。 \)",
+                'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+                'e' => "<div>
+                            \(\displaystyle
+                                \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
+                                = \\frac{\,{$b}\\times{$d}\,}{\,{$a}\\times{$c}\,}
+                                = \\frac{\,{$numerator}\,}{{$denominator}}
+                            \)
+                        </div>",
+            ],
+            [
+                'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}\,を計算しなさい。 \)",
+                'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+                'e' => "<div>
+                            <p>\( まず\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分してから計算する。 \)</p>
+                            \(\displaystyle
+                                \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
+                                = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
+                                = \\frac{\,{$numerator}\,}{{$denominator}}
+                            \)
+                        </div>",
+            ],
+            [
+                'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,を計算しなさい。 \)",
+                'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+                'e' => "<div>
+                            \(\displaystyle
+                                \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,
+                                =\\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
+                                = \\frac{\,{$b}\\times{$d}\,}{\,{$a}\\times{$c}\,}
+                                = \\frac{\,{$numerator}\,}{{$denominator}}
+                            \)
+                        </div>",
+            ],
+            [
+                'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}\,を計算しなさい。 \)",
+                'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+                'e' => "<div>
+                            <p>\( わり算をかけ算に直したら、次に\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分する。 \)</p>
+                            \(\displaystyle
+                                \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}
+                                = \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
+                                = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
+                                = \\frac{\,{$numerator}\,}{{$denominator}}
+                            \)
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "分数の乗除";
+        return view('workbook.unit.child', compact('unitname','question'));
+    }
+
+    // 比
+    public function ratio2() {
+        $primes1 = $this->get_primes(3, 13);
+        $multi = rand(2, 6);    //倍率
+        $mul10 = 10 ** rand(1,2);      //小数用
+        $div = $primes1[0];
+        $b = $primes1[1];
+        $a = $primes1[2];
+        $am = $a * $multi;
+        $bm = $b * $multi;
+        $c = $b * $div;
+        // $cm = $c * $multi;
+        $am_deci = $am / $mul10;
+        $bm_deci = $bm / $mul10;
+
+        // t/s = v/u, v=mt
+        $primes2 = $this->get_primes(4, 13);
+        $m = $primes2[0];
+        $s = $primes2[1];
+        $u = $primes2[2];
+        $t = $primes2[3];
+        $v = $m * $t;
+        $ms = $m * $s;
+
+        $questions = [
+            [
+                'q' => "\( {$am}:{$bm}\,を簡単な整数比で表しなさい。 \)",
+                'a' => "{$a}:{$b}",
+                'e' => "<div>
+                            \(いずれも\,{$multi}\,の倍数である。\)
+                        </div>",
+            ],
+            [
+                'q' => "\(\displaystyle \\frac{{$a}}{{$div}}:{$b}\,を簡単な整数比で表しなさい。 \)",
+                'a' => "{$a}:{$c}",
+                'e' => "<div>
+                            <p>\(それぞれ\,{$div}\,倍する。\)</p>
+                            <p>\(\displaystyle \\frac{{$a}}{{$div}}:{$b} = \\left(\\frac{{$a}}{{$div}}\\times {$div}\\right):({$b}\\times {$div}) = {$a}:{$c}.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\(\displaystyle \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}\,を簡単な整数比で表しなさい。 \)",
+                'a' => "{$u}:{$ms}",
+                'e' => "<div>
+                            <p>\(\displaystyle 分子同士が簡単な整数比になるので、まずそれぞれを\,{$t}\,で割るとよい。 \)</p>
+                            <p>\(\displaystyle
+                                \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}
+                                = \\frac{\,1\,}{\,{$s}\,}:\\frac{\,{$m}\,}{\,{$u}\,}
+                                = {$u}:{$ms}
+                            \)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\( {$am_deci}:{$bm_deci}\,を簡単な整数比で表しなさい。 \)",
+                'a' => "{$a}:{$b}",
+                'e' => "<div>
+                            <p>\(まず整数比にするために\,{$mul10}\,倍すると扱いやすくなる。\)</p>
+                            <p>\({$am_deci}:{$bm_deci} = ({$am_deci}\\times{$mul10}):({$bm_deci}\\times{$mul10}) = {$am}:{$bm} = {$a}:{$b} \)</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "比";
+        return view('workbook.unit.child', compact('unitname','question'));
     }
 
     // 分配法則１
@@ -421,7 +620,7 @@ class WorkbookController extends Controller
         return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
     }
 
-    // 一次関数（グラフ描画）
+    // 一次関数（交点の座標）
     public function plot_linear_function2() {
         // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
         $a = (-1)**rand(1,2) * rand(1,4);
@@ -463,6 +662,210 @@ class WorkbookController extends Controller
         return view('workbook.unit.plot_linear_function2', compact('a','b','c','d','plots'));
     }
 
+    // ２点を通る直線
+    public function linear_function3() {
+        // y=ax+b
+        $a = (-1)**rand(1,2) * rand(1,4);
+        $b = (-1)**rand(1,2) * rand(1,4);
+        
+        // 点P、Qの座標を決める。
+        $p_x = (-1)**rand(1,2) * rand(1,4);
+        $p_y = $a * $p_x + $b;
+        $q_x = (-1)**rand(1,2) * rand(1,4);
+        while ($p_x == $q_x) {
+            $q_y = (-1)**rand(1,2) * rand(1,4);
+        }
+        $q_y = $a * $q_x + $b;
+
+        // 文字列変数
+        $str_px = $p_x < 0 ? "({$p_x})" : "{$p_x}";
+        if ($p_x < $q_x) {
+            $str_subx = $p_x < 0 ? "{$q_x} - ({$p_x})" : "{$q_x} - {$p_x}";
+            $str_suby = $p_y < 0 ? "{$q_y} - ({$p_y})" : "{$q_y} - {$p_y}";
+        } else {
+            $str_subx = $q_x < 0 ? "{$p_x} - ({$q_x})" : "{$p_x} - {$q_x}";
+            $str_suby = $q_y < 0 ? "{$p_y} - ({$q_y})" : "{$p_y} - {$q_y}";
+        }
+        $str_equation = $b < 0 ? "y={$this->sign($a)}x {$b}" : "y={$this->sign($a)}x + {$b}";
+
+        // グラフ描画用
+        $size = 500;    //viewportの大きさ
+        $val_size = max(abs($p_x), abs($p_y), abs($q_x), abs($q_y)) * 4;   //実際の座標の大きさ 
+        $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
+        $plots = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+            'from_x' => -$size / 2,
+            'to_x' => $size / 2,
+            'from_y' => $a * (-$size / 2) + ($b * $scale),
+            'to_y' => $a * ($size / 2) + ($b * $scale),
+            'a' => $a,
+            'b' => $b,
+            'p_x' => $p_x,
+            'p_y' => $p_y,
+            'q_x' => $q_x,
+            'q_y' => $q_y,
+            'scale' => $scale,        
+        ];
+
+        $questions = [
+            [
+                'q' => "\(\,\mathrm{P({$p_x},{$p_y}),Q({$q_x},{$q_y})\,}を通る直線の式を求めなさい。\)",
+                'a' => "{$str_equation}",
+                'e' => "<div>
+                            <p>\(\ 求める直線の式を\,y=ax+b\,とおく。\)</p>
+                            <p>\(\displaystyle P,Q\,の座標より、a=\\frac{ \,y\,座標の差\, }{ \,x\,座標の差\, } = \\frac{ \,{$str_suby}\, }{ \,{$str_subx}\, } = {$a}.\)</p>
+                            <p>\(よって、y={$this->sign($a)}x+b\,と表せる。ここに\,P\,の座標を代入すると、{$p_y}={$a}\\times{$str_px}+b.\)</p>
+                            <p>\(これを\,b\,について解くと、b={$b}。よって、直線の式は、{$str_equation}\,である。\)</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "２点を通る直線";
+        return view('workbook.unit.linear_function3', compact('unitname','question','plots'));
+    }
+
+    // 正多角形の角
+    public function regular_polygon() {
+        $ns = [
+            5 => "五",
+            6 => "六",
+            8 => "八",
+            9 => "九",
+            10 => "十",
+            12 => "十二",
+        ];
+        $n = array_rand($ns);
+        $n_str = $ns[$n];
+        $n_2 = $n - 2;
+        $angle_in_total = 180 * ($n - 2);
+        $angle_in = $angle_in_total / $n;  //内角
+        $angle_out = 360 / $n;   //外角
+
+        $questions = [
+            [
+                'q' => "\(正\,{$n_str}\,角形の内角の和は何度か。\)",
+                'a' => "{$angle_in_total}^{\circ}",
+                'e' => "<div>
+                            <p>\(正\,n\,角形は\,(n-2)\,個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。\)</p>
+                            <p>\(三角形の内角の和は180^{\circ}なので、それが\,(n-2)\,個ある正\,n\,角形の内角の和は、180(n-2).\)</p>
+                            <p>\(\displaystyle よって、正\,{$n_str}\,角形（n={$n}）の内角の和は、180({$n}-2) = {$angle_in_total}^{\circ}.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\(正\,{$n_str}\,角形の内角ひとつは何度か。\)",
+                'a' => "{$angle_in}^{\circ}",
+                'e' => "<div>
+                            <p>\(正\,n\,角形は\,(n-2)\,個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。\)</p>
+                            <p>\(三角形の内角の和は180^{\circ}なので、それが\,(n-2)\,個ある正\,n\,角形の内角の和は、180(n-2).\)</p>
+                            <p>\(\displaystyle これより、これを\,n\,等分すれば内角ひとつの角度\,\\frac{ \,180(n-2)\, }{ n }\,が求まる。\)</p>
+                            <p>\(\displaystyle よって、正\,{$n_str}\,角形（n={$n}）の内角ひとつの角度は、\\frac{ \,180({$n}-2)\, }{ {$n} } = {$angle_in}^{\circ}.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\(内角の和が\,{$angle_in_total}^{\circ}\,の正多角形がある。角の数を答えなさい。\)",
+                'a' => "{$n}",
+                'e' => "<div>
+                            <p>\(正\,n\,角形は\,(n-2)\,個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。\)</p>
+                            <p>\(三角形の内角の和は180^{\circ}なので、それが\,(n-2)\,個ある正\,n\,角形の内角の和は、180(n-2).\)</p>
+                            <p>\(\displaystyle よって、180(n-2) = {$angle_in_total}\,を解いて、n={$n}.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\(ひとつの外角が\,{$angle_out}^{\circ}\,の正多角形がある。角の数を答えなさい。\)",
+                'a' => "{$n}",
+                'e' => "<div>
+                            <p>\(多角形の外角の和は\,360^{\circ}\,である。\)</p>
+                            <p>\(\displaystyle 正\,n\,角形の外角はこれを\,n\,等分した値になるので、\\frac{\,360\,}{n}. \)</p>
+                            <p>\(\displaystyle よって、\\frac{\,360\,}{ {$n} } = {$angle_out}\,を解いて、n={$n}.\)</p>
+                        </div>",
+            ],
+            [
+                'q' => "\(正{$n_str}角形の外角ひとつの角度を求めなさい。\)",
+                'a' => "{$angle_out}^{\circ}",
+                'e' => "<div>
+                            <p>\(多角形の外角の和は\,360^{\circ}\,である。\)</p>
+                            <p>\(\displaystyle 正\,n\,角形の外角はこれを\,n\,等分した値になるので、\\frac{\,360\,}{n}. \)</p>
+                            <p>\(\displaystyle よって、正{$n_str}角形（n={$n}）の外角は、\\frac{\,360\,}{ {$n} } = {$angle_out}^{\circ}.\)</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "正多角形の角";
+        return view('workbook.unit.child', compact('unitname','question'));
+    }
+
+    // 平方根
+    public function sqrt_calc() {
+        // √a = p√b
+        $b_arr = [2, 3, 5, 7, 11];
+        $b_idx = array_rand($b_arr);
+        $b = $b_arr[$b_idx];
+
+        $p1 = rand(2, 6);
+        $a1 = pow($p1, 2) * $b;
+        $p2 = rand(2, 6);
+        while($p1 == $p2) {
+            $p2 = rand(2, 6);
+        }
+        $a2 = pow($p2, 2) * $b;
+        $add_p1p2 = $p1 + $p2;
+        // $sub_p1p2 = ($p1 - $p2 == -1 ? "-" : $p1 - $p2);
+        $sub_p1p2 = $this->sign($p1 - $p2);
+
+        $questions = [
+            [
+                'q' => "<div>
+                            <p>\(次の計算をしなさい。\)</p>
+                            <p>\( \sqrt{{$a1}} + \sqrt{{$a2}} \)</p>
+                        </div>",
+                'a' => "{$add_p1p2}\sqrt{$b}",
+                'e' => "<div>
+                            \( \sqrt{{$a1}} + \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} + \sqrt{{$p2}^2 \\times {$b}}
+                            = {$p1}\sqrt{{$b}} + {$p2}\sqrt{{$b}} = {$add_p1p2}\sqrt{$b} \)
+                        </div>",
+            ],
+            [
+                'q' => "<div>
+                            <p>\(次の計算をしなさい。\)</p>
+                            <p>\( \sqrt{{$a1}} - \sqrt{{$a2}} \)</p>
+                        </div>",
+                'a' => "{$sub_p1p2}\sqrt{$b}",
+                'e' => "<div>
+                            \( \sqrt{{$a1}} - \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} - \sqrt{{$p2}^2 \\times {$b}}
+                            = {$p1}\sqrt{{$b}} - {$p2}\sqrt{{$b}} = {$sub_p1p2}\sqrt{$b} \)
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "平方根の和差";
+        return view('workbook.unit.child', compact('unitname','question'));
+    }
+
+    // 自然数になるような √(an)
+    public function sqrt_natural() {
+        $ns = [2, 3, 5, 7, 11, 13];
+        $n_index = rand(0, count($ns)-1);
+        $n = $ns[$n_index];   //自然数 n
+        // √(an) = p√(qn)
+        $q = $n;
+        $ps = [2, 3, 5];
+        $p_index = rand(0, count($ps)-1);
+        $p = $ps[$p_index];
+        $a = pow($p, 2) * $q;
+
+        $question = [
+            'q' => "n\,を自然数とする。\\sqrt{ {{ $a }} n}\,が自然数となるような\,n\,のうち、最小の値を求めなさい。",
+            'a' => "{$n}",
+            'e' => "\\sqrt{ {$a}n } = {$p}\\sqrt{ {$q}n }\,なので、\\sqrt{ {$q}n }\,が自然数になればよい。",
+        ];
+
+        return view('workbook.unit.sqrt_natural', compact('n','p','a','question'));
+    }
+
     /******** 共通関数 **********/
     // 最大公約数
     private function gcd($a, $b)
@@ -474,6 +877,39 @@ class WorkbookController extends Controller
         }
 
         return abs($a);
+    }
+
+    // 係数
+    private function sign($n)
+    {
+        if ($n == 1) {
+            return "";
+        } elseif ($n == -1) {
+            return "-";
+        } else {
+            return $n;
+        }
+    }
+
+    // 素数の取得(取得数、最大値)
+    private function get_primes($count, $max)
+    {
+        $primes = [
+            2, 3, 5, 7, 11, 13, 17, 19,
+            23, 29, 31, 37, 41, 43, 47,
+            53, 59, 61, 67, 71, 73, 79, 83,
+            89, 97
+        ];
+
+        $primes = array_filter($primes, fn($n) => $n <= $max);
+
+        $keys = array_rand($primes, $count);
+
+        if ($count == 1) {
+            $keys = [$keys];
+        }
+
+        return array_values(array_map(fn($key) => $primes[$key], $keys));
     }
 
     // 英単語　動詞１
@@ -1004,6 +1440,45 @@ class WorkbookController extends Controller
         $index = rand(0,count($questions)-1);
         $question = $questions[$index];
         return view('workbook.unit.aqueous1', compact('question'));
+    }
+
+    // 湿度
+    public function humidity() {
+        // h = m/M * 100
+        $h = rand(1, 90);   //湿度
+        $M = rand(5, 20);   //飽和水蒸気量[g/m^3]
+        $m = $M * $h / 100;  //実際の水蒸気量[g/m^3]
+
+        $questions = [
+            [
+                'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、実際の水蒸気量は\,{$m}\,\mathrm{g/m^3}\,とする。このときの湿度を求めなさい。\)",
+                'a' => "{$h}\,\mathrm{\%}",
+                'e' => "<p>\(\displaystyle
+                            \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
+                            h=\\frac{\mathnormal{m}}{\,M\,}=\\frac{ \,{$m}\, }{ \,{$M}\, } \\times 100 = {$h}\,[\%]}。
+                        \)</p>",
+            ],
+            [
+                'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの水蒸気量を求めなさい。\)",
+                'a' => "{$m}\,\mathrm{g/m^3}",
+                'e' => "<p>\(\displaystyle
+                            \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
+                            {$h}=\\frac{\,\mathnormal{m}\,}{\,{$M}\,}\\times 100。これを解いて、\mathnormal{m}={$m}\,[g/m^3]}。
+                        \)</p>",
+            ],
+            [
+                'q' => "\(ある気温での水蒸気量が\,{$m}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの飽和水蒸気量を求めなさい。\)",
+                'a' => "{$M}\,\mathrm{g/m^3}",
+                'e' => "<p>\(\displaystyle
+                            \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
+                            {$h}=\\frac{\,{$m}\,}{\,M\,}\\times 100。これを解いて、M={$M}\,[g/m^3]}。
+                        \)</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "湿度・水蒸気量";
+        return view('workbook.unit.child', compact('unitname','question'));
     }
 
     // 電磁気

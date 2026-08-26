@@ -265,10 +265,16 @@ Route::get('workbook/unitbasedlist', [WorkbookController::class, 'unitbasedlist'
 //算数
 Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.mul100');
+Route::get('workbook/ratio1', [WorkbookController::class, 'ratio1'])
+->middleware(['auth', 'verified'])->name('workbook.unit.ratio1');
+Route::get('workbook/ratio2', [WorkbookController::class, 'ratio2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.ratio2');
 Route::get('workbook/velocity', [WorkbookController::class, 'velocity1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.velocity1');
 Route::get('workbook/velocity2', [WorkbookController::class, 'velocity2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.velocity2');
+Route::get('workbook/fraction_muldiv', [WorkbookController::class, 'fraction_muldiv'])
+->middleware(['auth', 'verified'])->name('workbook.unit.fraction_muldiv');
 //数学
 Route::get('workbook/distributive_law1', [WorkbookController::class, 'distributive_law1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.distributive_law1');
@@ -295,6 +301,15 @@ Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_li
 ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function');
 Route::get('workbook/plot_linear_function2', [WorkbookController::class, 'plot_linear_function2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function2');
+Route::get('workbook/linear_function3', [WorkbookController::class, 'linear_function3'])
+->middleware(['auth', 'verified'])->name('workbook.unit.linear_function3');
+Route::get('workbook/regular_polygon', [WorkbookController::class, 'regular_polygon'])
+->middleware(['auth', 'verified'])->name('workbook.unit.regular_polygon');
+// 数学（中3）
+Route::get('workbook/sqrt_calc', [WorkbookController::class, 'sqrt_calc'])
+->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_calc');
+Route::get('workbook/sqrt_natural', [WorkbookController::class, 'sqrt_natural'])
+->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_natural');
 // 英語
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');
@@ -324,6 +339,8 @@ Route::get('workbook/density', [WorkbookController::class, 'density'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.density');
 Route::get('workbook/aqueous1', [WorkbookController::class, 'aqueous1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.aqueous1');
+Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
+->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
 Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
 /*************** 単元別学習　ここまで *************************/

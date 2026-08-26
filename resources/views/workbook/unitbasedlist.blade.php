@@ -45,6 +45,9 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.ratio1')}}">割合</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.unit.velocity1')}}">速さ１</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
@@ -54,6 +57,12 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.fraction_muldiv')}}">分数の乗除</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.ratio2')}}">比</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
@@ -94,6 +103,12 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.unit.sqrt_calc')}}">平方根の和差</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.unit.sqrt_natural')}}">自然数になる\(\sqrt{an}\)</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
@@ -139,6 +154,9 @@
                                     <a href="{{route('workbook.unit.plot_linear_function')}}">一次関数（グラフ描画）</a>
                                 </x-button-link>
                                 <x-button-link>
+                                    <a href="{{route('workbook.unit.linear_function3')}}">２点を通る直線</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.unit.plot_linear_function2')}}">交点の座標</a>
                                 </x-button-link>
                             </div>
@@ -162,6 +180,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.unit.regular_polygon')}}">正多角形の角</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -311,6 +332,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.unit.humidity')}}">湿度・水蒸気量</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
