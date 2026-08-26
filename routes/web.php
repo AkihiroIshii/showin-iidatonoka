@@ -262,6 +262,11 @@ Route::get('workbook/randomsetting', [WorkbookController::class, 'randomsetting'
 Route::get('workbook/unitbasedlist', [WorkbookController::class, 'unitbasedlist'])
 ->middleware(['auth', 'verified'])->name('workbook.unitbasedlist');
 /*************** 単元別学習　ここから *************************/
+//小学生国語
+Route::get('workbook/kanjiP2', [WorkbookController::class, 'kanjiP2'])
+->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP2');
+Route::get('workbook/kanjiP3', [WorkbookController::class, 'kanjiP3'])
+->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP3');
 //算数
 Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.mul100');

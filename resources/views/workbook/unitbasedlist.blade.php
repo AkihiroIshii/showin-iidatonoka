@@ -66,6 +66,35 @@
                             </div>
                         </x-td>
                     </tr>
+                    <tr>
+                        <x-td>国語</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.kanjiP2')}}">小２漢字</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.kanjiP3')}}">小３漢字</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -425,6 +454,57 @@
                             </div>
                         </x-td>
                     </tr>
+                </tbody>
+            </table>
+
+                        <!---------------------------------------- 社会 ---------------------------------------->
+            <x-h3 color="red">国語</x-h3>
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <thead>
+                    <tr class="bg-gray-300">
+                        <x-th>分野</x-th>
+                        <x-th>中１</x-th>
+                        <x-th>中２</x-th>
+                        <x-th>中３</x-th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <x-td>漢字</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                {{-- <x-button-link color="red">
+                                    <a href="{{route('workbook.unit.map_scale')}}">地図の縮尺</a>
+                                </x-button-link> --}}
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    {{-- <tr>
+                        <x-td>国文法</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="red">
+                                    <a href="{{route('workbook.unit.map_scale')}}">地図の縮尺</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr> --}}
                 </tbody>
             </table>
 
