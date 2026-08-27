@@ -267,6 +267,8 @@ Route::get('workbook/kanjiP2', [WorkbookController::class, 'kanjiP2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP2');
 Route::get('workbook/kanjiP3', [WorkbookController::class, 'kanjiP3'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP3');
+Route::get('workbook/kanjiP4', [WorkbookController::class, 'kanjiP4'])
+->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP4');
 //算数
 Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.mul100');
@@ -308,8 +310,12 @@ Route::get('workbook/plot_linear_function2', [WorkbookController::class, 'plot_l
 ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function2');
 Route::get('workbook/linear_function3', [WorkbookController::class, 'linear_function3'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_function3');
+Route::get('workbook/find_angle', [WorkbookController::class, 'find_angle'])
+->middleware(['auth', 'verified'])->name('workbook.find_angle');
 Route::get('workbook/regular_polygon', [WorkbookController::class, 'regular_polygon'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.regular_polygon');
+Route::get('workbook/proof_congruence1', [WorkbookController::class, 'proof_congruence1'])
+->middleware(['auth', 'verified'])->name('workbook.proof_congruence1');
 // 数学（中3）
 Route::get('workbook/sqrt_calc', [WorkbookController::class, 'sqrt_calc'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_calc');

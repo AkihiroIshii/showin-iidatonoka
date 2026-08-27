@@ -25,6 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- 小学算数 --}}
                     <tr>
                         <x-td>算数</x-td>
                         <x-td class="font-bold">
@@ -66,6 +67,7 @@
                             </div>
                         </x-td>
                     </tr>
+                    {{-- 小学国語 --}}
                     <tr>
                         <x-td>国語</x-td>
                         <x-td class="font-bold">
@@ -84,6 +86,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.unit.kanjiP4')}}">小４漢字</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -210,7 +215,13 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
+                                    <a href="{{route('workbook.find_angle')}}">角度を求める</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.unit.regular_polygon')}}">正多角形の角</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.proof_congruence1')}}">合同の証明１</a>
                                 </x-button-link>
                             </div>
                         </x-td>

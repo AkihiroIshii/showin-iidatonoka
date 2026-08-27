@@ -29,7 +29,7 @@
                     <div class="inline-block items-center text-center m-4 p-2 rounded shadow whitespace-nowrap overflow-hidden text-ellipsis bg-pink-200">
                         <p class="text-3xl m-4 font-klee">{{ $question['a'] }}</p>
                     </div>
-                    <p class="text-lg">＜解説＞</p>
+                    {{-- <p class="text-lg">＜解説＞</p> --}}
                     <div class="leading-[3]">
                         {{-- \(\displaystyle {{ $question['e'] }}\) --}}
                         {!! $question['e'] !!}

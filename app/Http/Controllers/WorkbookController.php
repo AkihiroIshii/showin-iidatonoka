@@ -620,48 +620,6 @@ class WorkbookController extends Controller
         return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
     }
 
-    // 一次関数（交点の座標）
-    public function plot_linear_function2() {
-        // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
-        $a = (-1)**rand(1,2) * rand(1,4);
-        $b = (-1)**rand(1,2) * rand(1,4);
-        $c = (-1)**rand(1,2) * rand(1,4);
-        
-        // a = c になっていたら c を変更
-        while ($a == $c) {
-            $c = (-1)**rand(1,2) * rand(1,4);
-        }
-
-        // 先に交点のx座標を決める。
-        $p_x = (-1)**rand(1,2) * rand(1,4);
-        $p_y = $a * $p_x + $b;
-
-        // y2の切片dが決まる。
-        $d = ($a - $c) * $p_x + $b;
-
-        // グラフ描画用
-        $size = 500;    //viewportの大きさ
-        $val_size = max(abs($p_x), abs($p_y)) * 4;   //実際の座標の大きさ 
-        $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
-        $plots = [
-            'w_full' => $size,
-            'w_half' => $size / 2,
-            'from_x' => -$size / 2,
-            'to_x' => $size / 2,
-
-            'from_y1' => $a * (-$size / 2) + ($b * $scale),
-            'to_y1' => $a * ($size / 2) + ($b * $scale),
-            'from_y2' => $c * (-$size / 2) + ($d * $scale),
-            'to_y2' => $c * ($size / 2) + ($d * $scale),
-
-            'p_x' => $p_x,
-            'p_y' => $p_y,
-            'scale' => $scale,        
-        ];
-
-        return view('workbook.unit.plot_linear_function2', compact('a','b','c','d','plots'));
-    }
-
     // ２点を通る直線
     public function linear_function3() {
         // y=ax+b
@@ -724,6 +682,48 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "２点を通る直線";
         return view('workbook.unit.linear_function3', compact('unitname','question','plots'));
+    }
+
+    // 一次関数（交点の座標）
+    public function plot_linear_function2() {
+        // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
+        $a = (-1)**rand(1,2) * rand(1,4);
+        $b = (-1)**rand(1,2) * rand(1,4);
+        $c = (-1)**rand(1,2) * rand(1,4);
+        
+        // a = c になっていたら c を変更
+        while ($a == $c) {
+            $c = (-1)**rand(1,2) * rand(1,4);
+        }
+
+        // 先に交点のx座標を決める。
+        $p_x = (-1)**rand(1,2) * rand(1,4);
+        $p_y = $a * $p_x + $b;
+
+        // y2の切片dが決まる。
+        $d = ($a - $c) * $p_x + $b;
+
+        // グラフ描画用
+        $size = 500;    //viewportの大きさ
+        $val_size = max(abs($p_x), abs($p_y)) * 4;   //実際の座標の大きさ 
+        $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
+        $plots = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+            'from_x' => -$size / 2,
+            'to_x' => $size / 2,
+
+            'from_y1' => $a * (-$size / 2) + ($b * $scale),
+            'to_y1' => $a * ($size / 2) + ($b * $scale),
+            'from_y2' => $c * (-$size / 2) + ($d * $scale),
+            'to_y2' => $c * ($size / 2) + ($d * $scale),
+
+            'p_x' => $p_x,
+            'p_y' => $p_y,
+            'scale' => $scale,        
+        ];
+
+        return view('workbook.unit.plot_linear_function2', compact('a','b','c','d','plots'));
     }
 
     // 正多角形の角
@@ -795,6 +795,156 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "正多角形の角";
         return view('workbook.unit.child', compact('unitname','question'));
+    }
+
+    // 合同の証明１
+    public function proof_congruence1() {
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        $questions = [
+            [
+                'q_type' => 2,
+                'q' => "正方形の特徴をできるだけ挙げなさい。",
+                'a_type' => 3,
+                'a' => '<ul class="list-disc">
+                            <li>すべての辺の長さが等しい。</li>
+                            <li>すべての内角が\(\,90^{\circ}\)。</li>
+                            <li>向かい合う辺が平行。</li>
+                        </ul>',
+                'e_type' => 1,
+                'e' => "\(AB=AC\,\)のように明記されていなくても、「正方形」であれば上記の仮定をすべて含んでいる。",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "長方形の特徴をできるだけ挙げなさい。",
+                'a_type' => 3,
+                'a' => '<ul class="list-disc">
+                            <li>すべての内角が\(\,90^{\circ}\)。</li>
+                            <li>向かい合う辺の長さが等しい。</li>
+                            <li>向かい合う辺が平行。</li>
+                        </ul>',
+                'e_type' => 1,
+                'e' => "\(AB=AC\,\)のように明記されていなくても、「長方形」であれば上記の仮定をすべて含んでいる。",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "平行四辺形の特徴をできるだけ挙げなさい。",
+                'a_type' => 3,
+                'a' => '<ul class="list-disc">
+                            <li>向かい合う角の大きさが等しい。</li>
+                            <li>向かい合う辺の長さが等しい。</li>
+                            <li>向かい合う辺が平行。</li>
+                        </ul>',
+                'e_type' => 1,
+                'e' => "\(AB=AC\,\)のように明記されていなくても、「平行四辺形」であれば上記の仮定をすべて含んでいる。",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "正三角形の特徴をできるだけ挙げなさい。",
+                'a_type' => 3,
+                'a' => '<ul class="list-disc">
+                            <li>すべての辺の長さが等しい。</li>
+                            <li>すべての内角が\(\,60^{\circ}\)。</li>
+                        </ul>',
+                'e_type' => 1,
+                'e' => "\(AB=AC\,\)のように明記されていなくても、「正三角形」であれば上記の仮定をすべて含んでいる。",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "二等辺三角形の特徴をできるだけ挙げなさい。",
+                'a_type' => 3,
+                'a' => '<ul class="list-disc">
+                            <li>頂角に接する二つの辺の長さが等しい。</li>
+                            <li>２つの底角が等しい。</li>
+                        </ul>',
+                'e_type' => 1,
+                'e' => "\(AB=AC\,\)のように明記されていなくても、「二等辺三角形」であれば上記の仮定をすべて含んでいる。",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "平行な２本の直線を、別の１本の直線が横切るとき、わかることをすべて挙げなさい。",
+                'a_type' => 3,
+                'a' => '<ul class="list-disc">
+                            <li>等しい錯角が存在する。</li>
+                            <li>等しい同位角が存在する。</li>
+                            <li>交点では、対頂角が等しい。</li>
+                        </ul>',
+                'e_type' => 1,
+                'e' => "平行線があれば、錯角や同位角がないか確認しよう。",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC}\,であるとき、他に成り立つ関係式を挙げなさい。",
+                'a_type' => 2,
+                'a' => '\mathrm{\\angle ABC = \\angle ACB}',
+                'e_type' => 1,
+                'e' => "二等辺三角形の底角は等しい。",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "合同の証明";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 角度を求める
+    public function find_angle() {
+        // 変数
+        $ang1 = 10 * rand(2, 14);   // 20～140°
+        $ang_rest = 180 - $ang1;    // 他２角の和
+        $ang_base = $ang_rest / 2;  // ang1を頂角とする二等辺三角形の底角。
+        $ang2 = $ang_base + (-1)**rand(1,2) * rand(10, $ang_base);
+        $ang3 = 180 - ($ang1 + $ang2);
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        $questions = [
+            [
+                'q_type' => 2,
+                'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC\, ,\\angle ABC = {$ang_base}^{\circ}\,であるとき、\\angle BAC を求めよ。}",
+                'a_type' => 2,
+                'a' => "{$ang1}^{\circ}",
+                'e_type' => 3,
+                'e' => "<p>\(ノートに\,\mathrm{\\triangle \mathrm{ABC}}\,を描いて考えましょう。\)</p>
+                        <p>\(扱いやすくするため、\,\mathrm{\\angle \mathrm{BAC}=\mathnormal{a}^{\circ},
+                            \\angle \mathrm{ABC}=\mathnormal{b}^{\circ},\\angle \mathrm{ACB}=\mathnormal{c}^{\circ} }\,とする。\)</p>
+                        <p>\(二等辺三角形の底角は等しいので、b = c = {$ang_base}^{\circ}.\)</p> 
+                        <p>\(三角形の内角の和は\,180^{\circ}\,なので、\)</p>
+                        \\[
+                            \\begin{aligned}
+                                a + b + c &= 180 \\\\
+                                a + {$ang_base} + {$ang_base} &= 180 \\\\
+                                a & = 180 - {$ang_rest} \\\\
+                                a &= {$ang1}^{\circ}.
+                            \\end{aligned}
+                        \\]
+                        ",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC\, ,\\angle BAC = {$ang1}^{\circ}\,であるとき、\\angle ABC を求めよ。}",
+                'a_type' => 2,
+                'a' => "{$ang_base}^{\circ}",
+                'e_type' => 3,
+                'e' => "<p>\(ノートに\,\mathrm{\\triangle \mathrm{ABC}}\,を描いて考えましょう。\)</p>
+                        <p>\(扱いやすくするため、\,\mathrm{\\angle \mathrm{BAC}=\mathnormal{a}^{\circ},
+                            \\angle \mathrm{ABC}=\mathnormal{b}^{\circ},\\angle \mathrm{ACB}=\mathnormal{c}^{\circ} }\,とする。\)</p>
+                        <p>\(三角形の内角の和は\,180^{\circ}\,で、a = {$ang1}^{\circ}\,なので、\)</p>
+                        \\[
+                            \\begin{aligned}
+                                a + b + c &= 180 \\\\
+                                {$ang1} + b + c &= 180 \\\\
+                                b + c &= {$ang_rest}.
+                            \\end{aligned}
+                        \\]
+                        <p>\(二等辺三角形の底角は等しいので、b = c。よって、 b = {$ang_rest} / 2 = {$ang_base}^{\circ}.\)</p> 
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "角度を求める";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 平方根
@@ -1182,7 +1332,7 @@ class WorkbookController extends Controller
                 'a' => 'She ( walked ) to the park.',
             ],
             [
-                'q' => '彼は英語を勉強した。 ⇒ She (　　) English.',
+                'q' => '彼は英語を勉強した。 ⇒ He (　　) English.',
                 'a' => 'He ( studied ) English.',
             ],
             [
@@ -1744,6 +1894,76 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "小３漢字";
+        return view('workbook.unit.template_kanji', compact('unitname','question'));
+    }
+
+    // 小４漢字
+    public function kanjiP4() {
+        $questions = [
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'がっしゅくでの とっくんの せいかが しあいに あらわれた。',
+                'a' => "合宿での特訓の成果が試合に表れた。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'きかいに ひつような ざいりょうが ふそくしている。',
+                'a' => "機械に必要な材料が不足している。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'かごしまから ひこうきで えひめに たびだつ。',
+                'a' => "鹿児島から飛行機で愛媛に旅立つ。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'ともだちと わなげで あそんだ。',
+                'a' => "友達と輪投げで遊んだ。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'ふくだいじんが もんだいはつげんをした。',
+                'a' => "副大臣が問題発言をした。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'うんどうかいで ときょうそうへの さんかを きぼうする。',
+                'a' => "運動会で徒競走への参加を希望する。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'りかの じっけんで かがみを つかう。',
+                'a' => "理科の実験で鏡を使う。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'そうこに とりの すが ある。',
+                'a' => "倉庫に鳥の巣がある。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'れんぞく しゅつじょうの きろくを うちたてる。',
+                'a' => "連続出場の記録を打ち立てる。",
+                'e' => "",
+            ],
+            [
+                'q1' => '次の文を漢字を使って書きましょう。',
+                'q2' => 'きゅうしょくで やきにくを のこさず たべた。',
+                'a' => "給食で焼肉を残さず食べた。",
+                'e' => "",
+            ],
+       ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "小４漢字";
         return view('workbook.unit.template_kanji', compact('unitname','question'));
     }
 }
