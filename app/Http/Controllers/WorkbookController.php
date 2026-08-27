@@ -940,6 +940,14 @@ class WorkbookController extends Controller
                         <p>\(二等辺三角形の底角は等しいので、b = c。よって、 b = {$ang_rest} / 2 = {$ang_base}^{\circ}.\)</p> 
                         ",
             ],
+            [
+                'q_type' => 2,
+                'q' => "平行四辺形\,\mathrm{ABCD}\,について、\mathrm{\\angle ABD = {$ang1}^{\circ}\,であるとき、\\angle BDC を求めよ。}",
+                'a_type' => 2,
+                'a' => "{$ang1}^{\circ}",
+                'e_type' => 2,
+                'e' => "図を描いて考えましょう。\mathrm{AB /\!/ DC}\,より、錯角は等しいから、\mathrm{\\angle ABD = \\angle BDC}.",
+            ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
