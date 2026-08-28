@@ -289,6 +289,9 @@
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.interrogative')}}">疑問詞</a>
                                 </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.past_verb')}}">過去形</a>
+                                </x-button-link>
                                 {{-- <div>
                                     be動詞
                                     <x-button-link color="purple">

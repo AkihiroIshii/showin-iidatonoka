@@ -334,6 +334,8 @@ Route::get('workbook/general_verb', [WorkbookController::class, 'general_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.general_verb');
 Route::get('workbook/interrogative', [WorkbookController::class, 'interrogative'])
 ->middleware(['auth', 'verified'])->name('workbook.interrogative');
+Route::get('workbook/past_verb', [WorkbookController::class, 'past_verb'])
+->middleware(['auth', 'verified'])->name('workbook.past_verb');
 
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');

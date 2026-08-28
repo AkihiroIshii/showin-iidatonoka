@@ -1347,19 +1347,34 @@ class WorkbookController extends Controller
         return $word;
     }
 
+    // 英単語_形容詞の取得
+    private function get_adjective()
+    {
+        // e:英単語、j:和訳、c:比較級、l:最大級
+        $words = [
+            ['e' => 'tall', 'j' => '背が高い', 'jp' => '背が高かった', 'jpq' => '背が高かったですか', 'jpnot' => '背が高くなかった', 'c' => 'taller', 'l' => 'tallest'],
+            ['e' => 'kind', 'j' => '親切だ', 'jp' => '親切でした', 'jpq' => '親切でしたか', 'jpnot' => '親切ではなかった', 'c' => 'kinder', 'l' => 'kindest'],
+            ['e' => 'shy', 'j' => '内気だ', 'jp' => '内気でした', 'jpq' => '内気でしたか', 'jpnot' => '内気ではなかった', 'c' => 'shier', 'l' => 'shiest'],
+            ['e' => 'cool', 'j' => '冷静だ', 'jp' => '冷静でした', 'jpq' => '冷静でしたか', 'jpnot' => '冷静ではなかった', 'c' => 'cooler', 'l' => 'coolest'],
+        ];
+        $index = rand(0,count($words)-1);
+        $word = $words[$index];
+        return $word;
+    }
+
     // 英単語_動詞の取得
     private function get_verb()
     {
         // e:英単語、j:和訳、p:複数形、i:不定冠詞
         $words = [
             ['e' => 'walk', 'eL' => 'Walk', 'es' => 'walks', 'ep' => 'walked', 'epp' => 'walked', 'eing' => 'walking',
-                'j' => '歩く', 'jp' => '歩いた', 'jing' => '歩いている', 'jnot' => '歩かない', 'jq' => '歩きますか', 'jpnot' => '歩かなかった'],
+                'j' => '歩く', 'jp' => '歩いた', 'jing' => '歩いている', 'jnot' => '歩かない', 'jq' => '歩きますか', 'jpnot' => '歩かなかった', 'jprenyo' => '歩き'],
             ['e' => 'study', 'eL' => 'Study', 'es' => 'studies', 'ep' => 'studied', 'epp' => 'studied', 'eing' => 'studying',
-                'j' => '勉強する', 'jp' => '勉強した', 'jing' => '勉強している', 'jnot' => '勉強しない', 'jq' => '勉強しますか', 'jpnot' => '勉強しなかった'],
+                'j' => '勉強する', 'jp' => '勉強した', 'jing' => '勉強している', 'jnot' => '勉強しない', 'jq' => '勉強しますか', 'jpnot' => '勉強しなかった', 'jprenyo' => '勉強し'],
             ['e' => 'run', 'eL' => 'Run', 'es' => 'runs', 'ep' => 'ran', 'epp' => 'run', 'eing' => 'running',
-                'j' => '走る', 'jp' => '走った', 'jing' => '走っている', 'jnot' => '走らない', 'jq' => '走りますか', 'jpnot' => '走らなかった'],
+                'j' => '走る', 'jp' => '走った', 'jing' => '走っている', 'jnot' => '走らない', 'jq' => '走りますか', 'jpnot' => '走らなかった', 'jprenyo' => '走り'],
             ['e' => 'think', 'eL' => 'Think', 'es' => 'thinks', 'ep' => 'thought', 'epp' => 'thought', 'eing' => 'thinking',
-                'j' => '考える', 'jp' => '考えた', 'jing' => '考えている', 'jnot' => '考えない', 'jq' => '考えますか', 'jpnot' => '考えなかった'],
+                'j' => '考える', 'jp' => '考えた', 'jing' => '考えている', 'jnot' => '考えない', 'jq' => '考えますか', 'jpnot' => '考えなかった', 'jprenyo' => '考え'],
         ];
         $index = rand(0,count($words)-1);
         $word = $words[$index];
@@ -1487,25 +1502,25 @@ class WorkbookController extends Controller
                 'e_type' => 1,
                 'e' => '"Do S V?"の形になる。なお、Sが三人称単数の場合、"Does S V?"になる"。',
             ],
-            [
-                'q_type' => 4,
-                'q1' => "次の文を英訳しなさい。",
-                'q2' => "{$s['j']}は{$v['jp']}。",
-                'a_type' => 1,
-                'a' => "{$s['e']} {$v['ep']}.",
-                'e_type' => 3,
-                'e' => '<p>"S V."の形で、Vは過去形になる。</p>
-                        <p>規則動詞はV+edの形になるが、不規則動詞は暗記するしかない。</p>',
-            ],
-            [
-                'q_type' => 4,
-                'q1' => "次の文を英訳しなさい。",
-                'q2' => "{$s['j']}は{$v['jpnot']}。",
-                'a_type' => 1,
-                'a' => "{$s['e']} didn't {$v['e']}.",
-                'e_type' => 1,
-                'e' => '"S didn\'t V."の形で、Vは原形になる。',
-            ],
+            // [
+            //     'q_type' => 4,
+            //     'q1' => "次の文を英訳しなさい。",
+            //     'q2' => "{$s['j']}は{$v['jp']}。",
+            //     'a_type' => 1,
+            //     'a' => "{$s['e']} {$v['ep']}.",
+            //     'e_type' => 3,
+            //     'e' => '<p>"S V."の形で、Vは過去形になる。</p>
+            //             <p>規則動詞はV+edの形になるが、不規則動詞は暗記するしかない。</p>',
+            // ],
+            // [
+            //     'q_type' => 4,
+            //     'q1' => "次の文を英訳しなさい。",
+            //     'q2' => "{$s['j']}は{$v['jpnot']}。",
+            //     'a_type' => 1,
+            //     'a' => "{$s['e']} didn't {$v['e']}.",
+            //     'e_type' => 1,
+            //     'e' => '"S didn\'t V."の形で、Vは原形になる。',
+            // ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
@@ -1515,15 +1530,6 @@ class WorkbookController extends Controller
 
     // 英文法 疑問詞
     public function interrogative() {
-        // 主語 'es'=1:三人称単数
-        // $subjects = [
-        //     ['e' => 'I', 'es' => 0, 'el' => 'I', 'j' => '私', ],
-        //     ['e' => 'We', 'es' => 0, 'el' => 'we', 'j' => '私たち', ],
-        //     ['e' => 'He', 'es' => 1, 'el' => 'he', 'j' => '彼',],
-        // ];
-        // $idx = rand(0, count($subjects)-1);
-        // $s = $subjects[$idx];
-
         // 主語 'es'=1:三人称単数
         $interrogatives = [
             ['e' => 'Who', 'j' => '誰が'],
@@ -1537,23 +1543,23 @@ class WorkbookController extends Controller
         $wh = $interrogatives[$idx];
 
         $q_whos = [
-            ['e' => 'got it', 'j' => 'それを手に入れた'],
-            ['e' => 'swam', 'j' => '泳いだ'],
-            ['e' => 'studied', 'j' => '勉強した'],
+            ['e' => 'reads the book', 'j' => 'その本を読む'],
+            ['e' => 'swims', 'j' => '泳ぐ'],
+            ['e' => 'studies', 'j' => '勉強する'],
         ];
         $idx = rand(0, count($q_whos)-1);
         $q_who = $q_whos[$idx];
 
         $q_whats = [
-            ['e' => 'What did you get?', 'j' => 'あなたは何を手に入れたのですか。'],
-            ['e' => 'What does she do?', 'j' => '彼女は何をするのですか。'],
-            ['e' => 'What do you do?', 'j' => 'あなたは何をするのですか。'],
+            ['e' => 'What do you read?', 'j' => 'あなたは何を読むのですか。'],
+            ['e' => 'What does she like?', 'j' => '彼女は何が好きですか。'],
+            ['e' => 'What do you need?', 'j' => 'あなたは何が必要ですか。'],
         ];
         $idx = rand(0, count($q_whats)-1);
         $q_what = $q_whats[$idx];
 
         $q_elses = [
-            ['e' => 'did you get the book', 'j' => 'その本を手に入れた'],
+            ['e' => 'do you read the book', 'j' => 'その本を読む'],
             ['e' => 'does she swim', 'j' => '彼女は泳ぐ'],
             ['e' => 'do you study', 'j' => '勉強する'],
         ];
@@ -1614,6 +1620,145 @@ class WorkbookController extends Controller
         $unitname = "疑問詞";
         return view('workbook.unit_template', compact('unitname','question'));
     }
+
+    // 英文法 過去形
+    public function past_verb() {
+        // 主語 'es'=1:三人称単数
+        $subjects = [
+            ['e' => 'You', 'es' => 0, 'el' => 'you', 'j' => 'あなた', ],
+            ['e' => 'She', 'es' => 1, 'el' => 'she', 'j' => '彼女',],
+            ['e' => 'Tom', 'es' => 1, 'el' => 'Tom', 'j' => 'トム',],
+            ['e' => 'They', 'es' => 0, 'el' => 'they', 'j' => '彼ら',],
+        ];
+        $idx = rand(0, count($subjects)-1);
+        $s = $subjects[$idx];
+        $v = $this->get_verb();
+        $a = $this->get_adjective();
+        $be = $s['es'] == 1 ? "was" : "were";
+        $Be = $s['es'] == 1 ? "Was" : "Were";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['jp']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$v['ep']}.",
+                'e_type' => 3,
+                'e' => '<p>"S V."の形で、Vは過去形になる。</p>
+                        <p>規則動詞はV+edの形になるが、不規則動詞は暗記するしかない。</p>',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$v['ep']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$v['jp']}。",
+                'e_type' => 3,
+                'e' => '<p>"S V."の形で、Vは過去形になる。</p>
+                        <p>規則動詞はV+edの形になるが、不規則動詞は暗記するしかない。</p>',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['jpnot']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} didn't {$v['e']}.",
+                'e_type' => 1,
+                'e' => '"S didn\'t V."の形で、Vは原形になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} didn't {$v['e']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$v['jpnot']}。",
+                'e_type' => 1,
+                'e' => '"S didn\'t V."の形で、Vは原形になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['jprenyo']}ましたか。",
+                'a_type' => 1,
+                'a' => "Did {$s['el']} {$v['e']}?",
+                'e_type' => 1,
+                'e' => '"Did S V?"の形で、Vは原形になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "Did {$s['el']} {$v['e']}?",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$v['jprenyo']}ましたか。",
+                'e_type' => 1,
+                'e' => '"Did S V?"の形で、Vは原形になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$a['jp']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$be} {$a['e']}.",
+                'e_type' => 1,
+                'e' => '"A was B."の形になる。Aが二人称や複数名詞のときは、"A were B."になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$be} {$a['e']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$a['jp']}。",
+                'e_type' => 1,
+                'e' => '"A was B."の形になる。Aが二人称や複数名詞のときは、"A were B."になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$a['jpnot']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$be}n't {$a['e']}.",
+                'e_type' => 1,
+                'e' => '"A wasn\'t B."の形になる。Aが二人称や複数名詞のときは、"A weren\'t B."になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$be}n't {$a['e']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$a['jpnot']}。",
+                'e_type' => 1,
+                'e' => '"A wasn\'t B."の形になる。Aが二人称や複数名詞のときは、"A weren\'t B."になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$a['jpq']}。",
+                'a_type' => 1,
+                'a' => "{$Be} {$s['el']} {$a['e']}?",
+                'e_type' => 1,
+                'e' => '"Was A B?"の形になる。Aが二人称や複数名詞のときは、"Were A B?"になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$Be} {$s['el']} {$a['e']}?",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$a['jpq']}。",
+                'e_type' => 1,
+                'e' => '"Was A B?"の形になる。Aが二人称や複数名詞のときは、"Were A B?"になる。',
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "過去形";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+
+
 
     // 英単語　動詞１
     public function e_word_verb1() {
