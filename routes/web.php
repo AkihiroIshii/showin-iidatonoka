@@ -317,11 +317,24 @@ Route::get('workbook/regular_polygon', [WorkbookController::class, 'regular_poly
 Route::get('workbook/proof_congruence1', [WorkbookController::class, 'proof_congruence1'])
 ->middleware(['auth', 'verified'])->name('workbook.proof_congruence1');
 // 数学（中3）
+Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
+->middleware(['auth', 'verified'])->name('workbook.expansion');
+Route::get('workbook/factorization', [WorkbookController::class, 'factorization'])
+->middleware(['auth', 'verified'])->name('workbook.factorization');
 Route::get('workbook/sqrt_calc', [WorkbookController::class, 'sqrt_calc'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_calc');
 Route::get('workbook/sqrt_natural', [WorkbookController::class, 'sqrt_natural'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_natural');
+Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
+->middleware(['auth', 'verified'])->name('workbook.expansion');
 // 英語
+Route::get('workbook/be_verb', [WorkbookController::class, 'be_verb'])
+->middleware(['auth', 'verified'])->name('workbook.be_verb');
+Route::get('workbook/general_verb', [WorkbookController::class, 'general_verb'])
+->middleware(['auth', 'verified'])->name('workbook.general_verb');
+Route::get('workbook/interrogative', [WorkbookController::class, 'interrogative'])
+->middleware(['auth', 'verified'])->name('workbook.interrogative');
+
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');
 Route::get('workbook/be_verb1', [WorkbookController::class, 'be_verb1'])
@@ -342,6 +355,8 @@ Route::get('workbook/pronoun', [WorkbookController::class, 'pronoun'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.pronoun');
 Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.preposition');
+Route::get('workbook/sentence_structure1', [WorkbookController::class, 'sentence_structure1'])
+->middleware(['auth', 'verified'])->name('workbook.sentence_structure1');
 // 社会
 Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.map_scale');

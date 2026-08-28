@@ -21,17 +21,22 @@
             {{-- <div class="text-center leading-[8]">
                 <p class="text-lg m-4">{{ $question['q'] }}</p>
             </div> --}}
-            {{-- q_type : 1:短文（数式なし）、2:短文（数式あり）、3:複数行（htmlタグあり） --}}
-            <div class="text-center leading-[3] font-klee text-lg">
-                @if ($question['q_type'] == 1)
-                    <p class="m-4">{{ $question['q'] }}</p>
-                @elseif ($question['q_type'] == 2)
-                    \(\displaystyle {{ $question['q'] }} \)
-                @elseif ($question['q_type'] == 3)
-                    <div class="pl-5 text-left">
+            {{-- q_type : 1:短文（数式なし）、2:短文（数式あり）、3:複数行（htmlタグあり）、4:2行（変数あり） --}}
+            <div class="text-center mb-4">
+                <div class="text-center leading-[3] font-klee text-lg">
+                    @if ($question['q_type'] == 1)
+                        <p class="m-4">{{ $question['q'] }}</p>
+                    @elseif ($question['q_type'] == 2)
+                        \(\displaystyle {{ $question['q'] }} \)
+                    @elseif ($question['q_type'] == 3)
                         {!! $question['q'] !!}
-                    </div>
-                @endif
+                    @elseif ($question['q_type'] == 4)
+                        <div class="text-center leading-[8]">
+                            <p class="text-lg m-4">{{ $question['q1'] }}</p>
+                            <p class="text-3xl m-4">{{ $question['q2'] }}</p>
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <div>

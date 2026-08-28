@@ -955,6 +955,186 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 式の展開
+    public function expansion() {
+        $a = (-1)**rand(1, 2) * rand(1, 13);
+        $b = (-1)**rand(1, 2) * rand(1, 13);
+        while (abs($a) == abs($b)) {
+            $b = rand(1, 9);
+        }
+        $ab_add_str = $this->sign2($a + $b);
+        $ab_mul_str = $this->sign_num($a * $b);
+        $a_str = $this->sign_num($a);
+        $b_str = $this->sign_num($b);
+
+        // (x+a)^2, (x-a)^2, (x+a)(x-a) 用
+        $a_abs = abs($a);
+        // $anega = -abs($a);
+        $a2_str = 2 * $a_abs;
+        $apow_str = $a**2;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        <p>\( (x{$a_str})(x{$b_str}) \)",
+                'a_type' => 2,
+                'a' => "x^2 {$ab_add_str}x {$ab_mul_str}",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x+a)(x+b)=x^2+(a+b)x+ab\,\)</p>
+                        <p>\( ここでは、a={$a},\,b={$b}\,なので、 \)</p>
+                        \\[
+                            \\begin{aligned}
+                                (x {$a_str})(x {$b_str}) &= x^2+\{({$a_str})+({$b_str})\}x+\{({$a_str})\\times({$b_str})\} \\\\
+                                                &= x^2 {$ab_add_str}x {$ab_mul_str}. \\\\
+                            \\end{aligned}
+                        \\]
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        <p>\( (x+{$a_abs})^2 \)",
+                'a_type' => 2,
+                'a' => "x^2 + {$a2_str}x + {$apow_str}",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x+a)^2=x^2+2ax+a^2\,\)</p>
+                        <p>\( ここでは、a={$a_abs}\,なので、 \)</p>
+                        \\[
+                            \\begin{aligned}
+                                (x + {$a_abs})^2 &= x^2+(2\\times{$a_abs})x+{$a_abs}^2 \\\\
+                                                &= x^2 + {$a2_str}x + {$apow_str}. \\\\
+                            \\end{aligned}
+                        \\]
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        <p>\( (x-{$a_abs})^2 \)",
+                'a_type' => 2,
+                'a' => "x^2 - {$a2_str}x + {$apow_str}",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x+a)^2=x^2-2ax+a^2\,\)</p>
+                        <p>\( ここでは、a={$a_abs}\,なので、 \)</p>
+                        \\[
+                            \\begin{aligned}
+                                (x - {$a_abs})^2 &= x^2-(2\\times{$a_abs})x+{$a_abs}^2 \\\\
+                                                &= x^2 - {$a2_str}x + {$apow_str}. \\\\
+                            \\end{aligned}
+                        \\]
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        <p>\( (x+{$a_abs})(x-{$a_abs}) \)",
+                'a_type' => 2,
+                'a' => "x^2 - {$apow_str}",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x+a)(x-a)=x^2-a^2\,\)</p>
+                        <p>\( ここでは、a={$a_abs}\,なので、 \)</p>
+                        \\[
+                            \\begin{aligned}
+                                (x + {$a_abs})(x - {$a_abs}) &= x^2-{$a_abs}^2 \\\\
+                                                &= x^2 - {$apow_str}. \\\\
+                            \\end{aligned}
+                        \\]
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "式の展開";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 因数分解
+    public function factorization() {
+        $a = (-1)**rand(1, 2) * rand(1, 13);
+        $b = (-1)**rand(1, 2) * rand(1, 13);
+        while (abs($a) == abs($b)) {
+            $b = rand(1, 9);
+        }
+        $ab_add = $a + $b;
+        $ab_mul = $a * $b;
+        $ab_add_str = $this->num_to_str($ab_add, 0, 1);
+        $ab_mul_str = $this->num_to_str($ab_mul, 0, 0);
+        $a_str = $this->num_to_str($a, 0, 0);
+        $b_str = $this->num_to_str($b, 0, 0);
+
+        // (x+a)^2, (x-a)^2, (x+a)(x-a) 用
+        $a_abs = abs($a);
+        $a2_str = 2 * $a_abs;
+        $apow_str = $a**2;
+
+        //因数分解用
+        $ab_add_str2 = $this->num_to_str($a + $b, 1, 2);
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の式を因数分解しなさい。</p>
+                        <p>\( x^2 {$ab_add_str}x {$ab_mul_str} \)",
+                'a_type' => 2,
+                'a' => "(x{$a_str})(x{$b_str})",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x+a)(x+b)=x^2+(a+b)x+ab\,\)</p>
+                        <p>\( ここでは、a+b={$ab_add},\,ab={$ab_mul}\,となる\,a,b\,の組み合わせを考える。 \)</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の式を因数分解しなさい。</p>
+                        <p>\( x^2 + {$a2_str}x + {$apow_str} \)",
+                'a_type' => 2,
+                'a' => "(x+{$a_abs})^2",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x+a)^2=x^2+2ax+a^2\,\)</p>
+                        <p>\( ここでは、{$a2_str}=2\\times{$a_abs},\,{$apow_str}={$a_abs}^2\,になっているので、a={$a_abs}。 \)</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の式を因数分解しなさい。</p>
+                        <p>\( x^2 - {$a2_str}x + {$apow_str} \)",
+                'a_type' => 2,
+                'a' => "(x-{$a_abs})^2",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x-a)^2=x^2-2ax+a^2\,\)</p>
+                        <p>\( ここでは、{$a2_str}=2\\times{$a_abs},\,{$apow_str}={$a_abs}^2\,になっているので、a={$a_abs}。 \)</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の式を因数分解しなさい。</p>
+                        <p>\( x^2 - {$apow_str} \)",
+                'a_type' => 2,
+                'a' => "(x+{$a_abs})(x-{$a_abs})",
+                'e_type' => 3,
+                'e' => "<p>\(展開の公式より、\)</p>
+                        <p class='text-center'>\( (x+a)(x-a)=x^2-a^2\,\)</p>
+                        <p>\( ここでは、{$apow_str} = {$a_abs}^2\,なので、a={$a_abs}。 \)</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "因数分解";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 平方根
     public function sqrt_calc() {
         // √a = p√b
@@ -1037,13 +1217,76 @@ class WorkbookController extends Controller
         return abs($a);
     }
 
-    // 係数
+    // 数字を文字に変換
+    // $n    :変数
+    // $first:1=>初項、0=>初項ではない（2項目以降）
+    // $coeff:1=>係数、0=>係数ではない（定数）
+    private function num_to_str($n, $first, $coeff)
+    {
+        // 初項、定数
+        if ($first == 1 && $coeff == 0) {
+            return $n;
+        // 初項、係数
+        } else if ($first == 1 && $coeff == 1) {
+            if ($n == 1) {
+                return "";
+            } else if ($n == -1) {
+                return "-";
+            } else {
+                return $n;
+            }
+        // 2項目以降、係数
+        } else if ($first == 0 && $coeff == 1) {
+            if ($n == 1) {
+                return "+";
+            } else if ($n == -1) {
+                return "-";
+            } else if ($n > 0) {
+                return "+".$n;
+            } else {
+                return $n;
+            }
+        // 2項目以降、定数
+        } else {
+            if ($n > 0) {
+                return "+".$n;
+            } else {
+                return $n;
+            }
+        }
+    }
+    
+    // 係数（前に項がないとき）
     private function sign($n)
     {
         if ($n == 1) {
             return "";
         } elseif ($n == -1) {
             return "-";
+        } else {
+            return $n;
+        }
+    }
+
+    // 係数２（前に項があるとき）
+    private function sign2($n)
+    {
+        if ($n == 1) {
+            return "+";
+        } elseif ($n == -1) {
+            return "-";
+        } elseif ($n > 0) {
+            return "+".$n;
+        } else {
+            return $n;
+        }
+    }
+
+    // 符号付き数（定数項）
+    private function sign_num($n)
+    {
+        if ($n > 0) {
+            return "+".$n;
         } else {
             return $n;
         }
@@ -1068,6 +1311,308 @@ class WorkbookController extends Controller
         }
 
         return array_values(array_map(fn($key) => $primes[$key], $keys));
+    }
+
+    // 英単語_主語（三人称単数）の取得
+    // private function get_sub_third_singular()
+    // {
+    //     // e:英単語、j:和訳
+    //     $words = [
+    //         ['e' => 'This', 'j' => 'これ'],
+    //         ['e' => 'That', 'j' => 'あれ'],
+    //         ['e' => 'It', 'j' => 'それ'],
+    //     ];
+    //     $index = rand(0,count($words)-1);
+    //     $word = $words[$index];
+    //     return $word;
+    // }
+
+    // 英単語_名詞の取得
+    private function get_noun()
+    {
+        // e:英単語、j:和訳、p:複数形、i:不定冠詞
+        $words = [
+            ['e' => 'pen', 'j' => 'ペン', 'p' => 'pens', 'i' => 'a'],
+            ['e' => 'book', 'j' => '本', 'p' => 'books', 'i' => 'a'],
+            ['e' => 'car', 'j' => '車', 'p' => 'cars', 'i' => 'a'],
+            ['e' => 'house', 'j' => '家', 'p' => 'houses', 'i' => 'a'],
+            ['e' => 'apple', 'j' => 'りんご', 'p' => 'apples', 'i' => 'an'],
+            ['e' => 'egg', 'j' => '卵', 'p' => 'eggs', 'i' => 'an'],
+            ['e' => 'dog', 'j' => '犬', 'p' => 'dogs', 'i' => 'a'],
+            ['e' => 'cat', 'j' => '猫', 'p' => 'cats', 'i' => 'a'],
+            ['e' => 'tree', 'j' => '木', 'p' => 'trees', 'i' => 'a'],
+        ];
+        $index = rand(0,count($words)-1);
+        $word = $words[$index];
+        return $word;
+    }
+
+    // 英単語_動詞の取得
+    private function get_verb()
+    {
+        // e:英単語、j:和訳、p:複数形、i:不定冠詞
+        $words = [
+            ['e' => 'walk', 'eL' => 'Walk', 'es' => 'walks', 'ep' => 'walked', 'epp' => 'walked', 'eing' => 'walking',
+                'j' => '歩く', 'jp' => '歩いた', 'jing' => '歩いている', 'jnot' => '歩かない', 'jq' => '歩きますか', 'jpnot' => '歩かなかった'],
+            ['e' => 'study', 'eL' => 'Study', 'es' => 'studies', 'ep' => 'studied', 'epp' => 'studied', 'eing' => 'studying',
+                'j' => '勉強する', 'jp' => '勉強した', 'jing' => '勉強している', 'jnot' => '勉強しない', 'jq' => '勉強しますか', 'jpnot' => '勉強しなかった'],
+            ['e' => 'run', 'eL' => 'Run', 'es' => 'runs', 'ep' => 'ran', 'epp' => 'run', 'eing' => 'running',
+                'j' => '走る', 'jp' => '走った', 'jing' => '走っている', 'jnot' => '走らない', 'jq' => '走りますか', 'jpnot' => '走らなかった'],
+            ['e' => 'think', 'eL' => 'Think', 'es' => 'thinks', 'ep' => 'thought', 'epp' => 'thought', 'eing' => 'thinking',
+                'j' => '考える', 'jp' => '考えた', 'jing' => '考えている', 'jnot' => '考えない', 'jq' => '考えますか', 'jpnot' => '考えなかった'],
+        ];
+        $index = rand(0,count($words)-1);
+        $word = $words[$index];
+        return $word;
+    }
+
+    // 英文法 be動詞
+    public function be_verb() {
+        // 主語
+        $subjects = [
+            ['e' => 'This', 'j' => 'これ', 'el' => 'this'],
+            ['e' => 'That', 'j' => 'あれ', 'el' => 'that'],
+            ['e' => 'It', 'j' => 'それ', 'el' => 'it'],
+        ];
+        $idx = rand(0, count($subjects)-1);
+        $s = $subjects[$idx];
+        $c = $this->get_noun();
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$c['j']}です。",
+                'a_type' => 1,
+                'a' => "{$s['e']} is {$c['i']} {$c['e']}.",
+                'e_type' => 1,
+                'e' => '"A is B."の形になる。なお、Bの頭文字が母音(aiueoの音)の場合、不定冠詞は"an"になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} is {$c['i']} {$c['e']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$c['j']}です。",
+                'e_type' => 1,
+                'e' => '"A is B."の形になる。なお、Bの頭文字が母音(aiueoの音)の場合、不定冠詞は"an"になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$c['j']}ではありません。",
+                'a_type' => 1,
+                'a' => "{$s['e']} isn't {$c['i']} {$c['e']}.",
+                'e_type' => 1,
+                'e' => '"A isn\'t B."の形になる。なお、Bの頭文字が母音(aiueoの音)の場合、不定冠詞は"an"になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} isn't {$c['i']} {$c['e']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$c['j']}ではありません。",
+                'e_type' => 1,
+                'e' => '"A isn\'t B."の形になる。なお、Bの頭文字が母音(aiueoの音)の場合、不定冠詞は"an"になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$c['j']}ですか。",
+                'a_type' => 1,
+                'a' => "Is {$s['el']} {$c['i']} {$c['e']}?",
+                'e_type' => 1,
+                'e' => '"Is A B?"の形になる。なお、Bの頭文字が母音(aiueoの音)の場合、不定冠詞は"an"になる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "Is {$s['el']} {$c['i']} {$c['e']}?",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$c['j']}ですか。",
+                'e_type' => 1,
+                'e' => '"Is A B?"の形になる。なお、Bの頭文字が母音(aiueoの音)の場合、不定冠詞は"an"になる。',
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "AはBです。";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 英文法 一般動詞
+    public function general_verb() {
+        // 主語 'es'=1:三人称単数
+        $subjects = [
+            ['e' => 'I', 'es' => 0, 'el' => 'I', 'j' => '私', ],
+            ['e' => 'We', 'es' => 0, 'el' => 'we', 'j' => '私たち', ],
+            ['e' => 'He', 'es' => 1, 'el' => 'he', 'j' => '彼',],
+        ];
+        $idx = rand(0, count($subjects)-1);
+        $s = $subjects[$idx];
+        $v = $this->get_verb();
+        $vs = $s['es'] == 1 ? $v['es'] : $v['e'];
+        $do_does = $s['es'] == 1 ? "does" : "do";
+        $Do_Does = $s['es'] == 1 ? "Does" : "Do";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$vs}.",
+                'e_type' => 1,
+                'e' => '"S V."の形になる。なお、Sが三人称単数の場合、Vにsが付く。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['jnot']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$do_does}n't {$v['e']}.",
+                'e_type' => 1,
+                'e' => '"S don\'t V."の形になる。なお、Sが三人称単数の場合、"S doesn\'t V."になる"。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['jq']}。",
+                'a_type' => 1,
+                'a' => "{$Do_Does} {$s['el']} {$v['e']}?",
+                'e_type' => 1,
+                'e' => '"Do S V?"の形になる。なお、Sが三人称単数の場合、"Does S V?"になる"。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['jp']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$v['ep']}.",
+                'e_type' => 3,
+                'e' => '<p>"S V."の形で、Vは過去形になる。</p>
+                        <p>規則動詞はV+edの形になるが、不規則動詞は暗記するしかない。</p>',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は{$v['jpnot']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} didn't {$v['e']}.",
+                'e_type' => 1,
+                'e' => '"S didn\'t V."の形で、Vは原形になる。',
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "一般動詞";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 英文法 疑問詞
+    public function interrogative() {
+        // 主語 'es'=1:三人称単数
+        // $subjects = [
+        //     ['e' => 'I', 'es' => 0, 'el' => 'I', 'j' => '私', ],
+        //     ['e' => 'We', 'es' => 0, 'el' => 'we', 'j' => '私たち', ],
+        //     ['e' => 'He', 'es' => 1, 'el' => 'he', 'j' => '彼',],
+        // ];
+        // $idx = rand(0, count($subjects)-1);
+        // $s = $subjects[$idx];
+
+        // 主語 'es'=1:三人称単数
+        $interrogatives = [
+            ['e' => 'Who', 'j' => '誰が'],
+            ['e' => 'What', 'j' => '何を'],
+            ['e' => 'Where', 'j' => 'どこで'],
+            ['e' => 'When', 'j' => 'いつ'],
+            ['e' => 'Why', 'j' => 'なぜ'],
+            ['e' => 'How', 'j' => 'どのように'],
+        ];
+        $idx = rand(0, count($interrogatives)-1);
+        $wh = $interrogatives[$idx];
+
+        $q_whos = [
+            ['e' => 'got it', 'j' => 'それを手に入れた'],
+            ['e' => 'swam', 'j' => '泳いだ'],
+            ['e' => 'studied', 'j' => '勉強した'],
+        ];
+        $idx = rand(0, count($q_whos)-1);
+        $q_who = $q_whos[$idx];
+
+        $q_whats = [
+            ['e' => 'What did you get?', 'j' => 'あなたは何を手に入れたのですか。'],
+            ['e' => 'What does she do?', 'j' => '彼女は何をするのですか。'],
+            ['e' => 'What do you do?', 'j' => 'あなたは何をするのですか。'],
+        ];
+        $idx = rand(0, count($q_whats)-1);
+        $q_what = $q_whats[$idx];
+
+        $q_elses = [
+            ['e' => 'did you get the book', 'j' => 'その本を手に入れた'],
+            ['e' => 'does she swim', 'j' => '彼女は泳ぐ'],
+            ['e' => 'do you study', 'j' => '勉強する'],
+        ];
+        $idx = rand(0, count($q_elses)-1);
+        $q_else = $q_elses[$idx];
+
+        $q_no = rand(1, 6);    // 5W1Hのどれを使うか。
+        if ($q_no == 1) {
+            $qj = "誰が{$q_who['j']}のですか。";
+            $qe = "Who {$q_who['e']}?";
+            $e = '"Who V?"の形になる。Whoは三人称単数扱い。';
+        } else if ($q_no == 2) {
+            $qj = "{$q_what['j']}";
+            $qe = "{$q_what['e']}";
+            $e = '"What+疑問文"の形になる。';
+        } else if ($q_no == 3) {
+            $qj = "いつ{$q_else['j']}のですか。";
+            $qe = "When {$q_else['e']}?";
+            $e = '"When+疑問文"の形になる。';
+        } else if ($q_no == 4) {
+            $qj = "どこで{$q_else['j']}のですか。";
+            $qe = "Where {$q_else['e']}?";
+            $e = '"Where+疑問文"の形になる。';
+        } else if ($q_no == 5) {
+            $qj = "なぜ{$q_else['j']}のですか。";
+            $qe = "Why {$q_else['e']}?";
+            $e = '"Why+疑問文"の形になる。';
+        } else if ($q_no == 6) {
+            $qj = "どのように{$q_else['j']}のですか。";
+            $qe = "How {$q_else['e']}?";
+            $e = '"How+疑問文"の形になる。';
+        }
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$qj}",
+                'a_type' => 1,
+                'a' => "{$qe}",
+                'e_type' => 1,
+                'e' => "{$e}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$qe}",
+                'a_type' => 1,
+                'a' => "{$qj}",
+                'e_type' => 1,
+                'e' => "{$e}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "疑問詞";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 英単語　動詞１
@@ -1539,6 +2084,297 @@ class WorkbookController extends Controller
         $question = $questions[$index];
         return view('workbook.unit.preposition', compact('question'));
     }
+
+    /********** 英語まとめ **************/
+    // be動詞と一般動詞
+    public function sentence_structure1() {
+        // 変数
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは三人称単数とする。</p>
+                            <p class="text-3xl">AはBである。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A is B.",
+                'e_type' => 1,
+                'e' => "三人称単数は「彼、彼女、それ、太郎、学校」などである。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは複数名詞とする。</p>
+                            <p class="text-3xl">AはBである。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A are B.",
+                'e_type' => 1,
+                'e' => "複数名詞は「彼ら、彼女ら、それら、太郎と花子、２冊の本」などである。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは一人称単数または三人称単数とする。</p>
+                            <p class="text-3xl">AはBでした。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A was B.",
+                'e_type' => 1,
+                'e' => "一人称単数は「自分」、三人称単数は「彼、彼女、それ、太郎、学校」などである。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは複数名詞とする。</p>
+                            <p class="text-3xl">AはBでした。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A were B.",
+                'e_type' => 1,
+                'e' => "複数名詞は「彼ら、彼女ら、それら、太郎と花子、２冊の本」などである。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは三人称単数とする。</p>
+                            <p class="text-3xl">AはBですか。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "Is A B?",
+                'e_type' => 1,
+                'e' => '"Is she angry?"（彼女は怒っていますか？）、"Is this your pen?"（これはあなたのペンですか。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは複数名詞とする。</p>
+                            <p class="text-3xl">AはBですか。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "Are A B?",
+                'e_type' => 1,
+                'e' => '"Are you tired?"（あなたは疲れていますか。）、"Are they your friends?"（彼らはあなたの友だちですか。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは三人称単数とする。</p>
+                            <p class="text-3xl">AはBではない。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A is not B. または A isn't B.",
+                'e_type' => 1,
+                'e' => '"It isn\'t mine."（これは私のものではない。）、"He is not ready."（彼は準備できていない。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは複数名詞とする。</p>
+                            <p class="text-3xl">AはBではない。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A are not B. または A aren't B.",
+                'e_type' => 1,
+                'e' => '"We are not hungry."（私たちはお腹が空いていない。）、"They aren\'t French."（彼らはフランス人ではない。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは三人称単数、Bは地名とする。</p>
+                            <p class="text-3xl">AはBにいます。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A is in B.",
+                'e_type' => 1,
+                'e' => '"He is in Tokyo."（彼は東京にいます。）、"She is in Italy."（彼女はイタリアにいます。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは複数名詞、Bは地名とする。</p>
+                            <p class="text-3xl">AはBにいます。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A are in B.",
+                'e_type' => 1,
+                'e' => '"They are in Tokyo."（彼らは東京にいます。）、"We are in Italy."（私たちはイタリアにいます。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは三人称単数、Bは地名とする。</p>
+                            <p class="text-3xl">AはBにいました。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A was in B.",
+                'e_type' => 1,
+                'e' => '"He was in Tokyo."（彼は東京にいました。）、"She was in Italy."（彼女はイタリアにいました。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは複数名詞、Bは地名とする。</p>
+                            <p class="text-3xl">AはBにいました。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "A were in B.",
+                'e_type' => 1,
+                'e' => '"They were in Tokyo."（彼らは東京にいました。）、"We were in Italy."（私たちはイタリアにいました。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは三人称単数、Bは地名とする。</p>
+                            <p class="text-3xl">AはBにいましたか。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "Was A in B?",
+                'e_type' => 1,
+                'e' => '"Was he in Tokyo?"（彼は東京にいましたか。）、"Was she in Italy?"（彼女はイタリアにいましたか。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Aは複数名詞、Bは地名とする。</p>
+                            <p class="text-3xl">AはBにいましたか。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "Were A in B?",
+                'e_type' => 1,
+                'e' => '"Were they in Tokyo?"（彼らは東京にいましたか。）、"Were you in Italy?"（あなたたちはイタリアにいましたか。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは複数名詞、Vは一般動詞とする。</p>
+                            <p class="text-3xl">Sは毎日Vする。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S V every day.",
+                'e_type' => 1,
+                'e' => '"They study every day."（彼らは毎日勉強する。）、"We run every day."（私たちは毎日走る。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは三人称単数、Vは一般動詞とする。</p>
+                            <p class="text-3xl">Sは毎日Vする。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S Vs every day.",
+                'e_type' => 1,
+                'e' => '"He studies every day."（彼は毎日勉強する。）、"She runs every day."（彼女は毎日走る。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは複数名詞、Vは一般動詞とする。</p>
+                            <p class="text-3xl">Sは毎日Vしますか。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "Do S V every day?",
+                'e_type' => 1,
+                'e' => '"Do They study every day?"（彼らは毎日勉強しますか。）、"Do you run every day?"（あなたたちは毎日走りますか。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは三人称単数、Vは一般動詞とする。</p>
+                            <p class="text-3xl">Sは毎日Vしますか。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "Does S V every day?",
+                'e_type' => 1,
+                'e' => '"Does he study every day?"（彼は毎日勉強しますか。）、"Does she run every day?"（彼女は毎日走りますか。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Vは一般動詞（規則動詞）とする。</p>
+                            <p class="text-3xl">Sは昨日Vした。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S Ved yesterday.",
+                'e_type' => 1,
+                'e' => '"We walked yesterday."（私たちは昨日歩いた。）、"The event ended yesterday."（そのイベントは昨日終わった。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Vは一般動詞とする。</p>
+                            <p class="text-3xl">Sは昨日Vしましたか。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "Did S V yesterday?",
+                'e_type' => 1,
+                'e' => '"Did They study yesterday?"（彼らは昨日勉強しましたか。）、"Did you run yesterday?"（あなたは昨日走りましたか。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Vは一般動詞とする。</p>
+                            <p class="text-3xl">Sは昨日Vしなかった。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S did not V yesterday. または S didn't V yesterday.",
+                'e_type' => 1,
+                'e' => '"They did not study yesterday."（彼らは昨日勉強しなかった。）、"I didn\'t run yesterday."（私は昨日走らなかった。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは三人称単数、Vは一般動詞とする。</p>
+                            <p class="text-3xl">S は今 V している。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S is Ving now.",
+                'e_type' => 1,
+                'e' => '"He is studying now."（彼は今勉強している。）、"She is running now."（彼女は今走っている。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは複数名詞、Vは一般動詞とする。</p>
+                            <p class="text-3xl">S は今 V している。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S are Ving now.",
+                'e_type' => 1,
+                'e' => '"They are studying now."（彼らは今勉強している。）、"We are running now."（私たちは今走っている。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは三人称単数、Vは一般動詞とする。</p>
+                            <p class="text-3xl">S はその時 V していた。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S was Ving then.",
+                'e_type' => 1,
+                'e' => '"He was studying then."（彼はその時勉強していた。）、"She was running now."（彼女はその時走っていた。）、など。',
+            ],
+            [
+                'q_type' => 3,
+                'q' => '<div class="text-center">
+                            <p>次の文を英訳しなさい。ただし、Sは複数名詞、Vは一般動詞とする。</p>
+                            <p class="text-3xl">S はその時 V していた。</p>
+                        </div>',
+                'a_type' => 1,
+                'a' => "S were Ving then.",
+                'e_type' => 1,
+                'e' => '"They were studying then."（彼らはその時勉強していた。）、"We were running then."（私たちはその時走っていた。）、など。',
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "be動詞と一般動詞";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
 
     // 密度
     public function density() {

@@ -138,6 +138,12 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
+                                    <a href="{{route('workbook.expansion')}}">式の展開</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.factorization')}}">因数分解</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.unit.sqrt_calc')}}">平方根の和差</a>
                                 </x-button-link>
                                 <x-button-link>
@@ -274,7 +280,16 @@
                         <x-td>英文法</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <div>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.be_verb')}}">be動詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.general_verb')}}">一般動詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.interrogative')}}">疑問詞</a>
+                                </x-button-link>
+                                {{-- <div>
                                     be動詞
                                     <x-button-link color="purple">
                                         <a href="{{route('workbook.unit.be_verb1')}}">主語と動詞</a>
@@ -300,7 +315,7 @@
                                     <x-button-link color="purple">
                                         <a href="{{route('workbook.unit.general_verb4')}}">不規則動詞</a>
                                     </x-button-link>
-                                </div>
+                                </div> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -312,6 +327,24 @@
                             </div>
                         </x-td>
                     </tr>
+                    {{-- <tr>
+                        <x-td>英文構造</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.sentence_structure1')}}">be動詞と一般動詞</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr> --}}
                 </tbody>
             </table>
 
