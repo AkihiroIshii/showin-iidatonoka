@@ -298,14 +298,24 @@ Route::get('workbook/linear_equation3', [WorkbookController::class, 'linear_equa
 Route::get('workbook/linear_equation4', [WorkbookController::class, 'linear_equation4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation4');
 Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
-->middleware(['auth', 'verified'])->name('workbook.unit.plot_proportional_function');
+->middleware(['auth', 'verified'])->name('workbook.plot_proportional_function');
+// Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
+// ->middleware(['auth', 'verified'])->name('workbook.unit.plot_proportional_function');
 Route::get('workbook/plane_figure', [WorkbookController::class, 'plane_figure'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.plane_figure');
 Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figure'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
+Route::get('workbook/corn_surface', [WorkbookController::class, 'corn_surface'])
+->middleware(['auth', 'verified'])->name('workbook.corn_surface');
 // 数学（中2）
+Route::get('workbook/simultaneous_equation', [WorkbookController::class, 'simultaneous_equation'])
+->middleware(['auth', 'verified'])->name('workbook.simultaneous_equation');
+Route::get('workbook/simultaneous_equation2', [WorkbookController::class, 'simultaneous_equation2'])
+->middleware(['auth', 'verified'])->name('workbook.simultaneous_equation2');
 Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_linear_function'])
-->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function');
+->middleware(['auth', 'verified'])->name('workbook.plot_linear_function');
+// Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_linear_function'])
+// ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function');
 Route::get('workbook/plot_linear_function2', [WorkbookController::class, 'plot_linear_function2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function2');
 Route::get('workbook/linear_function3', [WorkbookController::class, 'linear_function3'])
@@ -336,9 +346,12 @@ Route::get('workbook/interrogative', [WorkbookController::class, 'interrogative'
 ->middleware(['auth', 'verified'])->name('workbook.interrogative');
 Route::get('workbook/past_verb', [WorkbookController::class, 'past_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.past_verb');
+Route::get('workbook/conjection', [WorkbookController::class, 'conjection'])
+->middleware(['auth', 'verified'])->name('workbook.conjection');
 
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');
+/*
 Route::get('workbook/be_verb1', [WorkbookController::class, 'be_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.be_verb1');
 Route::get('workbook/be_verb2', [WorkbookController::class, 'be_verb2'])
@@ -353,6 +366,7 @@ Route::get('workbook/general_verb3', [WorkbookController::class, 'general_verb3'
 ->middleware(['auth', 'verified'])->name('workbook.unit.general_verb3');
 Route::get('workbook/general_verb4', [WorkbookController::class, 'general_verb4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.general_verb4');
+*/
 Route::get('workbook/pronoun', [WorkbookController::class, 'pronoun'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.pronoun');
 Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])

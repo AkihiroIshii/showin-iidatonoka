@@ -48,8 +48,17 @@
                         @elseif ($question['a_type'] == 2)
                             \(\displaystyle {{ $question['a'] }} \)
                         @elseif ($question['a_type'] == 3)
-                            <div class="pl-5 text-left">
+                            {{-- <div class="pl-5 text-left"> --}}
+                            {{-- <div> --}}
                                 {!! $question['a'] !!}
+                            {{-- </div> --}}
+                        @elseif ($question['a_type'] == 5)
+                            <div class="flex justify-center">
+                                <svg width="{{ $plot_para['w_full'] }}" height="{{ $plot_para['w_full'] }}"
+                                    viewBox="-{{ $plot_para['w_half'] }} -{{ $plot_para['w_half'] }} {{ $plot_para['w_full'] }} {{ $plot_para['w_full'] }}"
+                                    class="border">
+                                    {!! $plot_contents !!}
+                                </svg>
                             </div>
                         @endif
                     </div>
@@ -60,7 +69,8 @@
                         @elseif ($question['e_type'] == 2)
                             \(\displaystyle {{ $question['e'] }} \)
                         @elseif ($question['e_type'] == 3)
-                            <div class="pl-5 text-left">
+                            {{-- <div class="pl-5 text-left"> --}}
+                            <div>
                                 {!! $question['e'] !!}
                             </div>
                         @endif

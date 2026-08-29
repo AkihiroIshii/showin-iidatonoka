@@ -477,6 +477,45 @@ class WorkbookController extends Controller
         return view('workbook.unit.linear_equation4', compact('a','b','c','d','ans_sign','numerator','denominator'));
     }
 
+    // // 比例（グラフ描画）(※)old
+    // public function plot_proportional_function() {
+    //     $a_sign = (-1)**rand(1,2);
+    //     $a_numerator = rand(1, 4);
+    //     $a_denominator = rand(1, 4);
+
+    //     // 最大公約数を求める
+    //     $gcd = $this->gcd($a_numerator, $a_denominator);
+
+    //     // 約分
+    //     $a_numerator /= $gcd;
+    //     $a_denominator /= $gcd;
+
+    //     // グラフ描画用
+    //     $a = $a_sign * $a_numerator / $a_denominator;
+    //     $size = 500;    //viewportの大きさ
+    //     $val_size = 10; //実際の座標の大きさ
+    //     $scale = $size / $val_size; //縮尺
+    //     $p_x = $a_denominator; //代表点Pのx座標
+    //     $p_y = $a_sign * $a_numerator; //代表点Pのy座標
+    //     $q_x = -$a_denominator; //代表点Q(原点に対してPと対称な点)のx座標
+    //     $q_y = $a_sign * -$a_numerator; //代表点Q(原点に対してPと対称な点)のy座標
+    //     $plots = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //         'from_x' => -$size / 2,
+    //         'to_x' => $size / 2,
+    //         'from_y' => $a * (-$size / 2),
+    //         'to_y' => $a * ($size / 2),
+    //         'p_x' => $p_x,
+    //         'p_y' => $p_y,
+    //         'q_x' => $q_x,
+    //         'q_y' => $q_y,
+    //         'scale' => $scale,        
+    //     ];
+
+    //     return view('workbook.unit.plot_proportional_function', compact('a_sign','a_numerator','a_denominator','plots'));
+    // }
+
     // 比例（グラフ描画）
     public function plot_proportional_function() {
         $a_sign = (-1)**rand(1,2);
@@ -499,21 +538,90 @@ class WorkbookController extends Controller
         $p_y = $a_sign * $a_numerator; //代表点Pのy座標
         $q_x = -$a_denominator; //代表点Q(原点に対してPと対称な点)のx座標
         $q_y = $a_sign * -$a_numerator; //代表点Q(原点に対してPと対称な点)のy座標
-        $plots = [
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = -$size / 2;
+        $to_x = $size / 2;
+        $from_y = $a * (-$size / 2);
+        $to_y = $a * ($size / 2);
+
+        $plot_para = [
             'w_full' => $size,
             'w_half' => $size / 2,
-            'from_x' => -$size / 2,
-            'to_x' => $size / 2,
-            'from_y' => $a * (-$size / 2),
-            'to_y' => $a * ($size / 2),
-            'p_x' => $p_x,
-            'p_y' => $p_y,
-            'q_x' => $q_x,
-            'q_y' => $q_y,
-            'scale' => $scale,        
         ];
+        $plot_contents = "
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
 
-        return view('workbook.unit.plot_proportional_function', compact('a_sign','a_numerator','a_denominator','plots'));
+            <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
+
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
+                x2=\"" . $to_x . "\" y2=" . -$to_y . "
+                stroke=\"red\"
+                stroke-width=\"2\" />
+
+            <circle
+                cx=\"" . ( $p_x * $scale ) . "\"
+                cy=\"" . ( -$p_y * $scale ) . "\"
+                r=\"5\"
+                fill=\"red\"
+            />
+            <text
+                x=\"" . ( $p_x * $scale + 10 ) . "\"
+                y=\"" . ( -$p_y * $scale ) . "\"
+                font-size=\"16\"
+            >
+                ({$p_x},{$p_y})
+            </text>
+
+            <circle
+                cx=\"" . ( $q_x * $scale ) . "\"
+                cy=\"" . ( -$q_y * $scale ) . "\"
+                r=\"5\"
+                fill=\"red\"
+            />
+            <text
+                x=\"" . ( $q_x * $scale + 10 ) . "\"
+                y=\"" . ( -$q_y * $scale ) . "\"
+                font-size=\"16\"
+            >
+                ({$q_x},{$q_y})
+            </text>
+        ";
+        // 傾きの文字列作成
+        $a_sign_str = $this->num_to_str($a_sign, 1, 1);
+        $a_str = $a_sign < 0 ? "-" : "";
+        if ($a_denominator == 1) {
+            if ($a_numerator != 1) {
+               $a_str = $a_str.$a_numerator;
+            }
+        } else {
+            $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
+        }
+        $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の関数のグラフを描画しなさい。</p>
+                        $$ y = {$a_str}x $$",
+                'a_type' => 5,
+                'a' => "a",
+                'e_type' => 3,
+                'e' => "<ul class='list-disc'>
+                            <li>比例のグラフは原点を通る。</li>
+                            <li>比例定数（傾き）が正なら右上がり、負なら右下がり。</li>
+                            <li>ここでは比例定数（傾き）が \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
+                        </ul>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "比例（グラフ描画）";
+        return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
     }
 
     // 平面図形
@@ -579,6 +687,238 @@ class WorkbookController extends Controller
         return view('workbook.unit.spacial_figure', compact('question'));
     }
 
+    // 円錐の表面積
+    public function corn_surface() {
+        $r = rand(1, 6);
+        $R = $r * rand(2, 6);   //R:母線（大円の半径）> r:底面の半径
+        $a = 360 * $r / $R;   //展開した側面（おうぎ形）の中心角
+        $Sf_str = ($r * $R) . "\pi";
+        $r2 = $r**2;
+        $R2 = $R**2;
+        $S_str = (($r*$R) + $r2) . "\pi";
+        
+        $imageUrl_q = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_q.png']);
+        $imageUrl_e1 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e1.png']);
+        $imageUrl_e2 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e2.png']);
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、母線が\,{$R}\,\mathrm{cm}\,の円錐の表面積を求めよ。\)</p>
+                        <img src=\"{$imageUrl_q}\" class=\"mx-auto\" >",
+                'a_type' => 2,
+                'a' => "{$S_str}\,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<img src=\"{$imageUrl_e1}\" class=\"mx-auto\" >
+                        <img src=\"{$imageUrl_e2}\" class=\"mx-auto\" >
+                        <p>円錐を展開すると、底面は半径 \(r\) = {$r} cm の円、側面は半径 \(R\) = {$R} cm の扇形になる。</p>
+                        <p>(※)必ず円錐の展開図を描いて考えること。</p>
+                        <p>底面の円周は、側面の扇形の孤の部分と重なっていたので、それらの長さは一致する。</p>
+                        <p class=\"text-center\">[底面の円周の長さ] = [扇形の孤の長さ]</p>
+                        <p>この扇形の孤の長さは、半径 \(R\) の大円の円周 \((=2\pi R)\) に、360\(^{\circ}\) に対する中心角の比率をかけた値になる。</p>
+                        <p>そこで、扇形の中心角の大きさを \(a^{\circ}\) とおけば、\(\displaystyle 2\pi r = 2\pi R \\times \\frac{a}{\,360\,}\, \)が成り立つ。</p>
+                        <p>両辺を \(2\pi\) で割ると、\(\displaystyle r = R \\times \\frac{a}{\,360\,}\)。これを \(a\) について解くと、</p>
+                        <p>\(\displaystyle a = \\frac{r}{\,R\,} \\times 360 = \\frac{{$r}}{\,{$R}\,} \\times 360 = {$a}^{\circ}\). よって、扇形の面積 \(S_f\) は、</p>
+                        <p>\(S_f =\) [大円の面積] \(\\times\) [中心角の比率]
+                            \(\displaystyle= \pi R^2 \\times \\frac{a}{\,360\,}
+                                = {$R2}\pi \\times \\frac{{$a}}{\,360\,} = {$Sf_str}\,\mathrm{cm}^2\)</p>
+                        <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi\, \mathrm{cm}^2\) である。</p>
+                        <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
+
+                        <p class=\"mt-8 text-center font-bold\"><別解（中心角を求めない解き方）></p>
+                        <p>半径（ \(R\) cm とする）が等しい円と扇形を比べると、孤の長さの比と面積比は等しい。</p>
+                        <p class=\"text-center\">\(円周の長さ:孤の長さ = 円の面積:扇形の面積\)</p>
+                        <p>孤の長さを \(l\) cm、扇形の面積を \(S_f\) cm\(^2\) とすると、\(2\pi R:l = \pi R^2:S_f\)。よって、\(\displaystyle S_f=\\frac{\,Rl\,}{2}\)。</p>
+                        <p>また、この扇形の孤の長さ \(l\) は、底面の円周の長さに一致するので、\(l=2\pi r\) と表せる。</p>
+                        <p>これを先ほどの式に代入すると、\(\displaystyle S=\\frac{\,Rl\,}{2}=\\frac{\,2\pi rR\,}{2}=\pi rR = \pi \\times {$r} \\times {$R} = {$Sf_str}\, \mathrm{cm}^2\)。</p>
+                        <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi \, \mathrm{cm}^2\) である。</p>
+                        <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "円錐の表面積";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 連立方程式
+    public function simultaneous_equation() {
+        // ax + by = p, cx + dy = q
+        $a = rand(1, 5);
+        $b = (-1)**rand(1,2)*rand(1, 5);
+        $c = (-1)**rand(1,2)*rand(1, 5);
+        while ($a == $c) {
+        $c = (-1)**rand(1,2)*rand(1, 5);
+        }
+        $d = (-1)**rand(1,2)*rand(1, 5);
+        $x = (-1)**rand(1,2)*rand(1, 9);
+        $y = (-1)**rand(1,2)*rand(1, 9);
+        $p = $a * $x + $b * $y;
+        $q = $c * $x + $d * $y;
+
+        //係数の比を簡単にできたらしておく
+        $gcd_abp = $this->gcd($this->gcd($a, $b), $p);
+        // dd($gcd_abp);
+        $a = $a / $gcd_abp;
+        $b = $b / $gcd_abp;
+        $p = $p / $gcd_abp;
+        $gcd_cdq = $this->gcd($this->gcd($c, $d), $q);
+        $c = $c / $gcd_cdq;
+        $d = $d / $gcd_cdq;
+        $q = $q / $gcd_cdq;
+
+        // 表示する数式用
+        $ax_str = $this->num_to_str($a, 1, 1) . "x";
+        $by_str = $this->num_to_str($b, 0, 1) . "y";
+        $cx_str = $this->num_to_str($c, 1, 1) . "x";
+        $dy_str = $this->num_to_str($d, 0, 1) . "y";
+
+        // x,yどちらの項を揃えるか決める
+        $lcm_ac = $this->lcm(abs($a), abs($c));
+        $lcm_bd = $this->lcm(abs($b), abs($d));
+        // a2x + b2y = p2, c2x + d2y = q2
+        if($lcm_ac < $lcm_bd) {
+            // xの項を揃える
+            $target = "x";
+            $m1 = $lcm_ac / abs($a); //第一式の倍率
+            $m2 = $lcm_ac / abs($c); //第二式の倍率
+            $which_pm = $a * $c > 0 ? "m" : "p";    //係数の符号が同じならひき算(minus)、違うならたし算(plus)
+            $eq_after_pm = ($which_pm == "m") ? 
+                            $this->num_to_str($b*$m1 - $d*$m2, 1, 1)."y":
+                            $this->num_to_str($b*$m1 + $d*$m2, 1, 1)."y";
+        } else {
+            // yの項を揃える
+            $target = "y";
+            $m1 = $lcm_bd / abs($b); //第一式の倍率
+            $m2 = $lcm_bd / abs($d); //第二式の倍率
+            $which_pm = $b * $d > 0 ? "m" : "p";    //係数の符号が同じならひき算(minus)、違うならたし算(plus)
+            $eq_after_pm = ($which_pm == "m") ? 
+                            $this->num_to_str($a*$m1 - $c*$m2, 1, 1)."x":
+                            $this->num_to_str($a*$m1 + $c*$m2, 1, 1)."x";
+        }
+        // 解説用文字列
+        $a2_str = $this->num_to_str($a * $m1, 1, 1);
+        $b2_str = $this->num_to_str($b * $m1, 0, 1);
+        $p2 = $p * $m1;
+        
+        $c2_str = $this->num_to_str($c * $m2, 1, 1);
+        $d2_str = $this->num_to_str($d * $m2, 0, 1);
+        $q2 = $q * $m2;
+
+        $eq_after_pm .= ($which_pm == "m") ? "=".($p2 - $q2) : "=".($p2 + $q2);
+
+        $e_str = "";
+        if ($m1 > 1 || $m2 > 1) {
+            $e_str .= "<p>" .
+                ($m1 > 1 ? "<p>一つ目の式を\(\,{$m1}\,\)倍" : "") .
+                ($m1 > 1 && $m2 > 1 ? "、" : "") .
+                ($m2 > 1 ? "二つ目の式を\(\,{$m2}\,\)倍" : "") .
+                "して、\({$target}\,\)の項の係数を揃える。</p>";
+        }
+        $e_str .= "<p class=\"text-center\">
+                \(
+                    \,
+                    \\left\{
+                    \\begin{aligned}
+                        {$a2_str}x & {$b2_str}y = {$p2}\\\\
+                        {$c2_str}x & {$d2_str}y = {$q2}
+                        \\end{aligned}
+                    \\right.
+                \)</p>
+                <p>一つ目の式";
+        $e_str .= ($which_pm == "p") ? "に二つ目の式を足して、" : "から二つ目の式を引いて、";
+        $e_str .= "\({$eq_after_pm}\)。";
+        // 係数が１でなければ続きの文を追加。
+        if (!($eq_after_pm[0] == "x" || $eq_after_pm[0] == "y")) {
+            $e_str .= "よって、\(" . ($target == "x" ? "y={$y}" : "x={$x}") . "\)。</p>";
+        } else {
+            $e_str .= "</p>";
+        }
+        $e_str .= "<p>これをいずれかの式に代入すれば、\(";
+        $e_str .= ($target == "x" ? "x={$x}" : "y={$y}") . "\,\)も求まる。</p>";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の連立方程式を解きなさい。</p>
+                        \(
+                            \,
+                            \\left\{
+                            \\begin{aligned}
+                                {$ax_str} & {$by_str} = {$p} \\\\
+                                {$cx_str} & {$dy_str} = {$q}
+                                \\end{aligned}
+                            \\right.
+                        \)
+                        ",
+                'a_type' => 2,
+                'a' => "x={$x},\,y={$y}",
+                'e_type' => 3,
+                'e' => "{$e_str}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "連立方程式";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 連立方程式（文章題）
+    public function simultaneous_equation2() {
+        // a:大人人数、b:子供人数、da:大人割引率（割）、db:子供割引率、x:大人料金、y:子供料金
+        $a = rand(1, 5);
+        $b = rand(1, 8);
+        $da = rand(1, 2);
+        $db = rand(2, 5);
+        $x = 10 * rand(50, 100);
+        $y = 10 * rand(20, 40);
+        $x = 50 * rand(10, 20); //500～1000円
+        $y = 20 * rand(10, 20); //200～400円
+
+        $da_bar = 10 - $da; //2割引(da=2)なら8割(da_bar=8)
+        $db_bar = 10 - $db;
+
+        // ax + by = p, a(1-0.1da)x + b(1-0.1db)y
+        $p = $a * $x + $b * $y;
+        $dp = $a * (1-0.1*$da) * $x + $b * (1-0.1*$db) * $y;
+
+        // 表示する数式用
+        $ax_str = $this->num_to_str($a, 1, 1) . "x";
+        $by_str = $this->num_to_str($b, 0, 1) . "y"; 
+        $dax_str = $this->num_to_str($a, 1, 1) . "x \\times 0.{$da_bar}";
+        $dby_str = "{$this->num_to_str($b, 0, 1)}y \\times 0.{$db_bar}"; 
+
+        $e_str = "<p>大人料金を\(\,x\,\)、子供料金を\(\,y\,\)とすると、昼間の料金について次式が成り立つ。</p>";
+        $e_str .= "<p class=\"text-center\">\({$ax_str} {$by_str} = {$p}\)</p>";
+        $e_str .= "<p>また、{$da} 割引は元の {$da_bar} 割、{$db} 割引は元の {$db_bar} 割なので、夜間の料金について次式が成り立つ。</p>";
+        $e_str .= "<p class=\"text-center\">\({$dax_str} {$dby_str} = {$dp}\)</p>";
+        $e_str .= "<p>これらの連立方程式を解くと、\(x={$x}、y={$y}\) が求まる。</p>";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>大人 {$a} 人、子供 {$b} 人で動物園に行く。昼間の入園料は、合計{$p}円である。</p>
+                        <p>また、夜間は大人が {$da} 割引、子どもは {$db} 割引になり、同じ人数でも{$dp}円で入れる。</p>
+                        <p>大人と子供の入園料をそれぞれ求めなさい。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-center\">大人：\({$x}\) 円、子供：\({$y}\) 円   </p>",
+                'e_type' => 3,
+                'e' => "{$e_str}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "連立方程式";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 一次関数（グラフ描画）
     public function plot_linear_function() {
         $a_sign = (-1)**rand(1,2);
@@ -605,20 +945,138 @@ class WorkbookController extends Controller
             $p_x = -$p_x;
             $p_y = $a * $p_x + $b;
         } // p_y がviewportに収まらない場合は、x = -x での代表点に変える。
-        $plots = [
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = -$size / 2;
+        $to_x = $size / 2;
+        $from_y = $a * (-$size / 2) + ($b * $scale);
+        $to_y = $a * ($size / 2) + ($b * $scale);
+
+        $plot_para = [
             'w_full' => $size,
             'w_half' => $size / 2,
-            'from_x' => -$size / 2,
-            'to_x' => $size / 2,
-            'from_y' => $a * (-$size / 2) + ($b * $scale),
-            'to_y' => $a * ($size / 2) + ($b * $scale),
-            'p_x' => $p_x,
-            'p_y' => $p_y,
-            'scale' => $scale,        
         ];
+        $plot_contents = "
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
 
-        return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
+            <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
+
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
+                x2=\"" . $to_x . "\" y2=" . -$to_y . "
+                stroke=\"red\"
+                stroke-width=\"2\" />
+
+            <circle
+                cx=\"0\" 
+                cy=\"" . ( -$b * $scale ) . "\"
+                r=\"5\"
+                fill=\"red\"
+            />
+            <text
+                x=\"10\" 
+                y=\"" . ( -$b * $scale ) . "\"
+                font-size=\"16\"
+            >
+                (0,{$b})
+            </text>
+
+            <circle
+                cx=\"" . ( $p_x * $scale ) . "\"
+                cy=\"" . ( -$p_y * $scale ) . "\"
+                r=\"5\"
+                fill=\"red\"
+            />
+            <text
+                x=\"" . ( $p_x * $scale + 10 ) . "\"
+                y=\"" . ( -$p_y * $scale ) . "\"
+                font-size=\"16\"
+            >
+                ({$p_x},{$p_y})
+            </text>
+
+        ";
+        // 傾きの文字列作成
+        $a_sign_str = $this->num_to_str($a_sign, 1, 1);
+        $a_str = $a_sign < 0 ? "-" : "";
+        if ($a_denominator == 1) {
+            if ($a_numerator != 1) {
+               $a_str = $a_str.$a_numerator;
+            }
+        } else {
+            $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
+        }
+        if ($b >= 0) {
+            $fx_str = $a_str . "x\,+{$b}";
+        } else {
+            $fx_str = $a_str . "x\,{ $b }";
+        }
+        $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の関数のグラフを描画しなさい。</p>
+                        $$ y = {$fx_str} $$",
+                'a_type' => 5,
+                'a' => "a",
+                'e_type' => 3,
+                'e' => "<ul class='list-disc'>
+                            <li>切片が \({ $b }\) なので、\( (0,{ $b }) \) の点を通る。</li>
+                            <li>\(y=ax+b\) のグラフは、\(y=ax\) のグラフを \(y\) 軸方向に \(b\) だけ平行移動したグラフになる。</li>
+                            <li>傾きが正なら右上がり、負なら右下がり。</li>
+                            <li>ここでは傾きが \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
+                        </ul>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "一次関数（グラフ描画）";
+        return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
     }
+
+    // // 一次関数（グラフ描画）(※)old
+    // public function plot_linear_function() {
+    //     $a_sign = (-1)**rand(1,2);
+    //     $a_numerator = rand(1, 4);
+    //     $a_denominator = rand(1, 4);
+    //     $b = (-1)**rand(1,2) * rand(1,4);
+
+    //     // 最大公約数を求める
+    //     $gcd = $this->gcd($a_numerator, $a_denominator);
+
+    //     // 約分
+    //     $a_numerator /= $gcd;
+    //     $a_denominator /= $gcd;
+
+    //     // グラフ描画用
+    //     $a = $a_sign * $a_numerator / $a_denominator;
+    //     $size = 500;    //viewportの大きさ
+    //     $val_size = 10; //実際の座標の大きさ
+    //     $scale = $size / $val_size; //縮尺
+    //     $x_seppen = -$b/$a; //x切片
+    //     $p_x = $a_denominator; //代表点Pのx座標
+    //     $p_y = $a * $p_x + $b; //代表点Pのy座標
+    //     if(abs($p_y) > ($val_size-1) / 2) {
+    //         $p_x = -$p_x;
+    //         $p_y = $a * $p_x + $b;
+    //     } // p_y がviewportに収まらない場合は、x = -x での代表点に変える。
+    //     $plots = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //         'from_x' => -$size / 2,
+    //         'to_x' => $size / 2,
+    //         'from_y' => $a * (-$size / 2) + ($b * $scale),
+    //         'to_y' => $a * ($size / 2) + ($b * $scale),
+    //         'p_x' => $p_x,
+    //         'p_y' => $p_y,
+    //         'scale' => $scale,        
+    //     ];
+
+    //     return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
+    // }
 
     // ２点を通る直線
     public function linear_function3() {
@@ -806,11 +1264,13 @@ class WorkbookController extends Controller
                 'q_type' => 2,
                 'q' => "正方形の特徴をできるだけ挙げなさい。",
                 'a_type' => 3,
-                'a' => '<ul class="list-disc">
-                            <li>すべての辺の長さが等しい。</li>
-                            <li>すべての内角が\(\,90^{\circ}\)。</li>
-                            <li>向かい合う辺が平行。</li>
-                        </ul>',
+                'a' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>すべての辺の長さが等しい。</li>
+                                <li>すべての内角が\(\,90^{\circ}\)。</li>
+                                <li>向かい合う辺が平行。</li>
+                            </ul>
+                        </div>",
                 'e_type' => 1,
                 'e' => "\(AB=AC\,\)のように明記されていなくても、「正方形」であれば上記の仮定をすべて含んでいる。",
             ],
@@ -818,11 +1278,13 @@ class WorkbookController extends Controller
                 'q_type' => 2,
                 'q' => "長方形の特徴をできるだけ挙げなさい。",
                 'a_type' => 3,
-                'a' => '<ul class="list-disc">
-                            <li>すべての内角が\(\,90^{\circ}\)。</li>
-                            <li>向かい合う辺の長さが等しい。</li>
-                            <li>向かい合う辺が平行。</li>
-                        </ul>',
+                'a' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>すべての内角が\(\,90^{\circ}\)。</li>
+                                <li>向かい合う辺の長さが等しい。</li>
+                                <li>向かい合う辺が平行。</li>
+                            </ul>
+                        </div>",
                 'e_type' => 1,
                 'e' => "\(AB=AC\,\)のように明記されていなくても、「長方形」であれば上記の仮定をすべて含んでいる。",
             ],
@@ -830,11 +1292,13 @@ class WorkbookController extends Controller
                 'q_type' => 2,
                 'q' => "平行四辺形の特徴をできるだけ挙げなさい。",
                 'a_type' => 3,
-                'a' => '<ul class="list-disc">
-                            <li>向かい合う角の大きさが等しい。</li>
-                            <li>向かい合う辺の長さが等しい。</li>
-                            <li>向かい合う辺が平行。</li>
-                        </ul>',
+                'a' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>向かい合う角の大きさが等しい。</li>
+                                <li>向かい合う辺の長さが等しい。</li>
+                                <li>向かい合う辺が平行。</li>
+                            </ul>
+                        </div>",
                 'e_type' => 1,
                 'e' => "\(AB=AC\,\)のように明記されていなくても、「平行四辺形」であれば上記の仮定をすべて含んでいる。",
             ],
@@ -842,10 +1306,13 @@ class WorkbookController extends Controller
                 'q_type' => 2,
                 'q' => "正三角形の特徴をできるだけ挙げなさい。",
                 'a_type' => 3,
-                'a' => '<ul class="list-disc">
-                            <li>すべての辺の長さが等しい。</li>
-                            <li>すべての内角が\(\,60^{\circ}\)。</li>
-                        </ul>',
+                'a' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>すべての辺の長さが等しい。</li>
+                                <li>すべての内角が\(\,60^{\circ}\)。</li>
+                            </ul>
+                        </div>
+                        ",
                 'e_type' => 1,
                 'e' => "\(AB=AC\,\)のように明記されていなくても、「正三角形」であれば上記の仮定をすべて含んでいる。",
             ],
@@ -853,10 +1320,12 @@ class WorkbookController extends Controller
                 'q_type' => 2,
                 'q' => "二等辺三角形の特徴をできるだけ挙げなさい。",
                 'a_type' => 3,
-                'a' => '<ul class="list-disc">
-                            <li>頂角に接する二つの辺の長さが等しい。</li>
-                            <li>２つの底角が等しい。</li>
-                        </ul>',
+                'a' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>頂角に接する二つの辺の長さが等しい。</li>
+                                <li>２つの底角が等しい。</li>
+                            </ul>
+                        </div>",
                 'e_type' => 1,
                 'e' => "\(AB=AC\,\)のように明記されていなくても、「二等辺三角形」であれば上記の仮定をすべて含んでいる。",
             ],
@@ -864,11 +1333,13 @@ class WorkbookController extends Controller
                 'q_type' => 2,
                 'q' => "平行な２本の直線を、別の１本の直線が横切るとき、わかることをすべて挙げなさい。",
                 'a_type' => 3,
-                'a' => '<ul class="list-disc">
-                            <li>等しい錯角が存在する。</li>
-                            <li>等しい同位角が存在する。</li>
-                            <li>交点では、対頂角が等しい。</li>
-                        </ul>',
+                'a' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>等しい錯角が存在する。</li>
+                                <li>等しい同位角が存在する。</li>
+                                <li>交点では、対頂角が等しい。</li>
+                            </ul>
+                        </div>",
                 'e_type' => 1,
                 'e' => "平行線があれば、錯角や同位角がないか確認しよう。",
             ],
@@ -1215,6 +1686,12 @@ class WorkbookController extends Controller
         }
 
         return abs($a);
+    }
+
+    // 最小公倍数
+    private function lcm($a, $b)
+    {
+        return abs($a * $b) / $this->gcd($a, $b);
     }
 
     // 数字を文字に変換
@@ -1757,6 +2234,50 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 英文法 接続詞
+    public function conjection() {
+        $sentences = [
+            ['e' => 'I lived in Nagano when I was a student.', 'j' => '（私が）学生だったとき、私は長野に住んでいた。', ],
+            ['e' => 'I saw Tom when I was running.', 'j' => '（私が）走っていたとき、トムに会った。', ],
+            ['e' => 'If you like nature, let\'s go hiking.', 'j' => 'もし（あなたが）自然が好きなら、ハイキングに行こう。', ],
+            ['e' => 'If it rains tomorrow, we will stay home.', 'j' => 'もし明日雨が降ったら、私たちは家にいるだろう。', ],
+            ['e' => 'I think that she is right.', 'j' => '私は、彼女は正しいと思う。', ],
+            ['e' => 'He says that English is easy.', 'j' => '彼は、英語は簡単だと言う。', ],
+            ['e' => 'I like them because they are kind.', 'j' => '彼らは親切なので、私は彼らが好きです。', ],
+            ['e' => 'She went home because she felt sick.', 'j' => '彼女は具合が悪いので家に帰りました。', ],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => '<p>\("S_1 V_1～\,\mathrm{when}\,S_2 V_2～."のように、接続詞は２つの文をつなげられる。\)</p>
+                        <p>\("\mathrm{When}\,S_2 V_2～, S_1 V_1～."でもよい。\mathrm{if, because}も同様だが、\mathrm{that}は先頭に置かない。\)</p>',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => '<p>\("S_1 V_1～\,\mathrm{when}\,S_2 V_2～."のように、接続詞は２つの文をつなげられる。\)</p>
+                        <p>\("\mathrm{When}\,S_2 V_2～, S_1 V_1～."でもよい。\mathrm{if, because}も同様だが、\mathrm{that}は先頭に置かない。\)</p>',
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "接続詞";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
 
 
 

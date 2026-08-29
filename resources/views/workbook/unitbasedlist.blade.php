@@ -172,6 +172,12 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.simultaneous_equation')}}">連立方程式</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.simultaneous_equation2')}}">連立方程式（文章題）</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -184,15 +190,21 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
-                                    <a href="{{route('workbook.unit.plot_proportional_function')}}">比例（グラフ描画）</a>
+                                    <a href="{{route('workbook.plot_proportional_function')}}">比例（グラフ描画）</a>
                                 </x-button-link>
+                                {{-- <x-button-link>
+                                    <a href="{{route('workbook.unit.plot_proportional_function')}}">比例（グラフ描画）</a>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
-                                    <a href="{{route('workbook.unit.plot_linear_function')}}">一次関数（グラフ描画）</a>
+                                    <a href="{{route('workbook.plot_linear_function')}}">一次関数（グラフ描画）</a>
                                 </x-button-link>
+                                {{-- <x-button-link>
+                                    <a href="{{route('workbook.unit.plot_linear_function')}}">一次関数（グラフ描画）</a>
+                                </x-button-link> --}}
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.linear_function3')}}">２点を通る直線</a>
                                 </x-button-link>
@@ -215,6 +227,9 @@
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.spacial_figure')}}">空間図形</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.corn_surface')}}">円錐の表面積</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -323,6 +338,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.conjection')}}">接続詞</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
