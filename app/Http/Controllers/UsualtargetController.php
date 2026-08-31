@@ -51,9 +51,11 @@ class UsualtargetController extends Controller
 
         $validated = $request->validate([
             'content' => 'required',
-            'due_date' => 'required'
+            'due_date' => 'required',
+            // 'achieve_flg'
+            'achieve_flg' => 'sometimes',
         ]);
-
+// dd($validated);
         $today = Carbon::today();
 
         $user_id = Session::get('target_students');
