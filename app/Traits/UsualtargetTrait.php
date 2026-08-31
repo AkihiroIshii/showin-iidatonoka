@@ -83,14 +83,43 @@ trait UsualtargetTrait
     // 課題（acheive_flg=2）のみ抽出
     public function getKadai()
     {
-        $user_ids = Session::get('target_students', null); //セッションから対象の生徒を取得。
-        $user_ids = Arr::wrap($user_ids); //配列に統一
+        // if(Auth::user()->role == "") {
+        //     $kadais = Usualtarget::where('achieve_flg', '=', 2)
+        //         ->leftJoin('users', function($join) {
+        //             $join->on('usualtargets.user_id', '=', 'users.id');
+        //         })
+        //         ->selectRaw('
+        //             users.name,
+        //             usualtargets.content
+        //         ')
+        //         ->get();
+        // // 管理者以外（生徒、保護者）
+        // } else {
+            $user_ids = Session::get('target_students', null); //セッションから対象の生徒を取得。
+            $user_ids = Arr::wrap($user_ids); //配列に統一
 
-        $kadais = Usualtarget::whereIn('usualtargets.user_id', $user_ids)
+            $kadais = Usualtarget::whereIn('usualtargets.user_id', $user_ids)
+                ->leftJoin('users', function($join) {
+                    $join->on('usualtargets.user_id', '=', 'users.id');
+                })
+                ->where('achieve_flg', '=', 2)
+                ->selectRaw('
+                    users.name,
+                    usualtargets.content
+                ')
+                ->get();
+        // }
+
+        return $kadais;
+    }
+
+    // 全生徒の課題を抽出
+    public function getKadaiAllUsers()
+    {
+        $kadais = Usualtarget::where('achieve_flg', '=', 2)
             ->leftJoin('users', function($join) {
                 $join->on('usualtargets.user_id', '=', 'users.id');
             })
-            ->where('achieve_flg', '=', 2)
             ->selectRaw('
                 users.name,
                 usualtargets.content

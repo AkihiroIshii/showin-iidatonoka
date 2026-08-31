@@ -13,6 +13,7 @@ use App\Traits\EventTrait;
 use App\Traits\UsualtargetTrait;
 use App\Traits\TopChoiceTrait;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -30,8 +31,14 @@ class DashboardController extends Controller
         //普段の目標
         $current_flg = true;
         $usualtargets = $this->getUsualtargets($current_flg);
-        $kadais = $this->getKadai();
-// dd($kadais);
+
+        //課題（管理者かつダッシュボードであれば全生徒の課題を抽出）
+        if (request()->routeIs('dashboard') && Auth::user()->role == 'admin') {
+            $kadais = $this->getKadaiAllUsers();
+        } else {
+            $kadais = $this->getKadai();
+        }
+
         // イベントを取得
         $events = $this->getEvents();
         

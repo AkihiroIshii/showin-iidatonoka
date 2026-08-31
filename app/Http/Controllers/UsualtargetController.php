@@ -37,8 +37,9 @@ class UsualtargetController extends Controller
         $current_flg = false;
         $usualtargets = $this->getUsualtargets($current_flg);
         $grouped_usualtargets = $usualtargets->groupBy('name');
+        $kadais = $this->getKadai();
 
-        return view('usualtarget.index', compact('user','grouped_usualtargets','lastMonthCoinSum','thisMonthCoinSum'));
+        return view('usualtarget.index', compact('user','grouped_usualtargets','lastMonthCoinSum','thisMonthCoinSum','kadais'));
     }
 
     public function create() {
@@ -55,7 +56,7 @@ class UsualtargetController extends Controller
             // 'achieve_flg'
             'achieve_flg' => 'sometimes',
         ]);
-// dd($validated);
+
         $today = Carbon::today();
 
         $user_id = Session::get('target_students');

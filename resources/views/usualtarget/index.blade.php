@@ -42,6 +42,26 @@
             </div>
         @endif --}}
 
+        @if(Auth::user()->role == "admin")
+            <!-- 現在の課題を表示 -->
+            <div class="mb-6">
+                <table class="border-separate border border-slate-400 m-auto table-fixed">
+                    <tr class="bg-gray-300">
+                        <x-th>生徒名</x-th>
+                        <x-th>先生からの課題</x-th>
+                    </tr>
+                    @foreach($kadais as $kadai)
+                        <tr>
+                            <td class="border border-slate-300 px-4">{{$kadai->name}}</td>
+                            <td class="border border-slate-300 px-4">
+                                <pre class="whitespace-pre-wrap">{{$kadai->content}}
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+            </div>
+        @endif
+
         <!-- 普段の目標を表示 -->
         <x-h3>月間目標</x-h3>
         <!-- スマホ表示用 -->
