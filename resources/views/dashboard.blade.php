@@ -42,9 +42,9 @@
 
         <!-- Navigation Links -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-            <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
+            {{-- <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
                 単元別学習
-            </x-nav-link>
+            </x-nav-link> --}}
             {{-- <x-nav-link :href="route('workbook.randomsetting')" :active="request()->routeIs('workbook.randomsetting')">
                 ランダム出題
             </x-nav-link> --}}
@@ -56,6 +56,25 @@
             </x-nav-link> --}}
         </div>
 
+        <!-- 現在の課題を表示 -->
+        <div class="mb-6">
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <tr class="bg-gray-300">
+                    <x-th>生徒名</x-th>
+                    <x-th>先生からの課題</x-th>
+                </tr>
+                @foreach($kadais as $kadai)
+                    <tr>
+                        <td class="border border-slate-300 px-4">{{$kadai->name}}</td>
+                        <td class="border border-slate-300 px-4">
+                            <pre class="whitespace-pre-wrap">{{$kadai->content}}
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+        </div>
+
         {{-- このシステムについて --}}
         <x-h3>このシステムについて</x-h3>
         <div class="inline-block pl-5 text-lg leading-[2]">
@@ -65,23 +84,6 @@
             <p class="font-bold">(※)帰るときは右上の名前をクリックして、必ずログアウト（Log Out）してください。</p>
         </div>
 
-        <!-- 現在の課題を表示 -->
-        <x-h3>課題</x-h3>
-        <div class="mb-6">
-            <table class="border-separate border border-slate-400 m-auto table-fixed">
-                <tr class="bg-gray-300">
-                    <x-th>生徒名</x-th>
-                    <x-th>課題</x-th>
-                </tr>
-                @foreach($kadais as $kadai)
-                    <tr>
-                        <td class="border border-slate-300 px-4">{{$kadai->name}}</td>
-                        <td class="border border-slate-300 px-4">{{$kadai->content}}</td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
-        </div>
 
         <!-- 普段の目標を表示 -->
         <x-h3>挑戦中の目標</x-h3>

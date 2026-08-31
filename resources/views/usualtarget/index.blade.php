@@ -112,7 +112,7 @@
                                 @if(!empty($usualtarget->achieve_mark))
                                     <ul>
                                         <li>{{$usualtarget->achieve_mark}}</li>
-                                        <li>{{$usualtarget->comment}}</li>
+                                        <li><pre class="whitespace-pre-wrap">{{$usualtarget->comment}}</li>
                                     </ul>
                                 @endif
                                 @if(!empty($usualtarget->teacher_comment))
