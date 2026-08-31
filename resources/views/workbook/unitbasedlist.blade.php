@@ -171,6 +171,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.linear_equation4')}}">\(\displaystyle \frac{c}{\,ax+b\,}=d\)</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.setup_equation')}}">文章からの立式</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -457,6 +460,24 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>全分野</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.science_terms_all')}}">用語の概念</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

@@ -535,6 +535,40 @@ class WorkbookController extends Controller
         return view('workbook.unit.linear_equation4', compact('a','b','c','d','ans_sign','numerator','denominator'));
     }
 
+    // 文章からの立式
+    public function setup_equation() {
+        $l1 = 400 + 200 * rand(0, 10);  // 400～2400m
+        $l2 = 400 + 200 * rand(0, 10);
+        $L = $l1 + $l2;
+        $t1 = rand(2, 10);
+        $t2 = rand(2, 10);
+        $T = $t1 + $t2;
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+
+            [
+                'q_type' => 3,
+                'q' => "<p>道のりが \(L\) m の 2 地点 A, B 間を、彦星は分速 \(a\) m で A 地点から B 地点に、</p>
+                        <p>織姫は分速 \(b\) m で B 地点から A 地点に向かって同時刻に走り始める。</p>
+                        <p>そのあと二人が途中で出会ったのは、出発してから \(t\) 分後であった。</p>
+                        <p>\(L\) を \(a,b,t\) を使って表しなさい。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "L=a\,t+b\,t",
+                'e_type' => 3,
+                'e' => "<p>道のり \(L\) を表すので、他の量も m の単位に合わせる。</p>
+                        <p>速さ × 時間 が道のりなので、二人が出会う地点を X とすると、</p>
+                        <p>A, X 間の道のりは \(a\,t\)、X, B 間の道のりは \(b\,t\) と表せる。</p>
+                        <p>よって、これらを合計すれば A, B 間の道のりになるので、\(L=a\,t + b\,t\)。</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "文章からの立式";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // // 比例（グラフ描画）(※)old
     // public function plot_proportional_function() {
     //     $a_sign = (-1)**rand(1,2);
@@ -3521,6 +3555,49 @@ class WorkbookController extends Controller
         return view('workbook.unit.electromagnetism', compact('v1','i1','r1','question'));
     }
 
+    // 理科 用語の理解
+    public function science_terms_all() {
+        $terms = [
+            ['term' => '震度', 'mean' => '場所ごとにゆれの大きさを表す指標。', 'explanation' => '震度\,0\,から震度\,7\,まで\,10\,段階ある（震度\,5\,と\,6\,のみ弱・強にわかれる）。'],
+            ['term' => 'マグニチュード', 'mean' => '地震そのものの規模を表す指標。', 'explanation' => '震度はゆれの大きさを示すが、場所によって異なる。マグニチュードは場所に依らない。'],
+            ['term' => '溶質', 'mean' => '溶液に解けている物質のこと。', 'explanation' => '例えば、食塩水は水が溶媒で食塩が溶質である。'],
+
+            ['term' => '水蒸気量', 'mean' => '1m^3\,あたりの水蒸気の質量。', 'explanation' => '質量は\,g\,を用いるので、水蒸気量の単位は\,g/m^3\,である。'],
+            ['term' => '飽和水蒸気量', 'mean' => '湿度100\%のときの水蒸気量。', 'explanation' => '質量は\,g\,を用いるので、水蒸気量の単位は\,g/m^3\,である。'],
+
+            ['term' => '電解質', 'mean' => '水に溶かすと電流が流れる物質。', 'explanation' => '食塩は電解質だが、砂糖は非電解質である。'],
+            ['term' => '電離', 'mean' => '物質が水に溶けて陽イオンと陰イオンにわかれること。', 'explanation' => '例えば、塩化銅(CuCl_2)は銅イオン(Cu^{2+})と塩化物イオン(Cl^-)に電離する。'],
+            ['term' => '酸', 'mean' => '電離すると水素イオンを生じる化合物。', 'explanation' => '塩酸(HCl)、硫酸(H_2 SO_4)、酢酸(CH_3 COOH)などがある。'],
+            ['term' => 'アルカリ', 'mean' => '電離すると水酸化物イオンを生じる化合物。', 'explanation' => '水酸化ナトリウム(NaOH)、水酸化カルシウム(Ca(OH)_2)などがある。'],
+        ];
+        $idx = rand(0,count($terms)-1);
+        $term = $terms[$idx];
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 2,
+                'q' => "「{$term['term']}」の意味を説明しなさい。",
+                'a_type' => 2,
+                'a' => "\mathrm{ {$term['mean']} }",
+                'e_type' => 2,
+                'e' => "\mathrm{ {$term['explanation']} }",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の意味をもつ用語を答えなさい。</p>
+                        <p class=\"text-xl\">\(\mathrm{ {$term['mean']} }\)</p>",
+                'a_type' => 2,
+                'a' => "{$term['term']}",
+                'e_type' => 2,
+                'e' => "\mathrm{ {$term['explanation']} }",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "理科 用語の理解";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
 
     // 地図の縮尺
     public function map_scale() {

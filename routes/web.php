@@ -299,6 +299,8 @@ Route::get('workbook/linear_equation3', [WorkbookController::class, 'linear_equa
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation3');
 Route::get('workbook/linear_equation4', [WorkbookController::class, 'linear_equation4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation4');
+Route::get('workbook/setup_equation', [WorkbookController::class, 'setup_equation'])
+->middleware(['auth', 'verified'])->name('workbook.setup_equation');
 Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
 ->middleware(['auth', 'verified'])->name('workbook.plot_proportional_function');
 // Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
@@ -389,6 +391,8 @@ Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
 Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
+Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_terms_all'])
+->middleware(['auth', 'verified'])->name('workbook.science_terms_all');
 // 国語
 Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');
