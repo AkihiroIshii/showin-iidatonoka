@@ -26,7 +26,7 @@
 
             <div class="mt-8">
                 <div>
-                    <label for="content" class="font-semibold mt-4">月間目標</label>
+                    <label for="content" class="font-semibold mt-4">月間目標 or 課題</label>
                     <textarea name="content" class="w-full py-2 border border-gray-300 rounded-md" id="content"></textarea>
                 </div>
             </div>
@@ -36,12 +36,13 @@
                     <input type="date" name="due_date" class="w-full py-2 border border-gray-300 rounded-md" id="due_date">
                 </div>
             </div>
-            <!-- <div class="mt-8">
+            <div class="mt-8">
                 <div>
-                    <label for="achieve_flg" class="font-semibold mt-4">状況</label>1:目標達成、0:未達成
+                    <label for="achieve_flg" class="font-semibold mt-4">状況</label>2:課題、1:目標達成、0:未達成
                     <input type="text" name="achieve_flg" class="py-2 border border-gray-300 rounded-md" id="achieve_flg">
                 </div>
             </div>
+            <!--
             <div class="mt-8">
                 <div>
                     <label for="comment" class="font-semibold mt-4">振り返り</label>

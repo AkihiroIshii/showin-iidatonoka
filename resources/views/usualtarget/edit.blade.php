@@ -40,7 +40,7 @@
                 </div>
                 <div class="mt-8">
                     <div>
-                        <label for="achieve_flg" class="font-semibold mt-4">状況</label>1:目標達成、0:未達成
+                        <label for="achieve_flg" class="font-semibold mt-4">状況</label>2:現在の課題、1:目標達成、0:未達成
                         <input type="text" name="achieve_flg" class="py-2 border border-gray-300 rounded-md" id="achieve_flg" value="{{old('achieve_flg', $usualtarget->achieve_flg)}}">
                     </div>
                 </div>

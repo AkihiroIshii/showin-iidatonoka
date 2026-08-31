@@ -276,6 +276,8 @@ Route::get('workbook/ratio1', [WorkbookController::class, 'ratio1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.ratio1');
 Route::get('workbook/ratio2', [WorkbookController::class, 'ratio2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.ratio2');
+Route::get('workbook/select_eq_decimal', [WorkbookController::class, 'select_eq_decimal'])
+->middleware(['auth', 'verified'])->name('workbook.select_eq_decimal');
 Route::get('workbook/velocity', [WorkbookController::class, 'velocity1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.velocity1');
 Route::get('workbook/velocity2', [WorkbookController::class, 'velocity2'])
@@ -344,10 +346,14 @@ Route::get('workbook/general_verb', [WorkbookController::class, 'general_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.general_verb');
 Route::get('workbook/interrogative', [WorkbookController::class, 'interrogative'])
 ->middleware(['auth', 'verified'])->name('workbook.interrogative');
+Route::get('workbook/personal_pronoun', [WorkbookController::class, 'personal_pronoun'])
+->middleware(['auth', 'verified'])->name('workbook.personal_pronoun');
 Route::get('workbook/past_verb', [WorkbookController::class, 'past_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.past_verb');
 Route::get('workbook/conjection', [WorkbookController::class, 'conjection'])
 ->middleware(['auth', 'verified'])->name('workbook.conjection');
+Route::get('workbook/comparative', [WorkbookController::class, 'comparative'])
+->middleware(['auth', 'verified'])->name('workbook.comparative');
 
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');
@@ -367,8 +373,6 @@ Route::get('workbook/general_verb3', [WorkbookController::class, 'general_verb3'
 Route::get('workbook/general_verb4', [WorkbookController::class, 'general_verb4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.general_verb4');
 */
-Route::get('workbook/pronoun', [WorkbookController::class, 'pronoun'])
-->middleware(['auth', 'verified'])->name('workbook.unit.pronoun');
 Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.preposition');
 Route::get('workbook/sentence_structure1', [WorkbookController::class, 'sentence_structure1'])
@@ -385,6 +389,9 @@ Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
 Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
+// 国語
+Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
+->middleware(['auth', 'verified'])->name('workbook.jp_yougen');
 /*************** 単元別学習　ここまで *************************/
 
 

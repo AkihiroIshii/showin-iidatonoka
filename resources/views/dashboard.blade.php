@@ -65,6 +65,24 @@
             <p class="font-bold">(※)帰るときは右上の名前をクリックして、必ずログアウト（Log Out）してください。</p>
         </div>
 
+        <!-- 現在の課題を表示 -->
+        <x-h3>課題</x-h3>
+        <div class="mb-6">
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <tr class="bg-gray-300">
+                    <x-th>生徒名</x-th>
+                    <x-th>課題</x-th>
+                </tr>
+                @foreach($kadais as $kadai)
+                    <tr>
+                        <td class="border border-slate-300 px-4">{{$kadai->name}}</td>
+                        <td class="border border-slate-300 px-4">{{$kadai->content}}</td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+        </div>
+
         <!-- 普段の目標を表示 -->
         <x-h3>挑戦中の目標</x-h3>
         <div class="mb-6">

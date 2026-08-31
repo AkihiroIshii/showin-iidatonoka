@@ -70,9 +70,9 @@
                             \(\displaystyle {{ $question['e'] }} \)
                         @elseif ($question['e_type'] == 3)
                             {{-- <div class="pl-5 text-left"> --}}
-                            <div>
+                            {{-- <div> --}}
                                 {!! $question['e'] !!}
-                            </div>
+                            {{-- </div> --}}
                         @endif
                     </div>
 

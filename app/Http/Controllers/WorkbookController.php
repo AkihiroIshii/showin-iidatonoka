@@ -83,6 +83,7 @@ class WorkbookController extends Controller
         $val_1bu = $num * 0.01;
         $val_1per = $num * 0.01;
         $val_per = $num * 0.01 * $per;
+        $val_per2 = 0.01 * $per;
         
         $questions = [
             [
@@ -105,7 +106,7 @@ class WorkbookController extends Controller
                 'q' => "\({$num}\,の\,{$per}\,\%\,はいくつか。\)",
                 'a' => "{$val_per}",
                 'e' => "<div>
-                            <p>\(\displaystyle {$per}\,\%\,は\,\\frac{{$per}}{\,100\,}\,倍なので、{$num}\,\\times\\frac{{$per}}{\,100\,}\, = {$val_per}.\)</p>
+                            <p>\(\displaystyle {$per}\,\%\,は\,{$val_per2}\\left(=\\frac{{$per}}{\,100\,} \\right)\,倍なので、{$num}\,\\times{$val_per2} = {$val_per}.\)</p>
                             <p>\(\displaystyle {$num}\,の\,1\,\%（0.01倍）が\,{$val_1per}\,なので、{$val_1per}\,\\times{$per} = {$val_per}\,と計算してもよい.\)</p>
                         </div>",
             ],
@@ -123,6 +124,63 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "割合";
         return view('workbook.unit.child', compact('unitname','question'));
+    }
+
+    // 式の選択（小数）
+    public function select_eq_decimal() {
+        $a = 0.3 * rand(1, 9);
+        $b = 0.3 * rand(1, 9);
+        $n = rand(2, 9);
+        
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の値を求めるための<span class=\"underline\">計算式</span>を答えなさい。</p>
+                        <p class=\"text-xl\">{$a} の {$b} 倍はいくつか。<p>",
+                'a_type' => 1,
+                'a' => "{$a} × {$b}",
+                'e_type' => 1,
+                'e' => "2 の 3 倍はいくつかを考えると、計算式は 2 × 3。小数も同様に考えればよい。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の値を求めるための<span class=\"underline\">計算式</span>を答えなさい。</p>
+                        <p class=\"text-xl\">{$a} は {$b} の何倍か。<p>",
+                'a_type' => 1,
+                'a' => "{$a} ÷ {$b}",
+                'e_type' => 3,
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-desc\">
+                                <li>6 は 2 の何倍かを考えると、計算式は 6 ÷ 2。小数も同様に考えればよい。</li>
+                                <li>小さい数を大きい数でわることもある（2 ÷ 6 など）。慣れておくこと。</li>
+                            </ul>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の値を求めるための<span class=\"underline\">計算式</span>を答えなさい。</p>
+                        <p class=\"text-xl\">ジュースを {$n} 人に {$a} L ずつ配るためには、何 L 必要か。<p>",
+                'a_type' => 1,
+                'a' => "{$n} × {$a}",
+                'e_type' => 1,
+                'e' => "ジュースを 5 人に 2 L ずつ配ることを考えると、必要な量の計算式は 5 × 2。小数も同様に考えればよい。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の値を求めるための<span class=\"underline\">計算式</span>を答えなさい。</p>
+                        <p class=\"text-xl\">{$a} L のジュースを {$n} 人で同じ量ずつ分けると、一人分は何 L か。<p>",
+                'a_type' => 1,
+                'a' => "{$a} ÷ {$n}",
+                'e_type' => 1,
+                'e' => "8 L のジュースを 4 人で分けることを考えると、一人分の計算式は 8 ÷ 4。小数も同様に考えればよい。",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "式の選択（小数）";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 速さ１
@@ -611,11 +669,13 @@ class WorkbookController extends Controller
                 'a_type' => 5,
                 'a' => "a",
                 'e_type' => 3,
-                'e' => "<ul class='list-disc'>
-                            <li>比例のグラフは原点を通る。</li>
-                            <li>比例定数（傾き）が正なら右上がり、負なら右下がり。</li>
-                            <li>ここでは比例定数（傾き）が \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
-                        </ul>",
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class='list-disc'>
+                                <li>比例のグラフは原点を通る。</li>
+                                <li>比例定数（傾き）が正なら右上がり、負なら右下がり。</li>
+                                <li>ここでは比例定数（傾き）が \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
+                            </ul>
+                        </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
@@ -1023,12 +1083,14 @@ class WorkbookController extends Controller
                 'a_type' => 5,
                 'a' => "a",
                 'e_type' => 3,
-                'e' => "<ul class='list-disc'>
-                            <li>切片が \({ $b }\) なので、\( (0,{ $b }) \) の点を通る。</li>
-                            <li>\(y=ax+b\) のグラフは、\(y=ax\) のグラフを \(y\) 軸方向に \(b\) だけ平行移動したグラフになる。</li>
-                            <li>傾きが正なら右上がり、負なら右下がり。</li>
-                            <li>ここでは傾きが \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
-                        </ul>",
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>切片が \({ $b }\) なので、\( (0,{ $b }) \) の点を通る。</li>
+                                <li>\(y=ax+b\) のグラフは、\(y=ax\) のグラフを \(y\) 軸方向に \(b\) だけ平行移動したグラフになる。</li>
+                                <li>傾きが正なら右上がり、負なら右下がり。</li>
+                                <li>ここでは傾きが \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
+                            </ul>
+                        </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
@@ -1839,6 +1901,19 @@ class WorkbookController extends Controller
         return $word;
     }
 
+    // 英単語_副詞の取得
+    private function get_adverb()
+    {
+        // comp:比較級、larg:最大級
+        $words = [
+            ['e' => 'fast', 'j' => '速く', 'comp' => 'faster', 'larg' => 'fastest'],
+            ['e' => 'slowly', 'j' => 'ゆっくり', 'comp' => 'more slowly', 'larg' => 'most slowly'],
+        ];
+        $index = rand(0,count($words)-1);
+        $word = $words[$index];
+        return $word;
+    }
+
     // 英単語_動詞の取得
     private function get_verb()
     {
@@ -2098,6 +2173,101 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 英文法 人称代名詞
+    public function personal_pronoun() {
+        // 主語 'es'=1:三人称単数
+        $subjects = [
+            ['e' => 'I', 'es' => 0, 'el' => 'I', 'j' => '私は', ],
+            ['e' => 'You', 'es' => 0, 'el' => 'you', 'j' => 'あなたは', ],
+            ['e' => 'He', 'es' => 1, 'el' => 'he', 'j' => '彼は',],
+            ['e' => 'She', 'es' => 1, 'el' => 'she', 'j' => '彼女は',],
+            ['e' => 'Tom', 'es' => 1, 'el' => 'Tom', 'j' => 'トムは',],
+            ['e' => 'We', 'es' => 0, 'el' => 'we', 'j' => '私たちは', ],
+            ['e' => 'They', 'es' => 0, 'el' => 'we', 'j' => '彼らは', ],
+        ];
+        $idx1 = rand(0, count($subjects)-1);
+        $s = $subjects[$idx1];
+        // 動詞
+        $verbs = [
+            ['e' => 'know', 'es' => 'knows', 'j' => '知っている', ],
+            ['e' => 'like', 'es' => 'likes', 'j' => '好いている', ],
+            ['e' => 'need', 'es' => 'needs', 'j' => '必要としている', ],
+        ];
+        $idx2 = rand(0, count($verbs)-1);
+        $v = $verbs[$idx2];
+        $vs = $s['es'] == 1 ? $v['es'] : $v['e'];
+        // 目的語
+        $objects = [
+            ['e' => 'me', 'j' => '私を', ],
+            ['e' => 'you', 'j' => 'あなたを', ],
+            ['e' => 'him', 'j' => '彼を', ],
+            ['e' => 'her', 'j' => '彼女を', ],
+            ['e' => 'Tom', 'j' => 'トムを', ],
+            ['e' => 'us', 'j' => '私たちを', ],
+            ['e' => 'them', 'j' => '彼らを', ],
+        ];
+        $idx3 = rand(0, count($objects)-1);
+        $o = $objects[$idx3];
+        // 所有格
+        $possessives = [
+            ['e' => 'my', 'j' => '私の', ],
+            ['e' => 'your', 'j' => 'あなたの', ],
+            ['e' => 'his', 'j' => '彼の', ],
+            ['e' => 'her', 'j' => '彼女の', ],
+            ['e' => 'Tom\'s', 'j' => 'トムの', ],
+            ['e' => 'our', 'j' => '私たちの', ],
+            ['e' => 'their', 'j' => '彼らの', ],
+        ];
+        $idx4 = rand(0, count($possessives)-1);
+        $p = $possessives[$idx4];
+
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']} {$o['j']} {$v['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$vs} {$o['e']}.",
+                'e_type' => 1,
+                'e' => '<主語+動詞+目的語>の形の文。人称代名詞は主語か所有格か目的語かで単語が異なる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$vs} {$o['e']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']} {$o['j']} {$v['j']}。",
+                'e_type' => 1,
+                'e' => '<主語+動詞+目的語>の形の文。人称代名詞は主語か所有格か目的語かで単語が異なる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$p['j']}番です。",
+                'a_type' => 1,
+                'a' => "It's {$p['e']} turn.",
+                'e_type' => 1,
+                'e' => '人称代名詞は主語か所有格か目的語かで単語が異なる。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "It's {$p['e']} turn.",
+                'a_type' => 1,
+                'a' => "{$p['j']}番です。",
+                'e_type' => 1,
+                'e' => '人称代名詞は主語か所有格か目的語かで単語が異なる。',
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "代名詞";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 英文法 過去形
     public function past_verb() {
         // 主語 'es'=1:三人称単数
@@ -2279,6 +2449,180 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 英文法 比較級
+    public function comparative() {
+        // 主語 'es'=1:三人称単数
+        $subjects = [
+            ['e' => 'You', 'es' => 0, 'el' => 'you', 'j' => 'あなた', 'be' => 'are',],
+            ['e' => 'She', 'es' => 1, 'el' => 'she', 'j' => '彼女', 'be' => 'is',],
+            ['e' => 'Tom', 'es' => 1, 'el' => 'Tom', 'j' => 'トム', 'be' => 'is',],
+            ['e' => 'They', 'es' => 0, 'el' => 'they', 'j' => '彼ら', 'be' => 'are',],
+        ];
+        $idx = rand(0, count($subjects)-1);
+        $s = $subjects[$idx];
+        // 動詞
+        $verbs = [
+            ['e' => 'run', 'es' => 'runs', 'j' => '走る', ],
+            ['e' => 'walk', 'es' => 'walks', 'j' => '歩く', ],
+            ['e' => 'swim', 'es' => 'swims', 'j' => '泳ぐ', ],
+        ];
+        $idx = rand(0, count($verbs)-1);
+        $v = $verbs[$idx];
+        $vs = $s['es'] == 1 ? $v['es'] : $v['e'];
+        // 修飾語
+        // $modifiers = [
+        //     ['e' => 'in this class', 'j' => 'このクラスで', ],
+        //     ['e' => 'in this country', 'j' => 'この国で', ],
+        //     ['e' => 'in my family', 'j' => '私の家族の中で', ],
+        // ];
+        // $idx = rand(0, count($modifiers)-1);
+        // $m = $modifiers[$idx];
+        
+        // $v = $this->get_verb();     // 動詞の取得
+        $kei = $this->get_adjective();   // 形容詞を取得
+        $fuku = $this->get_adverb();   // 副詞を取得
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は最も{$kei['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$s['be']} the {$kei['l']}.",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$s['be']} <span class=\"underline\">{$kei['e']}</span>.\"
+                            （{$s['j']}は{$kei['j']}。）の下線部（形容詞）を最大級にした表現。</p>
+                        <p>最大級の形が\"the ○○est\"か\"the most ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$s['be']} the {$kei['l']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は最も{$kei['j']}。",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$s['be']} <span class=\"underline\">{$kei['e']}</span>.\"
+                            （{$s['j']}は{$kei['j']}。）の下線部（形容詞）を最大級にした表現。</p>
+                        <p>最大級の形が\"the ○○est\"か\"the most ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}はさらに{$kei['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$s['be']} {$kei['c']}.",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$s['be']} <span class=\"underline\">{$kei['e']}</span>.\"
+                            （{$s['j']}は{$kei['j']}。）の下線部（形容詞）を比較級にした表現。</p>
+                        <p>最大級の形が\"○○er\"か\"more ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$s['be']} {$kei['c']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}はさらに{$kei['j']}。",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$s['be']} <span class=\"underline\">{$kei['e']}</span>.\"
+                            （{$s['j']}は{$kei['j']}。）の下線部（形容詞）を比較級にした表現。</p>
+                        <p>最大級の形が\"○○er\"か\"more ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}はメアリーと同じくらい{$kei['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$s['be']} as {$kei['e']} as Mary.",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$s['be']} <span class=\"underline\">{$kei['e']}</span>.\"
+                            （{$s['j']}は{$kei['j']}。）の下線部（形容詞）を同格にした表現。</p>
+                        <p>\"as {$kei['e']}\" が「同じくらい{$kei['j']}」、\"as Mary\"が「メアリー（がそうであるの）と」を意味する。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$s['be']} as {$kei['e']} as Mary.",
+                'a_type' => 1,
+                'a' => "{$s['j']}はメアリーと同じくらい{$kei['j']}。",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$s['be']} <span class=\"underline\">{$kei['e']}</span>.\"
+                            （{$s['j']}は{$kei['j']}。）の下線部（形容詞）を同格にした表現。</p>
+                        <p>\"as {$kei['e']}\" が「同じくらい{$kei['j']}」、\"as Mary\"が「メアリー（がそうであるの）と」を意味する。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}は最も{$fuku['j']}{$v['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$vs} the {$fuku['larg']}.",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$vs} <span class=\"underline\">{$fuku['e']}</span>.\"
+                            （{$s['j']}は{$fuku['j']}{$v['j']}。）の下線部（副詞）を最大級にした表現。</p>
+                        <p>最大級の形が\"the ○○est\"か\"the most ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$vs} the {$fuku['larg']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は最も{$fuku['j']}{$v['j']}。",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$vs} <span class=\"underline\">{$fuku['e']}</span>.\"
+                            （{$s['j']}は{$fuku['j']}{$v['j']}。）の下線部（副詞）を最大級にした表現。</p>
+                        <p>最大級の形が\"the ○○est\"か\"the most ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}はさらに{$fuku['j']}{$v['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$vs} {$fuku['comp']}.",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$vs} <span class=\"underline\">{$fuku['e']}</span>.\"
+                            （{$s['j']}は{$fuku['j']}{$v['j']}。）の下線部（副詞）を比較級にした表現。</p>
+                        <p>最大級の形が\"○○er\"か\"more ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$vs} {$fuku['comp']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}はさらに{$fuku['j']}{$v['j']}。",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$vs} <span class=\"underline\">{$fuku['e']}</span>.\"
+                            （{$s['j']}は{$fuku['j']}{$v['j']}。）の下線部（副詞）を比較級にした表現。</p>
+                        <p>最大級の形が\"○○er\"か\"more ○○\"かは単語による。辞書で確認すること。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}はメアリーと同じくらい{$fuku['j']}{$v['j']}。",
+                'a_type' => 1,
+                'a' => "{$s['e']} {$vs} as {$fuku['e']} as Mary.",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$vs} <span class=\"underline\">{$fuku['e']}</span>.\"
+                            （{$s['j']}は{$fuku['j']}{$v['j']}。）の下線部（副詞）を同格にした表現。</p>
+                        <p>\"as {$fuku['e']}\" が「同じくらい{$fuku['j']}」、\"as Mary\"が「メアリー（がそうであるの）と」を意味する。</p>",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$vs} as {$fuku['e']} as Mary.",
+                'a_type' => 1,
+                'a' => "{$s['j']}はメアリーと同じくらい{$fuku['j']}{$v['j']}。",
+                'e_type' => 3,
+                'e' => "<p>\"{$s['e']} {$vs} <span class=\"underline\">{$fuku['e']}</span>.\"
+                            （{$s['j']}は{$fuku['j']}{$v['j']}。）の下線部（副詞）を同格にした表現。</p>
+                        <p>\"as {$fuku['e']}\" が「同じくらい{$fuku['j']}」、\"as Mary\"が「メアリー（がそうであるの）と」を意味する。</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "比較級";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
 
 
     // 英単語　動詞１
@@ -2641,74 +2985,7 @@ class WorkbookController extends Controller
         return view('workbook.unit.general_verb4', compact('question'));
     }
 
-    // 代名詞
-    public function pronoun() {
-        $questions = [
-            [
-                'q' => '私はペンを持っている。 ⇒ (　　) have a pen.',
-                'a' => '( I ) have a pen.',
-            ],
-            [
-                'q' => '彼はテニスが好きです。 ⇒ (　　) likes tennis.',
-                'a' => '( He ) likes tennis.',
-            ],
-            [
-                'q' => '彼女はピアノを弾きます。 ⇒ (　　) plays the piano.',
-                'a' => '( She ) plays the piano.',
-            ],
-            [
-                'q' => 'これは私の兄です。 ⇒ This is (　　) brother.',
-                'a' => 'This is ( my ) brother.',
-            ],
-            [
-                'q' => 'あなたの家は大きい。 ⇒ (　　) house is big.',
-                'a' => '( Your ) house is big.',
-            ],
-            [
-                'q' => 'ここが彼の部屋です。 ⇒ Here is (　　) room.',
-                'a' => 'Here is ( his ) room.',
-            ],
-            [
-                'q' => '彼女の名前はアリスです。 ⇒ (　　) name is Alice.',
-                'a' => '( Her ) name is Alice.',
-            ],
-            [
-                'q' => 'あれは私たちの父です。 ⇒ That is (　　) father.',
-                'a' => 'That is ( our ) father.',
-            ],
-            [
-                'q' => 'あれは彼らの車です。 ⇒ That is (　　) car.',
-                'a' => 'That is ( their ) car.',
-            ],
-            [
-                'q' => '誰かが私を呼んだ。 ⇒ Somebody called (　　).',
-                'a' => 'Somebody called ( me ).',
-            ],
-            [
-                'q' => '私はあなたを助けた。 ⇒ I helped (　　).',
-                'a' => 'I helped ( you ).',
-            ],
-            [
-                'q' => '母は彼を知っている。 ⇒ My mother knows (　　).',
-                'a' => 'My mother knows ( him ).',
-            ],
-            [
-                'q' => '私たちは彼女に会った。 ⇒ We saw (　　).',
-                'a' => 'We saw ( her ).',
-            ],
-            [
-                'q' => '私たちと遊ぼう。 ⇒  Let\'s play with (　　).',
-                'a' => 'Let\'s play with ( us ).',
-            ],
-            [
-                'q' => 'その犬は彼らを攻撃した。 ⇒  The dog attacked (　　).',
-                'a' => 'The dog attacked ( them ).',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.pronoun', compact('question'));
-    }
+
 
     // 前置詞
     public function preposition() {
@@ -3253,6 +3530,144 @@ class WorkbookController extends Controller
         $d_real_km = $d_real_cm / 100 / 1000;   //実際の距離(km)
 
         return view('workbook.unit.map_scale', compact('scale','d_map_cm','d_real_cm','d_real_km'));
+    }
+
+    // 国語_動詞の取得
+    private function get_jp_verb()
+    {
+        // 連用は２種用意⇒you1:～ます、you2:～た
+        $words = [
+            ['word' => '知る', 'katsuyou' => '五段活用', 'gokan' => '知', 'mi' => 'ら', 'you1' => 'り', 'you2' => 'っ', 'tai' => 'る', 'ka' => 'れ', 'mei' => 'れ',],
+            ['word' => '笑う', 'katsuyou' => '五段活用', 'gokan' => '笑', 'mi' => 'わ', 'you1' => 'い', 'you2' => 'っ', 'tai' => 'う', 'ka' => 'え', 'mei' => 'え',],
+            ['word' => '起きる', 'katsuyou' => '上一段活用', 'gokan' => '起', 'mi' => 'き', 'you1' => 'き', 'you2' => 'き', 'tai' => 'きる', 'ka' => 'きれ', 'mei' => 'きろ',],
+            ['word' => '染みる', 'katsuyou' => '上一段活用', 'gokan' => '染', 'mi' => 'み', 'you1' => 'み', 'you2' => 'み', 'tai' => 'みる', 'ka' => 'みれ', 'mei' => 'みろ',],
+            ['word' => '食べる', 'katsuyou' => '下一段活用', 'gokan' => '食', 'mi' => 'べ', 'you1' => 'べ', 'you2' => 'べ', 'tai' => 'べる', 'ka' => 'べれ', 'mei' => 'べろ',],
+            ['word' => '当てる', 'katsuyou' => '下一段活用', 'gokan' => '当', 'mi' => 'て', 'you1' => 'て', 'you2' => 'て', 'tai' => 'てる', 'ka' => 'てれ', 'mei' => 'てろ',],
+            ['word' => '来る', 'katsuyou' => 'カ行変格段活用', 'gokan' => '', 'mi' => 'こ', 'you1' => 'き', 'you2' => 'き', 'tai' => 'くる', 'ka' => 'くれ', 'mei' => 'こい',],
+            ['word' => '勉強する', 'katsuyou' => 'サ行変格段活用', 'gokan' => '勉強', 'mi' => 'し', 'you1' => 'し', 'you2' => 'し', 'tai' => 'する', 'ka' => 'すれ', 'mei' => 'しろ',],
+        ];
+        $index = rand(0,count($words)-1);
+        $word = $words[$index];
+        return $word;
+    }
+
+    // 国語_形容詞の取得
+    private function get_jp_adjective()
+    {
+        // 連用は２種用意⇒you1:～なる、you2:～た
+        $words = [
+            ['word' => '白い', 'gokan' => '白', 'mi' => 'かろ', 'you1' => 'く', 'you2' => 'かっ', 'tai' => 'い', 'ka' => 'けれ',],
+        ];
+        $index = rand(0,count($words)-1);
+        $word = $words[$index];
+        return $word;
+    }
+
+    // 国語_形容動詞の取得
+    private function get_jp_keidou()
+    {
+        // 連用は２種用意⇒you1:～なる、you2:～た
+        $words = [
+            ['word' => '静かだ', 'gokan' => '静か', 'mi' => 'だろ', 'you1' => 'に', 'you2' => 'だっ', 'tai' => 'な', 'ka' => 'なら',],
+        ];
+        $index = rand(0,count($words)-1);
+        $word = $words[$index];
+        return $word;
+    }
+
+    // 国文法
+    public function jp_yougen() {
+        $v = $this->get_jp_verb();
+
+        $idx1 = rand(1, 3); //1:動詞、2:形容詞、3:形容動詞
+
+        if ($idx1 == 1) {
+            $word = $this->get_jp_verb();
+            $w_type = "動詞";
+            $next = ['mi' => 'ない', 'you1' => 'ます', 'you2' => 'た', 'tai' => 'とき', 'ka' => 'ば',];
+            $e_part = "<li>動詞は動作などを表し、終止形「<span class=\"underline\">{$word['word']}</span>」はウ段の音で終わる。</li>
+                        <li>
+                            未然形：<span class=\"underline\">{$word['gokan']}{$word['mi']}</span>ない、
+                            連用形：<span class=\"underline\">{$word['gokan']}{$word['you1']}</span>ます・
+                                    <span class=\"underline\">{$word['gokan']}{$word['you2']}</span>た、
+                            連体形：<span class=\"underline\">{$word['gokan']}{$word['tai']}</span>とき、
+                            仮定形：<span class=\"underline\">{$word['gokan']}{$word['ka']}</span>ば、
+                            命令形：<span class=\"underline\">{$word['gokan']}{$word['mei']}</span>
+                        </li>";
+        } elseif ($idx1 == 2) {
+            $word = $this->get_jp_adjective();
+            $w_type = "形容詞";
+            $next = ['mi' => 'う', 'you1' => 'なる', 'you2' => 'た', 'tai' => 'とき', 'ka' => 'ば',];
+            $e_part = "<li>形容詞は状態などを表し、終止形「<span class=\"underline\">{$word['word']}</span>」は「い」で終わる。</li>
+                        <li>
+                            未然形：<span class=\"underline\">{$word['gokan']}{$word['mi']}</span>う、
+                            連用形：<span class=\"underline\">{$word['gokan']}{$word['you1']}</span>なる・
+                                    <span class=\"underline\">{$word['gokan']}{$word['you2']}</span>た、
+                            連体形：<span class=\"underline\">{$word['gokan']}{$word['tai']}</span>とき、
+                            仮定形：<span class=\"underline\">{$word['gokan']}{$word['ka']}</span>ば
+                        </li>";
+        } else {
+            $word = $this->get_jp_keidou();
+            $w_type = "形容動詞";
+            $next = ['mi' => 'う', 'you1' => 'なる', 'you2' => 'た', 'tai' => 'とき', 'ka' => 'ば',];
+            $e_part = "<li>形容動詞は状態などを表し、終止形「<span class=\"underline\">{$word['word']}</span>」は「だ」、「です」で終わる。</li>
+                        <li>
+                            未然形：<span class=\"underline\">{$word['gokan']}{$word['mi']}</span>う、
+                            連用形：<span class=\"underline\">{$word['gokan']}{$word['you1']}</span>なる・
+                                    <span class=\"underline\">{$word['gokan']}{$word['you2']}</span>た、
+                            連体形：<span class=\"underline\">{$word['gokan']}{$word['tai']}</span>とき、
+                            仮定形：<span class=\"underline\">{$word['gokan']}{$word['ka']}</span>ば
+                        </li>";
+        }
+
+        $types = ['mi', 'you1', 'you2', 'tai', 'ka'];
+        $idx2 = rand(0,count($types)-1);
+        $type = $types[$idx2];
+        $typenames = [
+            'mi' => '未然形',
+            'you1' => '連用形',
+            'you2' => '連用形',
+            'tai' => '連体形',
+            'ka' => '仮定形',
+        ];
+        $typename = $typenames[$type];
+        $changed_part = $word[$type];
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 1,
+                'q' => "「{$v['word']}」の活用の種類を答えなさい。",
+                'a_type' => 1,
+                'a' => "{$v['katsuyou']}",
+                'e_type' => 3,
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                <li>{$v['word']}の未然形は、「{$v['gokan']}<span class=\"underline\">{$v['mi']}</span>」ない。</li>
+                                <li>未然形（～ない）にしたときに、ア段なら「五段活用」、イ段なら「上一段活用」、エ段なら「下一段活用」。</li>
+                                <li>「来る」は「カ行変格活用」。</li>
+                                <li>「する」、「～する」は「サ行変格活用」。</li>
+                            </ul>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>下線部の品詞と活用形を答えなさい。</p>
+                        <p class=\"text-3xl\"><span class=\"underline\">{$word['gokan']}{$changed_part}</span>{$next[$type]}</p>",
+                'a_type' => 1,
+                'a' => "{$w_type}、{$typename}",
+                'e_type' => 3,
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class=\"list-disc\">
+                                {$e_part}
+                            </ul>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "用言";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 小２漢字

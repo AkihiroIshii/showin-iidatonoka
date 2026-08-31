@@ -24,6 +24,7 @@ trait UsualtargetTrait
             ->leftJoin('users', function($join) {
                 $join->on('usualtargets.user_id', '=', 'users.id');
             })
+            ->where('usualtargets.achieve_flg', "!=", 2)
             ->selectRaw("
                 usualtargets.id,
                 users.name,
@@ -77,6 +78,26 @@ trait UsualtargetTrait
             ->get();
 
         return $usualtargets;
+    }
+
+    // 課題（acheive_flg=2）のみ抽出
+    public function getKadai()
+    {
+        $user_ids = Session::get('target_students', null); //セッションから対象の生徒を取得。
+        $user_ids = Arr::wrap($user_ids); //配列に統一
+
+        $kadais = Usualtarget::whereIn('usualtargets.user_id', $user_ids)
+            ->leftJoin('users', function($join) {
+                $join->on('usualtargets.user_id', '=', 'users.id');
+            })
+            ->where('achieve_flg', '=', 2)
+            ->selectRaw('
+                users.name,
+                usualtargets.content
+            ')
+            ->get();
+
+        return $kadais;
     }
 
     /** 先月の獲得コイン数取得 */

@@ -49,6 +49,9 @@
                                     <a href="{{route('workbook.unit.ratio1')}}">割合</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.select_eq_decimal')}}">式の選択（小数）</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.unit.velocity1')}}">速さ１</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
@@ -272,9 +275,6 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="purple">
-                                    <a href="{{route('workbook.unit.pronoun')}}">代名詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
                                     <a href="{{route('workbook.unit.preposition')}}">前置詞</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
@@ -303,6 +303,9 @@
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.interrogative')}}">疑問詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.personal_pronoun')}}">代名詞</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.past_verb')}}">過去形</a>
@@ -340,6 +343,9 @@
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.conjection')}}">接続詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.comparative')}}">比較級</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -552,12 +558,12 @@
                             </div>
                         </x-td>
                     </tr>
-                    {{-- <tr>
+                    <tr>
                         <x-td>国文法</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="red">
-                                    <a href="{{route('workbook.unit.map_scale')}}">地図の縮尺</a>
+                                    <a href="{{route('workbook.jp_yougen')}}">用言</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -569,7 +575,7 @@
                             <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
-                    </tr> --}}
+                    </tr>
                 </tbody>
             </table>
 

@@ -30,7 +30,8 @@ class DashboardController extends Controller
         //普段の目標
         $current_flg = true;
         $usualtargets = $this->getUsualtargets($current_flg);
-
+        $kadais = $this->getKadai();
+// dd($kadais);
         // イベントを取得
         $events = $this->getEvents();
         
@@ -39,6 +40,6 @@ class DashboardController extends Controller
             ->orderBy('updated_at','desc')
             ->get();
 
-        return view('dashboard', compact('user','top_choices','events','usualtargets','informations'));
+        return view('dashboard', compact('user','top_choices','events','usualtargets','kadais','informations'));
     } 
 }
