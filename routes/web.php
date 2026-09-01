@@ -336,6 +336,8 @@ Route::get('workbook/regular_polygon', [WorkbookController::class, 'regular_poly
 ->middleware(['auth', 'verified'])->name('workbook.unit.regular_polygon');
 Route::get('workbook/proof_congruence1', [WorkbookController::class, 'proof_congruence1'])
 ->middleware(['auth', 'verified'])->name('workbook.proof_congruence1');
+Route::get('workbook/num_of_cases', [WorkbookController::class, 'num_of_cases'])
+->middleware(['auth', 'verified'])->name('workbook.num_of_cases');
 // 数学（中3）
 Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
 ->middleware(['auth', 'verified'])->name('workbook.expansion');

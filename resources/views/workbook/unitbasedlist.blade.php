@@ -264,6 +264,24 @@
                         </x-td>
                     </tr>
                     <tr>
+                        <x-td>データの活用</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.num_of_cases')}}">場合の数</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
                         <x-td>総合</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
