@@ -538,7 +538,7 @@ class WorkbookController extends Controller
     // 文字式で表す
     public function algebraic_expression() {
         $m = 10 * rand(2, 8);
-        $n = rand(1, 9);
+        $n = rand(2, 9);
 
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
@@ -602,13 +602,13 @@ class WorkbookController extends Controller
             [
                 'q_type' => 3,
                 'q' => "<p>次の数量を文字式で表しなさい。</p>
-                        <p>一辺の長さが a cm の正方形の面積[cm\(^2\)]。</p>
+                        <p>一辺の長さが " . $n . "a cm の正方形の面積[cm\(^2\)]。</p>
                         ",
                 'a_type' => 2,
-                'a' => "a^2",
+                'a' => $n**2 . "a^2",
                 'e_type' => 3,
                 'e' => "<p>長方形の面積は 縦 × 横 で求まる。</p>
-                        <p>正方形は縦と横が等しいので、(a × a) = a\(^2\) cm\(^2\)。</p>",
+                        <p>正方形は縦と横が等しいので、(" . $n . "a × " . $n . "a) = " . $n**2 . "a\(^2\) cm\(^2\)。</p>",
             ],
             [
                 'q_type' => 3,
