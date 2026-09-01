@@ -535,6 +535,101 @@ class WorkbookController extends Controller
         return view('workbook.unit.linear_equation4', compact('a','b','c','d','ans_sign','numerator','denominator'));
     }
 
+    // 文字式で表す
+    public function algebraic_expression() {
+        $m = 10 * rand(2, 8);
+        $n = rand(1, 9);
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数量を文字式で表しなさい。</p>
+                        <p>時速 {$m} km で a 時間走った時の距離[km]。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$m}\,a",
+                'e_type' => 3,
+                'e' => "<p>距離 ＝ 速さ × 時間。</p>
+                        <p>1 時間で {$m} km 走るので、その a 倍の {$m}a km 走る。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数量を文字式で表しなさい。</p>
+                        <p>距離 \(a\) km を時速 {$m} km で走るのにかかる時間。</p>
+                        ",
+                'a_type' => 1,
+                'a' => "\(\\frac{a}{\,{$m}\,}\) 時間",
+                'e_type' => 3,
+                'e' => "<p>時間 ＝ 距離 ÷ 速さ。</p>
+                        <p>時速 {$m} km は、1 時間あたりに {$m} km 進む速さのこと。</p>
+                        <p>例えば、a = " . $n*$m . " km なら " . $n . " 時間かかる。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数量を文字式で表しなさい。</p>
+                        <p>距離 \(a\) km を {$m} 時間で走る速さ。</p>
+                        ",
+                'a_type' => 1,
+                'a' => "時速 \(\\frac{a}{\,{$m}\,}\) km",
+                'e_type' => 3,
+                'e' => "<p>速さ ＝ 距離 ÷ 時間。</p>
+                        <p>速さとは、単位時間あたりに進む距離のこと。</p>
+                        <p>例えば a = " . $n*$m . " km なら、時速 " . $n . " km。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数量を文字式で表しなさい。</p>
+                        <p>1 個 {$m} 円のりんごを a 個買う時の金額[円]。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$m}\,a",
+                'e_type' => 1,
+                'e' => "1 個あたりの価格を単価という。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数量を文字式で表しなさい。</p>
+                        <p>a L のジュースを {$n} 人で等分したときの一人分の量[L]。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "\\frac{a}{\,{$n}\,}",
+                'e_type' => 1,
+                'e' => "a = " . 6*$n . " L なら、" . 6*$n . " ÷ {$n} = 6 L。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数量を文字式で表しなさい。</p>
+                        <p>一辺の長さが a cm の正方形の面積[cm\(^2\)]。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "a^2",
+                'e_type' => 3,
+                'e' => "<p>長方形の面積は 縦 × 横 で求まる。</p>
+                        <p>正方形は縦と横が等しいので、(a × a) = a\(^2\) cm\(^2\)。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数量を文字式で表しなさい。</p>
+                        <p> a 円の {$n} 割引きの値段。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "0." . (10-$n) . "a \\left(=\\frac{" . (10 - $n) . "}{10} a \\right)",
+                'e_type' => 3,
+                'e' => "<p>a 円の {$n} 割が 0.{$n}a 円なので、</p>
+                        <p>元の値段からこの分を引けばよい。</p>
+                        <p>\(a - 0.{$n}a = 0." . (10-$n) . "a\)</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "文字式で表す";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 文章からの立式
     public function setup_equation() {
         $l1 = 400 + 200 * rand(0, 10);  // 400～2400m
@@ -638,6 +733,75 @@ class WorkbookController extends Controller
 
     //     return view('workbook.unit.plot_proportional_function', compact('a_sign','a_numerator','a_denominator','plots'));
     // }
+
+    // 座標の読み取り
+    public function reading_coordinates() {
+        $x = (-1)**rand(1,2) * rand(0, 4);
+        $y = (-1)**rand(1,2) * rand(0, 4);
+
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 10; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+
+        $plot_para = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        $plot_contents = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <circle
+                cx=\"" . ( $x * $scale ) . "\"
+                cy=\"" . ( -$y * $scale ) . "\"
+                r=\"8\"
+                fill=\"red\"
+            />
+        ";
+        // 座標軸を追加
+        for ($i = -4; $i <= 4; $i++) {
+            $plot_contents .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_contents .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 5,
+                'q' => "<p>赤丸の位置の座標を答えなさい。</p>
+                        <p>太線は \(x\) 軸と\(y\) 軸で、一目盛の大きさを 1 とする。</p>",
+                'a_type' => 2,
+                'a' => "({$x},\,{$y})",
+                'e_type' => 3,
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class='list-disc'>
+                                <li>\(x\) 軸と \(y\) 軸の交点が原点で、その座標は \((0,\,0)\)。</li>
+                                <li>\(x\) 軸は数直線と同じで、右が正、左が負。</li>
+                                <li>\(y\) 軸も数直線と同じで、上が正、下が負。</li>
+                            </ul>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "座標の読み取り";
+        return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
+    }
 
     // 比例（グラフ描画）
     public function plot_proportional_function() {
@@ -748,7 +912,7 @@ class WorkbookController extends Controller
         $unitname = "比例（グラフ描画）";
         return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
     }
-
+    
     // 平面図形
     public function plane_figure() {
         $questions = [
@@ -866,6 +1030,102 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "円錐の表面積";
         return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 座標と三角形の面積
+    public function coordinates_triangle() {
+        // ３点を定義（P1はy>0, P2はx2=x1でy<0）
+        $x1 = (-1)**rand(1,2) * rand(0, 4);
+        $y1 = rand(1, 4);
+        $x2 = $x1;
+        $y2 = -rand(1, 4);
+        $x3 = rand(-4, 4);
+        while($x3 == $x1) {
+            $x3 = rand(-4, 4);
+        }
+        $y3 = rand(-4, 4);
+
+        // 説明用
+        $y2abs = abs($y2);
+        $AB = $y1 - $y2;
+        $CH = abs($x3 - $x1);
+        $S = $this->fracnum_to_str($AB * $CH, 2, "", 1);
+        // $S = $this->fracnum_to_str(2, 2, "", 1);
+
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 10; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+
+        $plot_par_q = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        $plot_con_q = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- ３点を描画 -->
+            <circle cx=\"" . ( $x1 * $scale ) . "\" cy=\"" . ( -$y1 * $scale ) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . ( $x1 * $scale + 10 ) . "\" y=\"" . ( -$y1 * $scale ) . "\" font-size=\"20\">A</text>
+            <circle cx=\"" . ( $x2 * $scale ) . "\" cy=\"" . ( -$y2 * $scale ) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . ( $x2 * $scale + 10 ) . "\" y=\"" . ( -$y2 * $scale ) . "\" font-size=\"20\">B</text>
+            <circle cx=\"" . ( $x3 * $scale ) . "\" cy=\"" . ( -$y3 * $scale ) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . ( $x3 * $scale + 10 ) . "\" y=\"" . ( -$y3 * $scale ) . "\" font-size=\"20\">C</text>
+            ";
+        // 座標軸を追加
+        for ($i = -4; $i <= 4; $i++) {
+            $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+        // 解説用グラフ
+        $plot_par_e = $plot_par_q;
+        $plot_con_e = $plot_con_q . 
+            "<polygon points=\"" . $x1*$scale . " " . -$y1*$scale . ", "
+                                . $x2*$scale . " " . -$y2*$scale . ", "
+                                . $x3*$scale . " " . -$y3*$scale . "\" fill=\"red\" fill-opacity=\"0.3\" />
+            <line x1=\"" . ($x1 * $scale) . "\" y1=\"" . -($y1 * $scale) . "\" x2=\"" . ($x2 * $scale) . "\" y2=\"" . -($y2 * $scale) . "\" stroke=\"red\" stroke-width=\"2\" /> 
+            <circle cx=\"" . ( $x3 * $scale ) . "\" cy=\"" . ( -$y3 * $scale ) . "\" r=\"5\" fill=\"blue\" />
+            <text x=\"" . ( $x3 * $scale + 10 ) . "\" y=\"" . ( -$y3 * $scale ) . "\" font-size=\"20\">C</text>
+            <circle cx=\"" . ( $x1 * $scale ) . "\" cy=\"" . ( -$y3 * $scale ) . "\" r=\"5\" fill=\"blue\" />
+            <text x=\"" . ( $x1 * $scale + 10 ) . "\" y=\"" . ( -$y3 * $scale ) . "\" font-size=\"20\">H</text>
+            <line x1=\"" . ($x1 * $scale) . "\" y1=\"" . -($y3 * $scale) . "\" x2=\"" . ($x3 * $scale) . "\" y2=\"" . -($y3 * $scale) . "\" stroke=\"blue\" stroke-width=\"2\" />
+            ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:廃止、6:グラフ描画
+        $questions = [
+            [
+                'q_type' => 6,
+                'q' => "<p>\(\\triangle \mathrm{ABC}\) の面積を求めなさい。</p>
+                        <p>ただし、一目盛の長さを 1 とする。</p>",
+                'a_type' => 2,
+                'a' => "{$S}",
+                'e_type' => 6,
+                'e' => "<p>下図のように H を取ると、AB は底辺、CH は高さと考えられる。</p>
+                        <p>よって、\(\displaystyle \\triangle \mathrm{ABC}
+                                        = \\frac{1}{\,2\,}\mathrm{AB} \\times \mathrm{CH}
+                                        = \\frac{1}{\,2\,}\\times {$AB} \\times {$CH}
+                                        = {$S}。\)</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "座標と三角形の面積";
+        return view('workbook.unit_template', compact('unitname','question', 'plot_par_q','plot_con_q', 'plot_par_e','plot_con_e'));
     }
 
     // 連立方程式
@@ -1819,6 +2079,64 @@ class WorkbookController extends Controller
     private function lcm($a, $b)
     {
         return abs($a * $b) / $this->gcd($a, $b);
+    }
+
+    // 数字を文字に変換（分数対応版）
+    // $numerator:分子、$denominator:分母
+    // $moji:文字列(x,yなど。定数なら"")
+    // $first:1=>初項、0=>初項ではない（2項目以降）
+    private function fracnum_to_str($numerator, $denominator, $moji, $first)
+    {
+        $out_str = "";
+
+        // 最大公約数を求める
+        $gcd = $this->gcd($numerator, $denominator);
+
+        // 約分
+        $numerator /= $gcd;
+        $denominator /= $gcd;
+
+        // 値を算出
+        $val = $numerator / $denominator;
+
+        // 整数フラグ
+        $int_flg = is_int($val) ? 1 : 0;
+
+        // 整数ならそのまま使う（ただし絶対値）
+        if ($int_flg == 1) {
+            //係数($mojiあり)で絶対値が 1 なら、係数 1 は出力しない。
+            if ($moji != "" && abs($val) == 1) {
+                $coeff = "";    // 係数
+            } else {
+                $coeff = abs($val);
+            }
+        // 非整数ならTeXでの分数表示の形にする。
+        } else {
+            $coeff = "\\frac{\," . abs($numerator) ."\,}{\," . abs($denominator) . "\,}";
+        }
+
+        // 正の数のとき
+        if ($val > 0) {
+            // 初項でないなら、係数に＋を付ける。
+            if ($first != 1) {
+                $coeff = "+" . $coeff;
+            }
+            $out_str = $coeff . $moji;
+        // 負の数のとき
+        } else {
+            // "-"と文字(x,yなど)を付ける
+            $out_str = "-" . $coeff . $moji;
+            // 初項でないなら（）で囲む
+            if ($first != 1) {
+                // 非整数（分数）なら大き目の（）で囲む
+                if ($int_flg == 0) {
+                    $out_str = "\\left(" . $out_str ." \\right)";
+                } else {
+                    $out_str = "(" . $out_str . ")";
+                }
+            }
+        }
+        return $out_str;
     }
 
     // 数字を文字に変換

@@ -21,7 +21,8 @@
             {{-- <div class="text-center leading-[8]">
                 <p class="text-lg m-4">{{ $question['q'] }}</p>
             </div> --}}
-            {{-- q_type : 1:短文（数式なし）、2:短文（数式あり）、3:複数行（htmlタグあり）、4:2行（変数あり） --}}
+            {{-- q_type : 1:短文（数式なし）、2:短文（数式あり）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新) --}}
+            {{-- 5:グラフ(旧)はq,a,eいずれかにしか$plotsを渡せなかったため、それぞれ渡せるように6:グラフ(新)を追加した。--}}
             <div class="text-center mb-4">
                 <div class="text-center leading-[3] font-klee text-lg">
                     @if ($question['q_type'] == 1)
@@ -34,6 +35,24 @@
                         <div class="text-center leading-[8]">
                             <p class="text-lg m-4">{{ $question['q1'] }}</p>
                             <p class="text-3xl m-4">{{ $question['q2'] }}</p>
+                        </div>
+                    @elseif ($question['q_type'] == 5)
+                        <p class="text-lg m-4">{!! $question['q'] !!}</p>
+                        <div class="flex justify-center">
+                            <svg width="{{ $plot_para['w_full'] }}" height="{{ $plot_para['w_full'] }}"
+                                viewBox="-{{ $plot_para['w_half'] }} -{{ $plot_para['w_half'] }} {{ $plot_para['w_full'] }} {{ $plot_para['w_full'] }}"
+                                class="border">
+                                {!! $plot_contents !!}
+                            </svg>
+                        </div>
+                    @elseif ($question['q_type'] == 6)
+                        <p class="text-lg m-4">{!! $question['q'] !!}</p>
+                        <div class="flex justify-center">
+                            <svg width="{{ $plot_par_q['w_full'] }}" height="{{ $plot_par_q['w_full'] }}"
+                                viewBox="-{{ $plot_par_q['w_half'] }} -{{ $plot_par_q['w_half'] }} {{ $plot_par_q['w_full'] }} {{ $plot_par_q['w_full'] }}"
+                                class="border">
+                                {!! $plot_con_q !!}
+                            </svg>
                         </div>
                     @endif
                 </div>
@@ -73,6 +92,15 @@
                             {{-- <div> --}}
                                 {!! $question['e'] !!}
                             {{-- </div> --}}
+                        @elseif ($question['e_type'] == 6)
+                            <p class="text-lg m-4">{!! $question['e'] !!}</p>
+                            <div class="flex justify-center">
+                                <svg width="{{ $plot_par_e['w_full'] }}" height="{{ $plot_par_e['w_full'] }}"
+                                    viewBox="-{{ $plot_par_e['w_half'] }} -{{ $plot_par_e['w_half'] }} {{ $plot_par_e['w_full'] }} {{ $plot_par_e['w_full'] }}"
+                                    class="border">
+                                    {!! $plot_con_e !!}
+                                </svg>
+                            </div>
                         @endif
                     </div>
 

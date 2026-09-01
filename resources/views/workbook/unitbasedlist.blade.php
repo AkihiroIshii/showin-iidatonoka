@@ -172,6 +172,9 @@
                                     <a href="{{route('workbook.unit.linear_equation4')}}">\(\displaystyle \frac{c}{\,ax+b\,}=d\)</a>
                                 </x-button-link>
                                 <x-button-link>
+                                    <a href="{{route('workbook.algebraic_expression')}}">文字式で表す</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.setup_equation')}}">文章からの立式</a>
                                 </x-button-link>
                             </div>
@@ -195,6 +198,9 @@
                         <x-td>関数</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.reading_coordinates')}}">座標の読み取り</a>
+                                </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.plot_proportional_function')}}">比例（グラフ描画）</a>
                                 </x-button-link>
@@ -250,6 +256,24 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.proof_congruence1')}}">合同の証明１</a>
                                 </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>総合</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.coordinates_triangle')}}">座標と三角形の面積</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
                         <x-td class="font-bold">

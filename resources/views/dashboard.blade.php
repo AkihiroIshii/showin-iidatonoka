@@ -61,7 +61,7 @@
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
                     <x-th>生徒名</x-th>
-                    <x-th>先生からの課題</x-th>
+                    <x-th>現在の課題</x-th>
                 </tr>
                 @foreach($kadais as $kadai)
                     <tr>

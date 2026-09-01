@@ -299,8 +299,12 @@ Route::get('workbook/linear_equation3', [WorkbookController::class, 'linear_equa
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation3');
 Route::get('workbook/linear_equation4', [WorkbookController::class, 'linear_equation4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation4');
+Route::get('workbook/algebraic_expression', [WorkbookController::class, 'algebraic_expression'])
+->middleware(['auth', 'verified'])->name('workbook.algebraic_expression');
 Route::get('workbook/setup_equation', [WorkbookController::class, 'setup_equation'])
 ->middleware(['auth', 'verified'])->name('workbook.setup_equation');
+Route::get('workbook/reading_coordinates', [WorkbookController::class, 'reading_coordinates'])
+->middleware(['auth', 'verified'])->name('workbook.reading_coordinates');
 Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
 ->middleware(['auth', 'verified'])->name('workbook.plot_proportional_function');
 // Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
@@ -311,6 +315,8 @@ Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figur
 ->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
 Route::get('workbook/corn_surface', [WorkbookController::class, 'corn_surface'])
 ->middleware(['auth', 'verified'])->name('workbook.corn_surface');
+Route::get('workbook/coordinates_triangle', [WorkbookController::class, 'coordinates_triangle'])
+->middleware(['auth', 'verified'])->name('workbook.coordinates_triangle');
 // 数学（中2）
 Route::get('workbook/simultaneous_equation', [WorkbookController::class, 'simultaneous_equation'])
 ->middleware(['auth', 'verified'])->name('workbook.simultaneous_equation');
