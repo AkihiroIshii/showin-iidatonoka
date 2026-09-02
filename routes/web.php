@@ -391,9 +391,6 @@ Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.preposition');
 Route::get('workbook/sentence_structure1', [WorkbookController::class, 'sentence_structure1'])
 ->middleware(['auth', 'verified'])->name('workbook.sentence_structure1');
-// 社会
-Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
-->middleware(['auth', 'verified'])->name('workbook.unit.map_scale');
 // 理科
 Route::get('workbook/density', [WorkbookController::class, 'density'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.density');
@@ -409,6 +406,13 @@ Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagn
 ->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
 Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_terms_all'])
 ->middleware(['auth', 'verified'])->name('workbook.science_terms_all');
+// 社会
+Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
+->middleware(['auth', 'verified'])->name('workbook.unit.map_scale');
+Route::get('workbook/soc_shikoku', [WorkbookController::class, 'soc_shikoku'])
+->middleware(['auth', 'verified'])->name('workbook.soc_shikoku');
+Route::get('workbook/soc_kyushu', [WorkbookController::class, 'soc_kyushu'])
+->middleware(['auth', 'verified'])->name('workbook.soc_kyushu');
 // 国語
 Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');

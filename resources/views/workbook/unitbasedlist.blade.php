@@ -563,6 +563,12 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.soc_kyushu')}}">九州地方</a>
+                                </x-button-link>
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.soc_shikoku')}}">中国・四国地方</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

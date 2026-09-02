@@ -407,13 +407,42 @@ class WorkbookController extends Controller
         return view('workbook.unit.child', compact('unitname','question'));
     }
 
+    // 分配法則１（旧）
+    // public function distributive_law1() {
+    //     $a = (-1)**rand(1,2) * rand(2, 9);
+    //     $b = (-1)**rand(1,2) * rand(2, 9);
+    //     $c = (-1)**rand(1,2) * rand(2, 9);
+
+    //     return view('workbook.unit.distributive_law1', compact('a','b','c'));
+    // }
+
     // 分配法則１
     public function distributive_law1() {
         $a = (-1)**rand(1,2) * rand(2, 9);
         $b = (-1)**rand(1,2) * rand(2, 9);
         $c = (-1)**rand(1,2) * rand(2, 9);
 
-        return view('workbook.unit.distributive_law1', compact('a','b','c'));
+        $c_str = $this->num_to_str($c, 0, 0);
+        $ab_str = $this->fracnum_to_str($a*$b, 1, "x", 1);        
+        $ac_str = $this->num_to_str($a*$c, 1, "", 0);        
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                        <p>\({$a}({$b}x{$c_str})\)</p>",
+                'a_type' => 2,
+                'a' => "{$ab_str}{$ac_str}",
+                'e_type' => 3,
+                'e' => "",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "分配法則１";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 分配法則２
@@ -4842,6 +4871,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    /*************** 社会 ******************/
     // 地図の縮尺
     public function map_scale() {
         $scale = 25000 * rand(1, 2);    //縮尺
@@ -4850,6 +4880,113 @@ class WorkbookController extends Controller
         $d_real_km = $d_real_cm / 100 / 1000;   //実際の距離(km)
 
         return view('workbook.unit.map_scale', compact('scale','d_map_cm','d_real_cm','d_real_km'));
+    }
+
+    // 九州地方
+    public function soc_kyushu() {
+        $terms = [
+            ['term' => 'カルデラ', 'mean' => '噴火のあとにできた大きなくぼ地。', 
+                'explanation' => '<p>吹き出したマグマの分だけ陥没する。</p>
+                                    <p>約 9 万年前の阿蘇山の噴火では、火砕流が山口県まで到達したと考えられている。</p>'],
+            ['term' => '季節風', 'mean' => '季節によって吹く方向が変わる風。', 
+                'explanation' => '<p>海よりも陸の方が温度変化しやすい。夏はユーラシア大陸が暖められて空気が上昇し、</p>
+                                <p>地表付近では太平洋側から空気が流れ込む。そのため、日本では夏に南風が吹く。</p>'],
+            ['term' => '黒潮（日本海流）', 'mean' => '日本列島の太平洋側を、南から北に向かって流れる暖かな海流。', 
+                'explanation' => '<p>黒潮と対馬海流は南から流れる暖流、親潮とリマン海流は北から流れる寒流。</p>'],
+            ['term' => '対馬海流', 'mean' => '日本列島の日本海側を、南から北に向かって流れる暖かな海流。', 
+                'explanation' => '<p>黒潮と対馬海流は南から流れる暖流、親潮とリマン海流は北から流れる寒流。</p>'],
+            ['term' => 'シラス', 'mean' => '過去の大規模な火砕流などの噴出物。', 
+                'explanation' => '<p>栄養分が少なく、水を保ちにくい。</p>'],
+            ['term' => '土石流', 'mean' => 'くずれた土砂が一気に流れ下ること。', 
+                'explanation' => '<p>九州地方はシラスの地層があるため、斜面が崩れやすい。</p>'],
+            ['term' => '間伐（かんばつ）', 'mean' => '森林で過密な場所の木々を適度に伐採すること。', 
+                'explanation' => '<p>高木の葉が日光を遮ると、背の低い若木が育たなくなる。それを防ぐために行う。</p>'],
+            ['term' => '二毛作', 'mean' => '同じ耕地で、一年間に二種類の作物を栽培すること。', 
+                'explanation' => '<p>稲を収穫した秋以降に小麦を栽培するなど。</p>'],
+            ['term' => '促成栽培', 'mean' => '出荷時期を早める工夫をした栽培方法。', 
+                'explanation' => '<p>他の地域と出荷時期をずらすことにより、高価格で売れる。</p>
+                                <p>なお、九州は他地域より温暖ではあるが、ビニールハウスや温室は使う。</p>'],
+            ['term' => '公害', 'mean' => '人間の生活や生産活動により自然環境が悪化し、健康被害が生じること。', 
+                'explanation' => '<p>各地で大気汚染や水質汚濁などの公害が問題視され、1967年に公害対策基本法が制定された。</p>
+                                <p>熊本県水俣市では、化学工場からの排水に含まれるメチル水銀が魚に蓄積して、</p>
+                                <p>それを食べた人が病気（水俣病）を発症する事例が問題視された。</p>'],
+        ];
+        $idx = rand(0,count($terms)-1);
+        $term = $terms[$idx];
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">「{$term['term']}」の意味を説明しなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$term['mean']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['explanation']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の意味をもつ用語を答えなさい。</p>
+                        <p class=\"text-xl\">{$term['mean']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$term['term']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['explanation']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "九州地方";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 中国・四国地方
+    public function soc_shikoku() {
+        $terms = [
+            ['term' => '山陰', 'mean' => '中国山地の北側の地域。', 
+                'explanation' => '<p>冬は北西からの季節風により雨や雪が多く降る地域。</p>'],
+            ['term' => '瀬戸内（せとうち）', 'mean' => '中国山地と四国山地の間の地域。', 
+                'explanation' => '<p>二つの山地に挟まれているため、太平洋や日本海の湿った空気が届きにくく、比較的雨が少ない。</p>'],
+            ['term' => '南四国', 'mean' => '四国山地の南側の地域。', 
+                'explanation' => '<p>夏は太平洋からの季節風や台風により雨が多く降る地域。</p>'],
+            ['term' => 'ため池', 'mean' => '水を貯えるために人工的につくられた池。', 
+                'explanation' => '<p>讃岐平野は瀬戸内の地域で雨が少ないことに加えて大きな川も少ないため、</p>
+                                    水不足が問題になりやすかった。讃岐のため池は特に江戸時代に多く作られた。</p>
+                                    昭和50年からは香川用水が使えるようになり、吉野川から水を引いている。<p>'],
+            ['term' => '本州四国連絡橋', 'mean' => '本州と四国を結ぶすべての橋の総称。', 
+                'explanation' => '<p>しまなみ海道、瀬戸大橋、大鳴門橋、明石海峡大橋がある。</p>'],
+            ['term' => '石油化学コンビナート', 'mean' => '石油精製工場を中心に、関連企業や工場が集まる地域。', 
+                'explanation' => '<p>しまなみ海道、瀬戸大橋、大鳴門橋、明石海峡大橋がある。</p>'],
+            ['term' => '過疎化', 'mean' => '人口の流出や高齢化により、社会生活の維持に支障がでるようになること。', 
+                'explanation' => '<p>利用者が減少してバスが廃止されるとさらに不便になるなど、悪循環に繋がりやすい。</p>'],
+        ];
+        $idx = rand(0,count($terms)-1);
+        $term = $terms[$idx];
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">「{$term['term']}」の意味を説明しなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$term['mean']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['explanation']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の意味をもつ用語を答えなさい。</p>
+                        <p class=\"text-xl\">{$term['mean']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$term['term']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['explanation']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "中国・四国地方";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 国語_動詞の取得
