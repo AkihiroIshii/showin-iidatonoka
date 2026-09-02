@@ -24,7 +24,10 @@ trait UsualtargetTrait
             ->leftJoin('users', function($join) {
                 $join->on('usualtargets.user_id', '=', 'users.id');
             })
-            ->where('usualtargets.achieve_flg', "!=", 2)
+            ->where(function ($query) {
+                $query->where('usualtargets.achieve_flg', "!=", 2)
+                    ->orWhereNull('usualtargets.achieve_flg');
+            })
             ->selectRaw("
                 usualtargets.id,
                 users.name,
@@ -57,7 +60,7 @@ trait UsualtargetTrait
             ->orderBy('usualtargets.due_date','desc')
             ->orderBy('usualtargets.set_date','desc')
             ->get();
-
+// dd($usualtargets);
         return $usualtargets;
     }
 
@@ -104,12 +107,13 @@ trait UsualtargetTrait
                 })
                 ->where('achieve_flg', '=', 2)
                 ->selectRaw('
+                    usualtargets.id,
                     users.name,
                     usualtargets.content
                 ')
                 ->get();
         // }
-
+// dd($kadais);
         return $kadais;
     }
 
@@ -121,6 +125,7 @@ trait UsualtargetTrait
                 $join->on('usualtargets.user_id', '=', 'users.id');
             })
             ->selectRaw('
+                usualtargets.id,
                 users.name,
                 usualtargets.content
             ')

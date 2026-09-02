@@ -38,7 +38,7 @@ class AdminController extends Controller
         //閲覧対象とする生徒IDをセッションに記録
         Session::put('target_students', $user->id);
 
-        return redirect()->route('record');
+        return redirect()->route('usualtarget');
     }
 
     // adminのdashboard
