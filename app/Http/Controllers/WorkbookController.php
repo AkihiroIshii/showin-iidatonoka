@@ -448,35 +448,73 @@ class WorkbookController extends Controller
         ]);
     }
 
+    // // 一次方程式(2)(※)旧
+    // public function linear_equation2() {
+    //     // a, b, c をランダムに決める
+    //     $a = rand(2, 9);
+    //     $b = rand(1, 9);
+    //     if ($a == $b) {
+    //         $b = $a + rand(1,9);
+    //     }
+    //     $c = rand(1, 9);
+
+    //     // x = ac / b
+    //     $numerator = $a * $c;
+    //     $denominator = $b;
+
+    //     // 最大公約数を求める
+    //     $gcd = $this->gcd($numerator, $denominator);
+
+    //     // 約分
+    //     $numerator /= $gcd;
+    //     $denominator /= $gcd;
+
+    //     // 分母が1なら整数として表示
+    //     if ($denominator == 1) {
+    //         $answer = $numerator;
+    //     } else {
+    //         $answer = $numerator . '/' . $denominator;
+    //     }
+
+    //     return view('workbook.unit.linear_equation2', compact('a','b','c','answer','numerator','denominator'));
+    // }
+
     // 一次方程式(2)
     public function linear_equation2() {
         // a, b, c をランダムに決める
-        $a = rand(2, 9);
-        $b = rand(1, 9);
-        if ($a == $b) {
-            $b = $a + rand(1,9);
-        }
+        $primes = $this->get_primes(2, 11);    // 11以下の素数を2つ取得する。
+        $a = $primes[0];
+        $b = $primes[1];
         $c = rand(1, 9);
 
         // x = ac / b
         $numerator = $a * $c;
         $denominator = $b;
 
-        // 最大公約数を求める
-        $gcd = $this->gcd($numerator, $denominator);
+        $ans_str = $this->fracnum_to_str($numerator, $denominator, "", 1);
 
-        // 約分
-        $numerator /= $gcd;
-        $denominator /= $gcd;
-
-        // 分母が1なら整数として表示
-        if ($denominator == 1) {
-            $answer = $numerator;
-        } else {
-            $answer = $numerator . '/' . $denominator;
-        }
-
-        return view('workbook.unit.linear_equation2', compact('a','b','c','answer','numerator','denominator'));
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。</p>
+                        <p>\(\displaystyle \\frac{\,$b\,}{\,$a\,}x={$c}\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$ans_str}",
+                'e_type' => 3,
+                'e' => "<p>\(x\) の係数の逆数を両辺にかけると、</p>
+                        <p>\(\displaystyle \\frac{\,$b\,}{\,$a\,}x \\times \\frac{\,$a\,}{\,$b\,} = {$c} \\times \\frac{\,$a\,}{\,$b\,}\)</p>
+                        <p>左辺は約分すると \(x\) だけが残るので、右辺を計算すれば、</p>
+                        <p>\(\displaystyle x={$ans_str}\)</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "\(\displaystyle \\frac{b}{\,a\,}x=c\)";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 一次方程式(3)
@@ -805,26 +843,23 @@ class WorkbookController extends Controller
 
     // 比例（グラフ描画）
     public function plot_proportional_function() {
-        $a_sign = (-1)**rand(1,2);
-        $a_numerator = rand(1, 4);
+        $a_numerator = (-1)**rand(1,2) * rand(1, 4);
         $a_denominator = rand(1, 4);
 
-        // 最大公約数を求める
-        $gcd = $this->gcd($a_numerator, $a_denominator);
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
 
-        // 約分
-        $a_numerator /= $gcd;
-        $a_denominator /= $gcd;
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
+        $zougen_str = $a > 0 ? "増える" : "減る";
 
         // グラフ描画用
-        $a = $a_sign * $a_numerator / $a_denominator;
-        $size = 500;    //viewportの大きさ
-        $val_size = 10; //実際の座標の大きさ
+        $size = 300;    //viewportの大きさ
+        $val_size = 12; //実際の座標の大きさ
         $scale = $size / $val_size; //縮尺
-        $p_x = $a_denominator; //代表点Pのx座標
-        $p_y = $a_sign * $a_numerator; //代表点Pのy座標
-        $q_x = -$a_denominator; //代表点Q(原点に対してPと対称な点)のx座標
-        $q_y = $a_sign * -$a_numerator; //代表点Q(原点に対してPと対称な点)のy座標
 
         // プロット用パラメータ
         $w_full = $size;
@@ -833,85 +868,310 @@ class WorkbookController extends Controller
         $to_x = $size / 2;
         $from_y = $a * (-$size / 2);
         $to_y = $a * ($size / 2);
+        // 座標の表示場所
+        if ($a > 0) {
+            if ($a >= 1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($a_numerator - 0.5) * $scale ];
+            // 0 < a < 1
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($a_numerator + 0.5) * $scale ];
+            }
+        // a < 0
+        } else {
+            if ($a <= -1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($a_numerator - 0.5) * $scale ];
+            // -1 < a < 0
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($a_numerator - 1) * $scale ];
+            }
+        }
 
-        $plot_para = [
+        $plot_par_a = [
             'w_full' => $size,
             'w_half' => $size / 2,
         ];
-        $plot_contents = "
-            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
 
-            <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
+        $plot_con_a = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_a .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_a .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
 
-            <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
-                x2=\"" . $to_x . "\" y2=" . -$to_y . "
-                stroke=\"red\"
-                stroke-width=\"2\" />
-
-            <circle
-                cx=\"" . ( $p_x * $scale ) . "\"
-                cy=\"" . ( -$p_y * $scale ) . "\"
-                r=\"5\"
-                fill=\"red\"
-            />
-            <text
-                x=\"" . ( $p_x * $scale + 10 ) . "\"
-                y=\"" . ( -$p_y * $scale ) . "\"
-                font-size=\"16\"
-            >
-                ({$p_x},{$p_y})
-            </text>
-
-            <circle
-                cx=\"" . ( $q_x * $scale ) . "\"
-                cy=\"" . ( -$q_y * $scale ) . "\"
-                r=\"5\"
-                fill=\"red\"
-            />
-            <text
-                x=\"" . ( $q_x * $scale + 10 ) . "\"
-                y=\"" . ( -$q_y * $scale ) . "\"
-                font-size=\"16\"
-            >
-                ({$q_x},{$q_y})
+        $plot_con_a .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
+            <!-- 解説用の点と補助線 -->
+            <line x1=\"0\" y1=\"0\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"0\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <line x1=\"" . $a_denominator*$scale . "\" y1=\"0\" x2=\"" . $a_denominator*$scale . 
+                    "\" y2=" . -$a_numerator*$scale*0.9 . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale ) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$a_denominator},{$a_numerator})
             </text>
         ";
-        // 傾きの文字列作成
-        $a_sign_str = $this->num_to_str($a_sign, 1, 1);
-        $a_str = $a_sign < 0 ? "-" : "";
-        if ($a_denominator == 1) {
-            if ($a_numerator != 1) {
-               $a_str = $a_str.$a_numerator;
-            }
-        } else {
-            $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
-        }
-        $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
 
         // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
         $questions = [
             [
                 'q_type' => 3,
                 'q' => "<p>次の関数のグラフを描画しなさい。</p>
-                        $$ y = {$a_str}x $$",
-                'a_type' => 5,
-                'a' => "a",
+                         $$ y = {$ax_str} $$",
+                'a_type' => 6,
+                'a' => "<p>下図の赤線</p>",
                 'e_type' => 3,
                 'e' => "<div class=\"pl-5 text-left\">
                             <ul class='list-disc'>
-                                <li>比例のグラフは原点を通る。</li>
-                                <li>比例定数（傾き）が正なら右上がり、負なら右下がり。</li>
-                                <li>ここでは比例定数（傾き）が \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
-                            </ul>
+                                <li>\(x = 0\) のとき \(y = 0\) なので、原点 \((0,\,0)\) を通る。</li>
+                                <li>比例定数（\(x\) の係数）が正なら右上がり、負なら右下がり。</li>
+                                <li>比例定数（\(x\) の係数）が \(\displaystyle {$a_str}\) なので、
+                                    <span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}。</span></li>
+                                    </ul>
                         </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "比例（グラフ描画）";
-        return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
+        return view('workbook.unit_template', compact('unitname','question','plot_par_a','plot_con_a'));
     }
+
+    // 比例（グラフの読み取り）
+    public function read_proportional_function() {
+        $a_numerator = (-1)**rand(1,2) * rand(1, 4);
+        $a_denominator = rand(1, 4);
+
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
+
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
+        $zougen_str = $a > 0 ? "増える" : "減る";
+
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 12; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = -$size / 2;
+        $to_x = $size / 2;
+        $from_y = $a * (-$size / 2);
+        $to_y = $a * ($size / 2);
+        // 座標の表示場所
+        if ($a > 0) {
+            if ($a >= 1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($a_numerator - 0.5) * $scale ];
+            // 0 < a < 1
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($a_numerator + 0.5) * $scale ];
+            }
+        // a < 0
+        } else {
+            if ($a <= -1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($a_numerator - 0.5) * $scale ];
+            // -1 < a < 0
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($a_numerator - 1) * $scale ];
+            }
+        }
+
+        $plot_par_q = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        $plot_con_q = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+        $plot_con_q .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
+        ";
+        $plot_par_e = $plot_par_q;
+        $plot_con_e = $plot_con_q . "
+            <!-- 解説用の点と補助線 -->
+            <line x1=\"0\" y1=\"0\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"0\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <line x1=\"" . $a_denominator*$scale . "\" y1=\"0\" x2=\"" . $a_denominator*$scale . 
+                    "\" y2=" . -$a_numerator*$scale*0.9 . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale ) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$a_denominator},{$a_numerator})
+            </text>
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 6,
+                'q' => "次のグラフを関数の式で表しなさい。",
+                'a_type' => 2,
+                'a' => "y = {$ax_str}",
+                'e_type' => 6,
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class='list-disc'>
+                                <li>原点 \((0,\,0)\) を通る直線なので、比例の式（\(y=ax\)）で表せる。</li>
+                                <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}ので、</span>
+                                    比例定数 \(a\) は \(\displaystyle {$a_str}\)。
+                                </li>
+                            </ul>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "比例（グラフの読み取り）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+
+    // // 比例（グラフ描画）（旧）
+    // public function plot_proportional_function() {
+    //     $a_sign = (-1)**rand(1,2);
+    //     $a_numerator = rand(1, 4);
+    //     $a_denominator = rand(1, 4);
+
+    //     // 最大公約数を求める
+    //     $gcd = $this->gcd($a_numerator, $a_denominator);
+
+    //     // 約分
+    //     $a_numerator /= $gcd;
+    //     $a_denominator /= $gcd;
+
+    //     // グラフ描画用
+    //     $a = $a_sign * $a_numerator / $a_denominator;
+    //     $size = 500;    //viewportの大きさ
+    //     $val_size = 10; //実際の座標の大きさ
+    //     $scale = $size / $val_size; //縮尺
+    //     $p_x = $a_denominator; //代表点Pのx座標
+    //     $p_y = $a_sign * $a_numerator; //代表点Pのy座標
+    //     $q_x = -$a_denominator; //代表点Q(原点に対してPと対称な点)のx座標
+    //     $q_y = $a_sign * -$a_numerator; //代表点Q(原点に対してPと対称な点)のy座標
+
+    //     // プロット用パラメータ
+    //     $w_full = $size;
+    //     $w_half = $size / 2;
+    //     $from_x = -$size / 2;
+    //     $to_x = $size / 2;
+    //     $from_y = $a * (-$size / 2);
+    //     $to_y = $a * ($size / 2);
+
+    //     $plot_para = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //     ];
+    //     $plot_contents = "
+    //         <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
+
+    //         <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
+
+    //         <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
+    //             x2=\"" . $to_x . "\" y2=" . -$to_y . "
+    //             stroke=\"red\"
+    //             stroke-width=\"2\" />
+
+    //         <circle
+    //             cx=\"" . ( $p_x * $scale ) . "\"
+    //             cy=\"" . ( -$p_y * $scale ) . "\"
+    //             r=\"5\"
+    //             fill=\"red\"
+    //         />
+    //         <text
+    //             x=\"" . ( $p_x * $scale + 10 ) . "\"
+    //             y=\"" . ( -$p_y * $scale ) . "\"
+    //             font-size=\"16\"
+    //         >
+    //             ({$p_x},{$p_y})
+    //         </text>
+
+    //         <circle
+    //             cx=\"" . ( $q_x * $scale ) . "\"
+    //             cy=\"" . ( -$q_y * $scale ) . "\"
+    //             r=\"5\"
+    //             fill=\"red\"
+    //         />
+    //         <text
+    //             x=\"" . ( $q_x * $scale + 10 ) . "\"
+    //             y=\"" . ( -$q_y * $scale ) . "\"
+    //             font-size=\"16\"
+    //         >
+    //             ({$q_x},{$q_y})
+    //         </text>
+    //     ";
+    //     // 傾きの文字列作成
+    //     $a_sign_str = $this->num_to_str($a_sign, 1, 1);
+    //     $a_str = $a_sign < 0 ? "-" : "";
+    //     if ($a_denominator == 1) {
+    //         if ($a_numerator != 1) {
+    //            $a_str = $a_str.$a_numerator;
+    //         }
+    //     } else {
+    //         $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
+    //     }
+    //     $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "<p>次の関数のグラフを描画しなさい。</p>
+    //                     $$ y = {$a_str}x $$",
+    //             'a_type' => 5,
+    //             'a' => "a",
+    //             'e_type' => 3,
+    //             'e' => "<div class=\"pl-5 text-left\">
+    //                         <ul class='list-disc'>
+    //                             <li>比例のグラフは原点を通る。</li>
+    //                             <li>比例定数（傾き）が正なら右上がり、負なら右下がり。</li>
+    //                             <li>ここでは比例定数（傾き）が \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
+    //                         </ul>
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "比例（グラフ描画）";
+    //     return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
+    // }
     
     // 平面図形
     public function plane_figure() {
@@ -1306,114 +1566,109 @@ class WorkbookController extends Controller
 
     // 一次関数（グラフ描画）
     public function plot_linear_function() {
-        $a_sign = (-1)**rand(1,2);
-        $a_numerator = rand(1, 4);
-        $a_denominator = rand(1, 4);
-        $b = (-1)**rand(1,2) * rand(1,4);
+        $a_numerator = (-1)**rand(1, 2) * rand(1, 4);
+        $a_denominator = rand(1, 3);
+        $b = (-1)**rand(1, 2) * rand(1, 3);
 
-        // 最大公約数を求める
-        $gcd = $this->gcd($a_numerator, $a_denominator);
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
 
-        // 約分
-        $a_numerator /= $gcd;
-        $a_denominator /= $gcd;
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
+        $b_str = $b > 0 ? ("+" . $b) : $b;
+        $zougen_str = $a > 0 ? "増える" : "減る";
 
         // グラフ描画用
-        $a = $a_sign * $a_numerator / $a_denominator;
-        $size = 500;    //viewportの大きさ
-        $val_size = 10; //実際の座標の大きさ
+        $size = 300;    //viewportの大きさ
+        $val_size = 16; //実際の座標の大きさ
         $scale = $size / $val_size; //縮尺
-        $x_seppen = -$b/$a; //x切片
-        $p_x = $a_denominator; //代表点Pのx座標
-        $p_y = $a * $p_x + $b; //代表点Pのy座標
-        if(abs($p_y) > ($val_size-1) / 2) {
-            $p_x = -$p_x;
-            $p_y = $a * $p_x + $b;
-        } // p_y がviewportに収まらない場合は、x = -x での代表点に変える。
+        $py = $a * $a_denominator + $b;    // プロットする点Pでの y の値
+
         // プロット用パラメータ
         $w_full = $size;
         $w_half = $size / 2;
         $from_x = -$size / 2;
         $to_x = $size / 2;
-        $from_y = $a * (-$size / 2) + ($b * $scale);
-        $to_y = $a * ($size / 2) + ($b * $scale);
+        $from_y = $a * (-$size / 2) + $b * $scale;
+        // dd($from_y);
+        $to_y = $a * ($size / 2) + $b * $scale;
+        // $to_y = 0;
+        // 座標の表示場所
+        if ($a > 0) {
+            if ($a >= 1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+            // 0 < a < 1
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
+            }
+        // a < 0
+        } else {
+            if ($a <= -1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+            // -1 < a < 0
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
+            }
+        }
 
-        $plot_para = [
+        $plot_par_a = [
             'w_full' => $size,
             'w_half' => $size / 2,
         ];
-        $plot_contents = "
-            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
 
-            <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
+        $plot_con_a = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_a .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_a .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
 
-            <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
-                x2=\"" . $to_x . "\" y2=" . -$to_y . "
-                stroke=\"red\"
-                stroke-width=\"2\" />
-
-            <circle
-                cx=\"0\" 
-                cy=\"" . ( -$b * $scale ) . "\"
-                r=\"5\"
-                fill=\"red\"
-            />
-            <text
-                x=\"10\" 
-                y=\"" . ( -$b * $scale ) . "\"
-                font-size=\"16\"
-            >
-                (0,{$b})
+        $plot_con_a .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
+            <!-- 解説用の点と補助線 -->
+            <line x1=\"0\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"" . -$b*$scale . "\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <line x1=\"" . $a_denominator*$scale . "\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale . 
+                    "\" y2=" . (-$a_numerator*$scale*0.9 -$b*$scale) . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale -$b*$scale) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$a_denominator},{$py})
             </text>
-
-            <circle
-                cx=\"" . ( $p_x * $scale ) . "\"
-                cy=\"" . ( -$p_y * $scale ) . "\"
-                r=\"5\"
-                fill=\"red\"
-            />
-            <text
-                x=\"" . ( $p_x * $scale + 10 ) . "\"
-                y=\"" . ( -$p_y * $scale ) . "\"
-                font-size=\"16\"
-            >
-                ({$p_x},{$p_y})
-            </text>
-
         ";
-        // 傾きの文字列作成
-        $a_sign_str = $this->num_to_str($a_sign, 1, 1);
-        $a_str = $a_sign < 0 ? "-" : "";
-        if ($a_denominator == 1) {
-            if ($a_numerator != 1) {
-               $a_str = $a_str.$a_numerator;
-            }
-        } else {
-            $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
-        }
-        if ($b >= 0) {
-            $fx_str = $a_str . "x\,+{$b}";
-        } else {
-            $fx_str = $a_str . "x\,{ $b }";
-        }
-        $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
 
         // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
         $questions = [
             [
                 'q_type' => 3,
                 'q' => "<p>次の関数のグラフを描画しなさい。</p>
-                        $$ y = {$fx_str} $$",
-                'a_type' => 5,
-                'a' => "a",
+                         $$ y = {$ax_str} {$b_str} $$",
+                'a_type' => 6,
+                'a' => "<p>下図の赤線</p>",
                 'e_type' => 3,
                 'e' => "<div class=\"pl-5 text-left\">
-                            <ul class=\"list-disc\">
-                                <li>切片が \({ $b }\) なので、\( (0,{ $b }) \) の点を通る。</li>
-                                <li>\(y=ax+b\) のグラフは、\(y=ax\) のグラフを \(y\) 軸方向に \(b\) だけ平行移動したグラフになる。</li>
-                                <li>傾きが正なら右上がり、負なら右下がり。</li>
-                                <li>ここでは傾きが \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
+                            <ul class='list-disc'>
+                                <li>切片が \({$b}\) なので、\((0,\,{$b})\) を通る。</li>
+                                <li>傾き（\(x\) の係数）が正なら右上がり、負なら右下がり。</li>
+                                <li>傾き（\(x\) の係数）が \(\displaystyle {$a_str}\) なので、
+                                    <span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}。</span></li>
                             </ul>
                         </div>",
             ],
@@ -1421,8 +1676,128 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "一次関数（グラフ描画）";
-        return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
+        return view('workbook.unit_template', compact('unitname','question','plot_par_a','plot_con_a'));
     }
+
+    // 一次関数（グラフ描画）(※)old2
+    // public function plot_linear_function() {
+    //     $a_sign = (-1)**rand(1,2);
+    //     $a_numerator = rand(1, 4);
+    //     $a_denominator = rand(1, 4);
+    //     $b = (-1)**rand(1,2) * rand(1,4);
+
+    //     // 最大公約数を求める
+    //     $gcd = $this->gcd($a_numerator, $a_denominator);
+
+    //     // 約分
+    //     $a_numerator /= $gcd;
+    //     $a_denominator /= $gcd;
+
+    //     // グラフ描画用
+    //     $a = $a_sign * $a_numerator / $a_denominator;
+    //     $size = 500;    //viewportの大きさ
+    //     $val_size = 10; //実際の座標の大きさ
+    //     $scale = $size / $val_size; //縮尺
+    //     $x_seppen = -$b/$a; //x切片
+    //     $p_x = $a_denominator; //代表点Pのx座標
+    //     $p_y = $a * $p_x + $b; //代表点Pのy座標
+    //     if(abs($p_y) > ($val_size-1) / 2) {
+    //         $p_x = -$p_x;
+    //         $p_y = $a * $p_x + $b;
+    //     } // p_y がviewportに収まらない場合は、x = -x での代表点に変える。
+    //     // プロット用パラメータ
+    //     $w_full = $size;
+    //     $w_half = $size / 2;
+    //     $from_x = -$size / 2;
+    //     $to_x = $size / 2;
+    //     $from_y = $a * (-$size / 2) + ($b * $scale);
+    //     $to_y = $a * ($size / 2) + ($b * $scale);
+
+    //     $plot_para = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //     ];
+    //     $plot_contents = "
+    //         <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
+
+    //         <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
+
+    //         <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
+    //             x2=\"" . $to_x . "\" y2=" . -$to_y . "
+    //             stroke=\"red\"
+    //             stroke-width=\"2\" />
+
+    //         <circle
+    //             cx=\"0\" 
+    //             cy=\"" . ( -$b * $scale ) . "\"
+    //             r=\"5\"
+    //             fill=\"red\"
+    //         />
+    //         <text
+    //             x=\"10\" 
+    //             y=\"" . ( -$b * $scale ) . "\"
+    //             font-size=\"16\"
+    //         >
+    //             (0,{$b})
+    //         </text>
+
+    //         <circle
+    //             cx=\"" . ( $p_x * $scale ) . "\"
+    //             cy=\"" . ( -$p_y * $scale ) . "\"
+    //             r=\"5\"
+    //             fill=\"red\"
+    //         />
+    //         <text
+    //             x=\"" . ( $p_x * $scale + 10 ) . "\"
+    //             y=\"" . ( -$p_y * $scale ) . "\"
+    //             font-size=\"16\"
+    //         >
+    //             ({$p_x},{$p_y})
+    //         </text>
+
+    //     ";
+    //     // 傾きの文字列作成
+    //     $a_sign_str = $this->num_to_str($a_sign, 1, 1);
+    //     $a_str = $a_sign < 0 ? "-" : "";
+    //     if ($a_denominator == 1) {
+    //         if ($a_numerator != 1) {
+    //            $a_str = $a_str.$a_numerator;
+    //         }
+    //     } else {
+    //         $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
+    //     }
+    //     if ($b >= 0) {
+    //         $fx_str = $a_str . "x\,+{$b}";
+    //     } else {
+    //         $fx_str = $a_str . "x\,{ $b }";
+    //     }
+    //     $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "<p>次の関数のグラフを描画しなさい。</p>
+    //                     $$ y = {$fx_str} $$",
+    //             'a_type' => 5,
+    //             'a' => "a",
+    //             'e_type' => 3,
+    //             'e' => "<div class=\"pl-5 text-left\">
+    //                         <ul class=\"list-disc\">
+    //                             <li>切片が \({ $b }\) なので、\( (0,{ $b }) \) の点を通る。</li>
+    //                             <li>\(y=ax+b\) のグラフは、\(y=ax\) のグラフを \(y\) 軸方向に \(b\) だけ平行移動したグラフになる。</li>
+    //                             <li>傾きが正なら右上がり、負なら右下がり。</li>
+    //                             <li>ここでは傾きが \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
+    //                         </ul>
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "一次関数（グラフ描画）";
+    //     return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
+    // }
 
     // // 一次関数（グラフ描画）(※)old
     // public function plot_linear_function() {
@@ -1464,6 +1839,139 @@ class WorkbookController extends Controller
 
     //     return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
     // }
+
+    // 一次関数（グラフ読取）
+    public function read_linear_function() {
+        $a_numerator = (-1)**rand(1, 2) * rand(1, 4);
+        $a_denominator = rand(1, 3);
+        $b = (-1)**rand(1, 2) * rand(1, 3);
+
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
+
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
+        $b_str = $b > 0 ? ("+" . $b) : $b;
+        $zougen_str = $a > 0 ? "増える" : "減る";
+
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 16; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+        $py = $a * $a_denominator + $b;    // プロットする点Pでの y の値
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = -$size / 2;
+        $to_x = $size / 2;
+        $from_y = $a * (-$size / 2) + $b * $scale;
+        // dd($from_y);
+        $to_y = $a * ($size / 2) + $b * $scale;
+        // $to_y = 0;
+        // 座標の表示場所
+        if ($a > 0) {
+            if ($a >= 1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+            // 0 < a < 1
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
+            }
+        // a < 0
+        } else {
+            if ($a <= -1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+            // -1 < a < 0
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
+            }
+        }
+
+        $plot_par_q = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        $plot_con_q = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+        $plot_con_q .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
+        ";
+        $plot_par_e = $plot_par_q;
+        $plot_con_e = $plot_con_q . "
+            <!-- 解説用の点と補助線 -->
+            <line x1=\"0\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"" . -$b*$scale . "\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <line x1=\"" . $a_denominator*$scale . "\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale . 
+                    "\" y2=" . (-$a_numerator*$scale*0.9 -$b*$scale) . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale -$b*$scale) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$a_denominator},{$py})
+            </text>
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 6,
+                'q' => "次のグラフを関数の式で表しなさい。",
+                'a_type' => 2,
+                'a' => "y = {$ax_str} {$b_str}",
+                'e_type' => 6,
+                'e' => "<div class=\"pl-5 text-left\">
+                            <ul class='list-disc'>
+                                <li>直線なので、一次関数の式（\(y=ax+b\)）で表せる。</li>
+                                <li>\((0,\,{$b})\) を通るので、切片は \(b={$b}\) 。</li>
+                                <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}ので、</span>
+                                    傾き \(a\) は \(\displaystyle {$a_str}\)。
+                                </li>
+                            </ul>
+                        </div>",
+            ],
+            // [
+            //     'q_type' => 6,
+            //     'q' => "次のグラフを関数の式で表しなさい。",
+            //     'a_type' => 2,
+            //     'a' => "y = {$ax_str}",
+            //     'e_type' => 6,
+            //     'e' => "<div class=\"pl-5 text-left\">
+            //                 <ul class='list-disc'>
+            //                     <li>原点 \((0,\,0)\) を通る直線なので、比例の式（\(y=ax\)）で表せる。</li>
+            //                     <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str} ので、</span>
+            //                         比例定数 \(a\) は \(\displaystyle {$a_str}\) 。
+            //                     </li>
+            //                 </ul>
+            //             </div>",
+            // ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "一次関数（グラフ読み取り）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
 
     // ２点を通る直線
     public function linear_function3() {
@@ -1818,6 +2326,7 @@ class WorkbookController extends Controller
         $m = rand(2, 9);
         $n = rand(2, 9);
         $l = rand(4, 9);    // 少し大きめの値
+        $k = rand(4, 9);    // 少し大きめの値
 
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
@@ -1889,6 +2398,26 @@ class WorkbookController extends Controller
                 'e' => "<p>カードを戻すので、一枚目（十の位）も二枚目（一の位）も {$l} 通りある。</p>
                         <p>よって、{$l} × {$l} = " . $l**2 ." 通り。</p>
                         ",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "{$l} 人の中から、班長と副班長を選ぶ。組み合わせは何通り考えられるか。",
+                'a_type' => 1,
+                'a' => $l*($l-1) . " 通り",
+                'e_type' => 3,
+                'e' => "<p>まず班長を決めると、{$l} 人から選ぶので {$l} 通り。</p>
+                        <p>副班長は残りのメンバーから選ぶので、" . ($l-1) . " 通り。</p>
+                        <p>よって、{$l} × " . ($l-1) . " = " . $l*($l-1) ." 通り。先に副班長を決める場合も同様である。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>男子 {$k} 人、女子 {$l} 人から、それぞれ一人ずつ代表者を選ぶ。</p>
+                        <p>組み合わせは何通り考えられるか。</p>",
+                'a_type' => 1,
+                'a' => $k*$l . " 通り",
+                'e_type' => 1,
+                'e' => "男子が {$k} 通り、女子が {$l} 通りなので、{$k} × {$l} = " . $k*$l . " 通り。",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
@@ -2163,6 +2692,21 @@ class WorkbookController extends Controller
     private function lcm($a, $b)
     {
         return abs($a * $b) / $this->gcd($a, $b);
+    }
+
+    // 約分
+    private function simplify_fraction($numerator, $denominator)
+    {
+        // 最大公約数を求める
+        $gcd = $this->gcd($numerator, $denominator);
+
+        // 約分
+        $numerator /= $gcd;
+        $denominator /= $gcd;
+        return [
+            'numerator' => $numerator,
+            'denominator' => $denominator,
+        ];
     }
 
     // 数字を文字に変換（分数対応版）

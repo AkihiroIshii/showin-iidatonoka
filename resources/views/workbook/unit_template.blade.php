@@ -79,6 +79,15 @@
                                     {!! $plot_contents !!}
                                 </svg>
                             </div>
+                        @elseif ($question['a_type'] == 6)
+                            <p class="text-lg m-4">{!! $question['a'] !!}</p>
+                            <div class="flex justify-center">
+                                <svg width="{{ $plot_par_a['w_full'] }}" height="{{ $plot_par_a['w_full'] }}"
+                                    viewBox="-{{ $plot_par_a['w_half'] }} -{{ $plot_par_a['w_half'] }} {{ $plot_par_a['w_full'] }} {{ $plot_par_a['w_full'] }}"
+                                    class="border">
+                                    {!! $plot_con_a !!}
+                                </svg>
+                            </div>
                         @endif
                     </div>
                     <p class="text-lg">＜解説＞</p>
