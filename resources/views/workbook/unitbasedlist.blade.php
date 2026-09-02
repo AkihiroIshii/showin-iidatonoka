@@ -569,6 +569,9 @@
                                 <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_shikoku')}}">中国・四国地方</a>
                                 </x-button-link>
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.soc_kinki')}}">近畿・中部地方</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

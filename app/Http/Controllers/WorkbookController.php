@@ -4956,7 +4956,7 @@ class WorkbookController extends Controller
             ['term' => '本州四国連絡橋', 'mean' => '本州と四国を結ぶすべての橋の総称。', 
                 'explanation' => '<p>しまなみ海道、瀬戸大橋、大鳴門橋、明石海峡大橋がある。</p>'],
             ['term' => '石油化学コンビナート', 'mean' => '石油精製工場を中心に、関連企業や工場が集まる地域。', 
-                'explanation' => '<p>しまなみ海道、瀬戸大橋、大鳴門橋、明石海峡大橋がある。</p>'],
+                'explanation' => '<p>瀬戸内海の沿岸は外国からの原材料の受け入れや出荷がしやすいため都合がよい。</p>'],
             ['term' => '過疎化', 'mean' => '人口の流出や高齢化により、社会生活の維持に支障がでるようになること。', 
                 'explanation' => '<p>利用者が減少してバスが廃止されるとさらに不便になるなど、悪循環に繋がりやすい。</p>'],
         ];
@@ -4986,6 +4986,54 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "中国・四国地方";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 近畿・中部地方
+    public function soc_kinki() {
+        $terms = [
+            ['term' => 'リアス海岸（リアス式海岸）', 'mean' => '入り江と岬とが複雑に入り組んだ海岸の地形。', 
+                'explanation' => '<p>近畿地方では三重県の志摩半島がこの地形になっている。津波が大きくなりやすい。</p>'],
+            ['term' => 'ニュータウン', 'mean' => '郊外に新しく建設された都市。', 
+                'explanation' => '<p>1960年代以降に都市部の住宅が不足したために造られた。</p>
+                                    <p>近畿地方では大阪の千里ニュータウンが有名。</p>'],
+            ['term' => '日本アルプス', 'mean' => '飛騨山脈、木曽山脈、赤石山脈の総称。', 
+                'explanation' => '<p>もともとのアルプス山脈はヨーロッパのイタリア北部にある。'],
+            ['term' => '園芸農業', 'mean' => '大都市に出荷する目的で、野菜、草花、果物などを栽培する農業。', 
+                'explanation' => '<p>ビニールハウスなどの施設を利用する場合、施設園芸農業という。</p>
+                                <p>愛知県の渥美半島では、電照によって開花時期を遅らせて出荷する電照菊が有名。</p>'],
+            ['term' => '扇状地', 'mean' => '川が山地から平野に流れ出るところに土砂が堆積してできた土地。</p>', 
+                'explanation' => '<p>川が「海に」流れ出るところにできるのは三角州。できる場所の違いに注意すること。</p>'],
+            ['term' => '早場米（はやばまい）', 'mean' => '他の地域よりも市場に早く出荷される米のこと。</p>', 
+                'explanation' => '<p>一般的な収穫時期は10月前後だが、北陸では8～9月に収穫する。</p>
+                                    <p>北陸は春から夏にかけて雪解け水が豊富。秋の長雨を避ける目的もある。</p>'],
+        ];
+        $idx = rand(0,count($terms)-1);
+        $term = $terms[$idx];
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">「{$term['term']}」の意味を説明しなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$term['mean']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['explanation']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の意味をもつ用語を答えなさい。</p>
+                        <p class=\"text-xl\">{$term['mean']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$term['term']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['explanation']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "近畿地方";
         return view('workbook.unit_template', compact('unitname','question'));
     }
 

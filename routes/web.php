@@ -409,10 +409,12 @@ Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_te
 // 社会
 Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.map_scale');
-Route::get('workbook/soc_shikoku', [WorkbookController::class, 'soc_shikoku'])
-->middleware(['auth', 'verified'])->name('workbook.soc_shikoku');
 Route::get('workbook/soc_kyushu', [WorkbookController::class, 'soc_kyushu'])
 ->middleware(['auth', 'verified'])->name('workbook.soc_kyushu');
+Route::get('workbook/soc_shikoku', [WorkbookController::class, 'soc_shikoku'])
+->middleware(['auth', 'verified'])->name('workbook.soc_shikoku');
+Route::get('workbook/soc_kinki', [WorkbookController::class, 'soc_kinki'])
+->middleware(['auth', 'verified'])->name('workbook.soc_kinki');
 // 国語
 Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');
