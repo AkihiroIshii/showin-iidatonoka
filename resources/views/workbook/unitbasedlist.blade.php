@@ -468,6 +468,12 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.chemical_reaction_equation')}}">化学反応式</a>
+                                </x-button-link>
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.mass_change')}}">化学変化と質量変化</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

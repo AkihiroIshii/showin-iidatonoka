@@ -60,11 +60,19 @@
         <div class="mb-6">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
+                    @if(Auth::user()->role == "admin")
+                        <x-th></x-th>
+                    @endif
                     <x-th>生徒名</x-th>
                     <x-th>現在の課題</x-th>
                 </tr>
                 @foreach($kadais as $kadai)
                     <tr>
+                        @if(Auth::user()->role == "admin")
+                            <th class="border border-slate-300 px-4 w-1/12">
+                                <a href="{{route('usualtarget.edit',  ['usualtarget' => $kadai->id])}}" class="text-blue-600">編集</a>
+                            </th>
+                        @endif
                         <td class="border border-slate-300 px-4">{{$kadai->name}}</td>
                         <td class="border border-slate-300 px-4">
                             <pre class="whitespace-pre-wrap">{{$kadai->content}}

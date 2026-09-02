@@ -51,7 +51,7 @@
                             <th></th>
                         @endif
                         <x-th>生徒名</x-th>
-                        <x-th>先生からの課題</x-th>
+                        <x-th>現在の課題</x-th>
                     </tr>
                     @foreach($kadais as $kadai)
                         <tr>

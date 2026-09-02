@@ -4390,6 +4390,272 @@ class WorkbookController extends Controller
         return view('workbook.unit.aqueous1', compact('question'));
     }
 
+    // 化学反応式
+    public function chemical_reaction_equation() {
+        $QAs = [
+            ['q' => '炭素を燃やすと二酸化酸素が生じる。',
+                'a' => 'C + O_2 \\to CO_2',
+                'e' => "<p>炎を出しながら酸素（O\(_2\)）と化合するのが「燃焼」である。</p>
+                        <p>１．すべての物質を化学式で表す。</p>
+                        <p class=\"text-center\">炭素：C、酸素：O\(_2\)、二酸化炭素：CO\(_2\)</p>
+                        <p>２．[反応前の物質]\(\,\\to\,\)[反応後の物質]の形に化学式を並べる。</p>
+                        <p class=\"text-center\">\(\mathrm{ C + O_2 \\to CO_2 }\)</p>
+                        <p>３．反応の前後で各元素の原子の数が一致しているので、係数は不要。</p>",
+            ],
+            ['q' => '水を電気分解すると水素と酸素が生じる。',
+                'a' => '2 H_2 O \\to 2 H_2 + O_2',
+                'e' => "<p>１．すべての物質を化学式で表す。</p>
+                        <p class=\"text-center\">水：H\(_2\)O、水素：H\(_2\)、酸素：O\(_2\)</p>
+                        <p>２．[反応前の物質]\(\,\\to\,\)[反応後の物質]の形に化学式を並べる。</p>
+                        <p class=\"text-center\">\(\mathrm{ H_2 O \\to H_2 + O_2 }\)</p>
+                        <p class=\"text-center\">（H × 2、O × 1 → H × 2、O × 2）</p>
+                        <p>３．反応の前後で酸素原子の数が一致していないため、水を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2 H_2 O \\to H_2 + O_2 }\)</p>
+                        <p class=\"text-center\">（H × 4、O × 2 → H × 2、O × 2）</p>
+                        <p>４．今度は水素原子の数が一致しなくなったため、水素を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2 H_2 O \\to 2 H_2 + O_2 }\)</p>
+                        <p class=\"text-center\">（H × 4、O × 2 → H × 4、O × 2）</p>
+                        <p>５．すべての元素の原子数が、反応前後で等しくなったらOK。</p>
+                        ",
+            ],
+            ['q' => '鉄と硫黄が反応すると硫化鉄ができる。',
+                'a' => 'Fe + S \\to FeS',
+                'e' => "<p>鉄も硫黄も分子をつくらないため、代表の原子１つで表す。</p>
+                        <p>１．すべての物質を化学式で表す。</p>
+                        <p class=\"text-center\">鉄：Fe、硫黄：S</p>
+                        <p>２．[反応前の物質]\(\,\\to\,\)[反応後の物質]の形に化学式を並べる。</p>
+                        <p class=\"text-center\">\(\mathrm{ Fe + S \\to FeS }\)</p>
+                        <p>３．反応の前後で各元素の原子の数が一致しているので、係数は不要。</p>
+                        ",
+            ],
+            ['q' => '酸化銀を加熱すると、銀と酸素に分解される。',
+                'a' => '2 Ag_2 O \\to 4Ag + O_2',
+                'e' => "<p>酸化銀は、銀と酸素の組成比が 2 : 1 の結晶なので Ag\(_2\)Oと表す。</p>
+                        <p>１．すべての物質を化学式で表す。</p>
+                        <p class=\"text-center\">酸化銀：Ag\(_2\)O、銀：Ag、酸素：O\(_2\)</p>
+                        <p>２．[反応前の物質]\(\,\\to\,\)[反応後の物質]の形に化学式を並べる。</p>
+                        <p class=\"text-center\">\(\mathrm{ Ag_2 O \\to Ag + O_2 }\)</p>
+                        <p>３．反応の前後で酸素原子の数が一致していないため、酸化銀を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2 Ag_2 O \\to Ag + O_2 }\)</p>
+                        <p class=\"text-center\">（Ag × 4、O × 2 → Ag × 1、O × 2）</p>
+                        <p>４．今度は銀原子の数が一致しなくなったため、銀を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2 Ag_2 O \\to 4Ag + O_2 }\)</p>
+                        <p class=\"text-center\">（Ag × 4、O × 2 → Ag × 4、O × 2）</p>
+                        <p>５．すべての元素の原子数が、反応前後で等しくなったらOK。</p>
+                        ",
+            ],
+            ['q' => '銅を空気中で加熱すると酸化銅ができる。',
+                'a' => '2 Cu + O_2 \\to 2CuO',
+                'e' => "<p>銅を熱すると空気中の酸素と化合する。銅と酸素の組成比は 1 : 1。</p>
+                        <p>１．すべての物質を化学式で表す。</p>
+                        <p class=\"text-center\">銅：Cu、酸素：O\(_2\)、酸化銅：CuO</p>
+                        <p>２．[反応前の物質]\(\,\\to\,\)[反応後の物質]の形に化学式を並べる。</p>
+                        <p class=\"text-center\">\(\mathrm{ Cu + O_2 \\to CuO }\)</p>
+                        <p>３．反応の前後で酸素原子の数が一致していないため、酸化銅を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ Cu + O_2 \\to 2CuO }\)</p>
+                        <p class=\"text-center\">（Cu × 1、O × 2 → Cu × 2、O × 2）</p>
+                        <p>４．今度は銅原子の数が一致しなくなったため、銅を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2 Cu + O_2 \\to 2CuO }\)</p>
+                        <p class=\"text-center\">（Cu × 2、O × 2 → Cu × 2、O × 2）</p>
+                        <p>５．すべての元素の原子数が、反応前後で等しくなったらOK。</p>
+                        ",
+            ],
+            ['q' => 'マグネシウムを空気中で加熱すると酸化マグネシウムができる。',
+                'a' => '2 Mg + O_2 \\to 2MgO',
+                'e' => "<p>マグネシウムを熱すると空気中の酸素と化合する。マグネシウムと酸素の組成比は 1 : 1。</p>
+                        <p>１．すべての物質を化学式で表す。</p>
+                        <p class=\"text-center\">マグネシウム：Mg、酸素：O\(_2\)、酸化マグネシウム：MgO</p>
+                        <p>２．[反応前の物質]\(\,\\to\,\)[反応後の物質]の形に化学式を並べる。</p>
+                        <p class=\"text-center\">\(\mathrm{ Mg + O_2 \\to MgO }\)</p>
+                        <p>３．反応の前後で酸素原子の数が一致していないため、酸化マグネシウムを増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ Mg + O_2 \\to 2MgO }\)</p>
+                        <p class=\"text-center\">（Mg × 1、O × 2 → Mg × 2、O × 2）</p>
+                        <p>４．今度はマグネシウム原子の数が一致しなくなったため、マグネシウムを増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2 Mg + O_2 \\to 2MgO }\)</p>
+                        <p class=\"text-center\">（Mg × 2、O × 2 → Mg × 2、O × 2）</p>
+                        <p>５．すべての元素の原子数が、反応前後で等しくなったらOK。</p>
+                        ",
+            ],
+            ['q' => '酸化銅と炭素の粉末を混ぜて熱すると銅ができる。',
+                'a' => '2CuO + C \\to 2Cu + CO_2',
+                'e' => "<p>酸化銅の還元反応。反応前の物質に炭素原子と酸素原子があることから、</p>
+                        <p>反応後は銅の他に炭素と酸素の化合物（二酸化炭素）が発生すると考える。</p>
+                        <p>１．すべての物質を化学式で表す。</p>
+                        <p class=\"text-center\">酸化銅：CuO、炭素：C、銅：Cu、二酸化酸素：CO\(_2\)</p>
+                        <p>２．[反応前の物質]\(\,\\to\,\)[反応後の物質]の形に化学式を並べる。</p>
+                        <p class=\"text-center\">\(\mathrm{ CuO + C \\to Cu + CO_2 }\)</p>
+                        <p>３．反応の前後で酸素原子の数が一致していないため、酸化銅を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2CuO + C \\to Cu + CO_2 }\)</p>
+                        <p class=\"text-center\">（Cu × 2、O × 2、C × 1 → Cu × 1、O × 2、C × 1）</p>
+                        <p>４．今度は銅原子の数が一致しなくなったため、銅を増やす。</p>
+                        <p class=\"text-center\">\(\mathrm{ 2CuO + C \\to 2Cu + CO_2 }\)</p>
+                        <p class=\"text-center\">（Cu × 2、O × 2、C × 1 → Cu × 2、O × 2、C × 1）</p>
+                        <p>５．すべての元素の原子数が、反応前後で等しくなったらOK。</p>
+                        ",
+            ],
+        ];
+        $idx = rand(0,count($QAs)-1);
+        $QA = $QAs[$idx];
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の反応を表す化学反応式を書きなさい。</p>
+                        <p class=\"text-2xl\">{$QA['q']}</p>",
+                'a_type' => 2,
+                'a' => "\mathrm{ {$QA['a']} }",
+                'e_type' => 3,
+                'e' => "<div class=\"pl-5 text-left\">
+                            {$QA['e']}
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "化学反応式";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 化学反応と質量変化
+    public function mass_change() {
+        $x = 0.4 * rand(5, 12);
+        $y = 0.5 * rand(5, 12);
+        $x3 = 0.3 * rand(10, 20);
+        $CuO_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5\">銅の質量[g]</td>
+                            <td class=\"border border-gray-400\">0.20</td>
+                            <td class=\"border border-gray-400\">0.40</td>
+                            <td class=\"border border-gray-400\">0.60</td>
+                            <td class=\"border border-gray-400\">0.80</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400\">酸化銅の質量[g]</td>
+                            <td class=\"border border-gray-400\">0.25</td>
+                            <td class=\"border border-gray-400\">0.50</td>
+                            <td class=\"border border-gray-400\">0.75</td>
+                            <td class=\"border border-gray-400\">1.00</td>
+                        </tr>
+                    </table>
+                    ";
+        $MgO_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5\">マグネシウムの質量[g]</td>
+                            <td class=\"border border-gray-400\">0.15</td>
+                            <td class=\"border border-gray-400\">0.30</td>
+                            <td class=\"border border-gray-400\">0.45</td>
+                            <td class=\"border border-gray-400\">0.60</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400\">酸化マグネシウムの質量[g]</td>
+                            <td class=\"border border-gray-400\">0.25</td>
+                            <td class=\"border border-gray-400\">0.50</td>
+                            <td class=\"border border-gray-400\">0.75</td>
+                            <td class=\"border border-gray-400\">1.00</td>
+                        </tr>
+                    </table>
+                    ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => $CuO_table .
+                        "<p>銅を酸化させると酸化銅ができる。それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">銅と酸化銅の質量比を答えなさい。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "4 : 5",
+                'e_type' => 3,
+                'e' => "<p>表より、銅 0.40 g に対して酸化銅 0.50 g ができているので、</p>
+                        <p class=\"text-center\">0.40 : 0.50 = 4 : 5</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $CuO_table .
+                        "<p>銅を酸化させると酸化銅ができる。それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">銅 " . number_format($x, 1) . " g には最大で何 g の酸素が結合するか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => number_format(($x / 4), 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>表より、銅 0.40 g に対して酸化銅 0.50 g ができている。</p>
+                        <p>つまり、銅 0.40 g に対して、酸素 0.10 g が結合しているので、</p>
+                        <p>銅と酸素の質量比は 4 : 1。よって、結合する酸素の質量を \(x\) g とすると、</p>
+                        <p class=\"text-center\"> " . number_format($x, 1) . " : \(x\) = 4 : 1 </p>
+                        <p>これを解いて、\(x\) = " . number_format(($x / 4), 1) . " g 。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $CuO_table .
+                        "<p>銅を酸化させると酸化銅ができる。それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">酸化銅 " . number_format($y, 1) . " g を還元すると、最大で何 g の銅が得られるか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => number_format((4 * $y / 5), 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>表より、銅 0.40 g に対して酸化銅 0.50 g ができているので、</p>
+                        <p>銅と酸化銅の質量比は 4 : 5。よって、還元して得られる銅の質量を \(x\) g とすると、</p>
+                        <p class=\"text-center\"> \(x\) : " . number_format($y, 1) . " = 4 : 5 </p>
+                        <p>これを解いて、\(x\) = " . number_format((4 * $y / 5), 1) . " g 。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $MgO_table .
+                        "<p>マグネシウムを酸化させると酸化マグネシウムができる。</p>
+                        <p>それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">マグネシウムと酸化マグネシウムの質量比を答えなさい。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "3 : 5",
+                'e_type' => 3,
+                'e' => "<p>表より、マグネシウム 0.30 g に対して酸化マグネシウム 0.50 g ができているので、</p>
+                        <p class=\"text-center\">0.30 : 0.50 = 3 : 5</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $MgO_table .
+                        "<p>マグネシウムを酸化させると酸化マグネシウムができる。</p>
+                        <p>それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">マグネシウム " . number_format($x3, 1) . " g には最大で何 g の酸素が結合するか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => number_format((2 * $x3 / 3), 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>表より、マグネシウム 0.30 g に対して酸化マグネシウム 0.50 g ができている。</p>
+                        <p>つまり、マグネシウム 0.30 g に対して、酸素 0.20 g が結合しているので、</p>
+                        <p>マグネシウムと酸素の質量比は 3 : 2。よって、結合する酸素の質量を \(x\) g とすると、</p>
+                        <p class=\"text-center\"> " . number_format($x3, 1) . " : \(x\) = 3 : 2 </p>
+                        <p>これを解いて、\(x\) = " . number_format((2 * $x3 / 3), 1) . " g 。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $MgO_table .
+                        "<p>マグネシウムを酸化させると酸化マグネシウムができる。</p>
+                        <p>それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">酸化マグネシウム " . number_format($y, 1) . " g を還元すると、最大で何 g のマグネシウムが得られるか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => number_format((3 * $y / 5), 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>表より、マグネシウム 0.30 g に対して酸化マグネシウム 0.50 g ができているので、</p>
+                        <p>マグネシウムと酸化マグネシウムの質量比は 3 : 5。よって、還元して得られるマグネシウムの質量を \(x\) g とすると、</p>
+                        <p class=\"text-center\"> \(x\) : " . number_format($y, 1) . " = 3 : 5 </p>
+                        <p>これを解いて、\(x\) = " . number_format((3 * $y / 5), 1) . " g 。</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "化学反応と質量変化";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 湿度
     public function humidity() {
         // h = m/M * 100

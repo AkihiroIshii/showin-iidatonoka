@@ -399,6 +399,10 @@ Route::get('workbook/density', [WorkbookController::class, 'density'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.density');
 Route::get('workbook/aqueous1', [WorkbookController::class, 'aqueous1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.aqueous1');
+Route::get('workbook/chemical_reaction_equation', [WorkbookController::class, 'chemical_reaction_equation'])
+->middleware(['auth', 'verified'])->name('workbook.chemical_reaction_equation');
+Route::get('workbook/mass_change', [WorkbookController::class, 'mass_change'])
+->middleware(['auth', 'verified'])->name('workbook.mass_change');
 Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
 Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
