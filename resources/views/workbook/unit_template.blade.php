@@ -24,7 +24,7 @@
             {{-- q_type : 1:短文（数式なし）、2:短文（数式あり）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新) --}}
             {{-- 5:グラフ(旧)はq,a,eいずれかにしか$plotsを渡せなかったため、それぞれ渡せるように6:グラフ(新)を追加した。--}}
             <div class="text-center mb-4">
-                <div class="text-center leading-[3] font-klee text-lg">
+                <div class="inline-block text-center leading-[3] font-klee text-lg">
                     @if ($question['q_type'] == 1)
                         <p class="m-4">{{ $question['q'] }}</p>
                     @elseif ($question['q_type'] == 2)

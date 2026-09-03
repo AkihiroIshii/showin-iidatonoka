@@ -587,6 +587,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.soc_bakumatsu')}}">幕末</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
