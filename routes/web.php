@@ -313,6 +313,8 @@ Route::get('workbook/read_proportional_function', [WorkbookController::class, 'r
 // ->middleware(['auth', 'verified'])->name('workbook.unit.plot_proportional_function');
 Route::get('workbook/plane_figure', [WorkbookController::class, 'plane_figure'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.plane_figure');
+Route::get('workbook/fan_figure', [WorkbookController::class, 'fan_figure'])
+->middleware(['auth', 'verified'])->name('workbook.unit.fan_figure');
 Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figure'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
 Route::get('workbook/corn_surface', [WorkbookController::class, 'corn_surface'])

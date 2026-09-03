@@ -244,6 +244,9 @@
                                     <a href="{{route('workbook.unit.plane_figure')}}">平面図形</a>
                                 </x-button-link>
                                 <x-button-link>
+                                    <a href="{{route('workbook.unit.fan_figure')}}">おうぎ形</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.unit.spacial_figure')}}">空間図形</a>
                                 </x-button-link>
                                 <x-button-link>

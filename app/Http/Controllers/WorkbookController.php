@@ -1236,6 +1236,134 @@ class WorkbookController extends Controller
         return view('workbook.unit.plane_figure', compact('question'));
     }
 
+    // おうぎ形
+    public function fan_figure() {
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 12; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+        
+        // 変数
+        $a = 30 * rand(1, 6);  // 中心角：15～180°
+        $r = rand(1, 9);
+        $l = $this->simplify_fraction(2*$a*$r, 360);    //孤の長さ/pi
+        $l_str = $this->fracnum_to_str($l['numerator'], $l['denominator'], "\,\pi", 1);
+        $l_coeff_str = $this->fracnum_to_str($l['numerator'], $l['denominator'], "", 1);
+        $theta = 2 * M_PI * $a / 360;   // 中心角（ラジアン）
+        $ratio = $this->simplify_fraction($a, 360);
+        $Sf = $this->simplify_fraction($a * $r**2, 360);
+        $Sf_str = $this->fracnum_to_str($Sf['numerator'], $Sf['denominator'], "\,\pi", 1);
+        $S_circ_str = $this->fracnum_to_str($r**2, 1, "\,\pi", 1);
+        // $Sfl = $this->simplify_fraction($a * $r**2, 360);
+        // $Sfl_str = $this->fracnum_to_str($Sf['numerator'], $Sf['denominator'], "\,\pi", 1);
+        // $S_f = $a * $r**2 / 360;    // 扇形の面積/pi
+
+        // プロット用
+        $pr = 0.8 * $size / 2;
+        $end_x = $pr * cos($theta);
+        $end_y = $pr * sin($theta);
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+
+        $plot_par_q = [
+            'w_full' => $w_full,
+            'w_half' => $w_half,
+        ];
+
+        $plot_con_q = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+        $plot_con_q .= "   
+            <circle cx=\"0\" cy=\"0\" r=\"{$pr}\" fill-opacity=\"0.1\"/>
+            <!-- M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
+            <path d=\"M 0 0 L {$pr} 0 A {$pr} {$pr}, 0, 0, 0, {$end_x} -{$end_y} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"2\" />
+           
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 6,
+                'q' => "<p>半径が等しい円とおうぎ形を考える。</p>
+                        <p>円の面積をS、おうぎ形の中心角を{$a}\(^{\circ}\)とする。</p>
+                        <p>おうぎ形の面積を、Sを使って表しなさい。",
+                'a_type' => 2,
+                'a' => "\\frac{{$ratio['numerator']}}{\,{$ratio['denominator']}\,}S",
+                'e_type' => 3,
+                'e' => "<p>半径が等しい 2 つのおうぎ形の面積比は、中心角の比に等しい。</p>
+                        <p>円は中心角 360° のおうぎ形と考えられるので、おうぎ形の面積を \(S_f\) とすると、</p>
+                        <p class=\"text-center\">\(S_f : S = {$a}^{\circ} : 360^{\circ}\)</p>
+                        <p>よって、\(\displaystyle S_f = \\frac{{$a}}{\,360\,}S = \\frac{{$ratio['numerator']}}{\,{$ratio['denominator']}\,}S 。\)</p>
+                        ",
+            ],
+            [
+                'q_type' => 6,
+                'q' => "<p>半径 {$r} cm、中心角 {$a}\(^{\circ}\) のおうぎ形の面積を求めなさい。",
+                'a_type' => 2,
+                'a' => "{$Sf_str} \,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<p>まず、半径が同じく {$r} cm の円の面積を \(S\) として考えると、</p>
+                        <p>\(S = \pi r^2 = \pi \\times {$r}^2 = {$S_circ_str} \,\mathrm{cm}^2\).</p>
+                        <p>半径が同じおうぎ形と円を比べると、その面積比は中心角の比に等しい。</p>
+                        <p>よって、おうぎ形の面積を \(S_f\) とすると、\(S_f : {$S_circ_str} = {$a}^{\circ} : 360^{\circ}\) が成り立つので、</p>
+                        <p>\(\displaystyle S_f = {$S_circ_str} \\times \\frac{{$a}}{\,360\,} = {$Sf_str} \).</p>
+                        ",
+            ],
+            [
+                'q_type' => 6,
+                'q' => "<p>半径 \(r\) が等しい円とおうぎ形を考える。</p>
+                        <p>円の面積を \(S\)、おうぎ形の孤の長さを \(l\) とする。</p>
+                        <p>おうぎ形の面積を、\(r,\,S\) を使って表しなさい。",
+                'a_type' => 2,
+                'a' => "\\frac{l}{\,2\pi r\,}\,S",
+                'e_type' => 3,
+                'e' => "<p>半径が等しい 2 つのおうぎ形の面積比は、孤の長さの比に等しい。</p>
+                        <p>円は、孤の長さが \(2\pi r\) （＝円周）のおうぎ形と考えられるので、</p>
+                        <p>おうぎ形の面積を \(S_f\) とすると、\(S_f : S = l : 2\pi r\)</p>
+                        <p>よって、\(\displaystyle S_f = \\frac{l}{\,2\pi r\,}S\).</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>半径 \({$r}\) cm、孤の長さが \(\displaystyle {$l_str}\) cm のおうぎ形の面積を求めなさい。",
+                'a_type' => 2,
+                'a' => "{$Sf_str} \,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<p>まず、半径が同じく \({$r}\) cm の円の面積を \(S\) として考えると、</p>
+                        <p>\(S = \pi r^2 = \pi \\times {$r}^2 = {$S_circ_str} \,\mathrm{cm}^2\).</p>
+                        <p>半径が同じおうぎ形と円を比べると、その面積比は（孤の長さ：円周）の比に等しい。</p>
+                        <p>よって、おうぎ形の面積を \(S_f\) とすると、\(\displaystyle S_f : {$S_circ_str} = {$l_str} : 2\pi r\) が成り立つので、</p>
+                        <p>\(\displaystyle S_f = {$S_circ_str} \\times \\frac{{$l_str}}{\,2\pi r\,} 
+                            = {$S_circ_str} \\times \\frac{{$l_coeff_str}}{\,2 \\times {$r}\,} = {$Sf_str} \).</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>半径 \({$r}\) cm、面積 \(\displaystyle {$Sf_str}\) cm\(^2\) のおうぎ形の中心角を求めなさい。",
+                'a_type' => 2,
+                'a' => "{$a}^{\circ}",
+                'e_type' => 3,
+                'e' => "<p>まず、半径が同じく \({$r}\) cm の円の面積を \(S\) として考えると、</p>
+                        <p>\(S = \pi r^2 = \pi \\times {$r}^2 = {$S_circ_str} \,\mathrm{cm}^2\).</p>
+                        <p>半径が同じおうぎ形と円を比べると、その面積比は中心角の比に等しい。</p>
+                        <p>よって、おうぎ形の中心角を \(a\) とすると、\(\displaystyle {$Sf_str} : {$S_circ_str} = a^{\circ} : 360^{\circ}\) が成り立つので、</p>
+                        <p>\(\displaystyle a = 360 \\times \\frac{{$Sf_str}}{\,{$S_circ_str}\,} = {$a} \).</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "おうぎ形";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    }
+
     // 空間図形
     public function spacial_figure() {
         $questions = [
