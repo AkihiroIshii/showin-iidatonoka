@@ -355,6 +355,9 @@ Route::get('workbook/sqrt_natural', [WorkbookController::class, 'sqrt_natural'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_natural');
 Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
 ->middleware(['auth', 'verified'])->name('workbook.expansion');
+// 数A
+Route::get('workbook/trigonometric_ratio', [WorkbookController::class, 'trigonometric_ratio'])
+->middleware(['auth', 'verified'])->name('workbook.trigonometric_ratio');
 // 英語
 Route::get('workbook/be_verb', [WorkbookController::class, 'be_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.be_verb');
@@ -368,6 +371,8 @@ Route::get('workbook/past_verb', [WorkbookController::class, 'past_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.past_verb');
 Route::get('workbook/conjection', [WorkbookController::class, 'conjection'])
 ->middleware(['auth', 'verified'])->name('workbook.conjection');
+Route::get('workbook/infinitive', [WorkbookController::class, 'infinitive'])
+->middleware(['auth', 'verified'])->name('workbook.infinitive');
 Route::get('workbook/comparative', [WorkbookController::class, 'comparative'])
 ->middleware(['auth', 'verified'])->name('workbook.comparative');
 
@@ -417,6 +422,10 @@ Route::get('workbook/soc_shikoku', [WorkbookController::class, 'soc_shikoku'])
 ->middleware(['auth', 'verified'])->name('workbook.soc_shikoku');
 Route::get('workbook/soc_kinki', [WorkbookController::class, 'soc_kinki'])
 ->middleware(['auth', 'verified'])->name('workbook.soc_kinki');
+Route::get('workbook/soc_kodai', [WorkbookController::class, 'soc_kodai'])
+->middleware(['auth', 'verified'])->name('workbook.soc_kodai');
+Route::get('workbook/soc_asuka_nara', [WorkbookController::class, 'soc_asuka_nara'])
+->middleware(['auth', 'verified'])->name('workbook.soc_asuka_nara');
 Route::get('workbook/soc_bakumatsu', [WorkbookController::class, 'soc_bakumatsu'])
 ->middleware(['auth', 'verified'])->name('workbook.soc_bakumatsu');
 // 国語

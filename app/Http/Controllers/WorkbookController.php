@@ -2832,6 +2832,135 @@ class WorkbookController extends Controller
         return view('workbook.unit.sqrt_natural', compact('n','p','a','question'));
     }
 
+    // 三角比（数A）
+    public function trigonometric_ratio() {
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 10; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        // 角度（°）、角度（ラジアン）、sin、cos、tan
+        $vals = [
+            ["deg" => 0, "rad" => 0, "sin" => 0, "cos" => 1, "tan" => 0],
+            ["deg" => 30, "rad" => "\\frac{\pi}{6}", "sin" => "\\frac{1}{\,2\,}", "cos" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+            ["deg" => 45, "rad" => "\\frac{\pi}{4}", "sin" => "\\frac{1}{\,\sqrt{2}\,}", "cos" => "\\frac{\,1\,}{\,\sqrt{2}\,}", "tan" => 1, ],
+            ["deg" => 60, "rad" => "\\frac{\pi}{3}", "sin" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "cos" => "\\frac{\,1\,}{\,2\,}", "tan" => "\sqrt{3}", ],
+            ["deg" => 90, "rad" => "\\frac{\pi}{2}", "sin" => 1, "cos" => 0, "tan" => "\infty", ],
+            ["deg" => 120, "rad" => "\\frac{2\pi}{3}", "sin" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "cos" => "-\\frac{\,1\,}{\,2\,}", "tan" => "-\sqrt{3}", ],
+            ["deg" => 135, "rad" => "\\frac{3\pi}{4}", "sin" => "\\frac{1}{\,\sqrt{2}\,}", "cos" => "-\\frac{\,1\,}{\,\sqrt{2}\,}", "tan" => -1, ],
+            ["deg" => 150, "rad" => "\\frac{5\pi}{6}", "sin" => "\\frac{1}{\,2\,}", "cos" => "-\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "-\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+            ["deg" => 180, "rad" => "\pi", "sin" => 0, "cos" => -1, "tan" => 0, ],
+            ["deg" => 210, "rad" => "\\frac{7\pi}{6}", "sin" => "-\\frac{1}{\,2\,}", "cos" => "-\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+            ["deg" => 225, "rad" => "\\frac{5\pi}{4}", "sin" => "-\\frac{1}{\,\sqrt{2}\,}", "cos" => "-\\frac{1}{\,\sqrt{2}\,}", "tan" => 1, ],
+            ["deg" => 240, "rad" => "\\frac{4\pi}{3}", "sin" => "-\\frac{\,\sqrt{3}\,}{2}", "cos" => "-\\frac{1}{\,2\,}", "tan" => "\sqrt{3}", ],
+            ["deg" => 270, "rad" => "\\frac{3\pi}{2}", "sin" => -1, "cos" => 0, "tan" => "\infty", ],
+            ["deg" => 300, "rad" => "\\frac{5\pi}{3}", "sin" => "-\\frac{\,\sqrt{3}\,}{2}", "cos" => "\\frac{1}{\,2\,}", "tan" => "-\sqrt{3}", ],
+            ["deg" => 315, "rad" => "\\frac{7\pi}{4}", "sin" => "-\\frac{1}{\,\sqrt{2}\,}", "cos" => "\\frac{1}{\,\sqrt{2}\,}", "tan" => -1, ],
+            ["deg" => 330, "rad" => "\\frac{11\pi}{6}", "sin" => "-\\frac{1}{\,2\,}", "cos" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "-\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+        ];
+        $idx = rand(0,count($vals)-1);
+        $val = $vals[$idx];
+        $a = $val['deg'];
+
+        $theta = 2 * M_PI * $a / 360;   // 中心角（ラジアン）
+        // $ratio = $this->simplify_fraction($a, 360);
+
+        // プロット用
+        $pr = 0.8 * $size / 2;
+        $px = $pr * cos($theta);
+        $py = -$pr * sin($theta);   // svg の y 座標は下が正なので、-1 をかけておく。
+
+        // 座標の表示場所
+        $posi_text = ['x' => $px, 'y' => $py ];
+        // if ($a > 0) {
+        //     if ($a >= 1) {
+        //         $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+        //     // 0 < a < 1
+        //     } else {
+        //         $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
+        //     }
+        // // a < 0
+        // } else {
+        //     if ($a <= -1) {
+        //         $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+        //     // -1 < a < 0
+        //     } else {
+        //         $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
+        //     }
+        // }
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+
+        $plot_par_e = [
+            'w_full' => $w_full,
+            'w_half' => $w_half,
+        ];
+
+        $plot_con_e = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_e .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_e .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+        $plot_con_e .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"2\" marker-start=\"url(#arrow)\"/>
+            <!-- 背景の単位円 -->
+            <circle cx=\"0\" cy=\"0\" r=\"{$pr}\" fill-opacity=\"0.1\"/>
+            <!-- 点P -->
+            <!-- <circle cx=\"{$px}\" cy=\"{$py}\" r=\"3\" fill=\"red\"/> -->
+            <!-- M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
+            <path d=\"M 0 0 L {$px} 0 L {$px} {$py} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />
+            <path d=\"M {$px} 0 L {$px} {$py}\" stroke=\"blue\" stroke-width=\"4\" />
+            <path d=\"M 0 0 L {$px} 0\" stroke=\"red\" stroke-width=\"4\" />
+            <!--<text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$px},{$py})
+            </text>-->           
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 2,
+                'q' => "\\sin {$val['deg']}^{\\circ}\, の値を答えなさい。",
+                'a_type' => 2,
+                'a' => "{$val['sin']}",
+                'e_type' => 6,
+                'e' => "<p>下図の単位円（半径 1 の円）で、青線の長さに該当する。</p>
+                        ",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "\\cos {$val['deg']}^{\\circ}\, の値を答えなさい。",
+                'a_type' => 2,
+                'a' => "{$val['cos']}",
+                'e_type' => 6,
+                'e' => "<p>下図の単位円（半径 1 の円）で、赤線の長さに該当する。</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "三角比（数A）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
     /******** 共通関数 **********/
     // 最大公約数
     private function gcd($a, $b)
@@ -3791,6 +3920,57 @@ class WorkbookController extends Controller
         $unitname = "比較級";
         return view('workbook.unit_template', compact('unitname','question'));
     }
+
+    // 英文法 不定詞
+    public function infinitive() {
+        $sentences = [
+            ['e' => 'I like to sing.', 'j' => '私は歌うことが好きだ。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。</p>
+                                                                                <p>動名詞を使って "I like singing." としてもよい。</p>'],
+            ['e' => 'To sleep is important.', 'j' => '眠ることは重要だ。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。<p>
+                                                                                    <p>この例文のように、名詞として使う不定詞は主語にすることができる。</p>
+                                                                                    <p>動名詞を使って "Sleeping is important." としてもよい。</p>'],
+            ['e' => 'I want to run.', 'j' => '私は走りたい。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。</p>
+                                                                            <p>"want to run" で「走ることを望む」⇒「走りたい」となる。</p>'],
+            ['e' => 'I came here to sing.', 'j' => '私は歌うためにここに来た。', 'exp' => '<p>「to ＋ 動詞の原形」を副詞の塊（～するために）として使っている。</p>
+                                                                                <p>ここでは動詞 came を修飾している。</p>'],
+            ['e' => 'I went home to sleep.', 'j' => '私は眠るために（家に）帰った。', 'exp' => '<p>「to ＋ 動詞の原形」を副詞の塊（～するために）として使っている。<p>
+                                                                                        <p>ここでは動詞 go を修飾している。</p>'],
+            ['e' => 'This is a room to sing.', 'j' => 'これは歌うための部屋です。', 'exp' => '<p>「to ＋ 動詞の原形」を形容詞の塊（～するための）として使っている。</p>
+                                                                                <p>ここでは名詞 a room を修飾している。</p>'],
+            ['e' => 'We need time to sleep.', 'j' => '私たちは眠るための時間を必要とする。', 'exp' => '<p>「to ＋ 動詞の原形」を形容詞の塊（～するための）として使っている。</p>
+                                                                                <p>ここでは名詞 time を修飾している。</p>'],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "不定詞";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
 
 
     // 英単語　動詞１
@@ -5355,6 +5535,139 @@ class WorkbookController extends Controller
         $unitname = "幕末";
         return view('workbook.unit_template', compact('unitname','question'));
     }
+
+    // 縄文、弥生、古墳時代
+    public function soc_kodai() {
+        $n = 10 * rand(1, 5);   //金銀交換用
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>縄文土器や弥生土器は何のために使われたか説明しなさい。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">食料の保存や煮炊きのため。</p>",
+                'e_type' => 3,
+                'e' => "<p>食料を保存していたということは、その日に食べる分だけでなく</p>
+                        <p>余分に食料を採取することができるようになっていたと考えられる。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>弥生時代に、青銅器はどのように使われたか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">祭りの道具（祭具）として。</p>",
+                'e_type' => 3,
+                'e' => "<p>一方、鉄器は武器や工具として実用的に使われた。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>弥生時代の集落の周りに柵や濠（ほり）があったのはなぜか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">集落を敵から守るため。</p>",
+                'e_type' => 3,
+                'e' => "<p>稲作には水が必要なので、地理環境によって作りやすさが異なる。</p>
+                        <p>そのため、稲作に適した土地をめぐる争いが起こるようになった。</p>
+                        <p>人骨に矢が刺さった跡が残っているのも、争いの痕跡と考えられる。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>「漢委奴国王」と彫られた金印は、誰から誰に与えられたものか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">漢の皇帝から奴国の王に与えられた。</p>",
+                'e_type' => 3,
+                'e' => "<p>この金印は、現在の福岡市で江戸時代に発見されたものである。</p>
+                        <p>1世紀半ばの歴史書「後漢書」に、当時の日本にあった国の一つである</p>
+                        <p>「奴国」の王が漢に使いを送り、皇帝から金印を与えられたと書かれている。</p>
+                        <p>なお、卑弥呼は3世紀の人物なので、金印の授与はそれよりも100年以上前の出来事である。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>3世紀に邪馬台国が存在したと考えられる根拠は何か。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">「魏志」倭人伝に書かれているから。</p>",
+                'e_type' => 3,
+                'e' => "<p>日本の公的な記録が見つかっているのは飛鳥時代の頃からであり、</p>
+                        <p>3世紀の記録は国内にない。そのため、中国大陸に存在した「魏」という</p>
+                        <p>国の記録に頼っている。「倭人」とは、魏の人々から見た、</p>
+                        <p>当時の邪馬台国などの人々に対する呼称である。</p>
+                        <p>当時の中国大陸には魏・呉・蜀の3つの国があったので、</p>
+                        <p>三国時代と呼ばれている（三国志に記されている）。</p>
+                        <p>なお、発掘調査や人骨の年代測定などで古代の痕跡を辿ることはできるが、</p>
+                        <p>当時の人物の業績を知るためには文字での記録が必要になる。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>縄文時代や弥生時代に各地で交易が行われていたと考えらえるのはなぜか。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">ヒスイや黒曜石などが、原産地以外でも出土しているから。</p>",
+                'e_type' => 3,
+                'e' => "<p>交易がなければ、原産地でしか出土しないはずである。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>古墳について、円墳と方墳の違いを説明しなさい。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">形状が円いか四角いかで区別される。</p>",
+                'e_type' => 3,
+                'e' => "<p>「方形」とは、四つの内角がすべて直角である四角形（長方形）のこと。</p>
+                        <p>円形と方形を組み合わせた古墳が前方後円墳である。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>大仙（大山）古墳は誰の古墳か。</p>
+                        ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">仁徳天皇（にんとくてんのう）</p>",
+                'e_type' => 3,
+                'e' => "<p>大仙古墳は仁徳天皇陵とも呼ばれる。クフ王のピラミッド、</p>
+                        <p>秦の始皇帝陵と並ぶ世界三大墳墓の一つとしても知られる。</p>
+                        <p>大仙古墳は巨大であるため、築造に約16年かかったと計算されている。</p>
+                        <p>仁徳天皇は第16代天皇で、「民のかまど」の話が有名。</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "縄文、弥生、古墳時代";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // // 飛鳥、奈良時代（作成中）
+    // public function soc_asuka_nara() {
+    //     $n = 10 * rand(1, 5);   //金銀交換用
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "<p>589年に中国大陸で誕生した統一王朝は何か。</p>
+    //                     ",
+    //             'a_type' => 3,
+    //             'a' => "<p class=\"text-2xl\">隋</p>",
+    //             'e_type' => 3,
+    //             'e' => "<p></p>
+    //                     ",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "飛鳥、奈良時代";
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
 
     // 国語_動詞の取得
     private function get_jp_verb()

@@ -310,7 +310,11 @@
                     </tr>
                 </tbody>
             </table>
-
+            <div class="flex flex-wrap gap-4 font-bold">
+                <x-button-link>
+                    <a href="{{route('workbook.trigonometric_ratio')}}">三角比（数A）</a>
+                </x-button-link>
+            </div>
 
             <!---------------------------------------- 英語 ---------------------------------------->
             <x-h3 color="purple">英語</x-h3>
@@ -397,6 +401,9 @@
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.conjection')}}">接続詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.infinitive')}}">不定詞</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.comparative')}}">比較級</a>
@@ -544,7 +551,7 @@
 
 
             <!---------------------------------------- 社会 ---------------------------------------->
-            <x-h3 color="yellow">社会</x-h3>
+            <x-h3 id="society" color="yellow">社会</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -586,6 +593,12 @@
                         <x-td>歴史</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.soc_kodai')}}">縄文、弥生、古墳</a>
+                                </x-button-link>
+                                {{-- <x-button-link color="yellow">
+                                    <a href="{{route('workbook.soc_asuka_nara')}}">飛鳥、奈良</a>作成中
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
