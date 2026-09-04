@@ -4015,6 +4015,57 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 英文法 受け身
+    public function passive_voice() {
+        $exp_common = '<p>受け身は「be動詞 + 過去分詞」で表す。現在か過去かはbe動詞で決まる。</p>';
+        $sentences = [
+            ['e' => 'I was born in Nagano.', 'j' => '私は長野で生まれた。', 'exp' => "{$exp_common}
+                                                                                    <p>bear（生む） は不規則動詞（bear - bore - born）。
+                                                                                    <p>bear（生む）の受け身で be born（生まれる）になる。</p>"],
+            ['e' => 'This book is written in English.', 'j' => 'この本は英語で書かれている。', 'exp' => "{$exp_common}
+                                                                                    <p>write（書く） は不規則動詞（write - wrote - written）。</p>"],
+            ['e' => 'My bike is broken.', 'j' => '私の自転車は壊れている。', 'exp' => "{$exp_common}
+                                                                                    <p>break（壊す） は不規則動詞（break - broke - broken）。</p>"],
+            ['e' => 'This was made in Japan.', 'j' => 'これは日本で作られた。', 'exp' => "{$exp_common}
+                                                                                        <p>make（作る） は不規則動詞（make - made - made）。</p>"],
+            ['e' => 'Paper is made from wood.', 'j' => '紙は木から作られる。', 'exp' => "{$exp_common}
+                                                                                        <p>make（作る） は不規則動詞（make - made - made）。</p>
+                                                                                        <p>原料の形がわかる場合は made of、わからない場合は made from を使う。</p>
+                                                                                        <p>ログハウスは原料（丸太）の形が残っているので、made of wood となる。</p>"],
+            ['e' => 'We were pushed forward.', 'j' => '私たちは前方に押された。', 'exp' => "{$exp_common}
+                                                                                        <p>forward は「前方へ」の意味（副詞）。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "受け身";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 英単語　動詞１
     public function e_word_verb1() {
         $questions = [
