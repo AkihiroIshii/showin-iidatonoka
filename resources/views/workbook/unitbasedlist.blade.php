@@ -406,6 +406,9 @@
                                     <a href="{{route('workbook.infinitive')}}">不定詞</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
+                                    <a href="{{route('workbook.gerund')}}">動名詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
                                     <a href="{{route('workbook.comparative')}}">比較級</a>
                                 </x-button-link>
                             </div>

@@ -3971,7 +3971,49 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 英文法 動名詞
+    public function gerund() {
+        $sentences = [
+            ['e' => 'I like swimming.', 'j' => '私は泳ぐことが好きだ。', 'exp' => '<p>動詞の原形にingをつけると動名詞「～すること」になる。</p>'],
+            ['e' => 'Skiing is fun.', 'j' => 'スキーは楽しい。', 'exp' => '<p>動詞の原形にingをつけると動名詞「～すること」になる。</p>
+                                                                        <p>"ski"「スキーをする」⇒"skiing"「スキー（をすること）」</p>'],
+            ['e' => 'I read a book before going to bed.', 'j' => '私は寝る前に本を読む。', 'exp' => '<p>前置詞 before の後に置けるのは原則として名詞のみ。</p>
+                                                                                                    <p>そのため go は置けないが、動名詞 going は置くことができる。</p>
+                                                                                                    <p>なお、before は接続詞として使うなら、"before I go to bed"と主語もつければよい。</p>'],
+            ['e' => 'Studying trains you.', 'j' => '勉強はあなたを鍛える。', 'exp' => '<p>読書（reading）、睡眠（sleeping）など、動名詞の形を使うと表現がシンプルにできる。</p>
+                                                                                    <p>ちなみに、train（鍛える）の動名詞は training（トレーニング）である。'],
+            ['e' => 'Seeing is believing.', 'j' => '見ることは信じることだ。', 'exp' => '<p>問題文は直訳ですが、実際には「百聞は一見に如かず」の意味で使われます。</p>'],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
 
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "動名詞";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
 
     // 英単語　動詞１
     public function e_word_verb1() {

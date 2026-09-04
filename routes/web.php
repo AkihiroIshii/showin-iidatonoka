@@ -373,6 +373,8 @@ Route::get('workbook/conjection', [WorkbookController::class, 'conjection'])
 ->middleware(['auth', 'verified'])->name('workbook.conjection');
 Route::get('workbook/infinitive', [WorkbookController::class, 'infinitive'])
 ->middleware(['auth', 'verified'])->name('workbook.infinitive');
+Route::get('workbook/gerund', [WorkbookController::class, 'gerund'])
+->middleware(['auth', 'verified'])->name('workbook.gerund');
 Route::get('workbook/comparative', [WorkbookController::class, 'comparative'])
 ->middleware(['auth', 'verified'])->name('workbook.comparative');
 
