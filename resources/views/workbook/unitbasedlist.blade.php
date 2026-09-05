@@ -13,10 +13,12 @@
 
             <!---------------------------------------- 小学生 ---------------------------------------->
             <x-h3 color="lime">小学生</x-h3>
+            <p class="text-center font-bold text-red-600">2026/9/5：漢字の「読み」「書き」を選べるようにしました。苦手な人はまず「読み」だけで練習しましょう。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
                         <x-th>分野</x-th>
+                        <x-th>小１</x-th>
                         <x-th>小２</x-th>
                         <x-th>小３</x-th>
                         <x-th>小４</x-th>
@@ -28,6 +30,10 @@
                     {{-- 小学算数 --}}
                     <tr>
                         <x-td>算数</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                             </div>
@@ -73,6 +79,13 @@
                     {{-- 小学国語 --}}
                     <tr>
                         <x-td>国語</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.kanjiP1')}}">小１漢字</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="lime">
@@ -310,11 +323,7 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="flex flex-wrap gap-4 font-bold">
-                <x-button-link>
-                    <a href="{{route('workbook.trigonometric_ratio')}}">三角比（数A）</a>
-                </x-button-link>
-            </div>
+
 
             <!---------------------------------------- 英語 ---------------------------------------->
             <x-h3 color="purple">英語</x-h3>
@@ -473,6 +482,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.animal_function')}}">動物の仕組み</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -690,6 +702,36 @@
                             <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!---------------------------------------- 高校生 ---------------------------------------->
+            <x-h3 color="pink">高校生</x-h3>
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <thead>
+                    <tr class="bg-gray-300">
+                        <x-th>科目</x-th>
+                        <x-th>単元</x-th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <x-td>数ⅠA</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.trigonometric_ratio')}}">単位円と三角比</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>数ⅡB</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                             </div>

@@ -31,6 +31,30 @@
                                     {{ request('en') ? 'checked' : '' }}>
                                 英訳
                             </label>
+                        @elseif ($subject == "kanji")
+                            <label class="px-6">
+                                <input type="checkbox" name="r" value="1"
+                                    {{ request('r') ? 'checked' : '' }}>
+                                読み
+                            </label>
+
+                            <label>
+                                <input type="checkbox" name="w" value="1"
+                                    {{ request('w') ? 'checked' : '' }}>
+                                書き
+                            </label>
+                        @elseif ($subject == "science")
+                            <label class="px-6">
+                                <input type="checkbox" name="term" value="1"
+                                    {{ request('term') ? 'checked' : '' }}>
+                                用語
+                            </label>
+
+                            <label>
+                                <input type="checkbox" name="calc" value="1"
+                                    {{ request('calc') ? 'checked' : '' }}>
+                                計算
+                            </label>
                         @endif
                         </div>
                     @endisset

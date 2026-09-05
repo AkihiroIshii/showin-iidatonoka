@@ -263,6 +263,8 @@ Route::get('workbook/unitbasedlist', [WorkbookController::class, 'unitbasedlist'
 ->middleware(['auth', 'verified'])->name('workbook.unitbasedlist');
 /*************** 単元別学習　ここから *************************/
 //小学生国語
+Route::get('workbook/kanjiP1', [WorkbookController::class, 'kanjiP1'])
+->middleware(['auth', 'verified'])->name('workbook.kanjiP1');
 Route::get('workbook/kanjiP2', [WorkbookController::class, 'kanjiP2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP2');
 Route::get('workbook/kanjiP3', [WorkbookController::class, 'kanjiP3'])
@@ -355,9 +357,6 @@ Route::get('workbook/sqrt_natural', [WorkbookController::class, 'sqrt_natural'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_natural');
 Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
 ->middleware(['auth', 'verified'])->name('workbook.expansion');
-// 数A
-Route::get('workbook/trigonometric_ratio', [WorkbookController::class, 'trigonometric_ratio'])
-->middleware(['auth', 'verified'])->name('workbook.trigonometric_ratio');
 // 英語
 Route::get('workbook/be_verb', [WorkbookController::class, 'be_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.be_verb');
@@ -417,6 +416,8 @@ Route::get('workbook/chemical_reaction_equation', [WorkbookController::class, 'c
 ->middleware(['auth', 'verified'])->name('workbook.chemical_reaction_equation');
 Route::get('workbook/mass_change', [WorkbookController::class, 'mass_change'])
 ->middleware(['auth', 'verified'])->name('workbook.mass_change');
+Route::get('workbook/animal_function', [WorkbookController::class, 'animal_function'])
+->middleware(['auth', 'verified'])->name('workbook.animal_function');
 Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
 Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
@@ -441,6 +442,11 @@ Route::get('workbook/soc_bakumatsu', [WorkbookController::class, 'soc_bakumatsu'
 // 国語
 Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');
+
+// 数A
+Route::get('workbook/trigonometric_ratio', [WorkbookController::class, 'trigonometric_ratio'])
+->middleware(['auth', 'verified'])->name('workbook.trigonometric_ratio');
+
 /*************** 単元別学習　ここまで *************************/
 
 
