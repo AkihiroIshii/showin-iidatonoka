@@ -381,6 +381,10 @@ Route::get('workbook/comparative', [WorkbookController::class, 'comparative'])
 ->middleware(['auth', 'verified'])->name('workbook.comparative');
 Route::get('workbook/passive_voice', [WorkbookController::class, 'passive_voice'])
 ->middleware(['auth', 'verified'])->name('workbook.passive_voice');
+Route::get('workbook/present_perfect', [WorkbookController::class, 'present_perfect'])
+->middleware(['auth', 'verified'])->name('workbook.present_perfect');
+Route::get('workbook/svo_infinitive', [WorkbookController::class, 'svo_infinitive'])
+->middleware(['auth', 'verified'])->name('workbook.svo_infinitive');
 
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');

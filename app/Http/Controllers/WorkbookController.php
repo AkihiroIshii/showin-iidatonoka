@@ -4245,408 +4245,623 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 英文法 現在完了
+    public function present_perfect(Request $request) {
+        $exp_common = '<p>現在完了形は「have + 過去分詞」で表す。「経験・完了・継続」を表現できるが、</p>
+                        <p>いずれも現在とのつながりがあることが重要（過去形は現在とのつながりがない）。</p>';
+        $sentences = [
+            ['e' => 'I have lived in Tokyo for two years.', 'j' => '私は東京に２年間住んでいる。', 'exp' => "{$exp_common}
+                                                                    <p>この例文では継続の意味を表し、「今も」東京に住んでいることを意味する。</p>
+                                                                    <p>\"I lived in Tokyo for two years.（過去形）\"では、今は住んでいないニュアンスになる。</p>"],
+            ['e' => 'I have finished reading this book.', 'j' => '私はこの本を読み終えたところだ。', 'exp' => "{$exp_common}
+                                                                    <p>この例文では完了の意味を表し、しばらく読み続けていてようやく「今」読み終えたニュアンスになる。</p>
+                                                                    <p>\"I finished reading this book.（過去形）\"では、数日前に読み終えた可能性もある。</p>"],
+            ['e' => 'I have seen Totoro twice.', 'j' => '私はトトロに二度会ったことがある。', 'exp' => "{$exp_common}
+                                                                    <p>この例文では経験の意味を表し、過去から「今」までの間に２回経験したことを意味する。</p>
+                                                                    <p>いつの出来事かを明確にするなら過去形の方がよい。（例：\"I saw Totoro last summer.\"）</p>"],
+            ['e' => 'I have never heard her voice.', 'j' => '私は一度も彼女の声を聞いたことがない。', 'exp' => "{$exp_common}
+                                                                    <p>never は not よりも強い否定を表し、「一度も～ない」という意味になる。経験用法と相性がよい。</p>"],
+            ['e' => 'Have you ever studied French?', 'j' => 'あなたは今までにフランス語を勉強したことはありますか。', 'exp' => "{$exp_common}
+                                                                    <p>ever は「今までに」という意味で、経験用法の疑問文と相性がよい。</p>
+                                                                    <p>\"Do you study French?\"（あなたはフランス語を勉強しますか。）とのニュアンスの違いを確認すること。"],
+            ['e' => 'I have been waiting for her call since yesterday.', 'j' => '私は彼女からの電話を昨日から待ち続けている。', 'exp' => "{$exp_common}
+                                                                    <p>過去から「今」までの継続が今も持続していることを強調するときは、現在完了進行形にする。</p>
+                                                                    <p>現在完了（have + 過去分詞）と、進行形（be動詞 + ing形）を組み合わせる。be動詞の過去分詞は been。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "現在完了";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 英文法 SVO + 不定詞
+    public function svo_infinitive(Request $request) {
+        $exp_common = '<p>主語(S)+動詞(V)+目的語(O)のあとに不定詞がつながる用法。</p>
+                        <p>この形でよく使われる動詞に、want、tell、help、let がある。</p>';
+        $sentences = [
+            ['e' => 'I want you to join the party.', 'j' => '私はあなたにそのパーティーに参加してもらいたい。', 'exp' => "{$exp_common}
+                                                                    <p>この例文では、want の主体は「私」だが、join の主体は「あなた」である。</p>
+                                                                    <p>どちらの主体も「私」なら、\"I want to join the party.\"でよい。</p>"],
+            ['e' => 'He told me to wait here.', 'j' => '彼は私にここで待つように言った。', 'exp' => "{$exp_common}
+                                                                    <p>この例文では、told(tell) の主体は「彼」だが、wait の主体は「私」である。"],
+            ['e' => 'I helped him open the gate.', 'j' => '私は彼が門を開けるのを手伝った。', 'exp' => "{$exp_common}
+                                                                    <p>この例文では、help の主体は「私」だが、open の主体は「彼」である。</p>
+                                                                    <p>「開けること」は不定詞で to open となるが、help と使う場合は to を省略できる。</p>
+                                                                    <p>(※)このように、不定詞なのに to を付けないものを、文法用語では原形不定詞と呼ぶ。</p>"],
+            ['e' => 'I let him play the piano.', 'j' => '私は彼にピアノを弾かせた。', 'exp' => "{$exp_common}
+                                                                    <p>この例文では、let（させる） の主体は「私」だが、play の主体は「彼」である。</p>
+                                                                    <p>「させる」には make、let、have の3つがあり、これらを特に「使役動詞」と呼ぶ。</p>
+                                                                    <p>「弾くこと」は不定詞で to play となるが、使役動詞と使う場合は to をつけない。</p>
+                                                                    <p>(※)このように、不定詞なのに to を付けないものを、文法用語では原形不定詞と呼ぶ。</p>
+                                                                    <p>なお、letは「してもいいよ」のニュアンスだが、makeは「強制的にさせる」のニュアンスになる。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "SVO + 不定詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
     // 英単語　動詞１
-    public function e_word_verb1() {
-        $questions = [
-            ['q' => '買う', 'a' => 'buy'],
-            ['q' => '持ってくる', 'a' => 'bring'],
-            ['q' => '建てる', 'a' => 'build'],
-            ['q' => '捕まえる', 'a' => 'catch'],
-            ['q' => '掃除する', 'a' => 'clean'],
-            ['q' => '料理する', 'a' => 'cook'],
-            ['q' => '描く', 'a' => 'draw/paint'],
-            ['q' => '飲む', 'a' => 'drink'],
-            ['q' => '楽しむ', 'a' => 'enjoy'],
-            ['q' => '飛ぶ', 'a' => 'fly'],
-            ['q' => '助ける', 'a' => 'help'],
-            ['q' => '知っている', 'a' => 'know'],
-            ['q' => '去る、置いていく', 'a' => 'leave'],
-            ['q' => '意味する', 'a' => 'mean'],
-            ['q' => '必要とする', 'a' => 'need'],
-            ['q' => '開ける', 'a' => 'open'],
-            ['q' => '拾う', 'a' => 'pick'],
-            ['q' => '乗る', 'a' => 'ride'],
-            ['q' => '立つ', 'a' => 'stand'],
-            ['q' => '考える、思う', 'a' => 'think'],
-            ['q' => '訪れる', 'a' => 'visit'],
-            ['q' => '着ている', 'a' => 'wear'],
-            ['q' => '(文字や手紙を)書く', 'a' => 'write'],
+    public function e_word_verb1(Request $request) {
+        $sentences = [
+            ['e' => "We <span class=\"underline\">buy</span> pizza at this store.", 'j' => "私たちはこの店でピザを<span class=\"underline\">買う</span>。", 'exp' => 'buyは不規則動詞（buy - bought - bought）。'],
+            ['e' => "They <span class=\"underline\">bring</span> books every week.", 'j' => "彼らは毎週本を<span class=\"underline\">持ってくる</span>。", 'exp' => 'bringは不規則動詞（bring - brought - brought）。'],
+            ['e' => "We <span class=\"underline\">build</span> houses.", 'j' => "私たちは家を<span class=\"underline\">建てる</span>。", 'exp' => "buildは不規則動詞（build - built - built）"],
+            ['e' => "They <span class=\"underline\">catch</span> the ball well.", 'j' => "彼らはボールを上手に<span class=\"underline\">捕る</span>。", 'exp' => "catchは不規則動詞（catch - caught - caught）"],
+            ['e' => "I <span class=\"underline\">clean</span> my room every day.", 'j' => "私は毎日自分の部屋を<span class=\"underline\">掃除する</span>。", 'exp' => ""],
+            ['e' => "I <span class=\"underline\">cook</span> dinner every night.", 'j' => "私は毎晩夕食を<span class=\"underline\">料理する</span>。", 'exp' => "加熱するときは cook を使う。サラダのように火を使わないものには make を使う。"],
+            ['e' => "I often <span class=\"underline\">draw</span> a picture.", 'j' => "私はよく絵を<span class=\"underline\">描く</span>。", 'exp' => "この例文では paint を使ってもよい。文字を書くときは write を使う。"],
+            ['e' => "I usually <span class=\"underline\">drink</span> orange juice.", 'j' => "私はたいていオレンジジュースを<span class=\"underline\">飲む</span>。", 'exp' => "drinkは不規則動詞（drink - drank - drunk）"],
+            ['e' => "We <span class=\"underline\">enjoy</span> sports on Saturdays.", 'j' => "私たちは土曜日にスポーツを<span class=\"underline\">楽しむ</span>。", 'exp' => ""],
+            ['e' => "The birds <span class=\"underline\">fly</span> high.", 'j' => "その鳥たちは高く<span class=\"underline\">飛ぶ</span>。", 'exp' => "flyは不規則動詞（fly - flew - flown）"],
+            ['e' => "They <span class=\"underline\">help</span> many children.", 'j' => "彼らは多くの子どもたちを<span class=\"underline\">助ける</span>。", 'exp' => ""],
+            ['e' => "I <span class=\"underline\">know</span> him.", 'j' => "私は彼を<span class=\"underline\">知っている</span>。", 'exp' => ""],
+            ['e' => "Many trains <span class=\"underline\">leave</span> the station.", 'j' => "多くの電車がその駅を<span class=\"underline\">出発する</span>。", 'exp' => "「離れる」が原義。「去る」「置き忘れる」「出発する」などの意味で使う。"],
+            ['e' => "What is this word <span class=\"underline\">mean</span>?", 'j' => "この言葉は何を<span class=\"underline\">意味する</span>のですか。", 'exp' => ""],
+            ['e' => "We <span class=\"underline\">need</span> your help.", 'j' => "私たちはあなたの助けを<span class=\"underline\">必要とする</span>。", 'exp' => ""],
+            ['e' => "I <span class=\"underline\">open</span> the gate every morning.", 'j' => "私は毎日その門を<span class=\"underline\">開ける</span>。", 'exp' => ""],
+            ['e' => "I often <span class=\"underline\">think</span> about the problem.", 'j' => "私はよくその問題について<span class=\"underline\">考える</span>。", 'exp' => ""],
+            ['e' => "We <span class=\"underline\">visit</span> my uncle every summer.", 'j' => "私たちは毎年夏に叔父を<span class=\"underline\">訪ねる</span>。", 'exp' => "visit の後ろは人でも場所でもよい。"],
+            ['e' => "I sometimes <span class=\"underline\">write</span> a letter.", 'j' => "私は時々手紙を<span class=\"underline\">書く</span>。", 'exp' => "write自体に「手紙を書く」という意味もある。"],
+            ['e' => "They <span class=\"underline\">wear</span> same clothes.", 'j' => "彼らは同じ服を<span class=\"underline\">着ている</span>。", 'exp' => "wearには「身に付けている」という意味があるので、眼鏡や帽子にも使う。"],
         ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.e_word_verb1', compact('question'));
-    }
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
 
-    // be動詞（主語と動詞）
-    public function be_verb1() {
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
         $questions = [
             [
-                'q' => '私は強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( I ) ( am ) strong.',
+                'q_type' => 3,
+                'q' => "<p>下線部を英単語で書きなさい。</p>
+                        <p class=\"text-2xl\">{$s['j']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$s['e']}</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
             ],
             [
-                'q' => 'あなたは強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( You ) ( are ) strong.',
-            ],
-            [
-                'q' => '彼は強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( He ) ( is ) strong.',
-            ],
-            [
-                'q' => '彼女は強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( She ) ( is ) strong.',
-            ],
-            [
-                'q' => '私たちは強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( We ) ( are ) strong.',
-            ],
-            [
-                'q' => 'あなたたちは強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( You ) ( are ) strong.',
-            ],
-            [
-                'q' => '彼らは強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( They ) ( are ) strong.',
-            ],
-            [
-                'q' => 'タケシは強い。 ⇒ (　　) (　　) strong.',
-                'a' => '( Takeshi ) ( is ) strong.',
-            ],
-            [
-                'q' => '太郎と花子は強い。 ⇒ (　　) (　　) (　　) (　　) strong.',
-                'a' => '( Taro ) ( and ) ( Hanako ) ( are ) strong.',
+                'q_type' => 3,
+                'q' => "<p>下線部の意味を答えなさい。</p>
+                        <p class=\"text-2xl\">{$s['e']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$s['j']}</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
             ],
         ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.be_verb1', compact('question'));
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "英単語（動詞１）";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
-    // be動詞（過去形）
-    public function be_verb2() {
+    // 英単語　前置詞
+    public function preposition(Request $request) {
+        $sentences = [
+            ['e' => "There is a notebook <span class=\"underline\">on the desk</span>.", 'j' => "<span class=\"underline\">机の上に</span>ノートがある。", 'exp' => 'onは接触を意味するので、壁や天井に接しているときも on を使う。'],
+            ['e' => "There is a cat <span class=\"underline\">under the desk</span>.", 'j' => "<span class=\"underline\">机の下に</span>猫がいる。", 'exp' => ''],
+            ['e' => "There is a cat <span class=\"underline\">by the desk</span>.", 'j' => "<span class=\"underline\">机のそばに</span>猫がいる。", 'exp' => '隣に寄り添うくらいの距離ならby、そこまでではないならnearを使う。'],
+            ['e' => "There is a cat <span class=\"underline\">in the box</span>.", 'j' => "<span class=\"underline\">箱の中に</span>猫がいる。", 'exp' => ''],
+            ['e' => "A girl is playing <span class=\"underline\">with a cat</span>.", 'j' => "少女が<span class=\"underline\">猫と</span>遊んでいる。", 'exp' => 'withは「～と一緒に」の意味で使われる。'],
+            ['e' => "A cat is running <span class=\"underline\">around the desk</span>.", 'j' => "猫が<span class=\"underline\">机の周りを</span>走っている。", 'exp' => ''],
+            ['e' => "We came <span class=\"underline\">from Ehime</span>.", 'j' => "私たちは<span class=\"underline\">愛媛から</span>来ました。", 'exp' => 'fromは「～から」の意味で、場所にも時間にも使える。'],
+            ['e' => "Let's go <span class=\"underline\">to the park</span>.", 'j' => "<span class=\"underline\">公園に</span>行こう。", 'exp' => '場所に対して「～に、～へ」の意味で使う。他にもいろいろな使い方がある。'],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
         $questions = [
             [
-                'q' => '私は強かった。 ⇒ (　　) (　　) strong.',
-                'a' => '( I ) ( was ) strong.',
+                'q_type' => 3,
+                'q' => "<p>下線部を英単語で書きなさい。</p>
+                        <p class=\"text-2xl\">{$s['j']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$s['e']}</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
             ],
             [
-                'q' => 'あなたは強かった。 ⇒ (　　) (　　) strong.',
-                'a' => '( You ) ( were ) strong.',
-            ],
-            [
-                'q' => '彼は強かった。 ⇒ (　　) (　　) strong.',
-                'a' => '( He ) ( was ) strong.',
-            ],
-            [
-                'q' => '彼女は強かった。 ⇒ (　　) (　　) strong.',
-                'a' => '( She ) ( was ) strong.',
-            ],
-            [
-                'q' => '私たちは強かった。 ⇒ (　　) (　　) strong.',
-                'a' => '( We ) ( were ) strong.',
-            ],
-            [
-                'q' => 'あなたたちは強かった。 ⇒ (　　) (　　) strong.',
-                'a' => '( You ) ( were ) strong.',
-            ],
-            [
-                'q' => '彼らは強かった。 ⇒ (　　) (　　) strong.',
-                'a' => '( They ) ( were ) strong.',
-            ],
-            [
-                'q' => '太郎と花子は強かった。 ⇒ (　　) (　　) (　　) (　　) strong.',
-                'a' => '( Taro ) ( and ) ( Hanako ) ( were ) strong.',
+                'q_type' => 3,
+                'q' => "<p>下線部の意味を答えなさい。</p>
+                        <p class=\"text-2xl\">{$s['e']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$s['j']}</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
             ],
         ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.be_verb2', compact('question'));
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "前置詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
-    // be動詞（疑問文・否定文）
-    public function be_verb3() {
-        $questions = [
-            [
-                'q' => '私は強くない。 ⇒ (　　) (　　) (　　) strong.',
-                'a' => '( I ) ( am ) ( not ) strong.',
-            ],
-            [
-                'q' => 'あなたは強くない。 ⇒ (　　) (　　) (　　) strong.',
-                'a' => '( You ) ( are ) ( not ) strong.',
-            ],
-            [
-                'q' => '彼は強くない。 ⇒ (　　) (　　) (　　) strong.',
-                'a' => '( He ) ( is ) ( not ) strong.',
-            ],
-            [
-                'q' => '彼女は強くない。 ⇒ (　　) (　　) (　　) strong.',
-                'a' => '( She ) ( is ) ( not ) strong.',
-            ],
-            [
-                'q' => '私たちは強くない。 ⇒ (　　) (　　) (　　) strong.',
-                'a' => '( We ) ( are ) ( not ) strong.',
-            ],
-            [
-                'q' => 'あなたたちは強くない。 ⇒ (　　) (　　) (　　) strong.',
-                'a' => '( You ) ( are ) ( not ) strong.',
-            ],
-            [
-                'q' => '彼らは強くない。 ⇒ (　　) (　　) (　　) strong.',
-                'a' => '( They ) ( are ) ( not ) strong.',
-            ],
+    // // 前置詞
+    // public function preposition() {
+    //     $questions = [
 
-            [
-                'q' => '私は強いですか。 ⇒ (　　) (　　) strong?',
-                'a' => '( Am ) ( I ) strong?',
-            ],
-            [
-                'q' => 'あなたは強いですか。 ⇒ (　　) (　　) strong?',
-                'a' => '( Are ) ( you ) strong?',
-            ],
-            [
-                'q' => '彼は強いですか。 ⇒ (　　) (　　) strong?',
-                'a' => '( Is ) ( he ) strong?',
-            ],
-            [
-                'q' => '彼女は強いですか。 ⇒ (　　) (　　) strong?',
-                'a' => '( Is ) ( she ) strong?',
-            ],
-            [
-                'q' => '私たちは強いですか。 ⇒ (　　) (　　) strong?',
-                'a' => '( Are ) ( we ) strong?',
-            ],
-            [
-                'q' => 'あなたたちは強いですか。 ⇒ (　　) (　　) strong?',
-                'a' => '( Are ) ( you ) strong?',
-            ],
-            [
-                'q' => '彼らは強いですか。 ⇒ (　　) (　　) strong?',
-                'a' => '( Are ) ( they ) strong?',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.be_verb3', compact('question'));
-    }
-
-    // 一般動詞（肯定文・否定文・疑問文）
-    public function general_verb1() {
-        $questions = [
-            [
-                'q' => '私はテニスをします。 ⇒ I (　　) tennis.',
-                'a' => 'I ( play ) tennis.',
-            ],
-            [
-                'q' => '私はテニスをしません。 ⇒ I (　　) (　　) tennis.',
-                'a' => 'I ( don\'t ) ( play ) tennis.',
-            ],
-            [
-                'q' => 'あなたはテニスをしますか。 ⇒ (　　) (　　) (　　) tennis?',
-                'a' => '( Do ) ( you ) ( play ) tennis?',
-            ],
-            [
-                'q' => '私たちは京都を知っている。 ⇒ We (　　) Kyoto.',
-                'a' => 'We ( know ) Kyoto.',
-            ],
-            [
-                'q' => '私たちは京都を知りません。 ⇒ We (　　) (　　) Kyoto.',
-                'a' => 'We ( don\'t ) ( know ) Kyoto.',
-            ],
-            [
-                'q' => 'あなたたちは京都を知っていますか。 ⇒ (　　) (　　) (　　) Kyoto?',
-                'a' => '( Do ) ( you ) ( know ) Kyoto?',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.general_verb1', compact('question'));
-    }
-
-    // 一般動詞（三単現）
-    public function general_verb2() {
-        $questions = [
-            [
-                'q' => '彼女はテニスをします。 ⇒ She (　　) tennis.',
-                'a' => 'She ( plays ) tennis.',
-            ],
-            [
-                'q' => '彼女はテニスをしません。 ⇒ She (　　) (　　) tennis.',
-                'a' => 'She ( doesn\'t ) ( play ) tennis.',
-            ],
-            [
-                'q' => '彼女はテニスをしますか。 ⇒ (　　) (　　) (　　) tennis?',
-                'a' => '( Does ) ( she ) ( play ) tennis?',
-            ],
-            [
-                'q' => 'トムは大阪が好きです。 ⇒ Tom (　　) Osaka.',
-                'a' => 'Tom ( likes ) Osaka.',
-            ],
-            [
-                'q' => 'トムは大阪に住んでいません。 ⇒ Tom (　　) (　　) in Osaka.',
-                'a' => 'Tom ( doesn\'t ) ( live ) in Osaka.',
-            ],
-            [
-                'q' => 'トムは大阪を訪れるでしょうか。 ⇒ (　　) (　　) (　　) Osaka?',
-                'a' => '( Does ) ( Tom ) ( visit ) Osaka?',
-            ],
-            [
-                'q' => 'それは10分かかります。 ⇒ It (　　) ten minutes.',
-                'a' => 'It ( takes ) ten minutes.',
-            ],
-            [
-                'q' => 'それは10分かかりません。 ⇒ It (　　) (　　) ten minutes.',
-                'a' => 'It ( doesn\'t ) ( take ) ten minutes.',
-            ],
-            [
-                'q' => 'それは10分かかりますか。 ⇒ (　　) (　　) (　　) ten minutes?',
-                'a' => '( Does ) ( it ) ( take ) ten minutes?',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.general_verb2', compact('question'));
-    }
-
-    // 一般動詞（過去形）
-    public function general_verb3() {
-        $questions = [
-            [
-                'q' => '彼女は公園まで歩いた。 ⇒ She (　　) to the park.',
-                'a' => 'She ( walked ) to the park.',
-            ],
-            [
-                'q' => '彼は英語を勉強した。 ⇒ He (　　) English.',
-                'a' => 'He ( studied ) English.',
-            ],
-            [
-                'q' => '私は音楽を聴いた。 ⇒ I (　　) to the music.',
-                'a' => 'I ( listened ) to the music.',
-            ],
-            [
-                'q' => '私は父に感謝した。 ⇒ I (　　) my father.',
-                'a' => 'I ( thanked ) my father.',
-            ],
-            [
-                'q' => 'あなたは昨日ピアノを弾きましたか。 ⇒ (　　) (　　) (　　) the piano yesterday?.',
-                'a' => '( Did ) ( you ) ( play ) the piano yesterday?',
-            ],
-            [
-                'q' => '彼は先週あなたの家に来ましたか。 ⇒ (　　) (　　) (　　) to your house last week?',
-                'a' => '( Did ) ( he ) ( come ) to your house last week?',
-            ],
-            [
-                'q' => '彼らは2年前、東京に住んでいましたか。 ⇒ (　　) (　　) (　　) in Tokyo two years ago?',
-                'a' => '( Did ) ( they ) ( live ) in Tokyo two years ago?',
-            ],
-            [
-                'q' => 'その車はここに止まらなかった。 ⇒ The car (　　) (　　) here.',
-                'a' => 'The car ( didn\'t ) ( stop ) here',
-            ],
-            [
-                'q' => '私たちはこの話を知らなかった。 ⇒ We (　　) (　　) this story.',
-                'a' => 'We ( didn\'t ) ( know ) this story.',
-            ],
-            [
-                'q' => '彼らは車を持っていなかった。 ⇒ They (　　) (　　) a car.',
-                'a' => 'They ( didn\'t ) ( have ) a car.',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.general_verb3', compact('question'));
-    }
-
-    // 一般動詞（不規則動詞）
-    public function general_verb4() {
-        $questions = [
-            [
-                'q' => '彼女は手紙を書いた。 ⇒ She (　　) a letter.',
-                'a' => 'She ( wrote ) a letter.',
-            ],
-            [
-                'q' => '彼は一杯の紅茶を飲んだ。 ⇒ He (　　) a cup of tea.',
-                'a' => 'He ( drank/had ) a cup of tea.',
-            ],
-            [
-                'q' => '私たちは学校まで走った。 ⇒ We (　　) to our school.',
-                'a' => 'We ( ran ) to our school.',
-            ],
-            [
-                'q' => 'それは2時間かかった。 ⇒ It (　　) two hours.',
-                'a' => 'It ( took ) two hours.',
-            ],
-            [
-                'q' => 'その試合は10時に始まった。 ⇒ The game (　　) at ten.',
-                'a' => 'The game ( began/started ) at ten.',
-            ],
-            [
-                'q' => '私はノートを買った。 ⇒ I (　　) a notebook.',
-                'a' => 'I ( bought ) a notebook.',
-            ],
-            [
-                'q' => '彼らは私たちを知っていた。 ⇒ They (　　) us.',
-                'a' => 'They ( knew ) us.',
-            ],
-            [
-                'q' => '私は君のお母さんに会った。 ⇒  I (　　) your mother.',
-                'a' => 'They ( saw/met ) your mother.',
-            ],
-            [
-                'q' => '彼は一冊の本を持ってきた。 ⇒ He (　　) a book.',
-                'a' => 'He ( brought ) a book.',
-            ],
-            [
-                'q' => '姉は鎌倉まで運転した。 ⇒ My sister (　　) to Kamakura .',
-                'a' => 'My sister ( drove ) to Kamakura.',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.general_verb4', compact('question'));
-    }
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.preposition', compact('question'));
+    // }
 
 
+    // // 英単語　動詞１
+    // public function e_word_verb1() {
+    //     $questions = [
+    //         ['q' => '買う', 'a' => 'buy'],
+    //         ['q' => '持ってくる', 'a' => 'bring'],
+    //         ['q' => '建てる', 'a' => 'build'],
+    //         ['q' => '捕まえる', 'a' => 'catch'],
+    //         ['q' => '掃除する', 'a' => 'clean'],
+    //         ['q' => '料理する', 'a' => 'cook'],
+    //         ['q' => '描く', 'a' => 'draw/paint'],
+    //         ['q' => '飲む', 'a' => 'drink'],
+    //         ['q' => '楽しむ', 'a' => 'enjoy'],
+    //         ['q' => '飛ぶ', 'a' => 'fly'],
+    //         ['q' => '助ける', 'a' => 'help'],
+    //         ['q' => '知っている', 'a' => 'know'],
+    //         ['q' => '去る、置いていく', 'a' => 'leave'],
+    //         ['q' => '意味する', 'a' => 'mean'],
+    //         ['q' => '必要とする', 'a' => 'need'],
+    //         ['q' => '開ける', 'a' => 'open'],
+    //         ['q' => '拾う', 'a' => 'pick'],
+    //         ['q' => '乗る', 'a' => 'ride'],
+    //         ['q' => '立つ', 'a' => 'stand'],
+    //         ['q' => '考える、思う', 'a' => 'think'],
+    //         ['q' => '訪れる', 'a' => 'visit'],
+    //         ['q' => '着ている', 'a' => 'wear'],
+    //         ['q' => '(文字や手紙を)書く', 'a' => 'write'],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.e_word_verb1', compact('question'));
+    // }
 
-    // 前置詞
-    public function preposition() {
-        $questions = [
-            [
-                'q' => '机の上にノートがある。 ⇒ There is a notebook (　　) the desk.',
-                'a' => 'There is a notebook ( on ) the desk.',
-            ],
-            [
-                'q' => '机の下に猫がいる。 ⇒ There is a cat (　　) the desk.',
-                'a' => 'There is a cat ( under ) the desk.',
-            ],
-            [
-                'q' => '机のそばに猫がいる。 ⇒ There is a cat (　　) the desk.',
-                'a' => 'There is a cat ( by/near ) the desk.',
-            ],
-            [
-                'q' => '箱の中に猫がいる。 ⇒ There is a cat (　　) the box.',
-                'a' => 'There is a cat ( in ) the box.',
-            ],
-            [
-                'q' => '少女が猫と遊んでいる。 ⇒ A girl is playing (　　) a cat.',
-                'a' => 'A girl is playing ( with ) a cat.',
-            ],
-            [
-                'q' => '猫が机の周りを走っている。 ⇒ A cat is running (　　) the desk.',
-                'a' => 'A cat is running ( around ) the desk.',
-            ],
-            [
-                'q' => '私たちは愛媛から来ました。 ⇒ We came (　　) Ehime.',
-                'a' => 'We came ( from ) Ehime.',
-            ],
-            [
-                'q' => '公園に行こう。 ⇒ Let\'s go (　　) the park.',
-                'a' => 'Let\'s go ( to ) the park.',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.preposition', compact('question'));
-    }
+    // // be動詞（主語と動詞）
+    // public function be_verb1() {
+    //     $questions = [
+    //         [
+    //             'q' => '私は強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( I ) ( am ) strong.',
+    //         ],
+    //         [
+    //             'q' => 'あなたは強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( You ) ( are ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼は強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( He ) ( is ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼女は強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( She ) ( is ) strong.',
+    //         ],
+    //         [
+    //             'q' => '私たちは強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( We ) ( are ) strong.',
+    //         ],
+    //         [
+    //             'q' => 'あなたたちは強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( You ) ( are ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼らは強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( They ) ( are ) strong.',
+    //         ],
+    //         [
+    //             'q' => 'タケシは強い。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( Takeshi ) ( is ) strong.',
+    //         ],
+    //         [
+    //             'q' => '太郎と花子は強い。 ⇒ (　　) (　　) (　　) (　　) strong.',
+    //             'a' => '( Taro ) ( and ) ( Hanako ) ( are ) strong.',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.be_verb1', compact('question'));
+    // }
+
+    // // be動詞（過去形）
+    // public function be_verb2() {
+    //     $questions = [
+    //         [
+    //             'q' => '私は強かった。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( I ) ( was ) strong.',
+    //         ],
+    //         [
+    //             'q' => 'あなたは強かった。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( You ) ( were ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼は強かった。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( He ) ( was ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼女は強かった。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( She ) ( was ) strong.',
+    //         ],
+    //         [
+    //             'q' => '私たちは強かった。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( We ) ( were ) strong.',
+    //         ],
+    //         [
+    //             'q' => 'あなたたちは強かった。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( You ) ( were ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼らは強かった。 ⇒ (　　) (　　) strong.',
+    //             'a' => '( They ) ( were ) strong.',
+    //         ],
+    //         [
+    //             'q' => '太郎と花子は強かった。 ⇒ (　　) (　　) (　　) (　　) strong.',
+    //             'a' => '( Taro ) ( and ) ( Hanako ) ( were ) strong.',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.be_verb2', compact('question'));
+    // }
+
+    // // be動詞（疑問文・否定文）
+    // public function be_verb3() {
+    //     $questions = [
+    //         [
+    //             'q' => '私は強くない。 ⇒ (　　) (　　) (　　) strong.',
+    //             'a' => '( I ) ( am ) ( not ) strong.',
+    //         ],
+    //         [
+    //             'q' => 'あなたは強くない。 ⇒ (　　) (　　) (　　) strong.',
+    //             'a' => '( You ) ( are ) ( not ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼は強くない。 ⇒ (　　) (　　) (　　) strong.',
+    //             'a' => '( He ) ( is ) ( not ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼女は強くない。 ⇒ (　　) (　　) (　　) strong.',
+    //             'a' => '( She ) ( is ) ( not ) strong.',
+    //         ],
+    //         [
+    //             'q' => '私たちは強くない。 ⇒ (　　) (　　) (　　) strong.',
+    //             'a' => '( We ) ( are ) ( not ) strong.',
+    //         ],
+    //         [
+    //             'q' => 'あなたたちは強くない。 ⇒ (　　) (　　) (　　) strong.',
+    //             'a' => '( You ) ( are ) ( not ) strong.',
+    //         ],
+    //         [
+    //             'q' => '彼らは強くない。 ⇒ (　　) (　　) (　　) strong.',
+    //             'a' => '( They ) ( are ) ( not ) strong.',
+    //         ],
+
+    //         [
+    //             'q' => '私は強いですか。 ⇒ (　　) (　　) strong?',
+    //             'a' => '( Am ) ( I ) strong?',
+    //         ],
+    //         [
+    //             'q' => 'あなたは強いですか。 ⇒ (　　) (　　) strong?',
+    //             'a' => '( Are ) ( you ) strong?',
+    //         ],
+    //         [
+    //             'q' => '彼は強いですか。 ⇒ (　　) (　　) strong?',
+    //             'a' => '( Is ) ( he ) strong?',
+    //         ],
+    //         [
+    //             'q' => '彼女は強いですか。 ⇒ (　　) (　　) strong?',
+    //             'a' => '( Is ) ( she ) strong?',
+    //         ],
+    //         [
+    //             'q' => '私たちは強いですか。 ⇒ (　　) (　　) strong?',
+    //             'a' => '( Are ) ( we ) strong?',
+    //         ],
+    //         [
+    //             'q' => 'あなたたちは強いですか。 ⇒ (　　) (　　) strong?',
+    //             'a' => '( Are ) ( you ) strong?',
+    //         ],
+    //         [
+    //             'q' => '彼らは強いですか。 ⇒ (　　) (　　) strong?',
+    //             'a' => '( Are ) ( they ) strong?',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.be_verb3', compact('question'));
+    // }
+
+    // // 一般動詞（肯定文・否定文・疑問文）
+    // public function general_verb1() {
+    //     $questions = [
+    //         [
+    //             'q' => '私はテニスをします。 ⇒ I (　　) tennis.',
+    //             'a' => 'I ( play ) tennis.',
+    //         ],
+    //         [
+    //             'q' => '私はテニスをしません。 ⇒ I (　　) (　　) tennis.',
+    //             'a' => 'I ( don\'t ) ( play ) tennis.',
+    //         ],
+    //         [
+    //             'q' => 'あなたはテニスをしますか。 ⇒ (　　) (　　) (　　) tennis?',
+    //             'a' => '( Do ) ( you ) ( play ) tennis?',
+    //         ],
+    //         [
+    //             'q' => '私たちは京都を知っている。 ⇒ We (　　) Kyoto.',
+    //             'a' => 'We ( know ) Kyoto.',
+    //         ],
+    //         [
+    //             'q' => '私たちは京都を知りません。 ⇒ We (　　) (　　) Kyoto.',
+    //             'a' => 'We ( don\'t ) ( know ) Kyoto.',
+    //         ],
+    //         [
+    //             'q' => 'あなたたちは京都を知っていますか。 ⇒ (　　) (　　) (　　) Kyoto?',
+    //             'a' => '( Do ) ( you ) ( know ) Kyoto?',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.general_verb1', compact('question'));
+    // }
+
+    // // 一般動詞（三単現）
+    // public function general_verb2() {
+    //     $questions = [
+    //         [
+    //             'q' => '彼女はテニスをします。 ⇒ She (　　) tennis.',
+    //             'a' => 'She ( plays ) tennis.',
+    //         ],
+    //         [
+    //             'q' => '彼女はテニスをしません。 ⇒ She (　　) (　　) tennis.',
+    //             'a' => 'She ( doesn\'t ) ( play ) tennis.',
+    //         ],
+    //         [
+    //             'q' => '彼女はテニスをしますか。 ⇒ (　　) (　　) (　　) tennis?',
+    //             'a' => '( Does ) ( she ) ( play ) tennis?',
+    //         ],
+    //         [
+    //             'q' => 'トムは大阪が好きです。 ⇒ Tom (　　) Osaka.',
+    //             'a' => 'Tom ( likes ) Osaka.',
+    //         ],
+    //         [
+    //             'q' => 'トムは大阪に住んでいません。 ⇒ Tom (　　) (　　) in Osaka.',
+    //             'a' => 'Tom ( doesn\'t ) ( live ) in Osaka.',
+    //         ],
+    //         [
+    //             'q' => 'トムは大阪を訪れるでしょうか。 ⇒ (　　) (　　) (　　) Osaka?',
+    //             'a' => '( Does ) ( Tom ) ( visit ) Osaka?',
+    //         ],
+    //         [
+    //             'q' => 'それは10分かかります。 ⇒ It (　　) ten minutes.',
+    //             'a' => 'It ( takes ) ten minutes.',
+    //         ],
+    //         [
+    //             'q' => 'それは10分かかりません。 ⇒ It (　　) (　　) ten minutes.',
+    //             'a' => 'It ( doesn\'t ) ( take ) ten minutes.',
+    //         ],
+    //         [
+    //             'q' => 'それは10分かかりますか。 ⇒ (　　) (　　) (　　) ten minutes?',
+    //             'a' => '( Does ) ( it ) ( take ) ten minutes?',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.general_verb2', compact('question'));
+    // }
+
+    // // 一般動詞（過去形）
+    // public function general_verb3() {
+    //     $questions = [
+    //         [
+    //             'q' => '彼女は公園まで歩いた。 ⇒ She (　　) to the park.',
+    //             'a' => 'She ( walked ) to the park.',
+    //         ],
+    //         [
+    //             'q' => '彼は英語を勉強した。 ⇒ He (　　) English.',
+    //             'a' => 'He ( studied ) English.',
+    //         ],
+    //         [
+    //             'q' => '私は音楽を聴いた。 ⇒ I (　　) to the music.',
+    //             'a' => 'I ( listened ) to the music.',
+    //         ],
+    //         [
+    //             'q' => '私は父に感謝した。 ⇒ I (　　) my father.',
+    //             'a' => 'I ( thanked ) my father.',
+    //         ],
+    //         [
+    //             'q' => 'あなたは昨日ピアノを弾きましたか。 ⇒ (　　) (　　) (　　) the piano yesterday?.',
+    //             'a' => '( Did ) ( you ) ( play ) the piano yesterday?',
+    //         ],
+    //         [
+    //             'q' => '彼は先週あなたの家に来ましたか。 ⇒ (　　) (　　) (　　) to your house last week?',
+    //             'a' => '( Did ) ( he ) ( come ) to your house last week?',
+    //         ],
+    //         [
+    //             'q' => '彼らは2年前、東京に住んでいましたか。 ⇒ (　　) (　　) (　　) in Tokyo two years ago?',
+    //             'a' => '( Did ) ( they ) ( live ) in Tokyo two years ago?',
+    //         ],
+    //         [
+    //             'q' => 'その車はここに止まらなかった。 ⇒ The car (　　) (　　) here.',
+    //             'a' => 'The car ( didn\'t ) ( stop ) here',
+    //         ],
+    //         [
+    //             'q' => '私たちはこの話を知らなかった。 ⇒ We (　　) (　　) this story.',
+    //             'a' => 'We ( didn\'t ) ( know ) this story.',
+    //         ],
+    //         [
+    //             'q' => '彼らは車を持っていなかった。 ⇒ They (　　) (　　) a car.',
+    //             'a' => 'They ( didn\'t ) ( have ) a car.',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.general_verb3', compact('question'));
+    // }
+
+    // // 一般動詞（不規則動詞）
+    // public function general_verb4() {
+    //     $questions = [
+    //         [
+    //             'q' => '彼女は手紙を書いた。 ⇒ She (　　) a letter.',
+    //             'a' => 'She ( wrote ) a letter.',
+    //         ],
+    //         [
+    //             'q' => '彼は一杯の紅茶を飲んだ。 ⇒ He (　　) a cup of tea.',
+    //             'a' => 'He ( drank/had ) a cup of tea.',
+    //         ],
+    //         [
+    //             'q' => '私たちは学校まで走った。 ⇒ We (　　) to our school.',
+    //             'a' => 'We ( ran ) to our school.',
+    //         ],
+    //         [
+    //             'q' => 'それは2時間かかった。 ⇒ It (　　) two hours.',
+    //             'a' => 'It ( took ) two hours.',
+    //         ],
+    //         [
+    //             'q' => 'その試合は10時に始まった。 ⇒ The game (　　) at ten.',
+    //             'a' => 'The game ( began/started ) at ten.',
+    //         ],
+    //         [
+    //             'q' => '私はノートを買った。 ⇒ I (　　) a notebook.',
+    //             'a' => 'I ( bought ) a notebook.',
+    //         ],
+    //         [
+    //             'q' => '彼らは私たちを知っていた。 ⇒ They (　　) us.',
+    //             'a' => 'They ( knew ) us.',
+    //         ],
+    //         [
+    //             'q' => '私は君のお母さんに会った。 ⇒  I (　　) your mother.',
+    //             'a' => 'They ( saw/met ) your mother.',
+    //         ],
+    //         [
+    //             'q' => '彼は一冊の本を持ってきた。 ⇒ He (　　) a book.',
+    //             'a' => 'He ( brought ) a book.',
+    //         ],
+    //         [
+    //             'q' => '姉は鎌倉まで運転した。 ⇒ My sister (　　) to Kamakura .',
+    //             'a' => 'My sister ( drove ) to Kamakura.',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.general_verb4', compact('question'));
+    // }
+
+
+
 
     /********** 英語まとめ **************/
     // be動詞と一般動詞
