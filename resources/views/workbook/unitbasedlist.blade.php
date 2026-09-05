@@ -318,6 +318,7 @@
 
             <!---------------------------------------- 英語 ---------------------------------------->
             <x-h3 color="purple">英語</x-h3>
+            <p class="text-center font-bold text-red-600">2026/9/5：英文法は「和訳」「英訳」を選べるようにしました。慣れるまでは「和訳」だけで練習しましょう。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -407,6 +408,9 @@
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.gerund')}}">動名詞</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.auxiliary_verb')}}">助動詞</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.comparative')}}">比較級</a>

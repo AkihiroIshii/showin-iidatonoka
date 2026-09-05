@@ -3231,7 +3231,7 @@ class WorkbookController extends Controller
     }
 
     // 英文法 be動詞
-    public function be_verb() {
+    public function be_verb(Request $request) {
         // 主語
         $subjects = [
             ['e' => 'This', 'j' => 'これ', 'el' => 'this'],
@@ -3300,14 +3300,24 @@ class WorkbookController extends Controller
                 'e' => '"Is A B?"の形になる。なお、Bの頭文字が母音(aiueoの音)の場合、不定冠詞は"an"になる。',
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $q_index = 2 * rand(0,count($questions)/2-1);
+        } else if ($en == false && $ja == true) {
+            $q_index = 2 * rand(0,count($questions)/2-1) + 1;
+        } else {
+            $q_index = rand(0,count($questions)-1);
+        }
         $question = $questions[$q_index];
-        $unitname = "AはBです。";
-        return view('workbook.unit_template', compact('unitname','question'));
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "be動詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英文法 一般動詞
-    public function general_verb() {
+    public function general_verb(Request $request) {
         // 主語 'es'=1:三人称単数
         $subjects = [
             ['e' => 'I', 'es' => 0, 'el' => 'I', 'j' => '私', ],
@@ -3335,10 +3345,28 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$vs}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$v['j']}。",
+                'e_type' => 1,
+                'e' => '"S V."の形になる。なお、Sが三人称単数の場合、Vにsが付く。',
+            ],
+            [
+                'q_type' => 4,
                 'q1' => "次の文を英訳しなさい。",
                 'q2' => "{$s['j']}は{$v['jnot']}。",
                 'a_type' => 1,
                 'a' => "{$s['e']} {$do_does}n't {$v['e']}.",
+                'e_type' => 1,
+                'e' => '"S don\'t V."の形になる。なお、Sが三人称単数の場合、"S doesn\'t V."になる"。',
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']} {$do_does}n't {$v['e']}.",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$v['jnot']}。",
                 'e_type' => 1,
                 'e' => '"S don\'t V."の形になる。なお、Sが三人称単数の場合、"S doesn\'t V."になる"。',
             ],
@@ -3351,34 +3379,34 @@ class WorkbookController extends Controller
                 'e_type' => 1,
                 'e' => '"Do S V?"の形になる。なお、Sが三人称単数の場合、"Does S V?"になる"。',
             ],
-            // [
-            //     'q_type' => 4,
-            //     'q1' => "次の文を英訳しなさい。",
-            //     'q2' => "{$s['j']}は{$v['jp']}。",
-            //     'a_type' => 1,
-            //     'a' => "{$s['e']} {$v['ep']}.",
-            //     'e_type' => 3,
-            //     'e' => '<p>"S V."の形で、Vは過去形になる。</p>
-            //             <p>規則動詞はV+edの形になるが、不規則動詞は暗記するしかない。</p>',
-            // ],
-            // [
-            //     'q_type' => 4,
-            //     'q1' => "次の文を英訳しなさい。",
-            //     'q2' => "{$s['j']}は{$v['jpnot']}。",
-            //     'a_type' => 1,
-            //     'a' => "{$s['e']} didn't {$v['e']}.",
-            //     'e_type' => 1,
-            //     'e' => '"S didn\'t V."の形で、Vは原形になる。',
-            // ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$Do_Does} {$s['el']} {$v['e']}?",
+                'a_type' => 1,
+                'a' => "{$s['j']}は{$v['jq']}。",
+                'e_type' => 1,
+                'e' => '"Do S V?"の形になる。なお、Sが三人称単数の場合、"Does S V?"になる"。',
+            ],
         ];
-        $q_index = rand(0,count($questions)-1);
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $q_index = 2 * rand(0,count($questions)/2-1);
+        } else if ($en == false && $ja == true) {
+            $q_index = 2 * rand(0,count($questions)/2-1) + 1;
+        } else {
+            $q_index = rand(0,count($questions)-1);
+        }
         $question = $questions[$q_index];
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "一般動詞";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英文法 疑問詞
-    public function interrogative() {
+    public function interrogative(Request $request) {
         // 主語 'es'=1:三人称単数
         $interrogatives = [
             ['e' => 'Who', 'j' => '誰が'],
@@ -3464,21 +3492,31 @@ class WorkbookController extends Controller
                 'e' => "{$e}",
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "疑問詞";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英文法 人称代名詞
-    public function personal_pronoun() {
+    public function personal_pronoun(Request $request) {
         // 主語 'es'=1:三人称単数
         $subjects = [
             ['e' => 'I', 'es' => 0, 'el' => 'I', 'j' => '私は', ],
             ['e' => 'You', 'es' => 0, 'el' => 'you', 'j' => 'あなたは', ],
             ['e' => 'He', 'es' => 1, 'el' => 'he', 'j' => '彼は',],
             ['e' => 'She', 'es' => 1, 'el' => 'she', 'j' => '彼女は',],
-            ['e' => 'Tom', 'es' => 1, 'el' => 'Tom', 'j' => 'トムは',],
+            ['e' => 'Mary', 'es' => 1, 'el' => 'Mary', 'j' => 'メアリーは',],
             ['e' => 'We', 'es' => 0, 'el' => 'we', 'j' => '私たちは', ],
             ['e' => 'They', 'es' => 0, 'el' => 'we', 'j' => '彼らは', ],
         ];
@@ -3559,14 +3597,24 @@ class WorkbookController extends Controller
                 'e' => '人称代名詞は主語か所有格か目的語かで単語が異なる。',
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "代名詞";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英文法 過去形
-    public function past_verb() {
+    public function past_verb(Request $request) {
         // 主語 'es'=1:三人称単数
         $subjects = [
             ['e' => 'You', 'es' => 0, 'el' => 'you', 'j' => 'あなた', ],
@@ -3695,14 +3743,24 @@ class WorkbookController extends Controller
                 'e' => '"Was A B?"の形になる。Aが二人称や複数名詞のときは、"Were A B?"になる。',
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "過去形";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英文法 接続詞
-    public function conjection() {
+    public function conjection(Request $request) {
         $sentences = [
             ['e' => 'I lived in Nagano when I was a student.', 'j' => '（私が）学生だったとき、私は長野に住んでいた。', ],
             ['e' => 'I saw Tom when I was running.', 'j' => '（私が）走っていたとき、トムに会った。', ],
@@ -3740,14 +3798,209 @@ class WorkbookController extends Controller
                         <p>\("\mathrm{When}\,S_2 V_2～, S_1 V_1～."でもよい。\mathrm{if, because}も同様だが、\mathrm{that}は先頭に置かない。\)</p>',
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "接続詞";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 英文法 不定詞
+    public function infinitive(Request $request) {
+        $sentences = [
+            ['e' => 'I like to sing.', 'j' => '私は歌うことが好きだ。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。</p>
+                                                                                <p>動名詞を使って "I like singing." としてもよい。</p>'],
+            ['e' => 'To sleep is important.', 'j' => '眠ることは重要だ。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。<p>
+                                                                                    <p>この例文のように、名詞として使う不定詞は主語にすることができる。</p>
+                                                                                    <p>動名詞を使って "Sleeping is important." としてもよい。</p>'],
+            ['e' => 'I want to run.', 'j' => '私は走りたい。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。</p>
+                                                                            <p>"want to run" で「走ることを望む」⇒「走りたい」となる。</p>'],
+            ['e' => 'I came here to sing.', 'j' => '私は歌うためにここに来た。', 'exp' => '<p>「to ＋ 動詞の原形」を副詞の塊（～するために）として使っている。</p>
+                                                                                <p>ここでは動詞 came を修飾している。</p>'],
+            ['e' => 'I went home to sleep.', 'j' => '私は眠るために（家に）帰った。', 'exp' => '<p>「to ＋ 動詞の原形」を副詞の塊（～するために）として使っている。<p>
+                                                                                        <p>ここでは動詞 go を修飾している。</p>'],
+            ['e' => 'This is a room to sing.', 'j' => 'これは歌うための部屋です。', 'exp' => '<p>「to ＋ 動詞の原形」を形容詞の塊（～するための）として使っている。</p>
+                                                                                <p>ここでは名詞 a room を修飾している。</p>'],
+            ['e' => 'We need time to sleep.', 'j' => '私たちは眠るための時間を必要とする。', 'exp' => '<p>「to ＋ 動詞の原形」を形容詞の塊（～するための）として使っている。</p>
+                                                                                <p>ここでは名詞 time を修飾している。</p>'],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "不定詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 英文法 動名詞
+    public function gerund(Request $request) {
+        $sentences = [
+            ['e' => 'I like swimming.', 'j' => '私は泳ぐことが好きだ。', 'exp' => '<p>動詞の原形にingをつけると動名詞「～すること」になる。</p>'],
+            ['e' => 'Skiing is fun.', 'j' => 'スキーは楽しい。', 'exp' => '<p>動詞の原形にingをつけると動名詞「～すること」になる。</p>
+                                                                        <p>"ski"「スキーをする」⇒"skiing"「スキー（をすること）」</p>'],
+            ['e' => 'I read a book before going to bed.', 'j' => '私は寝る前に本を読む。', 'exp' => '<p>前置詞 before の後に置けるのは原則として名詞のみ。</p>
+                                                                                                    <p>そのため go は置けないが、動名詞 going は置くことができる。</p>
+                                                                                                    <p>なお、before は接続詞として使うなら、"before I go to bed"と主語もつければよい。</p>'],
+            ['e' => 'Studying trains you.', 'j' => '勉強はあなたを鍛える。', 'exp' => '<p>読書（reading）、睡眠（sleeping）など、動名詞の形を使うと表現がシンプルにできる。</p>
+                                                                                    <p>ちなみに、train（鍛える）の動名詞は training（トレーニング）である。'],
+            ['e' => 'Seeing is believing.', 'j' => '見ることは信じることだ。', 'exp' => '<p>問題文は直訳ですが、実際には「百聞は一見に如かず」の意味で使われます。</p>'],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "動名詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 英文法 助動詞
+    public function auxiliary_verb(Request $request) {        
+        $exp_common = '<p>助動詞はbe動詞や一般動詞の前に置く。このとき、be動詞や一般動詞は原形になる。</p>';
+        $sentences = [
+            ['e' => 'She can swim.', 'j' => '彼女は泳げる。', 'exp' => "{$exp_common}
+                                                                    <p>can は「可能・能力」の意味を付加する助動詞。</p>
+                     \                                               <p>「彼女は泳ぐ。」なら三単現のsがついて\"She swims.\"になるが、助動詞の後は原形になる。</p>"],
+            ['e' => 'She will win.', 'j' => '彼女は勝つだろう。', 'exp' => "{$exp_common}
+                                                                    <p>will は「意志・予測」の意味を付加する助動詞。</p>
+                                                                    <p>予測のwillは将来について使うが、予定には be going to を使うことが一般的。</p> 
+                                                                    <p>「彼女は常に勝つ。」なら三単現のsがついて\"She always wins.\"になるが、助動詞の後は原形になる。</p>"],
+            ['e' => 'He may get angry.', 'j' => '彼は怒るかもしれない。', 'exp' => "{$exp_common}
+                                                                    <p>may は「推量・許可」の意味を付加する助動詞。ここでは推量の意味で使っている。</p>
+                                                                    <p>「彼はよく怒る。」なら三単現のsがついて\"He often gets angry.\"になるが、助動詞の後は原形になる。</p>"],
+            ['e' => 'You must study hard.', 'j' => 'あなたは懸命に勉強しなければならない。', 'exp' => "{$exp_common}
+                                                                    <p>must は「義務」の意味を付加する助動詞。hardは副詞では「懸命に」の意味がある。</p>
+                                                                    <p>have to を用いて、\"You have to study hard.\"と言い換えできる。</p>"],
+            ['e' => 'You should see him.', 'j' => 'あなたは彼に会うべきだ。', 'exp' => "{$exp_common}
+                                                                    <p>should は「必要」の意味を付加する助動詞。must ほどの強制力はない。</p>
+                                                                    <p>\"You must see him.\"となると、「あなたは彼に会わなければならない。（義務）」の意味になる。</p>"],
+            ['e' => 'May I use this pen?', 'j' => 'このペンを使ってもよいですか。', 'exp' => "{$exp_common}
+                                                                    <p>may は「推量・許可」の意味を付加する助動詞。疑問文では許可を求めるために使うことが多い。</p>
+                                                                    <p>\"Can I use this pen?\"も同じ意味だが、May I ～? の方が丁寧な表現になる。</p>"],
+            ['e' => 'You must not enter this room.', 'j' => 'あなたはこの部屋に入ってはならない。', 'exp' => "{$exp_common}
+                                                                    <p>肯定文では must と have to はどちらも「義務」を意味するが、否定文では意味が異なる。</p>
+                                                                    <p>must not は「してはならない（禁止）」だが、don't have to は「しなくてもよい」の意味になる。</p>"],
+            ['e' => 'You don\'t have to go there.', 'j' => 'あなたはそこに行かなくてもよい。', 'exp' => "{$exp_common}
+                                                                    <p>肯定文では must と have to はどちらも「義務」を意味するが、否定文では意味が異なる。</p>
+                                                                    <p>must not は「してはならない（禁止）」だが、don't have to は「しなくてもよい」の意味になる。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "助動詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英文法 比較級
-    public function comparative() {
+    public function comparative(Request $request) {
         // 主語 'es'=1:三人称単数
         $subjects = [
             ['e' => 'You', 'es' => 0, 'el' => 'you', 'j' => 'あなた', 'be' => 'are',],
@@ -3915,108 +4168,24 @@ class WorkbookController extends Controller
                         <p>\"as {$fuku['e']}\" が「同じくらい{$fuku['j']}」、\"as Mary\"が「メアリー（がそうであるの）と」を意味する。</p>",
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $q_index = 2 * rand(0,count($questions)/2-1);
+        } else if ($en == false && $ja == true) {
+            $q_index = 2 * rand(0,count($questions)/2-1) + 1;
+        } else {
+            $q_index = rand(0,count($questions)-1);
+        }
         $question = $questions[$q_index];
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "比較級";
-        return view('workbook.unit_template', compact('unitname','question'));
-    }
-
-    // 英文法 不定詞
-    public function infinitive() {
-        $sentences = [
-            ['e' => 'I like to sing.', 'j' => '私は歌うことが好きだ。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。</p>
-                                                                                <p>動名詞を使って "I like singing." としてもよい。</p>'],
-            ['e' => 'To sleep is important.', 'j' => '眠ることは重要だ。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。<p>
-                                                                                    <p>この例文のように、名詞として使う不定詞は主語にすることができる。</p>
-                                                                                    <p>動名詞を使って "Sleeping is important." としてもよい。</p>'],
-            ['e' => 'I want to run.', 'j' => '私は走りたい。', 'exp' => '<p>「to ＋ 動詞の原形」を名詞の塊（～すること）として使っている。</p>
-                                                                            <p>"want to run" で「走ることを望む」⇒「走りたい」となる。</p>'],
-            ['e' => 'I came here to sing.', 'j' => '私は歌うためにここに来た。', 'exp' => '<p>「to ＋ 動詞の原形」を副詞の塊（～するために）として使っている。</p>
-                                                                                <p>ここでは動詞 came を修飾している。</p>'],
-            ['e' => 'I went home to sleep.', 'j' => '私は眠るために（家に）帰った。', 'exp' => '<p>「to ＋ 動詞の原形」を副詞の塊（～するために）として使っている。<p>
-                                                                                        <p>ここでは動詞 go を修飾している。</p>'],
-            ['e' => 'This is a room to sing.', 'j' => 'これは歌うための部屋です。', 'exp' => '<p>「to ＋ 動詞の原形」を形容詞の塊（～するための）として使っている。</p>
-                                                                                <p>ここでは名詞 a room を修飾している。</p>'],
-            ['e' => 'We need time to sleep.', 'j' => '私たちは眠るための時間を必要とする。', 'exp' => '<p>「to ＋ 動詞の原形」を形容詞の塊（～するための）として使っている。</p>
-                                                                                <p>ここでは名詞 time を修飾している。</p>'],
-        ];
-        $idx = rand(0, count($sentences)-1);
-        $s = $sentences[$idx];
-
-        // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-        $questions = [
-            [
-                'q_type' => 4,
-                'q1' => "次の文を英訳しなさい。",
-                'q2' => "{$s['j']}",
-                'a_type' => 1,
-                'a' => "{$s['e']}",
-                'e_type' => 3,
-                'e' => "{$s['exp']}",
-            ],
-            [
-                'q_type' => 4,
-                'q1' => "次の文を和訳しなさい。",
-                'q2' => "{$s['e']}",
-                'a_type' => 1,
-                'a' => "{$s['j']}",
-                'e_type' => 3,
-                'e' => "{$s['exp']}",
-            ],
-        ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
-        $unitname = "不定詞";
-        return view('workbook.unit_template', compact('unitname','question'));
-    }
-
-    // 英文法 動名詞
-    public function gerund() {
-        $sentences = [
-            ['e' => 'I like swimming.', 'j' => '私は泳ぐことが好きだ。', 'exp' => '<p>動詞の原形にingをつけると動名詞「～すること」になる。</p>'],
-            ['e' => 'Skiing is fun.', 'j' => 'スキーは楽しい。', 'exp' => '<p>動詞の原形にingをつけると動名詞「～すること」になる。</p>
-                                                                        <p>"ski"「スキーをする」⇒"skiing"「スキー（をすること）」</p>'],
-            ['e' => 'I read a book before going to bed.', 'j' => '私は寝る前に本を読む。', 'exp' => '<p>前置詞 before の後に置けるのは原則として名詞のみ。</p>
-                                                                                                    <p>そのため go は置けないが、動名詞 going は置くことができる。</p>
-                                                                                                    <p>なお、before は接続詞として使うなら、"before I go to bed"と主語もつければよい。</p>'],
-            ['e' => 'Studying trains you.', 'j' => '勉強はあなたを鍛える。', 'exp' => '<p>読書（reading）、睡眠（sleeping）など、動名詞の形を使うと表現がシンプルにできる。</p>
-                                                                                    <p>ちなみに、train（鍛える）の動名詞は training（トレーニング）である。'],
-            ['e' => 'Seeing is believing.', 'j' => '見ることは信じることだ。', 'exp' => '<p>問題文は直訳ですが、実際には「百聞は一見に如かず」の意味で使われます。</p>'],
-        ];
-        $idx = rand(0, count($sentences)-1);
-        $s = $sentences[$idx];
-
-        // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-        $questions = [
-            [
-                'q_type' => 4,
-                'q1' => "次の文を英訳しなさい。",
-                'q2' => "{$s['j']}",
-                'a_type' => 1,
-                'a' => "{$s['e']}",
-                'e_type' => 3,
-                'e' => "{$s['exp']}",
-            ],
-            [
-                'q_type' => 4,
-                'q1' => "次の文を和訳しなさい。",
-                'q2' => "{$s['e']}",
-                'a_type' => 1,
-                'a' => "{$s['j']}",
-                'e_type' => 3,
-                'e' => "{$s['exp']}",
-            ],
-        ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
-        $unitname = "動名詞";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英文法 受け身
-    public function passive_voice() {
+    public function passive_voice(Request $request) {
         $exp_common = '<p>受け身は「be動詞 + 過去分詞」で表す。現在か過去かはbe動詞で決まる。</p>';
         $sentences = [
             ['e' => 'I was born in Nagano.', 'j' => '私は長野で生まれた。', 'exp' => "{$exp_common}
@@ -4060,10 +4229,20 @@ class WorkbookController extends Controller
                 'e' => "{$s['exp']}",
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "受け身";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 英単語　動詞１

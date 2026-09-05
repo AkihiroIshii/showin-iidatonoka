@@ -8,22 +8,48 @@
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"
             onload="renderMathInElement(document.body);"></script>
     </x-slot>
-    <div class="mx-auto px-6 py-10">
+    <div class="mx-auto p-6">
         <div class="mx-auto px-6">
-            <!-- 単元一覧画面へ -->
-            <a href="{{route('workbook.unitbasedlist')}}" class="text-blue-600 font-bold">単元一覧画面へ</a>
 
-            <div class="py-4 text-center">
-                {{-- <a href="{{route('workbook.unit.regular_polygon')}}" class="inline-block p-2 rounded shadow bg-blue-200 font-bold">次の問題</a> --}}
-                <a href="{{ url()->current() }}" class="inline-block p-2 rounded shadow bg-blue-200 font-bold">次の問題</a>
+            <div class="relative">
+                <!-- 単元一覧画面へ -->
+                <a href="{{route('workbook.unitbasedlist')}}" class="text-blue-600 font-bold">単元一覧画面へ</a>
+
+                <form method="GET" action="{{ url()->current() }}" class="inline-block">
+                    <!-- 和訳のみなど絞る場合はチェックボックスを表示 -->
+                    @isset($subject)
+                        <div class="flex gap-4">
+                        @if ($subject == "eng")
+                            <label class="px-6">
+                                <input type="checkbox" name="ja" value="1"
+                                    {{ request('ja') ? 'checked' : '' }}>
+                                和訳
+                            </label>
+
+                            <label>
+                                <input type="checkbox" name="en" value="1"
+                                    {{ request('en') ? 'checked' : '' }}>
+                                英訳
+                            </label>
+                        @endif
+                        </div>
+                    @endisset
+
+                    <button type="submit" class="absolute left-1/2 -translate-x-1/2 top-0 inline-block p-2 rounded shadow bg-blue-200 font-bold">
+                        次の問題
+                    </button>
+                </form>
             </div>
+            {{-- <div class="py-4 text-center">
+                <a href="{{ url()->current() }}?type=1" class="inline-block p-2 rounded shadow bg-blue-200 font-bold">次の問題</a>
+            </div> --}}
 
             {{-- <div class="text-center leading-[8]">
                 <p class="text-lg m-4">{{ $question['q'] }}</p>
             </div> --}}
             {{-- q_type : 1:短文（数式なし）、2:短文（数式あり）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新) --}}
             {{-- 5:グラフ(旧)はq,a,eいずれかにしか$plotsを渡せなかったため、それぞれ渡せるように6:グラフ(新)を追加した。--}}
-            <div class="text-center mb-4">
+            <div class="text-center mt-4 mb-4">
                 <div class="inline-block text-center leading-[3] font-klee text-lg">
                     @if ($question['q_type'] == 1)
                         <p class="m-4">{{ $question['q'] }}</p>
