@@ -55,6 +55,18 @@
                                     {{ request('calc') ? 'checked' : '' }}>
                                 計算
                             </label>
+                        @elseif ($subject == "unite")
+                            <label class="px-6">
+                                <input type="checkbox" name="unite" value="1"
+                                    {{ request('unite') ? 'checked' : '' }}>
+                                結合
+                            </label>
+
+                            <label>
+                                <input type="checkbox" name="separate" value="1"
+                                    {{ request('separate') ? 'checked' : '' }}>
+                                分解
+                            </label>
                         @endif
                         </div>
                     @endisset

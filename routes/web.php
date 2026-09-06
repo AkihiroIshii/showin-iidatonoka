@@ -443,9 +443,13 @@ Route::get('workbook/soc_bakumatsu', [WorkbookController::class, 'soc_bakumatsu'
 Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');
 
+/******** 高校生 **************/
 // 数A
 Route::get('workbook/trigonometric_ratio', [WorkbookController::class, 'trigonometric_ratio'])
 ->middleware(['auth', 'verified'])->name('workbook.trigonometric_ratio');
+// 英語
+Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relative'])
+->middleware(['auth', 'verified'])->name('workbook.h_eng_relative');
 
 /*************** 単元別学習　ここまで *************************/
 

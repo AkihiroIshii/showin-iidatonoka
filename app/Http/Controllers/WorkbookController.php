@@ -5142,7 +5142,174 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    /******* 高校英語 **********/
+    // 関係詞
+    public function h_eng_relative(Request $request) {
+        // $exp_common = '<p>主語(S)+動詞(V)+目的語(O)のあとに不定詞がつながる用法。</p>
+        //                 <p>この形でよく使われる動詞に、want、tell、help、let がある。</p>';
+        $sentences = [
+            [
+                'e1' => 'I know the man.',
+                'e2' => 'You saw him yesterday.',
+                'e12' => "I know the man <span class=\"underline\">whom</span> you saw yesterday.",
+                'j' => '私はあなたが昨日会った男性を知っている。',
+                'exp' => "<p>「私はその男性を知っている。」＋「あなたはその男性に昨日会った。」</p>
+                        <p>先行詞は the man で、him と同じ人物である。人で目的格なので whom を使う。</p>
+                        <p>ただし、whom は文章体であり、口語では who とすることも多い。</p>
+                        <p>省略も可能なので、一つの文にまとめるなら次の２つも正解である。</p>
+                        <p>I know the man <span class=\"underline\">who</span> you saw yesterday.</p>
+                        <p>I know the man you saw yesterday.</p>
+                        <p>【参考：「Evergreen（第11版）」p.322】
+                        <p>もし穴埋めかつ選択肢に who も whom もある場合、whom を選んでおくとよい。</p>
+                        <p>また、先行詞が人のときの関係代名詞（目的格）は whom を使うことが多いが、</p>
+                        <p>選択問題で選択肢に whom がなければ that でもよい。よって、次も正解。</p>
+                        <p>I know the man <span class=\"underline\">that</span> you saw yesterday.</p>"
+            ],
+            [
+                'e1' => 'I know his house.',
+                'e2' => 'Its roof is green.',
+                'e12' => "I know his house <span class=\"underline\">whose</span> roof is green.",
+                'j' => '私は屋根が緑色である彼の家を知っている。',
+                'exp' => "<p>「私は彼の家を知っている。」＋「その家の屋根は緑色だ。」</p>
+                        <p>先行詞は his house で、Its roof の It と同じである。所有格は、人でもものでも whose を使う。</p>
+                        <p>なお、関係詞を使わずに \"I know his house with green roof.\" と表現することも可能。</p>"
+            ],
+            [
+                'e1' => 'I am not the man.',
+                'e2' => 'I was the man.',
+                'e12' => "I am not the man <span class=\"underline\">that</span> I was.",
+                'j' => '私は以前の私とは違う。',
+                'exp' => "<p>「私はその男ではない。」＋「私は（以前は）その男だった。」</p>
+                        <p>先行詞が人の性質や状態を表し、関係代名詞が関係代名詞節で補語(C)であるときは that を使う。</p>
+                        <p>【参考：Evergreen（第11版）p.325 PLUS60⑤】</p>
+                        <p>この例文では関係代名詞節が\"I(S) was(V) the man(C)\"であり、the man は補語である。</p>
+                        <p>やや抽象的な文なのでわかりにくいと思うが、よくある表現なので慣れてしまうこと。</p>
+                        <p>「その男」というより「そのような男」と解釈したほうがわかりやすいかもしれない。</p>"
+            ],
+            [
+                'e1' => 'Tokyo is a historic city.',
+                'e2' => 'I lived there ten years ago.',
+                'e12' => "Tokyo is historic city <span class=\"underline\">where</span> I lived ten years ago.",
+                'j' => '私が10年前に住んでいた東京は歴史的な都市だ。',
+                'exp' => "<p>「東京は歴史的な都市だ。」＋「私は10年前そこに住んでいた。」</p>
+                        <p>Tokyo = there なので、これを関係詞にする。there は「そこに（副詞）」なので、関係副詞 where を使う。</p>
+                        <p>なお、histricは「歴史上有名な」、histricalは「歴史上実在した」「歴史に関する」の意味で使う。</p>
+                        <p>【参考：Anchor Cosmica（第4刷）p.881】</p>"
+            ],
+            [
+                'e1' => 'Tokyo is a historic city.',
+                'e2' => 'I want to visit it someday.',
+                'e12' => "Tokyo is a historic city <span class=\"underline\">which</span> I want to visit someday.",
+                'j' => '東京は、私がいつか訪れたい歴史的な都市だ。',
+                'exp' => "<p>「東京は歴史的な都市だ。」＋「私はいつかそこを訪れたい。」</p>
+                        <p>Tokyo = it なので、これを関係詞にする。it は「そこ（名詞）」なので、関係代名詞 which を使う。</p>
+                        <p>関係詞というよりも、visit が他動詞であることを問う問題といえる。</p>
+                        <p>visit の後ろには名詞が来るので、visit there と副詞を置くことはできない。よって、関係副詞 where は使えない。</p>"
+            ],
+            [
+                'e1' => 'You have the thing.',
+                'e2' => 'Give me the thing.',
+                'e12' => "Give me <span class=\"underline\">what</span> you have.",
+                'j' => 'あなたが持っているものを渡しなさい。',
+                'exp' => "<p>「あなたはそれを持っている。」＋「私にそれを渡しなさい。」</p>
+                        <p>the thing が共通なので関係詞にすると、\"Give me <span class=\"underline\">the thing which</span> you have.\"となる。</p>
+                        <p>この the thing which をひとまとめにしたのが what である。ただ繋げるだけなら</p>
+                        <p>\"Give me the thing which you have.\"でも正しいが、what の使い方にも慣れておくこと。</p>"
+            ],
+            [
+                'e1' => 'The time will come.',
+                'e2' => 'You will feel happy then.',
+                'e12' => "The time will come <span class=\"underline\">when</span> you will feel happy.",
+                'j' => 'あなたが幸せを感じる時が来るでしょう。',
+                'exp' => "<p>「その時は来るだろう。」＋「あなたはその時幸せを感じる。」</p>
+                        <p>the time と then が対応する。then は副詞なので、関係副詞 when を使う。</p>
+                        <p>then は過去にも未来にも使うことも抑えておこう。</p>
+                        <p>なお、then を at that time と表現するときは、that time が関係代名詞 which になる。</p>
+                        <p>The time will come. + You will feel happy at that time.</p>
+                        <p>= The time will come <span class=\"underline\">at which</span> you will feel happy.
+                        <p>また、<span class=\"underline\">The time you will feel happy(S)</span> will come. と表現することも可能だが、</p>
+                        <p>英語は主語が大きくなることを好まないので、関係詞を使った表現もできるようにしておこう。</p>
+                        "
+            ],
+            [
+                'e1' => 'He changed his job for some reason.',
+                'e2' => 'Do you know the reason?',
+                'e12' => "Do you know the reason <span class=\"underline\">why</span> he changed his job?",
+                'j' => '彼が仕事を変えた理由を知っていますか。',
+                'exp' => "<p>「彼は何らかの理由で仕事を変えた。」＋「あなたはその理由を知っていますか。」</p>
+                        <p>the reason が共通なので、関係代名詞 which を使って次のように繋げられる。</p>
+                        <p>Do you know the reason <span class=\"underline\">which</span> he changed his job for?</p>
+                        <p>= Do you know the reason <span class=\"underline\">for which</span> he changed his job?</p>
+                        <p>(※)関係代名詞は前置詞ごと前に持ってくることができる。</p>
+                        <p>ただし、the reason for which をまとめて the reason why とすることが一般的であるため、</p>
+                        <p>解答例は上述のようにした。さらに言えば、the reason も省略されることが多いそうなので、
+                        <p>\"Do you know <span class=\"underline\">why</span> he changed his job?\"でもよい。確かに言わんとすることは十分伝わる。</p>
+                        <p>【参考：Evergreen（第11刷）p.336】</p>
+                        "
+            ],
+            [
+                'e1' => 'This is the way.',
+                'e2' => 'She reached her destination in the way.',
+                'e12' => "This is the way <span class=\"underline\">that</span> she reached her destination.",
+                'j' => 'このようにして彼女は目的地にたどり着いた。',
+                'exp' => "<p>「これがその方法である。」＋「彼女はその方法で目的地にたどり着いた。」</p>
+                        <p>the way が共通なので、関係代名詞 which を使って次のように繋げられる。</p>
+                        <p>This is the way <span class=\"underline\">which</span> she reached her destination in.</p>
+                        <p>= This is the way <span class=\"underline\">in which</span> she reached her destination.</p>
+                        <p>(※)関係代名詞は前置詞ごと前に持ってくることができる。</p>
+                        <p>さて、この in which をまとめて how とできそうであるが、なぜか the way how とは言わないらしい。</p>
+                        <p>代わりに the way that が使われるため、解答例は上述の通り that を用いた。</p>
+                        <p>まあ言語と言うのは文法（理屈）ありきではなく、実際の使用例ありきなのだから</p>
+                        <p>受け入れるしかない。なお、この in which や that は省略することもできる。</p>
+                        <p>なお、the way that までまとめて how とすることはできるので以下も正解。</p>
+                        <p>This is <span class=\"underline\">how</span> she reached her destination.</p>
+                        <p>【参考：Evergreen（第11刷）p.336】</p>
+                        "
+            ],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
 
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の２つの文を、関係詞を使って１つの文にまとめなさい。</p>
+                        <p>{$s['e1']} + {$s['e2']}</p>",
+                'a_type' => 3,
+                'a' => "<p>{$s['e12']}</p>
+                        <p>（{$s['j']}）</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の文を、関係詞を使わずに２つの文にわけなさい。</p>
+                        <p>{$s['e12']}</p>",
+                'a_type' => 3,
+                'a' => "<p>{$s['e1']} + {$s['e2']}</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「結合」「分解」の値を取得。
+        $unite = $request->boolean('unite');
+        $separate = $request->boolean('separate');
+        if ($unite == true && $separate == false) {
+            $question = $questions[0];            
+        } else if ($unite == false && $separate == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "unite";   // 結合or分解の問題であることをbladeに伝える。
+        $unitname = "関係詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    /*********** 理科 **************/
     // 密度
     public function density() {
         $v = rand(1, 10);   //体積[cm^3]

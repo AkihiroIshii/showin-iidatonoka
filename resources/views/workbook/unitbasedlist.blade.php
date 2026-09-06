@@ -737,6 +737,16 @@
                             </div>
                         </x-td>
                     </tr>
+                    <tr>
+                        <x-td>英語</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.h_eng_relative')}}">関係詞</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                    </tr>
                 </tbody>
             </table>
 
