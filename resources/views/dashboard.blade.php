@@ -59,7 +59,7 @@
 
         <!-- 現在の課題を表示 -->
         <div class="mb-6">
-            <table class="border-separate border border-slate-400 m-auto table-fixed">
+            <table class="border-separate border border-slate-400 mt-4 mx-auto table-fixed">
                 <tr class="bg-gray-300">
                     @if(Auth::user()->role == "admin")
                         <x-th></x-th>
@@ -106,6 +106,7 @@
                 <li>保護者との<span class="font-bold">目標共有</span>も兼ねています。課題と併せて上に記載しておりますので、家庭学習の参考になさってください。</li>
                 <li>中３生は<span class="font-bold">過去問演習の記録管理</span>としても使います。</li>
             </ul>
+            <p>(※)スマホは横向きでのご利用を推奨します（縦向きはレイアウトが崩れやすいため）。</p>
         </div>
 
         {{-- 中学生のテスト勉強について --}}
