@@ -182,6 +182,10 @@
             <x-responsive-nav-link :href="route('record.create')" :active="request()->routeIs('record.create')">
                 新規登録
             </x-responsive-nav-link> -->
+
+            <x-responsive-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
+                単元別学習
+            </x-responsive-nav-link>
             @if(Auth::user()->role == "admin")
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
                     生徒一覧

@@ -12,13 +12,13 @@
     @endphp
 
     <!-- スマホ表示用 -->
-    <div class="sm:hidden">
-        <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
+    {{-- <div class="sm:hidden"> --}}
+        {{-- <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
             単元別学習
-        </x-nav-link>
+        </x-nav-link> --}}
         
         <!-- 普段の目標を表示 -->
-        <x-h3>挑戦中の目標</x-h3>
+        {{-- <x-h3>挑戦中の目標</x-h3>
         @foreach($usualtargets as $usualtarget)
             <div class="bg-sky-100 mb-4 p-2">
                 <p>
@@ -27,7 +27,7 @@
                 </p>
                 <p>{{$usualtarget->content}}</p>
             </div>
-        @endforeach
+        @endforeach --}}
         
         {{-- <x-h3>直近２ヵ月間のイベント</x-h3>
         @foreach($events as $event)
@@ -36,10 +36,10 @@
                 <p>{{$event->content}}</p>
             </div>
         @endforeach --}}
-    </div>
+    {{-- </div> --}}
 
     <!-- PC表示用 -->
-    <div class="hidden sm:block mx-auto px-6 py-4">
+    {{-- <div class="hidden sm:block mx-auto px-6 py-4"> --}}
 
         <!-- Navigation Links -->
         <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
@@ -310,7 +310,7 @@
                 @endforeach
             </table>
         </div> --}}
-    </div>
+    {{-- </div> --}}
 
     {{-- <!-- イベントが登録されていない場合のメッセージ表示 -->
     <div class="ml-4 mb-4">
