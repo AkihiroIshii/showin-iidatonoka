@@ -2832,134 +2832,7 @@ class WorkbookController extends Controller
         return view('workbook.unit.sqrt_natural', compact('n','p','a','question'));
     }
 
-    // 三角比（数A）
-    public function trigonometric_ratio() {
-        // グラフ描画用
-        $size = 300;    //viewportの大きさ
-        $val_size = 10; //実際の座標の大きさ
-        $scale = $size / $val_size; //縮尺
 
-        // 角度（°）、角度（ラジアン）、sin、cos、tan
-        $vals = [
-            ["deg" => 0, "rad" => 0, "sin" => 0, "cos" => 1, "tan" => 0],
-            ["deg" => 30, "rad" => "\\frac{\pi}{6}", "sin" => "\\frac{1}{\,2\,}", "cos" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "\\frac{\,1\,}{\,\sqrt{3}\,}", ],
-            ["deg" => 45, "rad" => "\\frac{\pi}{4}", "sin" => "\\frac{1}{\,\sqrt{2}\,}", "cos" => "\\frac{\,1\,}{\,\sqrt{2}\,}", "tan" => 1, ],
-            ["deg" => 60, "rad" => "\\frac{\pi}{3}", "sin" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "cos" => "\\frac{\,1\,}{\,2\,}", "tan" => "\sqrt{3}", ],
-            ["deg" => 90, "rad" => "\\frac{\pi}{2}", "sin" => 1, "cos" => 0, "tan" => "\infty", ],
-            ["deg" => 120, "rad" => "\\frac{2\pi}{3}", "sin" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "cos" => "-\\frac{\,1\,}{\,2\,}", "tan" => "-\sqrt{3}", ],
-            ["deg" => 135, "rad" => "\\frac{3\pi}{4}", "sin" => "\\frac{1}{\,\sqrt{2}\,}", "cos" => "-\\frac{\,1\,}{\,\sqrt{2}\,}", "tan" => -1, ],
-            ["deg" => 150, "rad" => "\\frac{5\pi}{6}", "sin" => "\\frac{1}{\,2\,}", "cos" => "-\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "-\\frac{\,1\,}{\,\sqrt{3}\,}", ],
-            ["deg" => 180, "rad" => "\pi", "sin" => 0, "cos" => -1, "tan" => 0, ],
-            ["deg" => 210, "rad" => "\\frac{7\pi}{6}", "sin" => "-\\frac{1}{\,2\,}", "cos" => "-\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "\\frac{\,1\,}{\,\sqrt{3}\,}", ],
-            ["deg" => 225, "rad" => "\\frac{5\pi}{4}", "sin" => "-\\frac{1}{\,\sqrt{2}\,}", "cos" => "-\\frac{1}{\,\sqrt{2}\,}", "tan" => 1, ],
-            ["deg" => 240, "rad" => "\\frac{4\pi}{3}", "sin" => "-\\frac{\,\sqrt{3}\,}{2}", "cos" => "-\\frac{1}{\,2\,}", "tan" => "\sqrt{3}", ],
-            ["deg" => 270, "rad" => "\\frac{3\pi}{2}", "sin" => -1, "cos" => 0, "tan" => "\infty", ],
-            ["deg" => 300, "rad" => "\\frac{5\pi}{3}", "sin" => "-\\frac{\,\sqrt{3}\,}{2}", "cos" => "\\frac{1}{\,2\,}", "tan" => "-\sqrt{3}", ],
-            ["deg" => 315, "rad" => "\\frac{7\pi}{4}", "sin" => "-\\frac{1}{\,\sqrt{2}\,}", "cos" => "\\frac{1}{\,\sqrt{2}\,}", "tan" => -1, ],
-            ["deg" => 330, "rad" => "\\frac{11\pi}{6}", "sin" => "-\\frac{1}{\,2\,}", "cos" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "-\\frac{\,1\,}{\,\sqrt{3}\,}", ],
-        ];
-        $idx = rand(0,count($vals)-1);
-        $val = $vals[$idx];
-        $a = $val['deg'];
-
-        $theta = 2 * M_PI * $a / 360;   // 中心角（ラジアン）
-        // $ratio = $this->simplify_fraction($a, 360);
-
-        // プロット用
-        $pr = 0.8 * $size / 2;
-        $px = $pr * cos($theta);
-        $py = -$pr * sin($theta);   // svg の y 座標は下が正なので、-1 をかけておく。
-
-        // 座標の表示場所
-        $posi_text = ['x' => $px, 'y' => $py ];
-        // if ($a > 0) {
-        //     if ($a >= 1) {
-        //         $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
-        //     // 0 < a < 1
-        //     } else {
-        //         $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
-        //     }
-        // // a < 0
-        // } else {
-        //     if ($a <= -1) {
-        //         $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
-        //     // -1 < a < 0
-        //     } else {
-        //         $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
-        //     }
-        // }
-
-        // プロット用パラメータ
-        $w_full = $size;
-        $w_half = $size / 2;
-
-        $plot_par_e = [
-            'w_full' => $w_full,
-            'w_half' => $w_half,
-        ];
-
-        $plot_con_e = "";
-        // 座標軸を作成
-        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
-            $plot_con_e .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-            $plot_con_e .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-        }
-
-        $plot_con_e .= "
-            <!-- 座標軸先端の矢印を定義 -->
-            <defs>
-                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
-                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
-                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
-                </marker>
-                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
-                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
-                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
-                </marker>
-            </defs>
-            <!-- x軸とy軸を作成 -->
-            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
-            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"2\" marker-start=\"url(#arrow)\"/>
-            <!-- 背景の単位円 -->
-            <circle cx=\"0\" cy=\"0\" r=\"{$pr}\" fill-opacity=\"0.1\"/>
-            <!-- 点P -->
-            <!-- <circle cx=\"{$px}\" cy=\"{$py}\" r=\"3\" fill=\"red\"/> -->
-            <!-- M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
-            <path d=\"M 0 0 L {$px} 0 L {$px} {$py} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />
-            <path d=\"M {$px} 0 L {$px} {$py}\" stroke=\"blue\" stroke-width=\"4\" />
-            <path d=\"M 0 0 L {$px} 0\" stroke=\"red\" stroke-width=\"4\" />
-            <!--<text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
-                ({$px},{$py})
-            </text>-->           
-        ";
-
-        // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
-        $questions = [
-            [
-                'q_type' => 2,
-                'q' => "\\sin {$val['deg']}^{\\circ}\, の値を答えなさい。",
-                'a_type' => 2,
-                'a' => "{$val['sin']}",
-                'e_type' => 6,
-                'e' => "<p>下図の単位円（半径 1 の円）で、青線の長さに該当する。</p>
-                        ",
-            ],
-            [
-                'q_type' => 2,
-                'q' => "\\cos {$val['deg']}^{\\circ}\, の値を答えなさい。",
-                'a_type' => 2,
-                'a' => "{$val['cos']}",
-                'e_type' => 6,
-                'e' => "<p>下図の単位円（半径 1 の円）で、赤線の長さに該当する。</p>
-                        ",
-            ],
-        ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
-        $unitname = "三角比（数A）";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
-    }
 
     /******** 共通関数 **********/
     // 最大公約数
@@ -5142,172 +5015,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    /******* 高校英語 **********/
-    // 関係詞
-    public function h_eng_relative(Request $request) {
-        // $exp_common = '<p>主語(S)+動詞(V)+目的語(O)のあとに不定詞がつながる用法。</p>
-        //                 <p>この形でよく使われる動詞に、want、tell、help、let がある。</p>';
-        $sentences = [
-            [
-                'e1' => 'I know the man.',
-                'e2' => 'You saw him yesterday.',
-                'e12' => "I know the man <span class=\"underline\">whom</span> you saw yesterday.",
-                'j' => '私はあなたが昨日会った男性を知っている。',
-                'exp' => "<p>「私はその男性を知っている。」＋「あなたはその男性に昨日会った。」</p>
-                        <p>先行詞は the man で、him と同じ人物である。人で目的格なので whom を使う。</p>
-                        <p>ただし、whom は文章体であり、口語では who とすることも多い。</p>
-                        <p>省略も可能なので、一つの文にまとめるなら次の２つも正解である。</p>
-                        <p>I know the man <span class=\"underline\">who</span> you saw yesterday.</p>
-                        <p>I know the man you saw yesterday.</p>
-                        <p>【参考：「Evergreen（第11版）」p.322】
-                        <p>もし穴埋めかつ選択肢に who も whom もある場合、whom を選んでおくとよい。</p>
-                        <p>また、先行詞が人のときの関係代名詞（目的格）は whom を使うことが多いが、</p>
-                        <p>選択問題で選択肢に whom がなければ that でもよい。よって、次も正解。</p>
-                        <p>I know the man <span class=\"underline\">that</span> you saw yesterday.</p>"
-            ],
-            [
-                'e1' => 'I know his house.',
-                'e2' => 'Its roof is green.',
-                'e12' => "I know his house <span class=\"underline\">whose</span> roof is green.",
-                'j' => '私は屋根が緑色である彼の家を知っている。',
-                'exp' => "<p>「私は彼の家を知っている。」＋「その家の屋根は緑色だ。」</p>
-                        <p>先行詞は his house で、Its roof の It と同じである。所有格は、人でもものでも whose を使う。</p>
-                        <p>なお、関係詞を使わずに \"I know his house with green roof.\" と表現することも可能。</p>"
-            ],
-            [
-                'e1' => 'I am not the man.',
-                'e2' => 'I was the man.',
-                'e12' => "I am not the man <span class=\"underline\">that</span> I was.",
-                'j' => '私は以前の私とは違う。',
-                'exp' => "<p>「私はその男ではない。」＋「私は（以前は）その男だった。」</p>
-                        <p>先行詞が人の性質や状態を表し、関係代名詞が関係代名詞節で補語(C)であるときは that を使う。</p>
-                        <p>【参考：Evergreen（第11版）p.325 PLUS60⑤】</p>
-                        <p>この例文では関係代名詞節が\"I(S) was(V) the man(C)\"であり、the man は補語である。</p>
-                        <p>やや抽象的な文なのでわかりにくいと思うが、よくある表現なので慣れてしまうこと。</p>
-                        <p>「その男」というより「そのような男」と解釈したほうがわかりやすいかもしれない。</p>"
-            ],
-            [
-                'e1' => 'Tokyo is a historic city.',
-                'e2' => 'I lived there ten years ago.',
-                'e12' => "Tokyo is historic city <span class=\"underline\">where</span> I lived ten years ago.",
-                'j' => '私が10年前に住んでいた東京は歴史的な都市だ。',
-                'exp' => "<p>「東京は歴史的な都市だ。」＋「私は10年前そこに住んでいた。」</p>
-                        <p>Tokyo = there なので、これを関係詞にする。there は「そこに（副詞）」なので、関係副詞 where を使う。</p>
-                        <p>なお、histricは「歴史上有名な」、histricalは「歴史上実在した」「歴史に関する」の意味で使う。</p>
-                        <p>【参考：Anchor Cosmica（第4刷）p.881】</p>"
-            ],
-            [
-                'e1' => 'Tokyo is a historic city.',
-                'e2' => 'I want to visit it someday.',
-                'e12' => "Tokyo is a historic city <span class=\"underline\">which</span> I want to visit someday.",
-                'j' => '東京は、私がいつか訪れたい歴史的な都市だ。',
-                'exp' => "<p>「東京は歴史的な都市だ。」＋「私はいつかそこを訪れたい。」</p>
-                        <p>Tokyo = it なので、これを関係詞にする。it は「そこ（名詞）」なので、関係代名詞 which を使う。</p>
-                        <p>関係詞というよりも、visit が他動詞であることを問う問題といえる。</p>
-                        <p>visit の後ろには名詞が来るので、visit there と副詞を置くことはできない。よって、関係副詞 where は使えない。</p>"
-            ],
-            [
-                'e1' => 'You have the thing.',
-                'e2' => 'Give me the thing.',
-                'e12' => "Give me <span class=\"underline\">what</span> you have.",
-                'j' => 'あなたが持っているものを渡しなさい。',
-                'exp' => "<p>「あなたはそれを持っている。」＋「私にそれを渡しなさい。」</p>
-                        <p>the thing が共通なので関係詞にすると、\"Give me <span class=\"underline\">the thing which</span> you have.\"となる。</p>
-                        <p>この the thing which をひとまとめにしたのが what である。ただ繋げるだけなら</p>
-                        <p>\"Give me the thing which you have.\"でも正しいが、what の使い方にも慣れておくこと。</p>"
-            ],
-            [
-                'e1' => 'The time will come.',
-                'e2' => 'You will feel happy then.',
-                'e12' => "The time will come <span class=\"underline\">when</span> you will feel happy.",
-                'j' => 'あなたが幸せを感じる時が来るでしょう。',
-                'exp' => "<p>「その時は来るだろう。」＋「あなたはその時幸せを感じる。」</p>
-                        <p>the time と then が対応する。then は副詞なので、関係副詞 when を使う。</p>
-                        <p>then は過去にも未来にも使うことも抑えておこう。</p>
-                        <p>なお、then を at that time と表現するときは、that time が関係代名詞 which になる。</p>
-                        <p>The time will come. + You will feel happy at that time.</p>
-                        <p>= The time will come <span class=\"underline\">at which</span> you will feel happy.
-                        <p>また、<span class=\"underline\">The time you will feel happy(S)</span> will come. と表現することも可能だが、</p>
-                        <p>英語は主語が大きくなることを好まないので、関係詞を使った表現もできるようにしておこう。</p>
-                        "
-            ],
-            [
-                'e1' => 'He changed his job for some reason.',
-                'e2' => 'Do you know the reason?',
-                'e12' => "Do you know the reason <span class=\"underline\">why</span> he changed his job?",
-                'j' => '彼が仕事を変えた理由を知っていますか。',
-                'exp' => "<p>「彼は何らかの理由で仕事を変えた。」＋「あなたはその理由を知っていますか。」</p>
-                        <p>the reason が共通なので、関係代名詞 which を使って次のように繋げられる。</p>
-                        <p>Do you know the reason <span class=\"underline\">which</span> he changed his job for?</p>
-                        <p>= Do you know the reason <span class=\"underline\">for which</span> he changed his job?</p>
-                        <p>(※)関係代名詞は前置詞ごと前に持ってくることができる。</p>
-                        <p>ただし、the reason for which をまとめて the reason why とすることが一般的であるため、</p>
-                        <p>解答例は上述のようにした。さらに言えば、the reason も省略されることが多いそうなので、
-                        <p>\"Do you know <span class=\"underline\">why</span> he changed his job?\"でもよい。確かに言わんとすることは十分伝わる。</p>
-                        <p>【参考：Evergreen（第11刷）p.336】</p>
-                        "
-            ],
-            [
-                'e1' => 'This is the way.',
-                'e2' => 'She reached her destination in the way.',
-                'e12' => "This is the way <span class=\"underline\">that</span> she reached her destination.",
-                'j' => 'このようにして彼女は目的地にたどり着いた。',
-                'exp' => "<p>「これがその方法である。」＋「彼女はその方法で目的地にたどり着いた。」</p>
-                        <p>the way が共通なので、関係代名詞 which を使って次のように繋げられる。</p>
-                        <p>This is the way <span class=\"underline\">which</span> she reached her destination in.</p>
-                        <p>= This is the way <span class=\"underline\">in which</span> she reached her destination.</p>
-                        <p>(※)関係代名詞は前置詞ごと前に持ってくることができる。</p>
-                        <p>さて、この in which をまとめて how とできそうであるが、なぜか the way how とは言わないらしい。</p>
-                        <p>代わりに the way that が使われるため、解答例は上述の通り that を用いた。</p>
-                        <p>まあ言語と言うのは文法（理屈）ありきではなく、実際の使用例ありきなのだから</p>
-                        <p>受け入れるしかない。なお、この in which や that は省略することもできる。</p>
-                        <p>なお、the way that までまとめて how とすることはできるので以下も正解。</p>
-                        <p>This is <span class=\"underline\">how</span> she reached her destination.</p>
-                        <p>【参考：Evergreen（第11刷）p.336】</p>
-                        "
-            ],
-        ];
-        $idx = rand(0, count($sentences)-1);
-        $s = $sentences[$idx];
 
-        // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-        $questions = [
-            [
-                'q_type' => 3,
-                'q' => "<p>次の２つの文を、関係詞を使って１つの文にまとめなさい。</p>
-                        <p>{$s['e1']} + {$s['e2']}</p>",
-                'a_type' => 3,
-                'a' => "<p>{$s['e12']}</p>
-                        <p>（{$s['j']}）</p>",
-                'e_type' => 3,
-                'e' => "{$s['exp']}",
-            ],
-            [
-                'q_type' => 3,
-                'q' => "<p>次の文を、関係詞を使わずに２つの文にわけなさい。</p>
-                        <p>{$s['e12']}</p>",
-                'a_type' => 3,
-                'a' => "<p>{$s['e1']} + {$s['e2']}</p>",
-                'e_type' => 3,
-                'e' => "{$s['exp']}",
-            ],
-        ];
-        // チェックボックス「結合」「分解」の値を取得。
-        $unite = $request->boolean('unite');
-        $separate = $request->boolean('separate');
-        if ($unite == true && $separate == false) {
-            $question = $questions[0];            
-        } else if ($unite == false && $separate == true) {
-            $question = $questions[1];            
-        } else {
-            $q_index = rand(0,count($questions)-1);
-            $question = $questions[$q_index];
-        }
-        $subject = "unite";   // 結合or分解の問題であることをbladeに伝える。
-        $unitname = "関係詞";
-        return view('workbook.unit_template', compact('unitname','question','subject'));
-    }
 
     /*********** 理科 **************/
     // 密度
@@ -6959,6 +6667,491 @@ class WorkbookController extends Controller
         }
         $subject = "kanji";   // 漢字の単元（読み、書き）であることをbladeに伝える。
         $unitname = "小４漢字";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    /******* 高校数学 **********/
+    // 三角比（数A）
+    public function trigonometric_ratio() {
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 10; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        // 角度（°）、角度（ラジアン）、sin、cos、tan
+        $vals = [
+            ["deg" => 0, "rad" => 0, "sin" => 0, "cos" => 1, "tan" => 0],
+            ["deg" => 30, "rad" => "\\frac{\pi}{6}", "sin" => "\\frac{1}{\,2\,}", "cos" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+            ["deg" => 45, "rad" => "\\frac{\pi}{4}", "sin" => "\\frac{1}{\,\sqrt{2}\,}", "cos" => "\\frac{\,1\,}{\,\sqrt{2}\,}", "tan" => 1, ],
+            ["deg" => 60, "rad" => "\\frac{\pi}{3}", "sin" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "cos" => "\\frac{\,1\,}{\,2\,}", "tan" => "\sqrt{3}", ],
+            ["deg" => 90, "rad" => "\\frac{\pi}{2}", "sin" => 1, "cos" => 0, "tan" => "\infty", ],
+            ["deg" => 120, "rad" => "\\frac{2\pi}{3}", "sin" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "cos" => "-\\frac{\,1\,}{\,2\,}", "tan" => "-\sqrt{3}", ],
+            ["deg" => 135, "rad" => "\\frac{3\pi}{4}", "sin" => "\\frac{1}{\,\sqrt{2}\,}", "cos" => "-\\frac{\,1\,}{\,\sqrt{2}\,}", "tan" => -1, ],
+            ["deg" => 150, "rad" => "\\frac{5\pi}{6}", "sin" => "\\frac{1}{\,2\,}", "cos" => "-\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "-\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+            ["deg" => 180, "rad" => "\pi", "sin" => 0, "cos" => -1, "tan" => 0, ],
+            ["deg" => 210, "rad" => "\\frac{7\pi}{6}", "sin" => "-\\frac{1}{\,2\,}", "cos" => "-\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+            ["deg" => 225, "rad" => "\\frac{5\pi}{4}", "sin" => "-\\frac{1}{\,\sqrt{2}\,}", "cos" => "-\\frac{1}{\,\sqrt{2}\,}", "tan" => 1, ],
+            ["deg" => 240, "rad" => "\\frac{4\pi}{3}", "sin" => "-\\frac{\,\sqrt{3}\,}{2}", "cos" => "-\\frac{1}{\,2\,}", "tan" => "\sqrt{3}", ],
+            ["deg" => 270, "rad" => "\\frac{3\pi}{2}", "sin" => -1, "cos" => 0, "tan" => "\infty", ],
+            ["deg" => 300, "rad" => "\\frac{5\pi}{3}", "sin" => "-\\frac{\,\sqrt{3}\,}{2}", "cos" => "\\frac{1}{\,2\,}", "tan" => "-\sqrt{3}", ],
+            ["deg" => 315, "rad" => "\\frac{7\pi}{4}", "sin" => "-\\frac{1}{\,\sqrt{2}\,}", "cos" => "\\frac{1}{\,\sqrt{2}\,}", "tan" => -1, ],
+            ["deg" => 330, "rad" => "\\frac{11\pi}{6}", "sin" => "-\\frac{1}{\,2\,}", "cos" => "\\frac{\,\sqrt{3}\,}{\,2\,}", "tan" => "-\\frac{\,1\,}{\,\sqrt{3}\,}", ],
+        ];
+        $idx = rand(0,count($vals)-1);
+        $val = $vals[$idx];
+        $a = $val['deg'];
+
+        $theta = 2 * M_PI * $a / 360;   // 中心角（ラジアン）
+        // $ratio = $this->simplify_fraction($a, 360);
+
+        // プロット用
+        $pr = 0.8 * $size / 2;
+        $px = $pr * cos($theta);
+        $py = -$pr * sin($theta);   // svg の y 座標は下が正なので、-1 をかけておく。
+
+        // 座標の表示場所
+        $posi_text = ['x' => $px, 'y' => $py ];
+        // if ($a > 0) {
+        //     if ($a >= 1) {
+        //         $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+        //     // 0 < a < 1
+        //     } else {
+        //         $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
+        //     }
+        // // a < 0
+        // } else {
+        //     if ($a <= -1) {
+        //         $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+        //     // -1 < a < 0
+        //     } else {
+        //         $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
+        //     }
+        // }
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+
+        $plot_par_e = [
+            'w_full' => $w_full,
+            'w_half' => $w_half,
+        ];
+
+        $plot_con_e = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_e .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_e .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+        $plot_con_e .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"2\" marker-start=\"url(#arrow)\"/>
+            <!-- 背景の単位円 -->
+            <circle cx=\"0\" cy=\"0\" r=\"{$pr}\" fill-opacity=\"0.1\"/>
+            <!-- 点P -->
+            <!-- <circle cx=\"{$px}\" cy=\"{$py}\" r=\"3\" fill=\"red\"/> -->
+            <!-- M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
+            <path d=\"M 0 0 L {$px} 0 L {$px} {$py} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />
+            <path d=\"M {$px} 0 L {$px} {$py}\" stroke=\"blue\" stroke-width=\"4\" />
+            <path d=\"M 0 0 L {$px} 0\" stroke=\"red\" stroke-width=\"4\" />
+            <!--<text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$px},{$py})
+            </text>-->           
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 2,
+                'q' => "\\sin {$val['deg']}^{\\circ}\, の値を答えなさい。",
+                'a_type' => 2,
+                'a' => "{$val['sin']}",
+                'e_type' => 6,
+                'e' => "<p>下図の単位円（半径 1 の円）で、青線の長さに該当する。</p>
+                        ",
+            ],
+            [
+                'q_type' => 2,
+                'q' => "\\cos {$val['deg']}^{\\circ}\, の値を答えなさい。",
+                'a_type' => 2,
+                'a' => "{$val['cos']}",
+                'e_type' => 6,
+                'e' => "<p>下図の単位円（半径 1 の円）で、赤線の長さに該当する。</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "三角比（数A）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
+    // 対数（数Ⅱ）☆できれば対数方程式、対数不等式、グラフの問題も追加したい。
+    public function h_math_log(Request $request) {
+        // a^p = q ⇒ log_a q = p
+        $a = rand(2, 9);    // 底
+        $p = rand(2, 9);    // 指数
+        $q = $a**$p;        // 真数
+        $a10 = rand(20, 100);     // 大きい数
+
+        $a2 = rand(2, 9);    // 底
+        while ($a == $a2) {
+            $a2 = rand(2, 9);
+        }
+        $p2 = rand(2, 9);    // 指数
+        $q2 = $a2**$p2;        // 真数
+
+        $primes1 = $this->get_primes(3, 9);
+        $p1 = $primes1[0];
+        $p2 = $primes1[1];
+        $p3 = $primes1[2];
+
+        $ps = rand(2, 3);   // 小さめの指数
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 1,
+                'q' => "\({$a}\) の \(P\) 乗が \(Q\) であることを、対数を使って表現せよ。",
+                'a_type' => 2,
+                'a' => "\log_{$a} Q = P",
+                'e_type' => 3,
+                'e' => "<p>対数の定義を理解しているかを確認するための問題である。</p>
+                        <p>\({$a}\) の \(P\) 乗が \(Q\) であることは、指数を使えば \({$a}^P = Q\) と表せる。</p>
+                        <p>対数は、この関係を \(P = ～\) の形で表現するためのものである。</p>
+                        <p>なお、ここでの \({$a}\) を「底」、\(Q\) を「真数」と呼ぶ。底 \(a\) が正ならば</p>
+                        <p>\(a^P > 0\) なので、真数も常に正である。この \(Q > 0\) を真数条件と呼ぶ。</p>
+                        ",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "\(\log_a MN = \log_a M + \log_a N\) を証明せよ。",
+                'a_type' => 3,
+                'a' => "<div class=\"space-y-4\">
+                            <p>\(\log_a M = m,\,\log_a N = n\) とおくと、対数の定義より \(a^m = M,\,a^n = N\).</p>
+                            <p>これより、\(MN = a^m a^n = a^{m+n}\).</p>
+                            <p>\(a^{m+n} = MN\) ならば、対数の定義より \(\log_a MN = m + n\) なので、</p>
+                            <p>\(\log_a MN = m + n = \log_a M + \log_a N\).（証明終わり）</p>
+                        </div>",
+                'e_type' => 3,
+                'e' => "<p>対数の定義を理解しているかを確認するための問題である。</p>
+                        <p>\(a\) の \(P\) 乗が \(Q\) であることは、指数を使えば \(a^P = Q\) と表せる。</p>
+                        <p>この関係を \(P\) について解いた形で表現したものが対数で、\(\log_a Q = P\) と表す。</p>
+                        <p>この定義に従って変形すれば、真数が積の形である対数を和に変換する公式が導出できる。</p>
+                        <p>なお、ここでの \(a\) を「底」、\(Q\) を「真数」と呼ぶ。底 \(a\) が正ならば</p>
+                        <p>\(a^P > 0\) なので、真数も常に正である。この \(Q > 0\) を真数条件と呼ぶ。</p>
+                        ",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "\(\displaystyle \log_a \\frac{M}{\,N\,} = \log_a M - \log_a N\) を証明せよ。",
+                'a_type' => 3,
+                'a' => "<div class=\"space-y-4\">
+                            <p>\(\log_a M = m,\,\log_a N = n\) とおくと、対数の定義より \(a^m = M,\,a^n = N\).</p>
+                            <p>これより、\(\displaystyle \\frac{M}{\,N\,} = \\frac{a^m}{\,a^n\,} = a^m a^{-n} = a^{m-n}\).</p>
+                            <p>\(\displaystyle a^{m-n} = \\frac{M}{\,N\,}\) ならば、対数の定義より \(\displaystyle \log_a \\frac{M}{\,N\,} = m - n\) なので、</p>
+                            <p>\(\displaystyle \log_a \\frac{M}{\,N\,} = \log_a M - \log_a N\).（証明終わり）</p>
+                        </div>",
+                'e_type' => 3,
+                'e' => "<p>対数の定義を理解しているかを確認するための問題である。</p>
+                        <p>\(a\) の \(P\) 乗が \(Q\) であることは、指数を使えば \(a^P = Q\) と表せる。</p>
+                        <p>この関係を \(P\) について解いた形で表現したものが対数で、\(\log_a Q = P\) と表す。</p>
+                        <p>この定義に従って変形すれば、真数が分数の形である対数を差に変換する公式が導出できる。</p>
+                        <p>なお、ここでの \(a\) を「底」、\(Q\) を「真数」と呼ぶ。底 \(a\) が正ならば</p>
+                        <p>\(a^P > 0\) なので、真数も常に正である。この \(Q > 0\) を真数条件と呼ぶ。</p>
+                        ",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "\(\log_a M^p = p\log_a M\) を証明せよ。",
+                'a_type' => 3,
+                'a' => "<div class=\"space-y-4\">
+                            <p>\(\log_a M = m\) とおくと、対数の定義より \(a^m = M\). この両辺を</p>
+                            <p>\(p\) 乗すると \(a^{mp} = M^p\) であり、対数の定義より、\(\log_a (M^p) = (mp)\) .</p>
+                            <p>よって、\(\log_a M^p = mp = p\log_a M\).（証明終わり）</p>
+                        </div>",
+                'e_type' => 3,
+                'e' => "<p>対数の定義を理解しているかを確認するための問題である。</p>
+                        <p>\(a\) の \(P\) 乗が \(Q\) であることは、指数を使えば \(a^P = Q\) と表せる。</p>
+                        <p>この関係を \(P\) について解いた形で表現したものが対数で、\(\log_a Q = P\) と表す。</p>
+                        <p>上述の証明では、\(mp\)、\(M^p\) をそれぞれひとまとめにして定義に当てはめている。</p>
+                        <p>なお、ここでの \(a\) を「底」、\(Q\) を「真数」と呼ぶ。底 \(a\) が正ならば</p>
+                        <p>\(a^P > 0\) なので、真数も常に正である。この \(Q > 0\) を真数条件と呼ぶ。</p>
+                        ",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "\(\displaystyle \log_a M = \\frac{\,\log_b M\,}{\,\log_b \,a\,\,}\) を証明せよ。",
+                'a_type' => 3,
+                'a' => "<div>
+                            <p>\(\log_a M = m\) とおくと、対数の定義より \(a^m = M\). このとき、適当な自然数 \(b\) について、</p>
+                            \\[
+                                \\begin{aligned}
+                                    \log_b a^m &= \log_b M \\\\
+                                    m \log_b a &= \log_b M \\\\
+                                    m &= \\frac{\,\log_b M\,}{\,\log_b \,a\,\,} \\\\
+                                    \log_a M &= \\frac{\,\log_b M\,}{\,\log_b \,a\,\,}
+                                \\end{aligned}
+                            \\]
+                            <p>（証明終わり）</p>
+                        </div>",
+                'e_type' => 3,
+                'e' => "<p>いわゆる底の変換公式の証明。対数の定義を理解しているかを確認するための問題でもある。</p>
+                        <p>\(a\) の \(P\) 乗が \(Q\) であることは、指数を使えば \(a^P = Q\) と表せる。</p>
+                        <p>この関係を \(P\) について解いた形で表現したものが対数で、\(\log_a Q = P\) と表す。</p>
+                        <p>なお、\(\log_b a^m = m \log_b a\) の変形は既知であるとした。</p>
+                        ",
+            ],
+
+            [
+                'q_type' => 1,
+                'q' => "\(\log_{0.{$a}} {$p}\) と \(\log_{0.{$a}} {" . ($p + 2) . "}\) はどちらが小さいか。",
+                'a_type' => 2,
+                'a' => "\log_{0.{$a}} {" . ($p + 2) . "}",
+                'e_type' => 3,
+                'e' => "<p>底 < 1 のとき、対数関数は減少関数になる（グラフのイメージを確認しておくこと）。</p>
+                        <p>よって、関数 \(y = \log_{0.{$a}} x\) は、真数 \(x\) が大きいほど小さくなる。</p>"
+            ],
+            [
+                'q_type' => 1,
+                'q' => "\(\log_{{$p1}} {{$p2}} \\times \log_{{$p2}} {{$p3}}\) を計算せよ。",
+                'a_type' => 2,
+                'a' => "\log_{{$p1}} {{$p3}}",
+                'e_type' => 3,
+                'e' => "<p>底の変換公式を使って、底を {$p1} にそろえて計算する。</p>
+                        <p>\(\displaystyle \log_{{$p1}} {{$p2}} \\times \log_{{$p2}} {{$p3}}
+                                = \log_{{$p1}} {{$p2}} \\times \\frac{\,\log_{{$p1}} {{$p3}}\,}{\,\log_{{$p1}} {{$p2}}\,} = \log_{{$p1}} {{$p3}}\).</p>",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "\(\log_{{$p1}} {{" . $p2 ** $ps . "}} \\times \log_{{$p2}} {{$p3}}\) を計算せよ。",
+                'a_type' => 2,
+                'a' => "{$ps}\log_{{$p1}} {{$p3}}",
+                'e_type' => 3,
+                'e' => "<p>底の変換公式を使って、底を {$p1} にそろえて計算する。</p>
+                        <p>\(\displaystyle \log_{{$p1}} {{" . $p2 ** $ps . "}} \\times \log_{{$p2}} {{$p3}}
+                                = \log_{{$p1}} {{$p2}}^{{$ps}} \\times \log_{{$p2}} {{$p3}}
+                                = {$ps}\log_{{$p1}} {{$p2}} \\times \\frac{\,\log_{{$p1}} {{$p3}}\,}{\,\log_{{$p1}} {{$p2}}\,}
+                                = {$ps}\log_{{$p1}} {{$p3}}\).</p>",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "\(2^{{$a10}}\) は何桁の整数か。ただし、log\(_{10}\) 2 = 0.301 とする。",
+                'a_type' => 2,
+                'a' => ceil($a10 * 0.301) . "\,桁",
+                'e_type' => 3,
+                'e' => "<p>\(\log_{10} 2^{{$a10}} = {$a10}\log_{10} 2 = {$a10} \\times 0.301 = " . $a10 * 0.301 . "\) なので、</p>
+                        <p>\(" . floor($a10 * 0.301) . "< \log_{10} 2^{{$a10}} <" . ceil($a10 * 0.301) ."\)</p>
+                        <p>\(\log_{10} 10^{" . floor($a10 * 0.301) . "} < \log_{10} 2^{{$a10}} < \log_{10} 10^{" . ceil($a10 * 0.301) ."}\)</p>
+                        <p>\(10^{" . floor($a10 * 0.301) . "} < 2^{{$a10}} < 10^{" . ceil($a10 * 0.301) ."}\)</p>
+                        <p>\(10^{" . floor($a10 * 0.301) . "}\) は \(" . ceil($a10 * 0.301) . "\) 桁の整数なので、\(2^{{$a10}}\) も \(" . ceil($a10 * 0.301) . "\) 桁の整数である。</p>
+                        <p>(※)最後の桁数がわかりにくいときは、小さい数で次のように具体的に考えるとよい。</p>
+                        <p>10\(^2\) < X < 10\(^3\) なら、10\(^2\) = 100 は 3 桁、10\(^3\) = 1000 は 4 桁なので、X は 3 桁である。 </p>
+                        <p>一般的に言えば、10\(^n\) は 1 に 0 が n 個ついて、（n + 1）桁の数になる。</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
+        $flag2 = $request->boolean('flag2');    // 計算問題
+        $flags = ['flag1' => '定義', 'flag2' => '計算'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(0,4);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(5,count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "対数（数Ⅱ）";
+        return view('workbook.unit_template', compact('unitname','question','subject','flags'));
+    }
+
+    /******* 高校英語 **********/
+    // 関係詞
+    public function h_eng_relative(Request $request) {
+        // $exp_common = '<p>主語(S)+動詞(V)+目的語(O)のあとに不定詞がつながる用法。</p>
+        //                 <p>この形でよく使われる動詞に、want、tell、help、let がある。</p>';
+        $sentences = [
+            [
+                'e1' => 'I know the man.',
+                'e2' => 'You saw him yesterday.',
+                'e12' => "I know the man <span class=\"underline\">whom</span> you saw yesterday.",
+                'j' => '私はあなたが昨日会った男性を知っている。',
+                'exp' => "<p>「私はその男性を知っている。」＋「あなたはその男性に昨日会った。」</p>
+                        <p>先行詞は the man で、him と同じ人物である。人で目的格なので whom を使う。</p>
+                        <p>ただし、whom は文章体であり、口語では who とすることも多い。</p>
+                        <p>省略も可能なので、一つの文にまとめるなら次の２つも正解である。</p>
+                        <p>I know the man <span class=\"underline\">who</span> you saw yesterday.</p>
+                        <p>I know the man you saw yesterday.</p>
+                        <p>【参考：「Evergreen（第11版）」p.322】
+                        <p>もし穴埋めかつ選択肢に who も whom もある場合、whom を選んでおくとよい。</p>
+                        <p>また、先行詞が人のときの関係代名詞（目的格）は whom を使うことが多いが、</p>
+                        <p>選択問題で選択肢に whom がなければ that でもよい。よって、次も正解。</p>
+                        <p>I know the man <span class=\"underline\">that</span> you saw yesterday.</p>"
+            ],
+            [
+                'e1' => 'I know his house.',
+                'e2' => 'Its roof is green.',
+                'e12' => "I know his house <span class=\"underline\">whose</span> roof is green.",
+                'j' => '私は屋根が緑色である彼の家を知っている。',
+                'exp' => "<p>「私は彼の家を知っている。」＋「その家の屋根は緑色だ。」</p>
+                        <p>先行詞は his house で、Its roof の It と同じである。所有格は、人でもものでも whose を使う。</p>
+                        <p>なお、関係詞を使わずに \"I know his house with green roof.\" と表現することも可能。</p>"
+            ],
+            [
+                'e1' => 'I am not the man.',
+                'e2' => 'I was the man.',
+                'e12' => "I am not the man <span class=\"underline\">that</span> I was.",
+                'j' => '私は以前の私とは違う。',
+                'exp' => "<p>「私はその男ではない。」＋「私は（以前は）その男だった。」</p>
+                        <p>先行詞が人の性質や状態を表し、関係代名詞が関係代名詞節で補語(C)であるときは that を使う。</p>
+                        <p>【参考：Evergreen（第11版）p.325 PLUS60⑤】</p>
+                        <p>この例文では関係代名詞節が\"I(S) was(V) the man(C)\"であり、the man は補語である。</p>
+                        <p>やや抽象的な文なのでわかりにくいと思うが、よくある表現なので慣れてしまうこと。</p>
+                        <p>「その男」というより「そのような男」と解釈したほうがわかりやすいかもしれない。</p>"
+            ],
+            [
+                'e1' => 'Tokyo is a historic city.',
+                'e2' => 'I lived there ten years ago.',
+                'e12' => "Tokyo is historic city <span class=\"underline\">where</span> I lived ten years ago.",
+                'j' => '私が10年前に住んでいた東京は歴史的な都市だ。',
+                'exp' => "<p>「東京は歴史的な都市だ。」＋「私は10年前そこに住んでいた。」</p>
+                        <p>Tokyo = there なので、これを関係詞にする。there は「そこに（副詞）」なので、関係副詞 where を使う。</p>
+                        <p>なお、histricは「歴史上有名な」、histricalは「歴史上実在した」「歴史に関する」の意味で使う。</p>
+                        <p>【参考：Anchor Cosmica（第4刷）p.881】</p>"
+            ],
+            [
+                'e1' => 'Tokyo is a historic city.',
+                'e2' => 'I want to visit it someday.',
+                'e12' => "Tokyo is a historic city <span class=\"underline\">which</span> I want to visit someday.",
+                'j' => '東京は、私がいつか訪れたい歴史的な都市だ。',
+                'exp' => "<p>「東京は歴史的な都市だ。」＋「私はいつかそこを訪れたい。」</p>
+                        <p>Tokyo = it なので、これを関係詞にする。it は「そこ（名詞）」なので、関係代名詞 which を使う。</p>
+                        <p>関係詞というよりも、visit が他動詞であることを問う問題といえる。</p>
+                        <p>visit の後ろには名詞が来るので、visit there と副詞を置くことはできない。よって、関係副詞 where は使えない。</p>"
+            ],
+            [
+                'e1' => 'You have the thing.',
+                'e2' => 'Give me the thing.',
+                'e12' => "Give me <span class=\"underline\">what</span> you have.",
+                'j' => 'あなたが持っているものを渡しなさい。',
+                'exp' => "<p>「あなたはそれを持っている。」＋「私にそれを渡しなさい。」</p>
+                        <p>the thing が共通なので関係詞にすると、\"Give me <span class=\"underline\">the thing which</span> you have.\"となる。</p>
+                        <p>この the thing which をひとまとめにしたのが what である。ただ繋げるだけなら</p>
+                        <p>\"Give me the thing which you have.\"でも正しいが、what の使い方にも慣れておくこと。</p>"
+            ],
+            [
+                'e1' => 'The time will come.',
+                'e2' => 'You will feel happy then.',
+                'e12' => "The time will come <span class=\"underline\">when</span> you will feel happy.",
+                'j' => 'あなたが幸せを感じる時が来るでしょう。',
+                'exp' => "<p>「その時は来るだろう。」＋「あなたはその時幸せを感じる。」</p>
+                        <p>the time と then が対応する。then は副詞なので、関係副詞 when を使う。</p>
+                        <p>then は過去にも未来にも使うことも抑えておこう。</p>
+                        <p>なお、then を at that time と表現するときは、that time が関係代名詞 which になる。</p>
+                        <p>The time will come. + You will feel happy at that time.</p>
+                        <p>= The time will come <span class=\"underline\">at which</span> you will feel happy.
+                        <p>また、<span class=\"underline\">The time you will feel happy(S)</span> will come. と表現することも可能だが、</p>
+                        <p>英語は主語が大きくなることを好まないので、関係詞を使った表現もできるようにしておこう。</p>
+                        "
+            ],
+            [
+                'e1' => 'He changed his job for some reason.',
+                'e2' => 'Do you know the reason?',
+                'e12' => "Do you know the reason <span class=\"underline\">why</span> he changed his job?",
+                'j' => '彼が仕事を変えた理由を知っていますか。',
+                'exp' => "<p>「彼は何らかの理由で仕事を変えた。」＋「あなたはその理由を知っていますか。」</p>
+                        <p>the reason が共通なので、関係代名詞 which を使って次のように繋げられる。</p>
+                        <p>Do you know the reason <span class=\"underline\">which</span> he changed his job for?</p>
+                        <p>= Do you know the reason <span class=\"underline\">for which</span> he changed his job?</p>
+                        <p>(※)関係代名詞は前置詞ごと前に持ってくることができる。</p>
+                        <p>ただし、the reason for which をまとめて the reason why とすることが一般的であるため、</p>
+                        <p>解答例は上述のようにした。さらに言えば、the reason も省略されることが多いそうなので、
+                        <p>\"Do you know <span class=\"underline\">why</span> he changed his job?\"でもよい。確かに言わんとすることは十分伝わる。</p>
+                        <p>【参考：Evergreen（第11刷）p.336】</p>
+                        "
+            ],
+            [
+                'e1' => 'This is the way.',
+                'e2' => 'She reached her destination in the way.',
+                'e12' => "This is the way <span class=\"underline\">that</span> she reached her destination.",
+                'j' => 'このようにして彼女は目的地にたどり着いた。',
+                'exp' => "<p>「これがその方法である。」＋「彼女はその方法で目的地にたどり着いた。」</p>
+                        <p>the way が共通なので、関係代名詞 which を使って次のように繋げられる。</p>
+                        <p>This is the way <span class=\"underline\">which</span> she reached her destination in.</p>
+                        <p>= This is the way <span class=\"underline\">in which</span> she reached her destination.</p>
+                        <p>(※)関係代名詞は前置詞ごと前に持ってくることができる。</p>
+                        <p>さて、この in which をまとめて how とできそうであるが、なぜか the way how とは言わないらしい。</p>
+                        <p>代わりに the way that が使われるため、解答例は上述の通り that を用いた。</p>
+                        <p>まあ言語と言うのは文法（理屈）ありきではなく、実際の使用例ありきなのだから</p>
+                        <p>受け入れるしかない。なお、この in which や that は省略することもできる。</p>
+                        <p>なお、the way that までまとめて how とすることはできるので以下も正解。</p>
+                        <p>This is <span class=\"underline\">how</span> she reached her destination.</p>
+                        <p>【参考：Evergreen（第11刷）p.336】</p>
+                        "
+            ],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の２つの文を、関係詞を使って１つの文にまとめなさい。</p>
+                        <p>{$s['e1']} + {$s['e2']}</p>",
+                'a_type' => 3,
+                'a' => "<p>{$s['e12']}</p>
+                        <p>（{$s['j']}）</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の文を、関係詞を使わずに２つの文にわけなさい。</p>
+                        <p>{$s['e12']}</p>",
+                'a_type' => 3,
+                'a' => "<p>{$s['e1']} + {$s['e2']}</p>",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「結合」「分解」の値を取得。
+        $unite = $request->boolean('unite');
+        $separate = $request->boolean('separate');
+        if ($unite == true && $separate == false) {
+            $question = $questions[0];            
+        } else if ($unite == false && $separate == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "unite";   // 結合or分解の問題であることをbladeに伝える。
+        $unitname = "関係詞";
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 }

@@ -67,6 +67,18 @@
                                     {{ request('separate') ? 'checked' : '' }}>
                                 分解
                             </label>
+                        @elseif ($subject == "custom")
+                            <label class="px-6">
+                                <input type="checkbox" name="flag1" value="1"
+                                    {{ request('flag1') ? 'checked' : '' }}>
+                                {{ $flags['flag1']}}
+                            </label>
+
+                            <label>
+                                <input type="checkbox" name="flag2" value="1"
+                                    {{ request('flag2') ? 'checked' : '' }}>
+                                {{ $flags['flag2'] }}
+                            </label>
                         @endif
                         </div>
                     @endisset

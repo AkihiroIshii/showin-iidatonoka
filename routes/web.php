@@ -444,9 +444,11 @@ Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');
 
 /******** 高校生 **************/
-// 数A
+// 数学
 Route::get('workbook/trigonometric_ratio', [WorkbookController::class, 'trigonometric_ratio'])
 ->middleware(['auth', 'verified'])->name('workbook.trigonometric_ratio');
+Route::get('workbook/h_math_log', [WorkbookController::class, 'h_math_log'])
+->middleware(['auth', 'verified'])->name('workbook.h_math_log');
 // 英語
 Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relative'])
 ->middleware(['auth', 'verified'])->name('workbook.h_eng_relative');
