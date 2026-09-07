@@ -368,6 +368,8 @@ Route::get('workbook/personal_pronoun', [WorkbookController::class, 'personal_pr
 ->middleware(['auth', 'verified'])->name('workbook.personal_pronoun');
 Route::get('workbook/past_verb', [WorkbookController::class, 'past_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.past_verb');
+Route::get('workbook/progressive_tense', [WorkbookController::class, 'progressive_tense'])
+->middleware(['auth', 'verified'])->name('workbook.progressive_tense');
 Route::get('workbook/conjection', [WorkbookController::class, 'conjection'])
 ->middleware(['auth', 'verified'])->name('workbook.conjection');
 Route::get('workbook/infinitive', [WorkbookController::class, 'infinitive'])

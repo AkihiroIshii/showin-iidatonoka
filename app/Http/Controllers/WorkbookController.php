@@ -3632,6 +3632,77 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 英文法 進行形
+    public function progressive_tense(Request $request) {
+        $exp_common = '<p>進行形は「be動詞 + 一般動詞のing形」で表す。現在か過去かは be 動詞で表す。</p>';
+        $sentences = [
+            ['e' => 'I am studying now.', 'j' => '私は今勉強しているところだ。', 'exp' => "{$exp_common}
+                                                                    <p>主語が I なので、be 動詞は am。studyをing形にする。</p>"],
+            ['e' => 'Mary is sleeping.', 'j' => 'メアリーは眠っている。', 'exp' => "{$exp_common}
+                                                                    <p>主語が Mary なので、be 動詞は is。sleepをing形にする。now は進行形に必須ではない。</p>
+                                                                    <p>進行形にせずに\"Mary sleeps.\"とすると、「メアリーは（習慣的に）眠る。」という</p>
+                                                                    <p>意味になるが、たいていの人は毎日眠るので、そんなことは当たり前である。</p>
+                                                                    <p>現在進行形を使うときは、「今」まさに眠っていることが重要なのである。</p>"],
+            ['e' => 'They are cleaning their room.', 'j' => '彼らは（彼らの）部屋を掃除しています。', 'exp' => "{$exp_common}
+                                                                    <p>主語が They なので、be 動詞は are。cleanをing形にする。</p>
+                                                                    <p>進行形にせずに\"They crean thier room.\"とすると、</p>
+                                                                    <p>「彼らは（習慣的に）部屋を掃除する。」という意味になる。</p>"],
+            ['e' => 'Is she cooking?', 'j' => '彼女は料理をしているのですか。', 'exp' => "{$exp_common}
+                                                                    <p>主語が she なので、be 動詞は is。cookをing形にする。</p>
+                                                                    <p>\"She is cooking.（彼女は料理をしている。）\"の主語と動詞を入れ替えれば疑問文になる。</p>"],
+            ['e' => 'They aren\'t playing now.', 'j' => '彼らは今は遊んでいません。', 'exp' => "{$exp_common}
+                                                                    <p>主語が They なので、be 動詞は are。playをing形にする。なお、play は「遊ぶ」という意味でも使う。</p>
+                                                                    <p>\"They are playing.（彼らは遊んでいる。）\"の be 動詞に not をつければ否定文になる。</p>
+                                                                    <p>\"They don't play.\"とすると、彼らはそもそも普段から遊ばないというニュアンスになる。</p>"],
+            ['e' => 'I was running then.', 'j' => '私はその時走っていた。', 'exp' => "{$exp_common}
+                                                                    <p>主語が I で過去形なので、be 動詞は am, is の過去形の was を使う。</p>"],
+            ['e' => 'Tom was fishing then.', 'j' => 'トムはその時釣りをしていた。', 'exp' => "{$exp_common}
+                                                                    <p>主語が Tom で過去形なので be 動詞は am, is の過去形の was を使う。</p>
+                                                                    <p>fish は「魚」（名詞）という意味の他に、「釣りをする」（動詞）という意味がある。</p>"],
+            ['e' => 'We were playing baseball then.', 'j' => '私たちはその時野球をしていた。', 'exp' => "{$exp_common}
+                                                                    <p>主語が We で過去形なので、be 動詞は are の過去形の were を使う。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "進行形";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
     // 英文法 接続詞
     public function conjection(Request $request) {
         $sentences = [

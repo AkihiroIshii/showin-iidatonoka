@@ -378,6 +378,9 @@
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.past_verb')}}">過去形</a>
                                 </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.progressive_tense')}}">進行形</a>
+                                </x-button-link>
                                 {{-- <div>
                                     be動詞
                                     <x-button-link color="purple">
