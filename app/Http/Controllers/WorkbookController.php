@@ -6436,7 +6436,7 @@ class WorkbookController extends Controller
             [
                 'q_type' => 3,
                 'q' => "<p>1873年の地租改正では、地租の税率は地価の何％とされたか。</p>
-                        <div class=\"pl-10 text-base leading-[2]\">
+                        <div class=\"text-base leading-[2]\">
                             <div class=\"font-bold mb-4\">
                                 <p>【発展学習】余裕がある人は、次の問題も考えてみましょう。税率の決め方について考える際に、参考になると思います。</p>
                                 <p>問．以下の方針に従い、地価に対する地租の税率（％）を決めなさい。小数点以下は切り捨てること。</p>
@@ -6444,19 +6444,19 @@ class WorkbookController extends Controller
                             <ul class=\"text-left\">
                                 <li>
                                     ○ 地租改正前の考え方は次の通り。
-                                    <ul class=\"pl-10 list-disc text-left\">
-                                        <li>収穫量の半分が年貢（国税）で、残り半分を農民の最終利益とする。</li>
+                                    <ul class=\"pl-5 list-none text-left\">
+                                        <li>・収穫量の半分が年貢（国税）で、残り半分を農民の最終利益とする。</li>
                                     </ul>
                                 </li>
                                 <li>
                                     ○ 地租改正後の考え方は次の通り。
-                                    <ul class=\"pl-10 list-disc text-left\">
-                                        <li>経費（肥料代など）は、収穫量の15%として見積もる。</li>
-                                        <li>税引前利益 = 収穫量 － 経費</li>
-                                        <li>農民の最終利益 = 税引前利益 － [<span class=\"underline\">地租</span>（国税）+ 村入費（地方税）]</li>
-                                        <li><span class=\"underline\">地租</span> : 村入費 = 3 : 1 の割合にする。</li>
-                                        <li><span class=\"underline\">地価</span>は、税引前利益の10倍に設定する。</li>
-                                        <li>農民の最終利益は、地租改正前と同じ金額になるようにする。</li>
+                                    <ul class=\"pl-5 list-none text-left\">
+                                        <li>・経費（肥料代など）は、収穫量の15%として見積もる。</li>
+                                        <li>・税引前利益 = 収穫量 － 経費</li>
+                                        <li>・農民の最終利益 = 税引前利益 － [<span class=\"underline\">地租</span>（国税）+ 村入費（地方税）]</li>
+                                        <li>・<span class=\"underline\">地租</span> : 村入費 = 3 : 1 の割合にする。</li>
+                                        <li>・<span class=\"underline\">地価</span>は、税引前利益の10倍に設定する。</li>
+                                        <li>・農民の最終利益は、地租改正前と同じ金額になるようにする。</li>
                                     </ul>
                                 </li>
                                 <li>○ 地租改正の前後で、１石あたりの米の価格は同じものとする。</li>
@@ -6472,24 +6472,24 @@ class WorkbookController extends Controller
                             <ul class=\"text-left\">
                                 <li>
                                     ○ 地租改正前の考え方は次の通り。
-                                    <ul class=\"pl-10 list-disc text-left\">
-                                        <li>収穫量の半分(0.5n 石)が年貢（国税）で、残り半分(0.5n 石)を農民の最終利益とする。</li>
+                                    <ul class=\"pl-5 list-none text-left\">
+                                        <li>・収穫量の半分(0.5n 石)が年貢（国税）で、残り半分(0.5n 石)を農民の最終利益とする。</li>
                                         <p class=\"text-red-500\">⇒ 農民の最終利益は 0.5nV 円。・・・①</p>
                                     </ul>
                                 </li>
                                 <li>
                                     ○ 地租改正後の考え方は次の通り。
-                                    <ul class=\"pl-10 list-disc text-left\">
-                                        <li>経費（肥料代など）は、収穫量(nV 円)の15%(0.15nV 円)として見積もる。</li>
-                                        <li>税引前利益 = 収穫量 － 経費</li>
+                                    <ul class=\"pl-5 list-none text-left\">
+                                        <li>・経費（肥料代など）は、収穫量(nV 円)の15%(0.15nV 円)として見積もる。</li>
+                                        <li>・税引前利益 = 収穫量 － 経費</li>
                                         <p class=\"text-red-500\">⇒ 税引前利益 = nV － 0.15nV = 0.85nV 円</p>
-                                        <li>農民の最終利益 = 税引前利益(0.85nV 円) － [<span class=\"underline\">地租</span>（国税）+ 村入費（地方税）]</li>
+                                        <li>・農民の最終利益 = 税引前利益(0.85nV 円) － [<span class=\"underline\">地租</span>（国税）+ 村入費（地方税）]</li>
                                         <p class=\"text-red-500\">⇒ 地租を t 円、[地租＋村入費]を T 円とおくと、農民の最終利益 = (0.85nV － T) 円。・・・②</p>
-                                        <li><span class=\"underline\">地租</span> : 村入費 = 3 : 1 の割合にする。</li>
+                                        <li>・<span class=\"underline\">地租</span> : 村入費 = 3 : 1 の割合にする。</li>
                                         <p class=\"text-red-500\">⇒ 地租 : [地租＋村入費] = 3 : 4 なので、t : T = 3 : 4。・・・③</p>
-                                        <li><span class=\"underline\">地価</span>は、税引前利益の10倍に設定する。</li>
+                                        <li>・<span class=\"underline\">地価</span>は、税引前利益の10倍に設定する。</li>
                                         <p class=\"text-red-500\">⇒ 地価 = 税引前利益 × 10 = 0.85nV × 10 = 8.5nV 円。・・・④</p>
-                                        <li>農民の最終利益は、地租改正前と同じ金額になるようにする。</li>
+                                        <li>・農民の最終利益は、地租改正前と同じ金額になるようにする。</li>
                                         <p class=\"text-red-500\">⇒ ①＝②にするので、0.5nV = 0.85nV － T。よって、T = 0.35nV 円。</p>
                                         <p class=\"text-red-500\">これと③より、t : 0.35nV = 3 : 4。よって、t = (3 × 0.35nV)/4 = 0.2625 nV 円。</p>
                                         <p class=\"text-red-500\">これと④より、地価に対する地租の税率は、t / 8.5nV = 0.2625nV / 8.5nV ≒ 0.03。</p>
