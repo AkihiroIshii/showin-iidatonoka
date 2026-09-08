@@ -6687,12 +6687,12 @@ class WorkbookController extends Controller
             ['kana' => "おんなのこが<span class=\"text-3xl font-bold\">ほん</span>をよんでいる。", 'kanji' => "女の子が<span class=\"text-3xl font-bold\">本</span>をよんでいる。", 'exp' => ''],
             ['kana' => "みぎからも ひだりからも <span class=\"text-3xl font-bold\">くるま</span>が きている。", 'kanji' => "右からも左からも<span class=\"text-3xl font-bold\">車</span>がきている。", 'exp' => ''],
             ['kana' => "やまの<span class=\"text-3xl font-bold\">うえ</span>はいいてんきだ。", 'kanji' => "山の<span class=\"text-3xl font-bold\">上</span>はいい天気だ。", 'exp' => ''],
-            ['kana' => "はやしの なかに <span class=\"text-3xl font-bold\">しろ</span>い きが たっている。", 'kanji' => "林の中に<span class=\"text-3xl font-bold\">白</span>い木が立っている。", 'exp' => ''],
+            ['kana' => "はやしの なかに <span class=\"text-3xl font-bold\">しろい</span> きが たっている。", 'kanji' => "林の中に<span class=\"text-3xl font-bold\">白い</span>木が立っている。", 'exp' => ''],
             ['kana' => "おとこのこが たんぼで <span class=\"text-3xl font-bold\">むし</span>を さがしている。", 'kanji' => "男の子が田んぼで<span class=\"text-3xl font-bold\">虫</span>をさがしている。", 'exp' => ''],
-            ['kana' => "あおい たまと <span class=\"text-3xl font-bold\">あか</span>い たまが ある。", 'kanji' => "青い玉と<span class=\"text-3xl font-bold\">赤</span>い玉がある。", 'exp' => ''],
-            // ['kana' => "<span class=\"text-3xl font-bold\"></span>。", 'kanji' => "<span class=\"text-3xl font-bold\"></span>。", 'exp' => ''],
-            // ['kana' => "<span class=\"text-3xl font-bold\"></span>。", 'kanji' => "<span class=\"text-3xl font-bold\"></span>。", 'exp' => ''],
-            // ['kana' => "<span class=\"text-3xl font-bold\"></span>。", 'kanji' => "<span class=\"text-3xl font-bold\"></span>。", 'exp' => ''],
+            ['kana' => "あおい たまと <span class=\"text-3xl font-bold\">あかい</span> たまが ある。", 'kanji' => "青い玉と<span class=\"text-3xl font-bold\">赤い</span>玉がある。", 'exp' => ''],
+            ['kana' => "そらの <span class=\"text-3xl font-bold\">ゆうひ</span>が きれいだ。", 'kanji' => "空の<span class=\"text-3xl font-bold\">夕日</span>がきれいだ。", 'exp' => ''],
+            ['kana' => "おとうとは しょうがく <span class=\"text-3xl font-bold\">いちねんせい</span> です。", 'kanji' => "おとうとは小学<span class=\"text-3xl font-bold\">一年生</span>です。", 'exp' => ''],
+            ['kana' => "まちに <span class=\"text-3xl font-bold\">ひゃくにん</span> あつまった。", 'kanji' => "町に<span class=\"text-3xl font-bold\">百人</span>あつまった。", 'exp' => ''],
         ];
         $idx = rand(0, count($sentences)-1);
         $s = $sentences[$idx];
