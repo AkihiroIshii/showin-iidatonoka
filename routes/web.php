@@ -386,6 +386,8 @@ Route::get('workbook/present_perfect', [WorkbookController::class, 'present_perf
 ->middleware(['auth', 'verified'])->name('workbook.present_perfect');
 Route::get('workbook/svo_infinitive', [WorkbookController::class, 'svo_infinitive'])
 ->middleware(['auth', 'verified'])->name('workbook.svo_infinitive');
+Route::get('workbook/postfix_modification', [WorkbookController::class, 'postfix_modification'])
+->middleware(['auth', 'verified'])->name('workbook.postfix_modification');
 
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');

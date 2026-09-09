@@ -4315,6 +4315,92 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 英文法 後置修飾
+    public function postfix_modification(Request $request) {
+        $exp_common = '<p>名詞を2語以上で修飾するとき、英語では後ろから修飾する。</p>
+                        <p>名詞の直後には現在分詞（ing形）、過去分詞、関係代名詞などを置く。</p>
+                        <p>修飾する部分がSVを持つ文（節）なら関係代名詞を、そうでない（句）なら分詞を使う。</p>';
+        $sentences = [
+            ['e' => 'The boy running over there is my brother.', 'j' => '向こうで走っている少年は私の弟です。', 'exp' => "{$exp_common}
+                                                                    <p>\"The boy\"を\"running over there\"が修飾し、「向こうで走っている少年」という</p>
+                                                                    <p>文の主語(S)になっている。\"<span class=\"underline\">The boy running over there(S)</span> is my brother.\"</p>"],
+            ['e' => 'I saw a girl wearing blue glasses.', 'j' => '私は青い眼鏡をかけた少女に会いました。', 'exp' => "{$exp_common}
+                                                                    <p>\"a girl\"を\"wearing blue glasses\"が修飾し、「青い眼鏡をかけた少女」という</p>
+                                                                    <p>文の目的語(O)になっている。\"I saw <span class=\"underline\">a girl wearing blue glasses(O)</span>.\"</p>
+                                                                    <p>なお、wear は「着ている」の意味だが、眼鏡、靴、時計などを「身に付けている」時にも使う。</p."],
+            ['e' => 'The novel written by Soseki was very popular.', 'j' => '漱石によって書かれたその小説は、とても人気があった。', 'exp' => "{$exp_common}
+                                                                    <p>\"The novel\"を\"written by Soseki\"が修飾し、「漱石によって書かれたその小説」という</p>
+                                                                    <p>文の主語(S)になっている。\"<span class=\"underline\">The novel written by Soseki(S)</span> was very popular.\"</p>"],
+            ['e' => 'He is reading a book given by his father.', 'j' => '彼は父にもらった本を読んでいる。', 'exp' => "{$exp_common}
+                                                                    <p>\"a book\"を\"gave by his father\"が修飾し、「父にもらった本」という</p>
+                                                                    <p>文の目的語(O)になっている。\"He is reading <span class=\"underline\">a book given by his father(O)</span>.\"</p>"],
+            ['e' => 'I have a sister who can speak English.', 'j' => '私には英語を話せる姉がいる。', 'exp' => "{$exp_common}
+                                                                    <p>上の例文は、\"I have a sister.\"と\"She can speak English.\"をひとまとめにした文。</p>
+                                                                    <p>前の文の a sister と、後ろの文の She(S) が同一人物なので、主格の関係代名詞 who でまとめられる。</p>
+                                                                    <p>「私には姉がいて、（彼女は）英語を話せるんだ。」と捉えた方が和訳しやすいと思う。</p>"],
+            ['e' => 'I have a dog which likes cats.', 'j' => '私は猫好きの犬を飼っている。', 'exp' => "{$exp_common}
+                                                                    <p>上の例文は、\"I have a dog.\"と\"It likes cats.\"をひとまとめにした文。</p>
+                                                                    <p>前の文の a dog と、後ろの文の It(S) が同じ犬なので、主格の関係代名詞 which でまとめられる。</p>
+                                                                    <p>愛犬家は who を使いたくなってしまうかもしれないが、who はあくまで人間にしか使えない。</p>
+                                                                    <p>「私は犬を飼っていて、（それは）猫が好きなんだ。」と捉えた方が和訳しやすいと思う。</p>"],
+            ['e' => 'Do you know the movie which he likes?', 'j' => '彼が好きな映画を知っていますか。', 'exp' => "{$exp_common}
+                                                                    <p>上の例文は、\"Do you know the movie.\"と\"He likes the movie.\"をひとまとめにした文。</p>
+                                                                    <p>前の文と後ろの文の the movie(O) が同じ映画なので、目的格の関係代名詞 which でまとめられる。</p>
+                                                                    <p>「あなたはその映画を知っていますか。（その映画を）彼は好きなんだけど。」と捉えればよいだろう。</p>
+                                                                    <p>He likes の後ろに何もない形に慣れていないかもしれないが、実は目的語の省略は中１でも出てきている。</p>
+                                                                    <p>Do you play tennis? ⇒ Yes, I do.</p>
+                                                                    <p>この返答は、Yes, I play tennis. の目的語 tennis を省略しているのだ。play は do に置き換わっている。</p>"],
+            ['e' => 'I know the girl that the boy likes.', 'j' => '私はその少年が好きな少女を知っている。', 'exp' => "{$exp_common}
+                                                                    <p>上の例文は、\"I know the girl.\"と\"The boy likes the girl.\"をひとまとめにした文。</p>
+                                                                    <p>前の文と後ろの文の the girl(O) が同じ人物なので、目的格の関係代名詞 that でまとめられる。</p>
+                                                                    <p>「私はその少女を知っている。（その少女を）彼は好いているだけど。」と捉えればよいだろう。</p>
+                                                                    <p>ところで、主格で人の時は who を使う。実は、目的格で人の時は whom という関係代名詞も存在する（高校では習う）。</p>
+                                                                    <p>that は代名詞「あれ」とか接続詞でも使うので、慣れないと混乱しやすい気がする。whom は関係代名詞でしか使わないし、</p>
+                                                                    <p>こちらの方が文法上はわかりやすい気もするのだが、なぜか中学英語では that を使う。どうやら、最近では whom が</p>
+                                                                    <p>堅めな表現になってきているらしい（日本語で言う拙者みたいな感じだろうか）。気になる人は調べてみてほしい。</p>
+                                                                    <p>ちなみに whom より that を使うべき場面もあるのだが、これ以上は高校レベルになるので深入りはやめておこう。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "後置修飾（分詞、関係代名詞）";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
     // 英単語　動詞１
     public function e_word_verb1(Request $request) {
         $sentences = [
@@ -6679,7 +6765,7 @@ class WorkbookController extends Controller
             ['kana' => "<span class=\"text-3xl font-bold\">もり</span>のなかをあるく。", 'kanji' => "<span class=\"text-3xl font-bold\">森</span>の中をあるく。", 'exp' => ''],
             ['kana' => "<span class=\"text-3xl font-bold\">かわ</span>のみずが つめたい。", 'kanji' => "<span class=\"text-3xl font-bold\">川</span>の水がつめたい。", 'exp' => ''],
             ['kana' => "たんぼの<span class=\"text-3xl font-bold\">つち</span>をたがやす。", 'kanji' => "田んぼの<span class=\"text-3xl font-bold\">土</span>をたがやす。", 'exp' => ''],
-            ['kana' => "あしたは<span class=\"text-3xl font-bold\">はやく</span>おきよう。", 'kanji' => "明日は<span class=\"text-3xl font-bold\">早く</span>おきよう。", 'exp' => ''],
+            ['kana' => "あしたは<span class=\"text-3xl font-bold\">はやく</span>おきよう。", 'kanji' => "明日は<span class=\"text-3xl font-bold\">早く</span>おきよう。", 'exp' => '「明日」は「あす」ともよみます。'],
             ['kana' => "かんじは<span class=\"text-3xl font-bold\">ただしく</span>かきましょう。", 'kanji' => "かん字は<span class=\"text-3xl font-bold\">正しく</span>かきましょう。", 'exp' => ''],
             ['kana' => "ちいさな<span class=\"text-3xl font-bold\">いし</span>をひろった。", 'kanji' => "小さな<span class=\"text-3xl font-bold\">石</span>をひろった。", 'exp' => ''],
             ['kana' => "いぬが<span class=\"text-3xl font-bold\">つき</span>をみている。", 'kanji' => "犬が<span class=\"text-3xl font-bold\">月を</span>見ている。", 'exp' => ''],
@@ -6788,6 +6874,56 @@ class WorkbookController extends Controller
                 'kanji' => "姉が通っている高校はとても広いです。",
                 'exp' => "",
             ],
+            [
+                'kana' => "きょうしつの でんきを つける。",
+                'kanji' => "教室の電気を点ける。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "つよい たいふうが ちかづいている。",
+                'kanji' => "強い台風が近づいている。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "ちゅうこの ふるどけいを かった。",
+                'kanji' => "中古の古時計を買った。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "かみを まるく きる。",
+                'kanji' => "紙を丸く切る。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "おんがくで がいこくの うたを おそわった。",
+                'kanji' => "音楽で外国の歌を教わった。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "しょくぱんまんの かおは しかくい。",
+                'kanji' => "食パンマンの顔は四角い。",
+                'exp' => "「しょくぱんまん」はひらがなで書くべきなのだろうか。。",
+            ],
+            [
+                'kana' => "がようしを はんぶんに きる。",
+                'kanji' => "画用紙を半分に切る。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "ちちは せんちょうです。",
+                'kanji' => "父は船長です。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "いまは ひるやすみの じかんです。",
+                'kanji' => "今は昼休みの時間です。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "おとうとは ははの はなしを きいて かんがえこんだ。",
+                'kanji' => "弟は母の話を聞いて考えこんだ。",
+                'exp' => "",
+            ],
         ];
         $idx = rand(0, count($sentences)-1);
         $s = $sentences[$idx];
@@ -6864,13 +7000,18 @@ class WorkbookController extends Controller
                 'exp' => "",
             ],
             [
-                'kana' => 'りかの じゅぎょうで でんりゅうを おそわった。',
-                'kanji' => "理科の授業で電流を教わった。",
+                'kana' => 'りかで でんりゅうを ならった。',
+                'kanji' => "理科で電流を習った。",
                 'exp' => "",
             ],
             [
-                'kana' => 'これは がっきゅういいんちょうの しんぞくの むかしの しゃしんだ。',
-                'kanji' => "これは学級委員長の親族の昔の写真だ。",
+                'kana' => 'これはしんぞくの むかしの しゃしんだ。',
+                'kanji' => "これは親族の昔の写真だ。",
+                'exp' => "",
+            ],
+            [
+                'kana' => 'がっきゅういいんちょうは かんじが じょうずだ。',
+                'kanji' => "学級委員長は漢字が上手だ。",
                 'exp' => "",
             ],
             [
@@ -6889,8 +7030,63 @@ class WorkbookController extends Controller
                 'exp' => "",
             ],
             [
-                'kana' => 'きみとの しょうぶは おわっていない。',
-                'kanji' => "君との勝負は終わっていない。",
+                'kana' => 'きみと しょうぶ してみたい。',
+                'kanji' => "君と勝負してみたい。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "えきまで くるまを うんてんする。",
+                'kanji' => "駅まで車を運転する。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "わるい よかんが する。",
+                'kanji' => "悪い予感がする。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "しょうわの たびの おもいで。",
+                'kanji' => "昭和の旅の思い出。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "にかいの へやは すこし くらい。",
+                'kanji' => "二階の部屋は少し暗い。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "でんしゃに のって みなとまちに むかう。",
+                'kanji' => "電車に乗って港町に向かう。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "にがい くすりを のむ。",
+                'kanji' => "苦い薬を飲む。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "ゆびぶえで とりを あつめる。",
+                'kanji' => "指笛で鳥を集める。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "しゅくだいが おわらない。",
+                'kanji' => "宿題が終わらない。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "びょういんで いきを ひきとった。",
+                'kanji' => "病院で息を引き取った。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "ちょうれいで せいれつする。",
+                'kanji' => "朝礼で整列する。",
+                'exp' => "",
+            ],
+            [
+                'kana' => "けついを ひょうめいする。",
+                'kanji' => "決意を表明する。",
                 'exp' => "",
             ],
         ];
@@ -6939,8 +7135,8 @@ class WorkbookController extends Controller
     public function kanjiP4(Request $request) {
         $sentences = [
             [
-                'kana' => 'がっしゅくでの とっくんの せいかが しあいに あらわれた。',
-                'kanji' => "合宿での特訓の成果が試合に表れた。",
+                'kana' => 'とっくんの せいかが しあいに あらわれた。',
+                'kanji' => "特訓の成果が試合に表れた。",
                 'exp' => "",
             ],
             [
@@ -6949,8 +7145,8 @@ class WorkbookController extends Controller
                 'exp' => "",
             ],
             [
-                'kana' => 'かごしまから ひこうきで えひめに たびだつ。',
-                'kanji' => "鹿児島から飛行機で愛媛に旅立つ。",
+                'kana' => 'かごしまから ひこうきで えひめに むかう。',
+                'kanji' => "鹿児島から飛行機で愛媛に向かう。",
                 'exp' => "",
             ],
             [
@@ -6963,11 +7159,11 @@ class WorkbookController extends Controller
                 'kanji' => "副大臣が問題発言をした。",
                 'exp' => "",
             ],
-            [
-                'kana' => 'うんどうかいで ときょうそうへの さんかを きぼうする。',
-                'kanji' => "運動会で徒競走への参加を希望する。",
-                'exp' => "",
-            ],
+            // [
+            //     'kana' => 'うんどうかいで ときょうそうへの さんかを きぼうする。',
+            //     'kanji' => "運動会で徒競走への参加を希望する。",
+            //     'exp' => "",
+            // ],
             [
                 'kana' => 'りかの じっけんで かがみを つかう。',
                 'kanji' => "理科の実験で鏡を使う。",
@@ -6988,6 +7184,81 @@ class WorkbookController extends Controller
                 'kanji' => "給食で焼肉を残さず食べた。",
                 'exp' => "",
             ],
+            [
+                'kana' => "さいしょから せつめいします。",
+                'kanji' => "最初から説明します。",
+                'exp' => "「初」は「しめすへん」ではなく「ころもへん」なので注意。",
+            ],
+            [
+                'kana' => "きせつが あきに かわる。",
+                'kanji' => "季節が秋に変わる。",
+                'exp' => "",
+            ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
+            // [
+            //     'kana' => "",
+            //     'kanji' => "",
+            //     'exp' => "",
+            // ],
         ];
         $idx = rand(0, count($sentences)-1);
         $s = $sentences[$idx];
