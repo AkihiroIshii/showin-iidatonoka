@@ -445,6 +445,8 @@ Route::get('workbook/soc_bakumatsu', [WorkbookController::class, 'soc_bakumatsu'
 ->middleware(['auth', 'verified'])->name('workbook.soc_bakumatsu');
 Route::get('workbook/soc_meiji', [WorkbookController::class, 'soc_meiji'])
 ->middleware(['auth', 'verified'])->name('workbook.soc_meiji');
+Route::get('workbook/soc_meiji2', [WorkbookController::class, 'soc_meiji2'])
+->middleware(['auth', 'verified'])->name('workbook.soc_meiji2');
 // 国語
 Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');
