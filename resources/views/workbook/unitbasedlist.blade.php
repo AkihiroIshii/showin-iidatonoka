@@ -630,9 +630,9 @@
                                 <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_kodai')}}">縄文、弥生、古墳</a>
                                 </x-button-link>
-                                {{-- <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_asuka_nara')}}">飛鳥、奈良</a>作成中
-                                </x-button-link> --}}
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.soc_asuka_nara')}}">飛鳥、奈良</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
