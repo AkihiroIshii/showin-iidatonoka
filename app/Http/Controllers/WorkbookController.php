@@ -2867,6 +2867,144 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 動く点P
+    public function moving_p() {
+        // 変数
+        $vp = rand(1, 2);   // 点Pの速さ。
+        $AB = $vp * rand(4, 6);  //ABの長さ。
+        $AD = rand(2, 4); //ADの長さ。
+
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = $AB * 1.4; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        $p_AB = $AB*$scale;
+        $p_AD = $AD*$scale;
+        $Ax = -$p_AB / 2;
+        $Ay = -$p_AD / 2;
+        $sample_Px = $Ax + (2/3)*$p_AB;
+        $sample_Py = $Ay; 
+        $sample_Px2 = $Ax + (2/3)*$p_AB;
+        $sample_Py2 = -$Ay; 
+        $Bx = -$Ax;
+        $By = $Ay;
+        $Cx = $Bx;
+        $Cy = -$By;
+        $Dx = $Ax;
+        $Dy = $Cy;
+        $Mx = $Ax;
+        $My = 0;
+
+        $AM_str = $this->fracnum_to_str($AD, 2, "", 1);  //AMの長さ（解説用文字列）
+        $AP1_str = $this->num_to_str($vp, 1, 1);    //AB上にPがあるときのAP
+        $S1_str = $this->fracnum_to_str($vp*$AD, 4, "x", 1);   //AB上にPがあるときの面積
+        $vp2_str = $this->num_to_str($vp, 1, 1);
+        $S2_1_str = $this->fracnum_to_str($AD*(2*$AB + $AD), 4, "", 1);   //AC上にPがあるときの面積（１項目）
+        $S2_2_str = $this->fracnum_to_str($AD*$vp, 4, "x", 1);   //AC上にPがあるときの面積（２項目）
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+
+        $plot_par_q = [
+            'w_full' => $w_full,
+            'w_half' => $w_half,
+        ];
+
+        $plot_con_common = "   
+            <rect x=\"{$Ax}\" y=\"{$Ay}\" width=\"{$p_AB}\" height=\"{$p_AD}\" stroke=\"black\" fill=\"transparent\"/>
+            <text x=\"" . ($Ax - 20) . "\" y=\"{$Ay}\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                A
+            </text>
+            <text x=\"" . ($Bx + 10) . "\" y=\"{$By}\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                B
+            </text>
+            <text x=\"" . ($Cx + 10) . "\" y=\"" . ($Cy + 10) . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                C
+            </text>
+            <text x=\"" . ($Dx - 20) . "\" y=\"" . ($Dy + 10) . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                D
+            </text>
+        ";
+        $plot_con_q = $plot_con_common . "
+            <circle cx=\"{$sample_Px}\" cy=\"{$sample_Py}\" r=\"5\" fill=\"blue\" />
+            <text x=\"" . ($sample_Px - 10) . "\" y=\"" . ($sample_Py + 30) . "\" font-weight=\"bold\" font-size=\"22\" fill=\"blue\" >
+                P
+            </text>
+            <text x=\"" . ($sample_Px - 30) . "\" y=\"" . ($sample_Py - 10) . "\" font-weight=\"bold\" font-size=\"22\" fill=\"blue\" >
+                {$vp} cm/s →
+            </text>        
+        ";
+
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $q_common = "<p>下図の長方形 ABCD で、点 P が A → B → C → D の順に、秒速 {$vp} cm で進む。</p>
+                        <p>また、AD の中点を M とし、P が A を出発してから \(x\) 秒後の \(\\triangle\)APM の面積を \(y\) cm\(^2\) とする。</p>";
+        $questions = [
+            [
+                'q_type' => 6,
+                'q' => "{$q_common}
+                        <p>AB = {$AB} cm、AD = {$AD} cm で、点 P が AB 上にいるとき、\(y\) を \(x\) の式で表しなさい。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "y={$S1_str}",
+                'e_type' => 6,
+                'e' => "<p>\(\displaystyle \mathrm{AP} = {$AP1_str}x \,\mathrm{cm、AM = \\frac{\,AD\,}{2} } = {$AM_str}\,\mathrm{cm}\,なので、\)</p>
+                        <p>\(\displaystyle y = \\frac{1}{\,2\,}\mathrm{AP} \\times \mathrm{AM} 
+                                = \\frac{1}{\,2\,} \\times {$AP1_str}x \\times {$AM_str} = {$S1_str} \).</p>
+                        ",
+            ],
+            [
+                'q_type' => 6,
+                'q' => "{$q_common}
+                        <p>AB = {$AB} cm、AD = {$AD} cm で、点 P が CD 上にいるとき、\(y\) を \(x\) の式で表しなさい。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "y={$S2_1_str} - {$S2_2_str}",
+                'e_type' => 6,
+                'e' => "<p>\(\mathrm{DP = (AB + BC + CD)} - {$vp2_str}x = " . 2*$AB + $AD . " - {$vp2_str}x\,と表せる。\)</p>
+                        <p>\(\displaystyle \mathrm{AM = \\frac{\,AD\,}{2} } = {$AM_str}\,\mathrm{cm}\,なので、\)</p>
+                        <p>\(\displaystyle y = \\frac{1}{\,2\,}\mathrm{AM} \\times \mathrm{DP} 
+                                = \\frac{1}{\,2\,} \\times {$AM_str} \\times (" . (2*$AB + $AD) . " - {$vp2_str}x) = {$S2_1_str} - {$S2_2_str} \).</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        // 問題によって解説図を変える。
+        $plot_par_e = $plot_par_q;
+        $plot_con_e = $plot_con_common . "
+            <text x=\"" . ($Mx - 25) . "\" y=\"" . ($My + 10) . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                M
+            </text>
+        ";
+        //PがAB上にいるとき
+        if ($q_index == 0) {
+            $plot_con_e .= "
+                <circle cx=\"{$sample_Px}\" cy=\"{$sample_Py}\" r=\"5\" fill=\"blue\" />
+                <text x=\"" . ($sample_Px - 10) . "\" y=\"" . ($sample_Py - 10) . "\" font-weight=\"bold\" font-size=\"22\" fill=\"blue\" >
+                    P
+                </text>
+                <path d=\"M {$Ax} {$Ay} L {$sample_Px} {$sample_Py} L {$Mx} {$My} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />  
+            ";
+        //PがCD上にいるとき
+        } else {
+            $plot_con_e .= "
+                <circle cx=\"{$sample_Px2}\" cy=\"{$sample_Py2}\" r=\"5\" fill=\"blue\" />
+                <text x=\"" . ($sample_Px2 - 10) . "\" y=\"" . ($sample_Py2 - 10) . "\" font-weight=\"bold\" font-size=\"22\" fill=\"blue\" >
+                    P
+                </text>
+                <path d=\"M {$Ax} {$Ay} L {$sample_Px2} {$sample_Py2} L {$Mx} {$My} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />  
+            ";
+        }
+
+        $unitname = "動く点P";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+
     // 式の展開
     public function expansion() {
         $a = (-1)**rand(1, 2) * rand(1, 13);

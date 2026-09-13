@@ -324,6 +324,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.moving_p')}}">動く点P</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
