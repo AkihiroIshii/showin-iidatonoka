@@ -287,6 +287,8 @@ Route::get('workbook/velocity2', [WorkbookController::class, 'velocity2'])
 Route::get('workbook/fraction_muldiv', [WorkbookController::class, 'fraction_muldiv'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.fraction_muldiv');
 //数学
+Route::get('workbook/positive_negative', [WorkbookController::class, 'positive_negative'])
+->middleware(['auth', 'verified'])->name('workbook.positive_negative');
 Route::get('workbook/distributive_law1', [WorkbookController::class, 'distributive_law1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.distributive_law1');
 Route::get('workbook/distributive_law2', [WorkbookController::class, 'distributive_law2'])
@@ -301,6 +303,8 @@ Route::get('workbook/linear_equation3', [WorkbookController::class, 'linear_equa
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation3');
 Route::get('workbook/linear_equation4', [WorkbookController::class, 'linear_equation4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation4');
+Route::get('workbook/linear_equation_summary', [WorkbookController::class, 'linear_equation_summary'])
+->middleware(['auth', 'verified'])->name('workbook.linear_equation_summary');
 Route::get('workbook/algebraic_expression', [WorkbookController::class, 'algebraic_expression'])
 ->middleware(['auth', 'verified'])->name('workbook.algebraic_expression');
 Route::get('workbook/setup_equation', [WorkbookController::class, 'setup_equation'])
@@ -321,6 +325,8 @@ Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figur
 ->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
 Route::get('workbook/corn_surface', [WorkbookController::class, 'corn_surface'])
 ->middleware(['auth', 'verified'])->name('workbook.corn_surface');
+Route::get('workbook/spacial_figure_summary', [WorkbookController::class, 'spacial_figure_summary'])
+->middleware(['auth', 'verified'])->name('workbook.spacial_figure_summary');
 Route::get('workbook/coordinates_triangle', [WorkbookController::class, 'coordinates_triangle'])
 ->middleware(['auth', 'verified'])->name('workbook.coordinates_triangle');
 // 数学（中2）

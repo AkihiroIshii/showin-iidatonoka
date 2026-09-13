@@ -121,6 +121,7 @@
 
             <!---------------------------------------- 数学 ---------------------------------------->
             <x-h3>数学</x-h3>
+            <p class="text-center font-bold text-red-600">2026/9/13：中２、中３は、まず中１の「一次方程式まとめ」を目標時間内に解けるようにしましょう。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -135,6 +136,9 @@
                         <x-td>式の計算</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.positive_negative')}}">正負の数</a>
+                                </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.distributive_law1')}}">分配法則１</a>
                                 </x-button-link>
@@ -183,6 +187,9 @@
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.linear_equation4')}}">\(\displaystyle \frac{c}{\,ax+b\,}=d\)</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.linear_equation_summary')}}">◎一次方程式まとめ</a>
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.algebraic_expression')}}">文字式で表す</a>
@@ -265,6 +272,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.corn_surface')}}">円錐の表面積</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.spacial_figure_summary')}}">◎空間図形まとめ</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -327,7 +337,7 @@
 
             <!---------------------------------------- 英語 ---------------------------------------->
             <x-h3 color="purple">英語</x-h3>
-            <p class="text-center font-bold text-red-600">2026/9/5：「和訳」「英訳」を選べるようにしました。慣れるまでは「和訳」だけで練習しましょう。</p>
+            <p class="text-center font-bold text-red-600">2026/9/13：中２、中３は、まず「中１まとめ」の英文をスラスラ読めて、和訳ができるようにしましょう。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -382,7 +392,7 @@
                                     <a href="{{route('workbook.progressive_tense')}}">進行形</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
-                                    <a href="{{route('workbook.eng_summaryJ1')}}">中１まとめ</a>
+                                    <a href="{{route('workbook.eng_summaryJ1')}}">◎中１まとめ</a>
                                 </x-button-link>
                                 {{-- <div>
                                     be動詞
@@ -434,7 +444,7 @@
                                     <a href="{{route('workbook.passive_voice')}}">受け身</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
-                                    <a href="{{route('workbook.eng_summaryJ2')}}">中２まとめ</a>
+                                    <a href="{{route('workbook.eng_summaryJ2')}}">◎中２まとめ</a>
                                 </x-button-link>
                             </div>
                         </x-td>

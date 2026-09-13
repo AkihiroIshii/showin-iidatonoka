@@ -416,6 +416,77 @@ class WorkbookController extends Controller
     //     return view('workbook.unit.distributive_law1', compact('a','b','c'));
     // }
 
+    // 正負の数
+    public function positive_negative() {
+        $a = (-1)**rand(1,2) * rand(2, 9);
+        $b = (-1)**rand(1,2) * rand(2, 9);
+
+        $a_plus_b = $a + $b;
+        $a_minus_b = $a - $b;
+        $a_mul_b = $a * $b;
+
+        $str_a_plus_b = $a . $this->num_to_str($b, 0, 0);
+        $str_a_minus_b = $a . "-(" . $this->num_to_str($b, 0, 0) . ")";
+        $str_a_mul_b = $a . " \\times (" . $this->num_to_str($b, 0, 0) . ")";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                        <p>\({$str_a_plus_b}\)</p>",
+                'a_type' => 2,
+                'a' => "{$a_plus_b}",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                a+(+\,b) = a+b \\\\
+                                a+(-\,b) = a-b \\\\
+                                a-(+\,b) = a-b \\\\
+                                a-(-\,b) = a+b \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                        <p>\({$str_a_minus_b}\)</p>",
+                'a_type' => 2,
+                'a' => "{$a_minus_b}",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                a+(+\,b) = a+b \\\\
+                                a+(-\,b) = a-b \\\\
+                                a-(+\,b) = a-b \\\\
+                                a-(-\,b) = a+b \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                        <p>\({$str_a_mul_b}\)</p>",
+                'a_type' => 2,
+                'a' => "{$a_mul_b}",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                a\\times(+\,b) &= ab \\\\
+                                a\\times(-\,b) &= -ab \\\\
+                                -a\\times(+\,b) &= -ab \\\\
+                                -a\\times(-\,b) &= ab \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "正負の数";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 分配法則１
     public function distributive_law1() {
         $a = (-1)**rand(1,2) * rand(2, 9);
@@ -600,6 +671,78 @@ class WorkbookController extends Controller
         $numerator = abs($numerator);
         $denominator = abs($denominator);
         return view('workbook.unit.linear_equation4', compact('a','b','c','d','ans_sign','numerator','denominator'));
+    }
+
+    // 一次方程式まとめ
+    public function linear_equation_summary() {
+        // a, b, c をランダムに決める
+        // $primes = $this->get_primes(2, 11);    // 11以下の素数を2つ取得する。
+        // $a = $primes[0];
+        // $b = $primes[1];
+        $a = rand(2, 5);
+        $b = rand(1, 5);
+        $c = (-1)**rand(1,2) * rand(1, 4);
+        $d = $a + rand(2, 4);
+        $e = rand(1, 3);
+
+        $no2_ans_numerator = $a*$e + $b;
+        $no2_ans_denominator = $d - $a;
+        $no2_ans_str = $this->fracnum_to_str($no2_ans_numerator, $no2_ans_denominator, "", 1);
+
+        // // x = ac / b
+        // $numerator = $a * $c;
+        // $denominator = $b;
+
+        // $ans_str = $this->fracnum_to_str($numerator, $denominator, "", 1);
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。（目標解答時間：1 分）</p>
+                        <p>\(\displaystyle \\frac{\,x+{$a}\,}{2} - \\frac{\,x-{$b}\,}{3} = {$c}\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => 6*$c - 3*$a - 2*$b,
+                'e_type' => 3,
+                'e' => "<p>分母を払うため、2 と 3 の最小公倍数である 6 を両辺にかける。</p>
+                        <p>\(\displaystyle \\frac{\,x+{$a}\,}{2} \\times 6 - \\frac{\,x-{$b}\,}{3} \\times 6 = {$c} \\times 6\)</p>
+                        <p>すると整数の方程式に変形できるので、以下の通り変形する。</p>
+                        \[
+                            \\begin{aligned}
+                                3(x+{$a}) - 2(x-{$b}) &= " . 6*$c . " \\\\
+                                3x + " . 3*$a . " - 2x + " . 2*$b . " &= " . 6*$c . " \\\\
+                                3x - 2x &= " . 6*$c . " - " . 3*$a . " - " . 2*$b . " \\\\
+                                x &= " . 6*$c - 3*$a - 2*$b . "
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。（目標解答時間：30 秒）</p>
+                        <p>\(\displaystyle \\frac{\,{$d}x-{$b}\,}{{$a}} = x + {$e}\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => $no2_ans_str,
+                'e_type' => 3,
+                'e' => "<p>分母を払うため、両辺を {$a} 倍してから変形する。</p>
+                        \[
+                            \\begin{aligned}
+                                {$d}x-{$b} &= {$a}x + " . $a*$e . " \\\\
+                                {$d}x - {$a}x &= " . $a*$e . " + {$b} \\\\
+                                " . ($d - $a) . "x &= " . ($a*$e + $b) . " \\\\ 
+                                x &= {$no2_ans_str}
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "一次方程式まとめ";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 文字式で表す
@@ -1446,6 +1589,147 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "円錐の表面積";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 円錐の表面積
+    public function spacial_figure_summary() {
+        $r = rand(1, 6);
+        $R = $r * rand(2, 6);   //R:母線（大円の半径）> r:底面の半径
+        $a = 360 * $r / $R;   //展開した側面（おうぎ形）の中心角
+        $Sf_str = ($r * $R) . "\pi";
+        $r2 = $r**2;
+        $r2_str = $this->num_to_str($r2, 1, 1);
+        $R2 = $R**2;
+        $S_str = (($r*$R) + $r2) . "\pi";
+        $h = rand(2, 6);
+        $V_cone_str = $this->fracnum_to_str($r2*$h, 3, "\pi", 1);
+        $V_cylinder_str = $this->num_to_str($r2*$h, 1, 1);    
+        $tate = rand(2, 6);
+        $yoko = rand(2, 6);
+        $V_sphere_str = $this->fracnum_to_str(4*pow($r, 3), 3*2, "\pi", 1);
+        
+        $imageUrl_q = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_q.png']);
+        $imageUrl_e1 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e1.png']);
+        $imageUrl_e2 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e2.png']);
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、母線が\,{$R}\,\mathrm{cm}\,の円錐の表面積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$S_str}\,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<p>円錐を展開すると、底面は半径 \(r\) = {$r} cm の円、側面は半径 \(R\) = {$R} cm の扇形になる。</p>
+                        <p>(※)必ず円錐の展開図を描き、\(r\) や \(R\) などを書き込みながら考えること。</p>
+                        <p>【底面】</p>
+                        <p>底面の面積を \(S_c\) とする。\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2_str}\pi\, \mathrm{cm}^2 .\) ・・・①</p>
+                        <p>【側面（扇形）】</p>
+                        <p>側面を展開した扇形の半径は、円錐の母線の長さに等しいので \(R（={$R}）\mathrm{cm}\)。</p>
+                        <p>半径が同じ扇形の面積は、中心角や孤の長さに比例する。そこで、この扇形と同じ半径の大円</p>
+                        <p>（中心角360\(^{\circ}\)の扇形）を比較する。扇形の中心角の大きさはわからないので、孤の長さの比を考える。</p>
+                        <p>扇形の孤の長さは底面の円周と一致するので \(2\pi r \,\mathrm{cm}\)。また、大円の孤（つまり円周）は \(2\pi R \,\mathrm{cm}\)。</p>
+                        <p>よって、半径 \(R\) の円に対する扇形の面積の比率は \(2\pi r / 2\pi R = r/R\)。これより、扇形の面積 \(S_f\) は、</p>
+                        <p>\(\displaystyle S_f = \pi R^2 \\times \\frac{r}{\,R\,} = \pi r R = \pi \\times {$r} \\times {$R} = " . $r*$R . "\pi\,\mathrm{cm}^2.\)・・・②</p>
+                        <p>【全体】</p>
+                        <p>①、②より、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2_str}\pi = {$S_str}\,\mathrm{cm}^2\)。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、高さが\,{$h}\,\mathrm{cm}\,の円錐の体積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$V_cone_str}\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<p>底面積を \(S\)、円錐の高さを \(h\) とすると、円錐の体積 \(V\) は \(\displaystyle \\frac{1}{\,3\,}Sh\) である。</p>
+                        <p>底面の半径を \(r\) とすると、\(S = \pi r^2 = \pi \\times {$r}^2 = {$r2_str}\pi \,\mathrm{cm}^2\)なので、</p>
+                        <p>\(\displaystyle V = \\frac{1}{\,3\,}Sh = \\frac{1}{\,3\,}\\times {$r2_str}\pi \\times {$h} = {$V_cone_str} \,\mathrm{cm}^3\).</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、高さが\,{$h}\,\mathrm{cm}\,の円柱の表面積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => ($r2*2 + 2*$r*$h) . "\pi\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<p>底面積を \(S\)、円錐の高さを \(h\) とする。また、底面の半径を \(r\) とする。</p>
+                        <p>【底面】</p>
+                        <p>底面積は、\(\pi r^2 = \pi \\times {$r}^2 = {$r2_str}\pi\,\mathrm{cm}^2\).</p>
+                        <p>円柱は底面積が上と下の二面あるので、合計すると \({$r2_str}\pi \\times 2 = " . $r2*2 . "\pi \mathrm{cm}^2\).・・・①</p>        
+                        <p>【側面】
+                        <p>円柱の側面を展開すると長方形になる。縦の長さは円柱の高さと等しく、横の長さは底面の円周の長さと等しい。</p>
+                        <p>よって、この長方形（側面）の面積は、\(h \\times 2\pi r = {$h} \\times (2\pi \\times {$r}) = " . 2*$r*$h . "\pi \,\mathrm{cm}^2\).・・・②</p>
+                        <p>【全体】</p>
+                        <p>①、②より、全体の表面積は、\(S = " . $r2*2 . "\pi + " . 2*$r*$h . "\pi = " . ($r2*2 + 2*$r*$h) . "\pi \,\mathrm{cm}^2\).</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、高さが\,{$h}\,\mathrm{cm}\,の円柱の体積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$V_cylinder_str}\pi\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<p>底面積を \(S\)、円錐の高さを \(h\) とすると、円柱の体積 \(V\) は \(Sh\) である。</p>
+                        <p>底面の半径を \(r\) とすると、\(S = \pi r^2 = \pi \\times {$r}^2 = {$r2_str}\pi \,\mathrm{cm}^2\)なので、</p>
+                        <p>\(\displaystyle V = Sh = {$r2_str}\pi \\times {$h} = {$V_cylinder_str}\pi \,\mathrm{cm}^3\).</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(たて\,{$tate}\,\mathrm{cm}、よこ\,{$yoko}\,\mathrm{cm}、高さ\,{$h}\,\mathrm{cm}\,の直方体の表面積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => $tate*$yoko*2 + $h*($tate*2 + $yoko*2) . "\,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<p>【底面】</p>
+                        <p>底面積は、\({$tate} \\times {$yoko} = " . $tate*$yoko . "\,\mathrm{cm}^2\).</p>
+                        <p>底面積は上と下の二面あるので、合計すると \(" . $tate*$yoko . " \\times 2 = " . $tate*$yoko*2 . "\,\mathrm{cm}^2\).・・・①</p>        
+                        <p>【側面】
+                        <p>側面を展開すると、縦 \({$h}\,\mathrm{cm}\)、横 \(({$tate}+{$yoko}+{$tate}+{$yoko})\mathrm{cm}\) の長方形になる。</p>
+                        <p>よって、この長方形（側面）の面積は、\({$h} ({$tate}+{$yoko}+{$tate}+{$yoko}) = " . $h*($tate*2 + $yoko*2) . "\,\mathrm{cm}^2\).・・・②</p>
+                        <p>【全体】</p>
+                        <p>①、②より、全体の表面積は、\(S = " . $tate*$yoko*2 . " + " . $h*($tate*2 + $yoko*2) . " = " . ($tate*$yoko*2 + $h*($tate*2 + $yoko*2)) . " \,\mathrm{cm}^2\).</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(たて\,{$tate}\,\mathrm{cm}、よこ\,{$yoko}\,\mathrm{cm}、高さ\,{$h}\,\mathrm{cm}\,の直方体の体積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => $tate*$yoko*$h . "\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<p>\({$tate} \\times {$yoko} \\times {$h} = " . $tate*$yoko*$h . "\,\mathrm{cm}^3\).</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(半径が\,{$r}\,\mathrm{cm}\,の半球の表面積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => ($r2 + 2*$r2) . "\pi\,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<p>底面と球面にわけて考える。</p>
+                        <p>【底面】</p>
+                        <p>底面積は、\(\pi r^2 = \pi \\times {$r}^2 = {$r2_str}\pi\,\mathrm{cm}^2\).・・・①</p>
+                        <p>【側面】
+                        <p>半径 \(r\) の全球の表面積は \(4\pi r^2\) なので、半球の側面の表面積はその半分である。</p>
+                        <p>よって、半球の球面の表面積は、\(\displaystyle 4\pi r^2 \\times \\frac{1}{\,2\,} = 2\pi \\times {$r}^2 = " . 2*$r2 . "\pi\,\mathrm{cm}^2\).・・・②</p>
+                        <p>【全体】</p>
+                        <p>①、②より、全体の表面積は、\({$r2_str}\pi + " . 2*$r2 . "\pi = " . ($r2 + 2*$r2) . "\pi \,\mathrm{cm}^2\).</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(半径が\,{$r}\,\mathrm{cm}\,の半球の体積を求めよ。\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$V_sphere_str}\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<p>半径 \(r\) の球の体積は \(\displaystyle \\frac{4}{\,3\,}\pi r^3\) であり、半球の体積はその半分である。</p>
+                        <p>よって半球の体積は、\(\displaystyle \\left( \\frac{4}{\,3\,}\pi \\times {$r}^3 \\right) \\times \\frac{1}{\,2\,} = {$V_sphere_str}\,\mathrm{cm}^3\).</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "空間図形まとめ";
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
