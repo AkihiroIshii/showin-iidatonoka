@@ -1592,7 +1592,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 円錐の表面積
+    // 空間図形まとめ
     public function spacial_figure_summary() {
         $r = rand(1, 6);
         $R = $r * rand(2, 6);   //R:母線（大円の半径）> r:底面の半径
@@ -5724,6 +5724,261 @@ class WorkbookController extends Controller
         $index = rand(0,count($questions)-1);
         $question = $questions[$index];
         return view('workbook.unit.aqueous1', compact('question'));
+    }
+
+    // 地震
+    public function sci_earth(Request $request) {
+        $terms = [
+            ['term' => '震度', 'mean' => '場所ごとにゆれの大きさを表す指標。', 'exp' => '震度 0 から震度 7 まで 10 段階ある（震度 5 と 6 のみ弱・強にわかれる）。'],
+            ['term' => 'マグニチュード', 'mean' => '地震そのものの規模を表す指標。', 'exp' => '震度はゆれの大きさを示すが、場所によって異なる。マグニチュードは場所に依らない。'],
+            ['term' => 'P波', 'mean' => '初期微動を伝える波。', 'exp' => 'Primary Wave（最初に来る波）の頭文字を取ってP波と呼ぶ。'],
+            ['term' => 'S波', 'mean' => '主要動を伝える波。', 'exp' => 'Secondary Wave（2 番目に来る波）の頭文字を取ってS波と呼ぶ。'],
+            ['term' => '初期微動', 'mean' => '地震が起きてから最初に感じる小さな揺れ。', 'exp' => 'P波が到達すると初期微動が始まる。'],
+            ['term' => '主要動', 'mean' => '小さな揺れの後に伝わる大きな揺れ（本震）。', 'exp' => 'S波が到達すると主要動が始まる。'],
+            ['term' => '震央', 'mean' => '震源の真上の地表の地点。', 'exp' => '地震が生じる地点（震源）は地中である。'],
+            ['term' => '海溝', 'mean' => 'プレートが沈み込むところ。', 'exp' => '海溝付近は地震が起こりやすい。日本列島の東側には日本海溝がある。'],
+        ];
+        $idx = rand(0,count($terms)-1);
+        $term = $terms[$idx];
+
+        //計算用
+        $t0 = rand(10,30);   //地震発生時刻(7:30:{t0})
+        $vp = rand(6,8);    //P波の速さ(km/s)
+        $vs = $vp / 2;    //S波の速さ(km/s)
+        $tAp = rand(3, 10);   //震源からA地点にP波が到達するまでにかかった時間（秒）
+        $lA = $vp * $tAp;   //震源からA地点までの距離
+        $tAs = $lA / $vs;   //震源からA地点にS波が到達するまでにかかった時間（秒）
+        $tBp = $tAp + rand(3, 10);  //震源からA地点にP波が到達するまでにかかった時間（秒）
+        $lB = $vp * $tBp;
+        $tBs = $lB / $vs;   //60秒以上になり得る。
+        $tBs_str = ($t0 + $tBs) >= 60 ? "31分" . ($t0 + $tBs - 60) . "秒" : "30分" . ($t0 + $tBs) . "秒";
+        $lAB = $lB - $lA;   //AB間の距離
+        $tCp = $tBp + rand(3, 10);  //震源からC地点にP波が到達するまでにかかった時間（秒）
+        $lC = $vp * $tCp;
+
+        $quake_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5\">地点</td>
+                            <td class=\"border border-gray-400\">震源からの距離</td>
+                            <td class=\"border border-gray-400\">P波到達時刻</td>
+                            <td class=\"border border-gray-400\">S波到達時刻</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400\">A</td>
+                            <td class=\"border border-gray-400\">{$lA} km</td>
+                            <td class=\"border border-gray-400\">7時30分" . $t0 + $tAp . "秒</td>
+                            <td class=\"border border-gray-400\">7時30分" . $t0 + $tAs . "秒</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400\">B</td>
+                            <td class=\"border border-gray-400\">{$lB} km</td>
+                            <td class=\"border border-gray-400\">7時30分" . $t0 + $tBp . "秒</td>
+                            <td class=\"border border-gray-400\">7時{$tBs_str}</td>
+                        </tr>
+                    </table>
+                    ";
+
+        $calc_qas = [
+            [
+                'q' => "P波の速さを求めよ。",
+                'a' => "{$vp} km/s",
+                'e' => "<p>表より、A地点からB地点までの距離は {$lAB} km で、P波はこの 2 地点間を " . $tBp - $tAp . " 秒で伝わっている。</p>
+                        <p>よって、P波の速さは、{$lAB} ÷ " . $tBp - $tAp . " = {$vp} km/s.</p>"
+            ],
+            [
+                'q' => "S波の速さを求めよ。",
+                'a' => "{$vs} km/s",
+                'e' => "<p>表より、A地点からB地点までの距離は {$lAB} km で、S波はこの 2 地点間を " . $tBs - $tAs . " 秒で伝わっている。</p>
+                        <p>よって、S波の速さは、{$lAB} ÷ " . $tBs - $tAs . " = {$vs} km/s.</p>"
+            ],
+            [
+                'q' => "B地点での初期微動継続時間を求めよ。",
+                'a' => $tBs - $tBp . " 秒",
+                'e' => "<p>初期微動継続時間は、初期微動が始まる時刻（P波到達時刻）から主要動が始まる時刻（S波到達時刻）までの</p>
+                        <p>時間である。表より、B地点で初期微動が始まる時刻は 7時30分" . $t0 + $tBp . "秒、主要動が始まる時刻は 7時{$tBs_str}。</p>
+                        <p>よって、B時点での初期微動継続時間は、" . $tBs - $tBp . " 秒。</p>"
+            ],
+            [
+                'q' => "震源で地震が発生した時刻を求めよ。",
+                'a' => "7時30分{$t0}秒",
+                'e' => "<p>まずはP波の速さを求める。表より、A地点からB地点までの距離は {$lAB} km で、</p>
+                        <p>P波はこの 2 地点間を" . $tBp - $tAp . " 秒で伝わっている。よって、P波の速さは、{$lAB} ÷ " . $tBp - $tAp . " = {$vp} km/s.</p>
+                        <p>次に、震源とA地点の 2 地点間について考える。震源からA地点までの距離は {$lA} km なので、</p>
+                        <p>P波が震源からA地点まで伝わるのにかかる時間は、{$lA}[km] ÷ {$vp}[km/s] = {$tAp} 秒。</p>
+                        <p>よって地震発生時刻は、A地点にP波が到達した時刻（7時30分" . $t0 + $tAp . "秒）より {$tAp} 秒前の、7時30分{$t0}秒。</p>
+                        <p>【別解】</p>
+                        <p>P波の代わりにS波の速さを求めてもよい。表より、A地点からB地点までの距離は {$lAB} km で、</p>
+                        <p>S波はこの 2 地点間を" . $tBs - $tAs . " 秒で伝わっている。よって、S波の速さは、{$lAB} ÷ " . $tBs - $tAs . " = {$vs} km/s.</p>
+                        <p>次に、震源とA地点の 2 地点間について考える。震源からA地点までの距離は {$lA} km なので、</p>
+                        <p>S波が震源からA地点まで伝わるのにかかる時間は、{$lA}[km] ÷ {$vs}[km/s] = {$tAs} 秒。</p>
+                        <p>よって地震発生時刻は、A地点にS波が到達した時刻（7時30分" . $t0 + $tAs . "秒）より {$tAs} 秒前の、7時30分{$t0}秒。</p>"
+            ],
+            [
+                'q' => "震源からの距離 {$lC} km のC地点で初期微動が始まった時刻を求めよ。",
+                'a' => "7時30分" . $t0 + $tCp . "秒",
+                'e' => "<p>初期微動が始まるのは、その地点にP波が到達する時刻である。</p>
+                        <p>まずはP波の速さを求める。表より、A地点からB地点までの距離は {$lAB} km で、</p>
+                        <p>P波はこの 2 地点間を" . $tBp - $tAp . " 秒で伝わっている。よって、P波の速さは、{$lAB} ÷ " . $tBp - $tAp . " = {$vp} km/s.</p>
+                        <p>次に、B地点とC地点の 2 地点間について考える。B地点からC地点までの距離は " . $lC - $lB . " km なので、</p>
+                        <p>P波がB地点からC地点まで伝わるのにかかる時間は、" . $lC - $lB . "[km] ÷ {$vp}[km/s] = " . $tCp - $tBp . " 秒。よってC地点に</p>
+                        <p>P波が到達した時刻は、B地点にP波が到達した時刻（7時30分" . $t0 + $tBp . "秒）の " . $tCp - $tBp . " 秒後の 7時30分" . $t0 + $tCp . "秒。</p>"
+            ],
+        ];
+        $idx = rand(0,count($calc_qas)-1);
+        $calc_qa = $calc_qas[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "「{$term['term']}」の意味を説明しなさい。",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$term['mean']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['exp']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の意味をもつ用語を答えなさい。</p>
+                        <p class=\"text-xl\">{$term['mean']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$term['term']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['exp']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の表を見て、設問に答えなさい。</p>
+                        {$quake_table}
+                        <p>問．{$calc_qa['q']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">{$calc_qa['a']}</p>",
+                'e_type' => 3,
+                'e' => "{$calc_qa['e']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $term = $request->boolean('term');    // 用語の確認
+        $calc = $request->boolean('calc');    // 計算問題
+        if ($term == true && $calc == false) {
+            $q_index = rand(0,1);
+            $question = $questions[$q_index];
+        } else if ($term == false && $calc == true) {
+            $q_index = rand(2,count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "science";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "地震";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 単位の次元
+    public function sci_unit_dimension() {
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>2 m × 3[　　] = 6 m\(^2\)</p>",
+                'a_type' => 3,
+                'a' => "<p>2 m × 3[ m ] = 6 m\(^2\)</p>",
+                'e_type' => 1,
+                'e' => "たて 2 m、よこ 3 m の長方形の面積は、6 m\(^2\) 。m は長さの単位、m\(^2\) は面積の単位である。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>5 kg + 6[　　] = 11[　　]</p>",
+                'a_type' => 3,
+                'a' => "<p>5 kg + 6[kg] = 11 [kg]</p>",
+                'e_type' => 1,
+                'e' => "足し算と引き算は、同じ単位同士でしかできない。5 kg + 6 m は意味を成さないからである。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>12 km ÷ 3[　　] = 4 km/時</p>",
+                'a_type' => 3,
+                'a' => "<p>12 km ÷ 3[時間] = 4 km/時</p>",
+                'e_type' => 1,
+                'e' => "距離を時間で割ったものを「時速」と呼ぶ。km/時 の「/」は「÷」と同じ意味である。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>18 人 － 9[　　] = 9[　　]</p>",
+                'a_type' => 3,
+                'a' => "<p>18 人 － 9[人] = 9[人]</p>",
+                'e_type' => 1,
+                'e' => "足し算と引き算は、同じ単位同士でしかできない。18人－9班 は意味を成さないからである。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>3 g ÷ 30 cm\(^3\) = 0.1 [　　]</p>",
+                'a_type' => 3,
+                'a' => "<p>3 g ÷ 30 cm\(^3\) = 0.1 [g/cm\(^3\)]</p>",
+                'e_type' => 1,
+                'e' => "質量を体積で割ったものを「密度」と呼ぶ。g/cm\(^3\) の「/」は「÷」と同じ意味である。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>3 V ÷ 10 m = 0.3[　　]</p>",
+                'a_type' => 3,
+                'a' => "<p>3 V ÷ 10 m = 0.3[V/m]</p>",
+                'e_type' => 1,
+                'e' => "右辺は「電場」の単位である。高校物理の内容だが、左辺を見れば右辺の単位もわかるはずだ。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>3 mol ÷ 5 [　　] = 0.6[mol/L]</p>",
+                'a_type' => 3,
+                'a' => "<p>3 mol ÷ 5 [ L ] = 0.6[mol/L]</p>",
+                'e_type' => 1,
+                'e' => "右辺は「モル濃度」の単位である。高校化学の内容だが、左辺を見れば右辺の単位もわかるはずだ。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>両辺の単位の次元が同じになるように、[ ]内に入る単位を答えなさい。</p>
+                        <p>8 [　　] ÷ 4 m\(^2\) = 2[N/m\(^2\)]</p>",
+                'a_type' => 3,
+                'a' => "<p>8 [ N ] ÷ 4 m\(^2\) = 2[N/m\(^2\)]</p>",
+                'e_type' => 1,
+                'e' => "右辺は「圧力」の単位である。中２で習う内容だが、左辺を見れば右辺の単位もわかるはずだ。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>等号の前後で矛盾が起こらないように、[ ]内に入る単位を答えなさい。</p>
+                        <p>2 m\(^2\) = 2 × (100[　　])\(^2\) = 2 × 100\(^2\)[　　] = 20000 cm\(^2\)</p>",
+                'a_type' => 3,
+                'a' => "<p>2 m\(^2\) = 2 × (100[cm])\(^2\) = 2 × 100\(^2\)[cm\(^2\)] = 20000 cm\(^2\)</p>",
+                'e_type' => 1,
+                'e' => "1 m = 100 cm の関係を使って単位変換をしている。数値と単位の両方が 2 乗されることに注意。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>等号の前後で矛盾が起こらないように、[ ]内に入る単位を答えなさい。</p>
+                        <p>0.5 L = 0.5 × 1000[　　] = 500[　　]</p>",
+                'a_type' => 3,
+                'a' => "<p>0.5 L = 0.5 × 1000[mL] = 500[mL]</p>",
+                'e_type' => 1,
+                'e' => "1 L = 1000 mL の関係を使って単位変換をしている。",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "理科 単位の次元";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 化学反応式

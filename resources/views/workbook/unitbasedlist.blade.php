@@ -545,6 +545,9 @@
                         <x-td>地学</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.sci_earth')}}">地震</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -581,17 +584,20 @@
                         <x-td>全分野</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                            </div>
-                        </x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
-                            </div>
-                        </x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
                                 <x-button-link color="green">
-                                    <a href="{{route('workbook.science_terms_all')}}">用語の概念</a>
+                                    <a href="{{route('workbook.sci_unit_dimension')}}">単位の次元</a>
                                 </x-button-link>
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                {{-- <x-button-link color="green">
+                                    <a href="{{route('workbook.science_terms_all')}}">用語の概念</a>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                     </tr>
