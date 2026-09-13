@@ -3703,6 +3703,101 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 英文法 中１英語まとめ
+    public function eng_summaryJ1(Request $request) {
+        $sentences = [
+            ['e' => "I am tired.", 'j' => "私は疲れている。", 'exp' => "tiredは「疲れている」という意味の形容詞。状態は、主語＋be動詞＋形容詞で表せる。"],
+            ['e' => "He has two sisters.", 'j' => "彼には二人の姉（妹）がいる。", 'exp' => "Heは三人称単数で現在形なので、haveはhasになる。sisterには複数形のsがつく。"],
+            ['e' => "She runs around the park every morning.", 'j' => "彼女は毎朝公園の周りを走る。", 
+                'exp' => "\"She runs（彼女は走る） / around the park（公園の周りを） / every morning（毎朝）.\"と、分解して捉えること。"],
+            ['e' => "That boy and I are brothers.", 'j' => "あの少年と私は兄弟です。", 
+                'exp' => "<p>英語は基本的に「主語＋動詞～」という構造なので、動詞（are）に着目する。</p>
+                            <p>すると、動詞の前の\"That boy and I\"すべてが主語であると判断できる。</p>
+                            <p>また、主語は「あの少年と私」の二人（複数）なので、be動詞は are を使う。</p>"],
+            ['e' => "I am shopping near Tokyo Station.", 'j' => "私は東京駅の近くで買い物をしている。", 
+                'exp' => "be動詞＋ing形で進行形を表す。東京駅は固有名詞なので、単語の頭文字は大文字で表す。"],
+            ['e' => "My sister studies English every day.", 'j' => "私の姉（妹）は毎日英語を勉強する。", 
+                'exp' => "studys ではなく studies になることに注意。また、English は固有名詞なので頭文字は大文字にする。"],
+            ['e' => "Don't touch this machine.", 'j' => "この機械に触るな。", 
+                'exp' => "主語を省いて動詞から始めると命令文になる。\"Touch this machine.\"だと「この機械に触れ。」になる。"],
+            ['e' => "Didn't you know the event?", 'j' => "あなたはそのイベントを知らなかったのですか。",
+                'exp' => "<p>疑問文＋否定文＋過去の形なので、まずはそれぞれの表現を理解すること。</p>
+                        <p>【肯定】\"You know the event.\"（あなたはそのイベントを知っている。）</p>
+                        <p>【否定】\"You Don't know the event.\"（あなたはそのイベントを知らない。）</p>
+                        <p>【疑問】\"Do you know the event?\"（あなたはそのイベントを知っていますか。）</p>
+                        <p>【疑問＋否定】\"Don't you know the event?\"（あなたはそのイベントを知らないのですか。）</p>
+                        <p>【疑問＋否定＋過去】\"Didn't you know the event?\"（あなたはそのイベントを知らなかったのですか。）</p>
+                        "],
+            ['e' => "I wrote a letter to my mother.", 'j' => "私は母に手紙を書いた。", 'exp' => "writeは不規則動詞であり、過去形はwroteになる。"],
+            ['e' => "A dog was by the tree.", 'j' => "一匹の犬が木のそばにいた。", 
+                'exp' => "<p>be動詞の後に名詞や形容詞が来る場合、be動詞は「～です。」の意味になる。</p>
+                        <p>一方、be動詞の後に by the tree（木のそばに）と場所を置くと「いる」の意味で使える。</p>
+                        <p>\"A dog was（一匹の犬がいた） / by the tree（木のそばに）.\"</p>
+                        <p>近くには near でもよいが、by の方がすぐそばにいる印象になる。</p>
+                        <p>ちなみに、by を抜いて\"A dog was the tree.\"とすると、「一匹の犬が木だった。」になる。</p>"],
+            ['e' => "He is my brother.", 'j' => "彼は私の兄です。", 'exp' => "I am, You are, He is, She is, It is など、主語によってbe動詞を使い分けること。"],
+            ['e' => "They don't know my name.", 'j' => "彼らは私の名前を知らない。", 'exp' => "一般動詞を否定するときは、動詞の前にdon't(do not)をつける。"],
+            ['e' => "She likes this town.", 'j' => "彼女はこの町が好きだ。", 'exp' => "Sheは三人称単数で現在形なので、likeはlikesになる。"],
+            ['e' => "Run to Iida Statoin.", 'j' => "飯田駅まで走れ。", 'exp' => "主語を省いて動詞から始めると命令文になる。飯田駅は固有名詞なので、単語の頭文字は大文字で表す。"],
+            ['e' => "Please teach me English.", 'j' => "私に英語を教えてください。", 
+                'exp' => "<p>主語を省いて動詞から始めると命令文になる。命令文にpleaseをつけると依頼になる。</p>
+                        <p>ここでは\"Teach me English\"の前にPleaseを置いているが、\"Teach me English, please.\"でもよい。</p>"],
+            ['e' => "There are a dog and three cats there.", 'j' => "あそこに一匹の犬と三匹の猫がいる。", 
+                'exp' => "<p>There is～, There are～で「～がある、いる」という表現を使う。</p>
+                        <p>ここでは犬と猫併せて4匹（複数）いるので、There are～を用いる。</p>
+                        <p>最後のthereは「あそこに」を意味する副詞。「ここに」ならhereを使う。</p>"],
+            ['e' => "Put a card on the desk, please.", 'j' => "机の上にカードを一枚置いてください。", 
+                    'exp' => "<p>主語を省いて動詞から始めると命令文になる。命令文にpleaseをつけると依頼になる。</p>
+                            <p>pleaseを前に付けて\"Please put a card on the desk.\"でもよい。</p>
+                            <p>a に「ひとつの」という意味があるので、「一枚のカード」は a card でよい。</p>"],
+            ['e' => "Where were you yesterday?", 'j' => "お前は昨日どこにいたんだ。", 
+                'exp' => "\"Where are you?（お前はどこにいるんだ。）\"を過去形にするには、be動詞を過去形にすればよい。"],
+            ['e' => "Two birds are singing.", 'j' => "二羽の鳥が歌っている。", 'exp' => "be動詞＋ing形で進行形を表す。birdには複数形のsがつく。"],
+            ['e' => "I went to Okinawa with my family last year.", 'j' => "去年、私は家族と沖縄に行った。", 
+                'exp' => "<p>\"I went to Okinawa（私は沖縄に行った） / with my family（家族と一緒に） / last year（去年）.\"と、分解して捉える。</p>
+                        <p>go は不規則動詞で過去形は went。沖縄は固有名詞なので頭文字は大文字で表す。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "中１英語まとめ";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
     // 英文法 接続詞
     public function conjection(Request $request) {
         $sentences = [
@@ -4186,6 +4281,118 @@ class WorkbookController extends Controller
         }
         $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "受け身";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 英文法 中２英語まとめ
+    public function eng_summaryJ2(Request $request) {
+        $sentences = [
+            ['e' => "I was talking with my friends.", 'j' => "私は友人と話していた。", 
+                'exp' => "進行形はbe動詞＋ing形で表す。be動詞を過去形にすれば過去進行形になる。"],
+            ['e' => "I want to know the fact.", 'j' => "私は事実を知りたい。", 
+                'exp' => "\"want to 一般動詞\"で「～したい」を表す。factは事実、truthは真実。"],
+            ['e' => "He can swim very fast.", 'j' => "彼はとても速く泳げる。", 
+                'exp' => "<p>canは「可能」を意味する助動詞。助動詞は一般動詞の前に置く。</p>
+                        <p>Heは三人称単数で現在形なのでswimはswimsになるが、助動詞の後は原形になる。</p>"],
+            ['e' => "She will be a great artist.", 'j' => "彼女は偉大な芸術家になるだろう。", 
+                'exp' => "<p>\"She is a great artist.\"（彼女は偉大な芸術家だ。）を、未来形にした表現。</p>
+                        <p>will は未来を意味する助動詞。助動詞の後は原形になるので、is は be になる。</p>
+                        <p>beの代わりにbecomeを使って\"She will become a great artist.\"としてもよい。</p>"],
+            ['e' => "You are cleverer than me.", 'j' => "あなたは私よりも賢い。", 
+                'exp' => "\"You are clever.（あなたは賢い。）\"を比較級で表現した文。thanは「～よりも」を意味する。"],
+            ['e' => "He has as much money as you.", 'j' => "彼はあなたと同じくらいたくさんのお金を持っている。", 
+                'exp' => "<p>お金（金額）は不可算名詞（数えられない名詞）なので、many moneyではなくmuch moneyと表す。</p>
+                        <p>同格（同じくらい）は\"as + 原級 + as\"の形で、as の間には形容詞か副詞の原級が入るが、</p>
+                        <p>この例文のように「形容詞または副詞 + 名詞」が入ることもある。\"He has money as much as you.\"でもよい。</p>"],
+            ['e' => "I had enough time to solve the problem.", 'j' => "私にはその問題を解くための時間が十分にあった。", 
+                'exp' => "<p>\"I had enough time（私は十分な時間を持っていた） / to sovle the problem（その問題を解くための）.\"と分解して捉える。</p>
+                        <p>「私には時間があった」をどう訳すか悩んだ人がいるかもしれないが、「私は時間を持っていた」と解釈することがポイント。</p>"],
+            ['e' => "I think that you should apologize to him.", 'j' => "君は彼に謝るべきだと思う。", 
+                'exp' => "<p>思っているのは「私」なので、I think that～（私は～だと思う）の表現を使う。</p>
+                        <p>apologize（謝る）が難しかったかもしれないが、日本語で日常的に使う単語は積極的に覚えること。</p>
+                        <p>should の代わりに must を使うと、より強い表現（命令に近い）になる。</p>"],
+            ['e' => "Melos ran to save his friend's life.", 'j' => "メロス（Melos）は友の命を救うために走った。", 
+                'exp' => "<p>\"Melos ran（メロスは走った） / to save（救うために） / his friend's life（彼の友の命を）.\"と分解して捉える。</p>
+                        <p>run は不規則動詞で過去形は ran。不定詞（to + 動詞の原形）は頻出なので、使いこなせるようにしておくこと。</p>"],
+            ['e' => "This novel was written two hundred years ago.", 'j' => "この小説は二百年前に書かれた。", 
+                    'exp' => "<p>\"This novel is written\"はbe動詞＋過去分詞なので現在形の受け身。過去の受け身は、be動詞を過去形にする。</p>
+                            <p>なお、twoなどの数詞がつくときはhundredに複数形のsはつかないので注意（英和辞書で確認してみよう）。</p>"],
+            ['e' => "I am going to see a movie with my friend next week.", 'j' => "来週、友達と映画を観る予定です。", 
+                'exp' => "<p>\"I am going to see a movie（映画を観る予定だ） / with my friend（友達と） / next week（来週）.\"と分解して捉える。</p>
+                        <p>もともと決まっている予定は be going to を使う。will も未来を表すが、その場で決めたことや、主語の意志（やるぞ！）の意味が強い。</p>
+                        <p>映画を「観に行く」予定なら going to (go to)～としてもよいが、この go to はなくても構わない。</p>
+                        <p>映画を観るは see a movie でよいが、テレビで映画を観るときは watch a movie を使うことが多い（watch TV と同様）。</p>
+                        "],
+            ['e' => "I think that the boy will be a doctor.", 'j' => "あの少年は医者になると思う。", 
+                    'exp' => "<p>思っているのは「私」なので、I think that～ で「私は～と思う。」を表す。</p>
+                            <p>be a doctor は become a doctor でもよい。doctor や actor（役者）は語尾がerではないので注意。</p>"],
+            ['e' => "He broke his arm when he was ten.", 'j' => "彼は10歳の時に腕を骨折した。", 
+                    'exp' => "<p>\"He broke his arm.\"と\"He was ten (then).\"を接続詞whenでつなげた文。</p>
+                            <p>breakの原義は「突然力を加えて物を壊す」であり、「骨折する」意味でも使われる。</p>
+                            <p>whenなどの接続詞は二つの文をつなぐので、それぞれ主語と動詞が必要になる。</p>
+                            <p>10歳は ten years old だが、he was ten だけでも構わない。</p>
+                            <p>また、\"When he was ten, he broke his arm.\"としてもよい。</p>"],
+            ['e' => "Please show her how to play the piano.", 'j' => "彼女にピアノの弾き方を教えてあげてください。", 
+                    'exp' => "<p>\"Please show her（彼女に教えてください） / how to play the piano（ピアノの弾き方を）.\"と分解して捉える。</p>
+                            <p>「教える」は teach が一般的だが、踊り方やラケットの振り方のように見せて教えるときは show を使う。</p>
+                            <p>how to ～（～のやり方）という表現も使い慣れておくこと。the way to play the piano でもよい。</p>"],
+            ['e' => "It is difficult for us to solve this problem.", 'j' => "この問題を解くのは、私たちには難しい。", 
+                    'exp' => "<p>\"It is difficult（それは難しい） / for us（私たちにとって） / to solve this problem（この問題を解くことは）.\"と分解して捉える。</p>
+                            <p>この It は to solve this problem を受けている。\"To solve this problem is difficult for us.\"でもよいのだが、</p>
+                            <p>主語が長くなるよりは It is ～とする方が好まれるらしい。solve a problem（問題を解く）も頻出なので覚えておくこと。</p>"],
+            ['e' => "I think that you had better read many books.", 'j' => "君はたくさんの本を読んだ方がよいと思う。", 
+                'exp' => "<p>思っているのは「私」なので、I think that～（私は～だと思う）の表現を使う。</p>
+                        <p>had betterは2単語だが、まとめて「したほうがよい」を意味する一つの助動詞と考えてよい。</p>
+                        <p>had となっているが、過去の意味は持たない。had better の代わりに should を使ってもよいが、</p>
+                        <p>should よりも had better の方が「読まないと将来のためにならないぞ」という警告めいた感じになる。</p>"],
+            ['e' => "Go home if you want to.", 'j' => "帰りたければ帰りなさい。", 
+                    'exp' => "<p>\"Go home（帰れ） / if you want to go home（家に帰りたいならば）.\"と同じ。</p>
+                            <p>ただ、ここでの go home のような繰り返しは省略されることが多い。</p>"],
+            ['e' => "Where is the longest liver in the world?", 'j' => "世界一長い川はどこですか。", 
+                'exp' => "<p>「世界一長い」を「世界で最も長い」と捉えて、最上級 the ～est の表現を使う。</p>
+                        <p>世界一長い川の名前を知りたいのであれば、 Where の代わりに What で聞いてもよい。</p>"],
+            ['e' => "The window in our classroom was broken.", 'j' => "私たちの教室の窓が割られた。", 
+                    'exp' => "<p>受け身なので、be動詞＋過去分詞 で表す。過去形なので is は was になる。</p>
+                            <p>窓が複数枚なら、\"The windows in our classroom were broken.\"となる。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "中２英語まとめ";
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 

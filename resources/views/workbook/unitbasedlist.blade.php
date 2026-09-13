@@ -381,6 +381,9 @@
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.progressive_tense')}}">進行形</a>
                                 </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.eng_summaryJ1')}}">中１まとめ</a>
+                                </x-button-link>
                                 {{-- <div>
                                     be動詞
                                     <x-button-link color="purple">
@@ -429,6 +432,9 @@
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.passive_voice')}}">受け身</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.eng_summaryJ2')}}">中２まとめ</a>
                                 </x-button-link>
                             </div>
                         </x-td>
