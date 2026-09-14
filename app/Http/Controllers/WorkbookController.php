@@ -864,6 +864,7 @@ class WorkbookController extends Controller
                 'e' => "<p>分母を払うため、両辺を {$a} 倍してから変形する。</p>
                         \[
                             \\begin{aligned}
+                                \\frac{\,{$d}x-{$b}\,}{{$a}} \\times {$a} &= (x + {$e}) \\times {$a} \\\\
                                 {$d}x-{$b} &= {$a}x + " . $a*$e . " \\\\
                                 {$d}x - {$a}x &= " . $a*$e . " + {$b} \\\\
                                 " . ($d - $a) . "x &= " . ($a*$e + $b) . " \\\\ 
@@ -4411,7 +4412,7 @@ class WorkbookController extends Controller
             ['e' => "He is my brother.", 'j' => "彼は私の兄です。", 'exp' => "I am, You are, He is, She is, It is など、主語によってbe動詞を使い分けること。"],
             ['e' => "They don't know my name.", 'j' => "彼らは私の名前を知らない。", 'exp' => "一般動詞を否定するときは、動詞の前にdon't(do not)をつける。"],
             ['e' => "She likes this town.", 'j' => "彼女はこの町が好きだ。", 'exp' => "Sheは三人称単数で現在形なので、likeはlikesになる。"],
-            ['e' => "Run to Iida Statoin.", 'j' => "飯田駅まで走れ。", 'exp' => "主語を省いて動詞から始めると命令文になる。飯田駅は固有名詞なので、単語の頭文字は大文字で表す。"],
+            ['e' => "Run to Iida Station.", 'j' => "飯田駅まで走れ。", 'exp' => "主語を省いて動詞から始めると命令文になる。飯田駅は固有名詞なので、単語の頭文字は大文字で表す。"],
             ['e' => "Please teach me English.", 'j' => "私に英語を教えてください。", 
                 'exp' => "<p>主語を省いて動詞から始めると命令文になる。命令文にpleaseをつけると依頼になる。</p>
                         <p>ここでは\"Teach me English\"の前にPleaseを置いているが、\"Teach me English, please.\"でもよい。</p>"],
