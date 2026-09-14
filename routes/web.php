@@ -272,6 +272,10 @@ Route::get('workbook/kanjiP3', [WorkbookController::class, 'kanjiP3'])
 Route::get('workbook/kanjiP4', [WorkbookController::class, 'kanjiP4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP4');
 //算数
+Route::get('workbook/add_sub_per10', [WorkbookController::class, 'add_sub_per10'])
+->middleware(['auth', 'verified'])->name('workbook.add_sub_per10');
+Route::get('workbook/day_to_hour', [WorkbookController::class, 'day_to_hour'])
+->middleware(['auth', 'verified'])->name('workbook.day_to_hour');
 Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.mul100');
 Route::get('workbook/ratio1', [WorkbookController::class, 'ratio1'])
@@ -325,6 +329,8 @@ Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figur
 ->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
 Route::get('workbook/corn_surface', [WorkbookController::class, 'corn_surface'])
 ->middleware(['auth', 'verified'])->name('workbook.corn_surface');
+Route::get('workbook/angle_calc_div', [WorkbookController::class, 'angle_calc_div'])
+->middleware(['auth', 'verified'])->name('workbook.angle_calc_div');
 Route::get('workbook/spacial_figure_summary', [WorkbookController::class, 'spacial_figure_summary'])
 ->middleware(['auth', 'verified'])->name('workbook.spacial_figure_summary');
 Route::get('workbook/coordinates_triangle', [WorkbookController::class, 'coordinates_triangle'])

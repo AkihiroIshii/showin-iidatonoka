@@ -10,7 +10,7 @@
     </x-slot>
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
-
+            <p>◎：まとめの単元、☆：難しめの単元、⇗：スピードアップ</p>
             <!---------------------------------------- 小学生 ---------------------------------------->
             <x-h3 color="lime">小学生</x-h3>
             <p class="text-center font-bold text-red-600">2026/9/5：漢字の「読み」「書き」を選べるようにしました。苦手な人はまず「読み」だけで練習しましょう。</p>
@@ -36,6 +36,12 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.add_sub_per10')}}">10単位のたし算・ひき算</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.day_to_hour')}}">10日は何時間？</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -137,7 +143,7 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
-                                    <a href="{{route('workbook.positive_negative')}}">正負の数</a>
+                                    <a href="{{route('workbook.positive_negative')}}">⇗正負の数</a>
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.distributive_law1')}}">分配法則１</a>
@@ -195,7 +201,7 @@
                                     <a href="{{route('workbook.algebraic_expression')}}">文字式で表す</a>
                                 </x-button-link>
                                 <x-button-link>
-                                    <a href="{{route('workbook.setup_equation')}}">文章からの立式</a>
+                                    <a href="{{route('workbook.setup_equation')}}">☆文章からの立式</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -205,7 +211,7 @@
                                     <a href="{{route('workbook.simultaneous_equation')}}">連立方程式</a>
                                 </x-button-link>
                                 <x-button-link>
-                                    <a href="{{route('workbook.simultaneous_equation2')}}">連立方程式（文章題）</a>
+                                    <a href="{{route('workbook.simultaneous_equation2')}}">☆連立方程式（文章題）</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -270,7 +276,10 @@
                                     <a href="{{route('workbook.unit.spacial_figure')}}">空間図形</a>
                                 </x-button-link>
                                 <x-button-link>
-                                    <a href="{{route('workbook.corn_surface')}}">円錐の表面積</a>
+                                    <a href="{{route('workbook.corn_surface')}}">☆円錐の表面積</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.angle_calc_div')}}">⇗角度の計算テク</a>
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.spacial_figure_summary')}}">◎空間図形まとめ</a>

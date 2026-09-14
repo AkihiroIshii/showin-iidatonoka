@@ -56,6 +56,140 @@ class WorkbookController extends Controller
     }
 
     /***************** 単元別問題作成 *****************/
+    // 10単位のたし算・ひき算
+    public function add_sub_per10() {
+        $a = 10 * rand(1, 9);
+        $b = 10 * rand(1, 9);
+        while ($a == $b) {
+            $b = 10 * rand(1, 9);
+        }
+        $add = $a + $b;
+        // a が大きくなるようにする。
+        if($a < $b) {
+            $temp = $b;
+            $b = $a;
+            $a = $temp;
+        }
+        $sub = $a - $b;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">{$a} + {$b} はいくつですか。</p>",
+                'a_type' => 2,
+                'a' => "{$add}",
+                'e_type' => 3,
+                'e' => "<p>" . $a/10 . " + " . $b/10 . " = " . $add/10 . " と にてますね。</p>
+                        <p>10円玉が " . $a/10 . " まいと" . $b/10 . " まいで " . $add/10 . " まい。</p>
+                        <p>これは {$a} 円と {$b} 円で {$add} 円になるのと おなじです。</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "10単位のたし算・ひき算";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 10日は何時間？
+    public function day_to_hour() {
+        $days = [2,3,4,5,7,9,10];   // 1, 6, 8 は除く。
+        $idx = rand(0, count($days)-1);
+        $day = $days[$idx];
+        $hour = 24 * $day;
+
+        $exp = "<p>1日は 24時間なので、24時間を {$day}回たします。</p>
+                <p>24時間は、20時間と 4時間にわけてみましょう。</p>
+                <div class=\"text-left\">
+                <p>24時間</p>
+                <p>= ○○○○○ ○○○○○ ○○○○○ ○○○○○　○○○○</p>
+                <p>= [10] [10] ○○○○</p>
+                </div>
+                <p>すると、{$day}日は つぎのように あらわせます。</p>
+                <div class=\"text-left\">";
+        for ($i = 1; $i <= $day; $i++) {
+            $exp .= "<p class=\"pl-8 [line-height:initial]\">[10] [10]　○○○○　ここまでで、" . $i * 20 . " + " . $i * 4 . " = " . $i * 24 . "時間。</p>";
+        }
+        $exp .= "</div>";
+        //解説を場合分け
+        // if ($day == 5) {
+        //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
+        //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>";
+        // } elseif ($day == 10) {
+        //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
+        //             <p>24 を 10かい たすのは、10 を 24かい たすのとおなじ。</p>
+        //             <p>つまり、10円玉が 24まいで 240円になるのとおなじ。</p>";
+        // } elseif ($day == 9) {
+        //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
+        //             <p>9 日は 10 日よりも 1日（24時間）すくないので、</p>
+        //             <div class=\"text-left\">
+        //                 <p>9 日 = 10 日 － 1 日</p>
+        //                 <p>= 240 時間 － 24 時間</p>
+        //                 <p>= 240 時間 － 20 時間 － 4 時間</p>
+        //                 <p>= 220 時間 － 4 時間</p>
+        //                 <p>= 216 時間。</p>
+        //             </div>";
+        // } elseif ($day > 5) {
+        //     $exp = "<p>まず {$day} 日を 5 日と " . $day - 5 . " 日にわけてみます。</p>
+        //             <p>1 日は 24 時間なので、10 日で 240 時間。</p>
+        //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>
+        //             <p>のこりの " . $day - 5 . " 日が何時間かは、つぎのように かんがえます。</p>";
+        //     for ($i = 1; $i < $day - 5; $i++) {
+        //         $exp .= "24 + ";
+        //     }
+        //     $exp .= "24</p><p> = ";
+        //     for ($i = 1; $i < $day - 5; $i++) {
+        //         $exp .= "(20 + 4) + ";
+        //     }
+        //     $exp .= "(20 + 4)</p><p> = (";
+        //     for ($i = 1; $i < $day - 5; $i++) {
+        //         $exp .= "20 + ";
+        //     }
+        //     $exp .= "20) + (";
+        //     for ($i = 1; $i < $day - 5; $i++) {
+        //         $exp .= "4 + ";
+        //     }
+        //     $exp .= "4)</p><p> = ". 20 * ($day - 5) . " + " . 4 * ($day - 5) . " = " . 24*($day - 5) . " 時間。
+        //     <p>よって、{$day} 日は 120 時間＋" . 24*($day - 5) . " 時間 = {$hour} 時間。";
+        // } else {
+        //     $exp = "<p>1 日は 24 時間なので、{$day} 日が何時間かは つぎのように かんがえます。</p>";
+        //     for ($i = 1; $i < $day; $i++) {
+        //         $exp .= "24 + ";
+        //     }
+        //     $exp .= "24</p><p> = ";
+        //     for ($i = 1; $i < $day; $i++) {
+        //         $exp .= "(20 + 4) + ";
+        //     }
+        //     $exp .= "(20 + 4)</p><p> = (";
+        //     for ($i = 1; $i < $day; $i++) {
+        //         $exp .= "20 + ";
+        //     }
+        //     $exp .= "20) + (";
+        //     for ($i = 1; $i < $day; $i++) {
+        //         $exp .= "4 + ";
+        //     }
+        //     $exp .= "4)</p><p> = ". 20 * $day . " + " . 4 * $day . " = {$hour} 時間。";
+        // } 
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl\">{$day} 日は何時間（なんじかん）ですか。</p>",
+                'a_type' => 2,
+                'a' => "{$hour}\,時間",
+                'e_type' => 3,
+                'e' => "{$exp}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "10日は何時間？";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 10倍、100倍
     public function mul100() {
         $a = rand(2, 9);
@@ -434,7 +568,7 @@ class WorkbookController extends Controller
         $questions = [
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。（目標解答時間：5 秒）</p>
                         <p>\({$str_a_plus_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_plus_b}",
@@ -450,7 +584,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。（目標解答時間：5 秒）</p>
                         <p>\({$str_a_minus_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_minus_b}",
@@ -466,7 +600,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。（目標解答時間：5 秒）</p>
                         <p>\({$str_a_mul_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_mul_b}",
@@ -1590,6 +1724,123 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "円錐の表面積";
         return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 角度の計算テク（約分）
+    public function angle_calc_div(Request $request) {
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 10; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        $angles = [30, 45, 60, 90, 120, 135, 150, 180];  // 180°までの角度
+        $ang_idx = rand(0, count($angles)-1);
+        $angle = $angles[$ang_idx];
+
+        $yakubun_str = $this->fracnum_to_str($angle, 360, "", 1);
+        $gcd = $this->gcd($angle, 360);
+
+        $theta = 2 * M_PI * $angle / 360;   // 中心角（ラジアン）
+        $theta_unit = 2 * M_PI * $gcd / 360;
+
+        $rs = [9, 10, 12, 18, 36];  // 半径
+        $r_idx = rand(0, count($rs)-1);
+        $r = $rs[$r_idx];
+        $yakubun_str2_1 = $this->fracnum_to_str($angle*$r, 360, "", 1);
+        $yakubun_str2_2 = $this->fracnum_to_str($angle*$r*$r, 360, "\,\pi", 1);
+
+        // プロット用
+        $pr = 0.8 * $size / 2;
+        $end_x = $pr * cos($theta);
+        $end_y = $pr * sin($theta);
+        // 共通単位となる角度($gcd)
+        $ur = 0.2 * $size / 2;
+        $ux = $ur * cos($theta);
+        $uy = -$ur * sin($theta);   // svg の y 座標は下が正なので、-1 をかけておく。
+        $uR_end_x = $pr * cos($theta_unit);
+        $uR_end_y = $pr * sin($theta_unit);
+        $ur_end_x = $ur * cos($theta_unit);
+        $ur_end_y = $ur * sin($theta_unit);
+        
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+
+        $plot_par_e = [
+            'w_full' => $w_full,
+            'w_half' => $w_half,
+        ];
+
+        $plot_con_e = "
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"2\" />
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 背景の単位円 -->
+            <circle cx=\"0\" cy=\"0\" r=\"{$pr}\" fill-opacity=\"0.1\"/> 
+            <!-- M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
+            <path d=\"M 0 0 L {$pr} 0 A {$pr} {$pr}, 0, 0, 0, {$end_x} -{$end_y} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"2\" />     
+            <path d=\"M 0 0 L {$pr} 0 A {$pr} {$pr}, 0, 0, 0, {$uR_end_x} -{$uR_end_y} Z\" fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />     
+            <path d=\"M 0 0 L {$ur} 0 A {$ur} {$ur}, 0, 0, 0, {$ur_end_x} -{$ur_end_y} Z\" fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+            <text x=\"35\" y=\"-5\" font-weight=\"bold\" font-size=\"18\" >
+                {$gcd}°
+            </text>  
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>約分しなさい。（目標解答時間：10秒）</p>
+                        <p>$$\\frac{{$angle}}{\,360\,}$$</p>",
+                'a_type' => 2,
+                'a' => "{$yakubun_str}",
+                'e_type' => 6,
+                'e' => "<p>円に対するおうぎ形の面積比を、中心角の比率で表したもの。</p>
+                        <p>{$angle} と 360 は {$gcd} で約分できる。下図のイメージを持つこと。</p>
+                        <p>\({$angle}^{\circ} = {$gcd}^{\circ} \\times " . $angle/$gcd . "\)</p>
+                        <p>\(360^{\circ} = {$gcd}^{\circ} \\times " . 360/$gcd . "\)</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。（目標解答時間：30秒）</p>
+                        <p>$$\pi \\times {$r}^2 \\times \\frac{{$angle}}{\,360\,}$$</p>",
+                'a_type' => 2,
+                'a' => "{$yakubun_str2_2}",
+                'e_type' => 6,
+                'e' => "<p>半径 {$r}、中心角 {$angle}° のおうぎ形の面積を求めるときの計算式。<p>
+                        <p>{$r}\(^2\) = " . $r**2 . " を先に計算すると扱いづらくなるため、その前に約分すること。</p>
+                        \[
+                            \\begin{aligned}
+                                \pi \\times {$r}^2 \\times \\frac{{$angle}}{\,360\,}
+                                    &= \pi \\times {$r}^2 \\times {$yakubun_str} \\\\
+                                    &= \pi \\times {$r} \\times {$yakubun_str2_1} \\\\
+                                    &= {$yakubun_str2_2}
+                            \\end{aligned}
+                        \]
+                        <p>なお、{$angle} と 360 は {$gcd} で約分した。下図のイメージを持つこと。</p>
+                        <p>\({$angle}^{\circ} = {$gcd}^{\circ} \\times " . $angle/$gcd . "\)</p>
+                        <p>\(360^{\circ} = {$gcd}^{\circ} \\times " . 360/$gcd . "\)</p>",
+            ],
+        ];
+        // $q_index = rand(0,count($questions)-1);
+        // $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 比率
+        $flag2 = $request->boolean('flag2');    // 面積
+        $flags = ['flag1' => '比率', 'flag2' => '面積'];
+        if ($flag1 == true && $flag2 == false) {
+            $question = $questions[0];
+        } else if ($flag1 == false && $flag2 == true) {
+            $question = $questions[1];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "角度の計算テク";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e','flags','subject'));
     }
 
     // 空間図形まとめ
