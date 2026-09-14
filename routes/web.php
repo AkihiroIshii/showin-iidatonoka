@@ -449,6 +449,8 @@ Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
 Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
+Route::get('workbook/sci_proportional_quantity', [WorkbookController::class, 'sci_proportional_quantity'])
+->middleware(['auth', 'verified'])->name('workbook.sci_proportional_quantity');
 Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_terms_all'])
 ->middleware(['auth', 'verified'])->name('workbook.science_terms_all');
 // 社会

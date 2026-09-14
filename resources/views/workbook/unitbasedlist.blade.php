@@ -603,6 +603,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.sci_proportional_quantity')}}">比例する量</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

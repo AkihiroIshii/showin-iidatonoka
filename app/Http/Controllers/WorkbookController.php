@@ -6939,6 +6939,207 @@ class WorkbookController extends Controller
         return view('workbook.unit.electromagnetism', compact('v1','i1','r1','question'));
     }
 
+    // 比例する量（理科）
+    public function sci_proportional_quantity() {
+        $a_numerator = rand(1,2) * rand(1, 4);
+        $a_denominator = rand(1, 4);
+
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
+
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
+        $zougen_str = $a > 0 ? "増える" : "減る";
+
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = 12; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = 0;
+        $to_x = $size;
+        $from_y = $size;
+        $to_y = 0;
+        // 座標の表示場所
+        if ($a > 0) {
+            if ($a >= 1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($a_numerator - 0.5) * $scale ];
+            // 0 < a < 1
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($a_numerator + 0.5) * $scale ];
+            }
+        // a < 0
+        } else {
+            if ($a <= -1) {
+                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($a_numerator - 0.5) * $scale ];
+            // -1 < a < 0
+            } else {
+                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($a_numerator - 1) * $scale ];
+            }
+        }
+
+        $plot_par_q = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        $plot_con_q = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+
+        $plot_con_q .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
+        ";
+        $plot_par_e = $plot_par_q;
+        $plot_con_e = $plot_con_q . "
+            <!-- 解説用の点と補助線 -->
+            <line x1=\"0\" y1=\"0\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"0\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <line x1=\"" . $a_denominator*$scale . "\" y1=\"0\" x2=\"" . $a_denominator*$scale . 
+                    "\" y2=" . -$a_numerator*$scale*0.9 . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale ) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$a_denominator},{$a_numerator})
+            </text>
+        ";
+
+        $unit = rand(2, 10);
+        $a = rand(2, 10);
+        $b = rand(2, 10);
+        $c = rand(2, 5);
+        while ($a == $b) {
+            $b = rand(2, 10);
+        }
+        $au = $a * $unit;
+        $bu = $b * $unit;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>密度が一定の物質があり、{$a} cm\(^3\) で {$au} g である。</p>
+                        <p>この物質が {$b} cm\(^3\) あるとき、その質量を求めなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$bu} g</p>",
+                'e_type' => 3,
+                'e' => "<p>密度は単位体積あたりの質量である。</p>
+                        <p>よって、密度が一定なら、体積と質量の比も一定である。</p>
+                        <p>そこで、求める質量を \(x\) g とすると、</p>
+                        <p>\({$a}:{$au} = {$b}:x\)。これを解いて、\(x = {$bu}\) g。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>密度が一定の物質があり、{$a} cm\(^3\) で {$au} g である。</p>
+                        <p>この物質が {$bu} g あるとき、その体積を求めなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$b} cm\(^3\)</p>",
+                'e_type' => 3,
+                'e' => "<p>密度は単位体積あたりの質量である。</p>
+                        <p>よって、密度が一定なら、体積と質量の比も一定である。</p>
+                        <p>そこで、求める体積を \(x\) cm\(^3\) とすると、</p>
+                        <p>\({$a}:{$au} = x:{$bu}\)。これを解いて、\(x = {$b}\) cm\(^3\)。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>ばねに {$a} g のおもりをつるすと " . $au * 0.1 . " cm 伸びた。</p>
+                        <p>このばねに {$b} g のおもりをつるすと何 cm 伸びるか。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">" . $bu * 0.1 . " cm</p>",
+                'e_type' => 3,
+                'e' => "<p>ばねが伸びる長さは、つるしたおもりの重さ（ばねを引く力）に比例する。</p>
+                        <p>よって、おもりの重さとばねの伸びの比も一定である。</p>
+                        <p>そこで、ばねの伸びる長さを \(x\) cm とすると、</p>
+                        <p>\({$a}:" . $au*0.1 . " = {$b}:x\)。これを解いて、\(x = " . $bu*0.1 . "\) cm。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>ばねに {$a} g のおもりをつるすと " . $au * 0.1 . " cm 伸びた。</p>
+                        <p>このばねが " . $bu * 0.1 . " cm 伸びたとき、何 g のおもりがつるされているか。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$b} g</p>",
+                'e_type' => 3,
+                'e' => "<p>ばねが伸びる長さは、つるしたおもりの重さ（ばねを引く力）に比例する。</p>
+                        <p>よって、おもりの重さとばねの伸びの比も一定である。</p>
+                        <p>そこで、求めるおもりの重さを \(x\) g とすると、</p>
+                        <p>\({$a}:" . $au*0.1 . " = x:" . $bu*0.1 . "\)。これを解いて、\(x = {$b}\) g。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>ある物質 A を {$a} g 用意し、十分に酸化させると " . $a * (1+0.1*$c) ." g の酸化物ができた。</p>
+                        <p>この物質 A を {$b} g 用意して酸化させると、最大で何 g の酸化物ができるか。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">" . $b * (1+0.1*$c) . " g</p>",
+                'e_type' => 3,
+                'e' => "<p>同じ化学反応において、反応前と反応後の物質の質量比は一定である。</p>
+                        <p>そこで、求める酸化物の質量を \(x\) g とすると、</p>
+                        <p>\({$a}:" . $a * (1+0.1*$c) . " = {$b}:x\)。これを解いて、\(x = " . $b * (1+0.1*$c) . "\) g。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>ある物質 A を {$a} g 用意し、十分に酸化させると " . $a * (1+0.1*$c) ." g の酸化物ができた。</p>
+                        <p>この物質 A の酸化物が " . $b * (1+0.1*$c) . " g 得られたとき、酸化前の物質 A は何 g あったか。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$b} g</p>",
+                'e_type' => 3,
+                'e' => "<p>同じ化学反応において、反応前と反応後の物質の質量比は一定である。</p>
+                        <p>そこで、求める酸化物の質量を \(x\) g とすると、</p>
+                        <p>\({$a}:" . $a * (1+0.1*$c) . " = x:" . $b * (1+0.1*$c) . "\)。これを解いて、\(x = {$b}\) g。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>ある地震では、震源からの距離 " . $a * $c . " km の地点 A で主要動が始まったのは、地震発生の {$a} 秒後だった。</p>
+                        <p>この地震で、震源からの距離 " . $b * $c . " km の地点 B で主要動が始まったのは、地震発生の何秒後か。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$b} 秒後</p>",
+                'e_type' => 3,
+                'e' => "<p>同じ地震において、主要動を伝える S 波の速度は一定と考える。</p>
+                        <p>このとき、震源からの距離と S 波が伝わるまでの時間は比例する。</p>
+                        <p>そこで、地点 B に主要動が伝わるまでの時間を \(t\) 秒とすると、</p>
+                        <p>\(" . $a*$c . ":{$a} = " . $b*$c . ":t\)。これを解いて、\(t = {$b}\) 秒後。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>ある地震では、震源からの距離 " . $a * $c . " km の地点 A で主要動が始まったのは、地震発生の {$a} 秒後だった。</p>
+                        <p>この地震で、地点 B で主要動が始まったのは、地震発生の {$b} 秒後だった。地点 B の震源からの距離を求めなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">" . $b*$c . " km</p>",
+                'e_type' => 3,
+                'e' => "<p>同じ地震において、主要動を伝える S 波の速度は一定と考える。</p>
+                        <p>このとき、震源からの距離と S 波が伝わるまでの時間は比例する。</p>
+                        <p>そこで、地点 B の震源からの距離を \(x\) km とすると、</p>
+                        <p>\(" . $a*$c . ":{$a} = x:{$b}\)。これを解いて、\(x = " . $b*$c . "\) km。</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "比例する量";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+
     // 理科 用語の理解
     public function science_terms_all() {
         $terms = [
