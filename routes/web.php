@@ -386,6 +386,9 @@ Route::get('workbook/progressive_tense', [WorkbookController::class, 'progressiv
 ->middleware(['auth', 'verified'])->name('workbook.progressive_tense');
 Route::get('workbook/eng_summaryJ1', [WorkbookController::class, 'eng_summaryJ1'])
 ->middleware(['auth', 'verified'])->name('workbook.eng_summaryJ1');
+
+Route::get('workbook/eng_irregular_verb', [WorkbookController::class, 'eng_irregular_verb'])
+->middleware(['auth', 'verified'])->name('workbook.eng_irregular_verb');
 Route::get('workbook/conjection', [WorkbookController::class, 'conjection'])
 ->middleware(['auth', 'verified'])->name('workbook.conjection');
 Route::get('workbook/infinitive', [WorkbookController::class, 'infinitive'])
@@ -400,8 +403,8 @@ Route::get('workbook/passive_voice', [WorkbookController::class, 'passive_voice'
 ->middleware(['auth', 'verified'])->name('workbook.passive_voice');
 Route::get('workbook/eng_summaryJ2', [WorkbookController::class, 'eng_summaryJ2'])
 ->middleware(['auth', 'verified'])->name('workbook.eng_summaryJ2');
-Route::get('workbook/eng_irregular_verb', [WorkbookController::class, 'eng_irregular_verb'])
-->middleware(['auth', 'verified'])->name('workbook.eng_irregular_verb');
+Route::get('workbook/eng_reading_J2_1', [WorkbookController::class, 'eng_reading_J2_1'])
+->middleware(['auth', 'verified'])->name('workbook.eng_reading_J2_1');
 
 Route::get('workbook/present_perfect', [WorkbookController::class, 'present_perfect'])
 ->middleware(['auth', 'verified'])->name('workbook.present_perfect');

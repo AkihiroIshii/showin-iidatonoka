@@ -4482,6 +4482,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+
     // 英単語 不規則動詞
     public function eng_irregular_verb(Request $request) {
         $words = [
@@ -5135,6 +5136,134 @@ class WorkbookController extends Controller
         $unitname = "中２英語まとめ";
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
+
+    // 英文法 中２読解 桃太郎
+    public function eng_reading_J2_1(Request $request) {
+        $qas = [
+            [
+                's' => "<p>　Long, long ago somewhere, there lived an old man and woman. The old
+                        coupleʼs house stood between a mountain and a river. Each day, the old man
+                        went up the mountain to cut wood, and the old woman went down to the river
+                        to wash clothes.</p>
+                        <p class=\"text-right text-sm font-bold\">出典：LADDER SERIES『Long-ago Stories of Japan vol.1』p.1-2</p>",
+                'q' => "<p>問．本文中から、不定詞の形になっている部分を<span class=\"underline\">すべて</span>抜き出しなさい。</p>",
+                'a' => "to cut, to wash",
+                'exp' => "<p>to cut（切るために）、to wash（洗うために）の２つ。</p>
+                        <p>to the river の to は「～へ」の意味の前置詞（the river は名詞）。<p>
+                        <p>【和訳】</p>
+                        <div class=\"mx-auto w-2/3 text-left\">
+                            　昔々あるところに、おじいさんとおばあさんが住んでいました。その老夫婦の家は、山と川の間に立っていました。
+                            日々、おじいさんは山へ柴刈りに、おばあさんは川へ洗濯に行きました。
+                        </div>",
+            ],
+            [
+                's' => "<p>　One day, as always, the old woman was down at the river. When she finished
+                        the wash, she looked up and saw a great big peach. The peach was bobbing and
+                        rolling in the water. It was heavy and round and pink, and it looked delicious.
+                        But it was just out of reach.</p>
+                        <p class=\"text-right text-sm font-bold\">出典：LADDER SERIES『Long-ago Stories of Japan vol.1』p.1-2</p>",
+                'q' => "<p>問．本文中から、進行形になっている部分を抜き出しなさい。</p>",
+                'a' => "was bobbing and rolling",
+                'exp' => "<p>bob（水面で上下にぷかぷか動く）を知らずとも、be動詞＋ing形であることは見抜けるはず。</p>
+                        <p>The peach was bobbing and the peach was rolling の重複部分（the peach was）が省略されている。<p>
+                        <p>【和訳】</p>
+                        <div class=\"mx-auto w-2/3 text-left\">
+                            　ある日、いつものように、おばあさんは（家より下の）川にいました。
+                            彼女が洗濯を終えたとき、（ふと）見上げるととても大きな桃が見えました。
+                            その桃は水の中をぷかぷかしたり回ったりしていました。それは重くて丸くてピンク色で、とても美味しそうでした。
+                            しかし、それはわずかに手の届かないところにありました（流れていました）。
+                        </div>",
+            ],
+            [
+                's' => "<p>　“Come over here!” the old woman called out. ”The waterʼs sweeter over here!”</p>
+                        <p class=\"text-right text-sm font-bold\">出典：LADDER SERIES『Long-ago Stories of Japan vol.1』p.1-2</p>",
+                'q' => "<p>問．本文中から、⽐較級になっている単語の<span class=\"underline\">原級と品詞</span>を答えなさい。</p>",
+                'a' => "sweet、形容詞",
+                'exp' => "<p>water's が water is の短縮形なのか所有格なのかは文脈から判断する。</p>
+                            <p>「水のsweeter」では変なので、water is sweeter だと判断できる。</p>
+                            <p>また、” ” で囲まれているのはセリフ部分である。</p>
+                        <p>【和訳】</p>
+                        <div class=\"mx-auto w-2/3 text-left\">
+                            　「こっちにおいで！」おばあさんは叫びました。「こっちの水の方が甘いわよ！」
+                        </div>",
+            ],
+            [
+                's' => "<p>　And , sure enough, the great peach began to move toward her. It bobbed
+                        and rolled and rolled and bobbed, straight into her arms. The old woman pulled
+                        the peach out of the water and smiled. She couldnʼt wait to share this wonderful
+                        fruit with her husband.</p>
+                        <p class=\"text-right text-sm font-bold\">出典：LADDER SERIES『Long-ago Stories of Japan vol.1』p.1-2</p>",
+                'q' => "<p>問．本文中で使われている助動詞を答えなさい。</p>",
+                'a' => "could（couldn't）",
+                'exp' => "<p>could は can の過去形。couldn't wait は「待つことができなかった」の意味になる。</p>
+                        <p>助動詞は動詞の直前に置くことから、まず文中でどれが動詞かを判断できることが必要である。</p>
+                        <p>なお、「どんぶらこ」に対応する英語はないが、ここでは\"bob and roll\"と表現されている。</p>
+                        <p>【和訳】</p>
+                        <div class=\"mx-auto w-2/3 text-left\">
+                            　そして、思った（願った）通り、その大きな桃は彼女に向かって動き始めました。
+                            それはどんぶらこどんぶらこと、まっすぐ彼女の腕の中に流れてきた。おばあさんは
+                            その桃を水から引き上げて微笑みました。彼女はその素晴らしい果物を夫と分け合うのが待ちきれませんでした。
+                        </div>",
+            ],
+            [
+                's' => "<p>　And , sure enough, <span class=\"underline\">the great peach began to move toward her</span>. It bobbed
+                        and rolled and rolled and bobbed, straight into her arms. The old woman pulled
+                        the peach out of the water and smiled. She couldnʼt wait to share this wonderful
+                        fruit with her husband.</p>
+                        <p class=\"text-right text-sm font-bold\">出典：LADDER SERIES『Long-ago Stories of Japan vol.1』p.1-2</p>",
+                'q' => "<p>問．下線部から形容詞を抜き出し、それが修飾する単語も答えなさい。</p>",
+                'a' => "great → peach",
+                'exp' => "<p>形容詞は、This is large（これは大きい） のようにbe動詞で主語を説明したり、</p>
+                        <p>a large house（大きな家）のように名詞を前から修飾したりして使われる。</p>
+                        <p>ここでは great（大きな）が peach（桃）を修飾している。</p>
+                        <p>品詞の使い方がわかると、何が何を修飾しているかが読み取れるようになる。</p>
+                        <p>【和訳】</p>
+                        <div class=\"mx-auto w-2/3 text-left\">
+                            　そして、思った（願った）通り、その大きな桃は彼女に向かって動き始めました。
+                            それはどんぶらこどんぶらこと、まっすぐ彼女の腕の中に流れてきた。おばあさんは
+                            その桃を水から引き上げて微笑みました。彼女はその素晴らしい果物を夫と分け合うのが待ちきれませんでした。
+                        </div>",
+            ],
+            [
+                's' => "<p>　Long, long ago somewhere, there lived an old man and woman. The old
+                        coupleʼs house stood between a mountain and a river. Each day, the old man
+                        went up the mountain to cut wood, and the old woman went down to the river
+                        to wash <span class=\"underline\">clothes</span>.</p>
+                        <p>　One day, as always, the old woman was down at the river. When she finished
+                        the wash, she looked up and saw a great big peach. The peach was bobbing and
+                        rolling in the water. It was heavy and round and pink, and it looked <span class=\"underline\">delicious</span>.
+                        But it was just out of reach.</p>
+                        <p>　“Come over here!” the old woman called out. ”The <span class=\"underline\">waterʼs</span> sweeter over here!”</p>
+                        <p>　And , sure enough, the great peach began to move toward her. It bobbed
+                        and rolled and rolled and bobbed, straight into her <span class=\"underline\">arms</span>. The old woman pulled
+                        the peach out of the water and smiled. She couldnʼt wait to share this wonderful
+                        fruit with her husband.</p>
+                        <p class=\"text-right text-sm font-bold\">出典：LADDER SERIES『Long-ago Stories of Japan vol.1』p.1-2</p>",
+                'q' => "<p>問．下線が引かれた 4 単語のうち、複数形の単語をすべて答えなさい。</p>",
+                'a' => "clothes, arms",
+                'exp' => "<p>clothes は cloth（服）の複数形。arms は arm（腕）の複数形、つまり両腕を表す。</p>
+                        <p>delicious は形容詞、water's は water is の短縮形。</p>",
+            ],
+        ];
+        $qa_idx = rand(0,count($qas)-1);
+        $qa = $qas[$qa_idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $question = [
+            'q_type' => 3,
+            'q' => "<p>次の文を読んで、次の設問に答えなさい。</p>
+                    <div class=\"mx-auto w-2/3 text-left\">" . $qa['s'] . "</div>
+                    " . $qa['q'],
+            'a_type' => 3,
+            'a' => $qa['a'],
+            'e_type' => 3,
+            'e' => $qa['exp'],
+        ];
+        $unitname = "中２読解　桃太郎";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
 
     // 英文法 現在完了
     public function present_perfect(Request $request) {

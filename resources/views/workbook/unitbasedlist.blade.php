@@ -480,12 +480,19 @@
                             </div>
                         </x-td>
                     </tr>
-                    {{-- <tr>
-                        <x-td>英文構造</x-td>
+                    <tr>
+                        <x-td>読解</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                {{-- <x-button-link color="purple">
+                                    <a href="{{route('workbook.sentence_structure1')}}">be動詞と一般動詞</a>
+                                </x-button-link> --}}
+                            </div>
+                        </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="purple">
-                                    <a href="{{route('workbook.sentence_structure1')}}">be動詞と一般動詞</a>
+                                    <a href="{{route('workbook.eng_reading_J2_1')}}">桃太郎</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -493,11 +500,7 @@
                             <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
-                            </div>
-                        </x-td>
-                    </tr> --}}
+                    </tr>
                 </tbody>
             </table>
 
