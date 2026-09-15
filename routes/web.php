@@ -480,6 +480,8 @@ Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 // 数学
 Route::get('workbook/trigonometric_ratio', [WorkbookController::class, 'trigonometric_ratio'])
 ->middleware(['auth', 'verified'])->name('workbook.trigonometric_ratio');
+Route::get('workbook/h_math_covariance', [WorkbookController::class, 'h_math_covariance'])
+->middleware(['auth', 'verified'])->name('workbook.h_math_covariance');
 Route::get('workbook/h_math_log', [WorkbookController::class, 'h_math_log'])
 ->middleware(['auth', 'verified'])->name('workbook.h_math_log');
 // 英語

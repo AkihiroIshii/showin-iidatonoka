@@ -776,6 +776,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.trigonometric_ratio')}}">単位円と三角比</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.h_math_covariance')}}">共分散</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

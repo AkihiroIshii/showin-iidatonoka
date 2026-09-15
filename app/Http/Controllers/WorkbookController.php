@@ -3638,7 +3638,17 @@ class WorkbookController extends Controller
             }
         }
     }
-    
+   
+    // 負の数のみ（）付きで返す。0もそのまま返す。
+    private function add_braket($n)
+    {
+        if ($n < 0) {
+            return "(" . $n . ")";
+        } else {
+            return $n;
+        }
+    }
+
     // 係数（前に項がないとき）
     private function sign($n)
     {
@@ -9261,6 +9271,195 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "三角比（数A）";
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
+    // 共分散（数ⅠＡ）
+    public function h_math_covariance() {
+        // 変数
+        $data_arr_x = [rand(5, 20), rand(5, 20), rand(5, 20), rand(5, 20),];
+        $data_arr_y = [rand(5, 20), rand(5, 20), rand(5, 20), rand(5, 20),];
+        $n = count($data_arr_x);
+        // 平均値が整数値になるように、最後の値を調整。
+        $data_arr_x_modn = array_sum($data_arr_x) % $n;
+        $data_arr_y_modn = array_sum($data_arr_y) % $n;
+        $data_arr_x[$n-1] = $data_arr_x_modn == 0 ? $data_arr_x[$n-1] : $data_arr_x[$n-1] - $data_arr_x_modn;
+        $data_arr_y[$n-1] = $data_arr_y_modn == 0 ? $data_arr_y[$n-1] : $data_arr_y[$n-1] - $data_arr_y_modn;
+        // 調整後のデータの合計と平均値
+        $data_sum_x = array_sum($data_arr_x);
+        $data_sum_y = array_sum($data_arr_y);
+        $avg_x = $data_sum_x / $n;
+        $avg_y = $data_sum_y / $n;
+        // 平均値からの差の二乗
+        for ($i = 0; $i < $n; $i++) {
+            $diff_arr_x[$i] = pow($data_arr_x[$i] - $avg_x, 2);
+            $diff_arr_y[$i] = pow($data_arr_y[$i] - $avg_y, 2);
+        }        
+        // 分散と標準偏差
+        $var_x = array_sum($diff_arr_x) / $n;
+        $var_y = array_sum($diff_arr_y) / $n;
+        $s_x = sqrt($var_x);
+        $s_y = sqrt($var_y);
+        $s_x_int = floor($s_x); //小数点以下切り捨て
+        $s_y_int = floor($s_y); //小数点以下切り捨て
+        // 一人目の国語の偏差値（近似値）
+        $hensachi = round(($data_arr_x[0] - $avg_x) * 10 / $s_x_int + 50);
+        //共分散
+        $covar = 0;
+        for ($i = 0; $i < $n; $i++) {
+            $covar += ($data_arr_x[$i] - $avg_x) * ($data_arr_y[$i] - $avg_y); 
+        }
+        $covar = $covar / $n;
+        //相関係数
+        $r = round($covar / (floor(sqrt($var_x)) * floor(sqrt($var_y))), 1);
+
+        // データ和の文字列
+        $sum_x_str = "";
+        for ($i = 0; $i < ($n - 1); $i++) {
+            $sum_x_str .= $data_arr_x[$i] . " + ";
+        }
+        $sum_x_str .= $data_arr_x[$i];
+        $sum_y_str = "";
+        for ($i = 0; $i < ($n - 1); $i++) {
+            $sum_y_str .= $data_arr_y[$i] . " + ";
+        }
+        $sum_y_str .= $data_arr_y[$i];
+        // 二乗和の文字列
+        $sum_diff2_x_str1 = "";
+        for ($i = 0; $i < ($n - 1); $i++) {
+            $sum_diff2_x_str1 .= "(" . $data_arr_x[$i] . " - {$avg_x})^2 + ";
+        }
+        $sum_diff2_x_str1 .= "(" . $data_arr_x[$i] . " - {$avg_x})^2";
+        $sum_diff2_x_str2 = "";
+        for ($i = 0; $i < ($n - 1); $i++) {
+            $sum_diff2_x_str2 .= ($data_arr_x[$i]- $avg_x)**2 . " + ";
+        }
+        $sum_diff2_x_str2 .= ($data_arr_x[$i]- $avg_x)**2;
+        //共分散の分子の積
+        $sum_diff_xy_str1 = "";
+        for ($i = 0; $i < ($n - 1); $i++) {
+            $sum_diff_xy_str1 .= "(" . $data_arr_x[$i] . " - {$avg_x})(" . $data_arr_y[$i] . " - {$avg_y}) + ";
+        }
+        $sum_diff_xy_str1 .= "(" . $data_arr_x[$i] . " - {$avg_x})(" . $data_arr_y[$i] . " - {$avg_y})";
+        $sum_diff_xy_str2 = "";
+        for ($i = 0; $i < ($n - 1); $i++) {
+            $diff_mul = ($data_arr_x[$i] - $avg_x) * ($data_arr_y[$i] - $avg_y);
+            $sum_diff_xy_str2 .= $this->add_braket($diff_mul) . " + ";
+        }
+        $diff_mul = ($data_arr_x[$i] - $avg_x) * ($data_arr_y[$i] - $avg_y);
+        $sum_diff_xy_str2 .= $this->add_braket($diff_mul);
+
+        $data_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5\">国語</td>";
+                            for ($i = 0; $i<$n; $i++) {
+                                $data_table .= "<td class=\"border border-gray-400 p-5\">" . $data_arr_x[$i] . "</td>";
+                            }
+                        $data_table .= "</tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5\">数学</td>";
+                            for ($i = 0; $i<$n; $i++) {
+                                $data_table .= "<td class=\"border border-gray-400 p-5\">" . $data_arr_y[$i] . "</td>";
+                            }
+                        $data_table .= "</tr>
+                    </table>
+                    ";
+                    
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の表は、生徒{$n}人のテストの点数である。以下の問に答えなさい。</p>
+                        {$data_table}
+                        <p class=\"leading-[2]\">問．国語の点数について、平均値と分散と標準偏差を求めなさい。</p>
+                        <p class=\"leading-[2]\">ただし、標準偏差は小数点以下を切り捨てて整数値で答えなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p>平均値：{$avg_x}点、分散：{$var_x}、標準偏差：{$s_x_int}点</p>",
+                'e_type' => 3,
+                'e' => "<p>平均値 \(\\overline{x}\) は点数の合計をデータ数(n = {$n})で割ったものなので、</p>
+                        <p>\(\displaystyle \\overline{x} = \\frac{1}{\,n\,} \sum_{i=1}^{n} x_i = \\frac{\,{$sum_x_str}\,}{{$n}} = {$avg_x}\)点</p>
+                        <p>分散 \(s^2\) は、各データの平均値からの差(\(x_i - \overline{x}\))の</p>
+                        <p>二乗和をデータ数で割ったものなので、</p>
+                        \[
+                            \\begin{aligned}
+                                s^2 &= \\frac{1}{\,n\,} \sum_{i=1}^{n} (x_i - \overline{x})^2 \\\\
+                                            &= \\frac{\,{$sum_diff2_x_str1}\,}{{$n}} \\\\
+                                            &= \\frac{\,{$sum_diff2_x_str2}\,}{{$n}} = {$var_x} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>標準偏差 \(s\) は、分散の平方根を取ったものなので、\(s = \sqrt{{$var_x}}\)。</p>
+                        $$ \sqrt{" . $s_x_int**2 . "} \leqq \sqrt{{$var_x}} < \sqrt{" . ($s_x_int + 1)**2 . "} $$
+                        $$ {$s_x_int} \leqq s < " . $s_x_int + 1 . " $$
+                        <p>よって、標準偏差の小数点以下を切り捨てた値は {$s_x_int} 点である。</p>
+                        <p>これは、国語の点数が概ね（{$avg_x} ± {$s_x_int}）点に分布していることを意味する。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の表は、生徒{$n}人のテストの点数である。以下の問に答えなさい。</p>
+                        {$data_table}
+                        <p class=\"leading-[2]\">問．国語の平均値 \(\overline{x}\) は {$avg_x} 点、分散は {$var_x} である。国語が " . $data_arr_x[0] . " 点の生徒の、国語の偏差値を</p>
+                        <p class=\"leading-[2]\">整数値で答えなさい。なお、点数が \(x\) の生徒の偏差値は、\(\displaystyle \\frac{\,x-\overline{x}\,}{s} \\times 10 + 50\) で求まる。</p>
+                        <p class=\"leading-[2]\">\(s\) は標準偏差を表すが、本問では小数点以下を切り捨てた整数値の近似値を用いてよい。</p>",
+                'a_type' => 3,
+                'a' => "<p>{$hensachi}</p>",
+                'e_type' => 3,
+                'e' => "<p>標準偏差 \(s\) は分散の平方根をとった値なので、\(s = \sqrt{{$var_x}}\) と表せる。</p>
+                        $$ \sqrt{" . $s_x_int**2 . "} \leqq \sqrt{{$var_x}} < \sqrt{" . ($s_x_int + 1)**2 . "} $$
+                        $$ {$s_x_int} \leqq s < " . $s_x_int + 1 . " $$
+                        <p>よって、標準偏差の小数点以下を切り捨てた値は {$s_x_int} 点であるから、この近似値を用いる。</p>
+                        <p>これより、国語が " . $data_arr_x[0] . " 点の生徒の偏差値は、
+                            \(\displaystyle \\frac{\," . $data_arr_x[0] . "-{$avg_x}\,}{{$s_x_int}} \\times 10 + 50
+                            \\fallingdotseq {$hensachi}.\)</p>
+                        <p>なお、平均点と同じ点数だった場合、偏差値は50になる。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の表は、生徒{$n}人のテストの点数である。以下の問に答えなさい。</p>
+                        {$data_table}
+                        <p class=\"leading-[2]\">問．国語の平均点は {$avg_x} 点、数学の平均点は {$avg_y} 点である。共分散を求めなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p>\({$covar}\)</p>",
+                'e_type' => 3,
+                'e' => "<p>国語の点数を \(x\)、数学の点数を \(y\) とする。それぞれの平均値を \(\overline{x}, \overline{y}\) で表す。</p>
+                        <p>共分散 \(s_{xy}\) は、各教科の得点の平均値からの差の積 \((x_i-\overline{x})(y_i-\overline{y})\) の</p>
+                        <p>二乗和をデータ数 n で割ったものであるから、</p>
+                        \[
+                            \\begin{aligned}
+                                s_{xy} &= \\frac{1}{\,n\,} \sum_{i=1}^{n} (x_i-\overline{x})(y_i-\overline{y}) \\\\
+                                            &= \\frac{\,{$sum_diff_xy_str1}\,}{{$n}} \\\\
+                                            &= \\frac{\,{$sum_diff_xy_str2}\,}{{$n}} = {$covar} \\\\
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+            // ↓標準偏差を近似してしまったせいか、相関係数が1を超えてしまうことがあるので非表示にしている。
+            // [
+            //     'q_type' => 3,
+            //     'q' => "<p>次の表は、生徒{$n}人のテストの点数である。以下の問に答えなさい。</p>
+            //             {$data_table}
+            //             <p class=\"leading-[2]\">問．国語の分散は {$var_x}、数学の分散は {$var_y} 、共分散は {$covar} である。</p>
+            //             <p class=\"leading-[2]\">相関係数を、小数点以下第１位までの値で答えなさい。</p>
+            //             <p class=\"leading-[2]\">ただし本問では、標準偏差は小数点以下を切り捨てた整数値の近似値を用いてよい。</p>",
+            //     'a_type' => 3,
+            //     'a' => "<p>\({$r}\)</p>",
+            //     'e_type' => 3,
+            //     'e' => "<p>標準偏差は分散の平方根をとった値なので、</p>
+            //             <p>国語の標準偏差は \(s_x = \sqrt{{$var_x}}\)、数学の標準偏差は \(s_y = \sqrt{{$var_y}}\) と表せる。</p>
+            //             $$ \sqrt{" . $s_x_int**2 . "} \leqq \sqrt{{$var_x}} < \sqrt{" . ($s_x_int + 1)**2 . "} $$
+            //             $$ {$s_x_int} \leqq s_x < " . $s_x_int + 1 . " $$
+            //             <p>よって、国語の標準偏差の小数点以下を切り捨てた値は {$s_x_int} 点である。</p>
+            //             $$ \sqrt{" . $s_y_int**2 . "} \leqq \sqrt{{$var_y}} < \sqrt{" . ($s_y_int + 1)**2 . "} $$
+            //             $$ {$s_y_int} \leqq s_y < " . $s_y_int + 1 . " $$
+            //             <p>よって、数学の標準偏差の小数点以下を切り捨てた値は {$s_y_int} 点である。</p>
+            //             <p>これより、\(s_x \\fallingdotseq {$s_x_int},\,s_y \\fallingdotseq {$s_y_int}\)。共分散を \(s_{xy}\) とすると、相関係数 \(r\) は、</p>
+            //             $$ r = \\frac{s_{xy}}{\,s_x s_y \,} = \\frac{{$covar}}{\,{$s_x_int} \\times {$s_y_int}\,} \\fallingdotseq {$r}. $$
+            //             ",
+            // ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "共分散（数IA）";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 対数（数Ⅱ）☆できれば対数方程式、対数不等式、グラフの問題も追加したい。
