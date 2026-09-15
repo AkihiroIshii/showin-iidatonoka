@@ -9310,7 +9310,7 @@ class WorkbookController extends Controller
         }
         $covar = $covar / $n;
         //相関係数
-        $r = round($covar / (floor(sqrt($var_x)) * floor(sqrt($var_y))), 1);
+        // $r = round($covar / (floor(sqrt($var_x)) * floor(sqrt($var_y))), 1);
 
         // データ和の文字列
         $sum_x_str = "";
