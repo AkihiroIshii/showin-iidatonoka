@@ -4482,6 +4482,62 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 英単語 不規則動詞
+    public function eng_irregular_verb(Request $request) {
+        $words = [
+            ['e' => "buy", 'j' => "買う", 'p' => "bought", 'pp' => "bought"],
+            ['e' => "build", 'j' => "建てる", 'p' => "built", 'pp' => "built"],
+            ['e' => "catch", 'j' => "捕まえる", 'p' => "caught", 'pp' => "caught"],
+            ['e' => "find", 'j' => "見つける", 'p' => "found", 'pp' => "found"],
+            ['e' => "feel", 'j' => "感じる", 'p' => "felt", 'pp' => "felt"],
+            ['e' => "get", 'j' => "手に入れる", 'p' => "got", 'pp' => "got"],
+            ['e' => "hear", 'j' => "聞こえる", 'p' => "heard", 'pp' => "heard"],
+            ['e' => "keep", 'j' => "保つ", 'p' => "kept", 'pp' => "kept"],
+            ['e' => "leave", 'j' => "去る、～のままにする", 'p' => "left", 'pp' => "left"],
+            ['e' => "make", 'j' => "作る", 'p' => "made", 'pp' => "made"],
+            ['e' => "meet", 'j' => "会う", 'p' => "met", 'pp' => "met"],
+            ['e' => "read", 'j' => "読む", 'p' => "read", 'pp' => "read"],
+            ['e' => "send", 'j' => "送る", 'p' => "sent", 'pp' => "sent"],
+            ['e' => "stand", 'j' => "立っている", 'p' => "stood", 'pp' => "stood"],
+            ['e' => "teach", 'j' => "教える", 'p' => "taught", 'pp' => "taught"],
+            ['e' => "think", 'j' => "考える", 'p' => "thought", 'pp' => "thought"],
+            ['e' => "tell", 'j' => "伝える", 'p' => "told", 'pp' => "told"],
+            ['e' => "win", 'j' => "勝つ", 'p' => "won", 'pp' => "won"],
+
+            ['e' => "come", 'j' => "来る", 'p' => "came", 'pp' => "come"],
+            ['e' => "run", 'j' => "走る", 'p' => "ran", 'pp' => "run"],
+
+            ['e' => "begin", 'j' => "始まる、始める", 'p' => "began", 'pp' => "begun"],
+            ['e' => "do", 'j' => "する", 'p' => "did", 'pp' => "done"],
+            ['e' => "drive", 'j' => "運転する", 'p' => "drove", 'pp' => "driven"],
+            ['e' => "eat", 'j' => "食べる", 'p' => "ate", 'pp' => "eaten"],
+            ['e' => "grow", 'j' => "成長する", 'p' => "grew", 'pp' => "grown"],
+            ['e' => "go", 'j' => "行く", 'p' => "went", 'pp' => "gone"],
+            ['e' => "know", 'j' => "知っている", 'p' => "knew", 'pp' => "known"],
+            ['e' => "see", 'j' => "見る", 'p' => "saw", 'pp' => "seen"],
+            ['e' => "speak", 'j' => "話す、しゃべる", 'p' => "spoke", 'pp' => "spoken"],
+            ['e' => "sing", 'j' => "歌う", 'p' => "sang", 'pp' => "sung"],
+            ['e' => "swim", 'j' => "泳ぐ", 'p' => "swam", 'pp' => "swum"],
+            ['e' => "write", 'j' => "書く", 'p' => "wrote", 'pp' => "written"],
+            ['e' => "take", 'j' => "取る", 'p' => "took", 'pp' => "taken"],
+        ];
+        $idx = rand(0, count($words)-1);
+        $w = $words[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $question = [
+            'q_type' => 3,
+            'q' => "{$w['e']}（{$w['j']}）の過去形と過去分詞を書きなさい。",
+            'a_type' => 3,
+            'a' => "<p class=\"text-2xl\">過去形：{$w['p']}、過去分詞：{$w['pp']}</p>",
+            'e_type' => 3,
+            'e' => "過去分詞は受け身などで用いる形で、過去を意味するわけではない。",
+        ];
+        $unitname = "不規則動詞";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 英文法 接続詞
     public function conjection(Request $request) {
         $sentences = [
@@ -4968,7 +5024,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
-    // 英文法 中２英語まとめ
+    // 英文法 ◎中２英語まとめ
     public function eng_summaryJ2(Request $request) {
         $sentences = [
             ['e' => "I was talking with my friends.", 'j' => "私は友人と話していた。", 
@@ -5407,6 +5463,65 @@ class WorkbookController extends Controller
         }
         $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "前置詞";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 英文法 ◎形容詞の用法
+    public function eng_adjective_usage(Request $request) {
+        $sentences = [
+            ['e' => "He is bald.", 'j' => "彼はハゲている。", 'exp' => "S is C. で、C が形容詞の時は、S が C の状態にあることを表す。"],
+            ['e' => "He went bald two years ago.", 'j' => "彼は２年前にハゲた。", 'exp' => "「go + 形容詞」「get + 形容詞」で、「～の状態になる」ことを表す。go bald の過去形は went bald。"],
+            ['e' => "He wasn't bald when he was a student.", 'j' => "彼は学生の頃はハゲていなかった。", 'exp' => "おそらく今はハゲているのだろう。"],
+            ['e' => "I don't want to go bald.", 'j' => "私はハゲたくない。", 'exp' => "to go bald が不定詞の名詞的用法（ハゲること）を意味する。直訳すると、「私はハゲることを望まない。」"],
+            ['e' => "When did he go bald?", 'j' => "彼はいつハゲたのですか。", 'exp' => "疑問文と過去形の表現を確認しておこう。疑問文なので he goes とはならない。"],
+            ['e' => "You are balder than I", 'j' => "君は私よりもハゲている。", 'exp' => "bald に er がついて比較級になっている。"],
+            ['e' => "He is the baldest in this group.", 'j' => "彼はこのグループ内で最もハゲている。", 'exp' => "最上級の表現。たぶん彼以外もある程度はハゲている。"],
+            ['e' => "You are as bald as we.", 'j' => "君は我々と同じくらいハゲている。", 'exp' => "君、いい加減に認めたまえ(`・ω・´)。"],
+            ['e' => "I am going bald.", 'j' => "私はハゲつつある。", 'exp' => "go bald（ハゲる）の進行形。\"I am going to go bald.\"だと「私はハゲる予定です。」になるので注意。"],
+            ['e' => "He has been bald since last year.", 'j' => "彼は去年からハゲている。", 'exp' => "<p>現在完了形の継続用法。彼は去年から今に至るまでずっとハゲている。</p>
+                                                                                                    <p>He was bald.（過去形）とすると、現在は復活している可能性が出てくる。</p>"],
+            ['e' => "He will be bald next year.", 'j' => "彼は来年にはハゲているだろう。", 'exp' => "will は未来を意味する助動詞。なお、shall を使うと予言めいた表現になる。"],
+            ['e' => "You don't have to go bald.", 'j' => "君がハゲる必要はない。", 'exp' => "don't have to～ で ～する必要はない、という表現。別にハゲても構わない。</p>"],
+            ['e' => "Be bald.", 'j' => "ハゲなさい。", 'exp' => "命令文。だいぶひどいことを言っているので、実際に使っているのは聞いたことがない。"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を英訳しなさい。（bald・・・[形]ハゲた・ハゲの）",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を和訳しなさい。（bald・・・[形]ハゲた・ハゲの）",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "形容詞の用法";
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 

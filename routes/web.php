@@ -400,6 +400,8 @@ Route::get('workbook/passive_voice', [WorkbookController::class, 'passive_voice'
 ->middleware(['auth', 'verified'])->name('workbook.passive_voice');
 Route::get('workbook/eng_summaryJ2', [WorkbookController::class, 'eng_summaryJ2'])
 ->middleware(['auth', 'verified'])->name('workbook.eng_summaryJ2');
+Route::get('workbook/eng_irregular_verb', [WorkbookController::class, 'eng_irregular_verb'])
+->middleware(['auth', 'verified'])->name('workbook.eng_irregular_verb');
 
 Route::get('workbook/present_perfect', [WorkbookController::class, 'present_perfect'])
 ->middleware(['auth', 'verified'])->name('workbook.present_perfect');
@@ -407,6 +409,8 @@ Route::get('workbook/svo_infinitive', [WorkbookController::class, 'svo_infinitiv
 ->middleware(['auth', 'verified'])->name('workbook.svo_infinitive');
 Route::get('workbook/postfix_modification', [WorkbookController::class, 'postfix_modification'])
 ->middleware(['auth', 'verified'])->name('workbook.postfix_modification');
+Route::get('workbook/eng_adjective_usage', [WorkbookController::class, 'eng_adjective_usage'])
+->middleware(['auth', 'verified'])->name('workbook.eng_adjective_usage');
 
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');

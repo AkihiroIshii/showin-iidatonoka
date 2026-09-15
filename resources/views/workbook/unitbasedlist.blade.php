@@ -374,6 +374,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.eng_irregular_verb')}}">不規則動詞</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -470,6 +473,9 @@
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.postfix_modification')}}">後置修飾（分詞、関係代名詞）</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.eng_adjective_usage')}}">◎形容詞の用法</a>
                                 </x-button-link>
                             </div>
                         </x-td>
