@@ -7071,11 +7071,13 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 化学反応と質量変化
+    // 化学反応と質量変化（酸化銅）
     public function mass_change() {
-        $x = 0.4 * rand(5, 12);
-        $y = 0.5 * rand(5, 12);
-        $x3 = 0.3 * rand(10, 20);
+        $x = 0.4 * rand(5, 12); //銅
+        $o1 = ($x / 4) * (0.2 * rand(1, 4));    //銅より少ない酸素
+        $o2 = ($x / 4) * (1 + 0.2 * rand(1, 4));    //銅より過剰な酸素
+        $y = 0.5 * rand(5, 12); //酸化銅
+        $x3 = 0.3 * rand(10, 20);   //マグネシウム
         $CuO_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
                             <td class=\"border border-gray-400 p-5\">銅の質量[g]</td>
@@ -7159,6 +7161,38 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
+                'q' => $CuO_table .
+                        "<p>銅を酸化させると酸化銅ができる。それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">銅 " .number_format($x, 1) . " g と酸素 {$o1} g から得られる酸化銅は、最大で何 g か。</p>
+                        ",
+                'a_type' => 3,
+                'a' => number_format(($o1 * 5), 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>表より、銅 0.40 g に対して酸化銅 0.50 g ができており、結合した酸素は 0.10 g とわかる。</p>
+                        <p>よって、銅と酸素の質量比は 4 : 1。これより、銅 " .number_format($x, 1) . " g  に結合する酸素の質量は、
+                            " .number_format($x, 1) . " g  ÷ 4 = " . $x / 4 . " g.</p>
+                        <p>しかし、酸素は {$o1} g しかないため、<span class=\"underline\">銅のすべてが反応するわけではない</span>。そこで、酸素 {$o1} g を</p>
+                        <p>基準に考えると、この酸素と反応する銅の質量は、{$o1} × 4 = " . $o1 * 4 . " g である。よって、得られる酸化銅は、 </p>
+                        <p>{$o1} + " . $o1 * 4 . " = " . number_format(($o1 * 5), 1)  . " g である
+                        （酸素と酸化銅の質量比は 1 : 5 なので、{$o1} × 5 = " . number_format(($o1 * 5), 1) . " g と考えてもよい）。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $CuO_table .
+                        "<p>銅を酸化させると酸化銅ができる。それぞれの質量は上表のとおり。</p>
+                        <p class=\"text-2xl\">銅 " .number_format($x, 1) . " g と酸素 {$o2} g から得られる酸化銅は、最大で何 g か。</p>
+                        ",
+                'a_type' => 3,
+                'a' => number_format(($x * 5 / 4), 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>表より、銅 0.40 g に対して酸化銅 0.50 g ができており、結合した酸素は 0.10 g とわかる。</p>
+                        <p>よって、銅と酸素の質量比は 4 : 1。これより、銅 " .number_format($x, 1) . " g に結合する酸素の質量は、最大で 
+                            " . number_format($x, 1) . " g  ÷ 4 = " . $x / 4 . " g.</p>
+                        <p>酸素は {$o2} g あるので、銅 " .number_format($x, 1) . " g は、すべて酸素と反応する（酸素が余る）。</p>
+                        <p>銅と酸化銅の質量比は 4 : 5 なので、得られる酸化銅は、" . number_format($x, 1) . " × (5 / 4) = " . number_format(($x * 5 / 4), 1)  . " g である。</p>",
+            ],
+            [
+                'q_type' => 3,
                 'q' => $MgO_table .
                         "<p>マグネシウムを酸化させると酸化マグネシウムができる。</p>
                         <p>それぞれの質量は上表のとおり。</p>
@@ -7206,7 +7240,7 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "化学反応と質量変化";
+        $unitname = "化学反応と質量変化（酸化）";
         return view('workbook.unit_template', compact('unitname','question'));
     }
 

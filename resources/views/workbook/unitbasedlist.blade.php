@@ -568,7 +568,7 @@
                                     <a href="{{route('workbook.chemical_reaction_equation')}}">化学反応式</a>
                                 </x-button-link>
                                 <x-button-link color="green">
-                                    <a href="{{route('workbook.mass_change')}}">化学変化と質量変化</a>
+                                    <a href="{{route('workbook.mass_change')}}">化学変化と質量変化（酸化）</a>
                                 </x-button-link>
                             </div>
                         </x-td>
