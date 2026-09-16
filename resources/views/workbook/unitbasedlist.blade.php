@@ -570,6 +570,9 @@
                                 <x-button-link color="green">
                                     <a href="{{route('workbook.mass_change')}}">化学変化と質量変化（酸化）</a>
                                 </x-button-link>
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.mass_change_NAHCO3')}}">☆気体が生じる化学反応</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

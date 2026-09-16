@@ -460,6 +460,8 @@ Route::get('workbook/chemical_reaction_equation', [WorkbookController::class, 'c
 ->middleware(['auth', 'verified'])->name('workbook.chemical_reaction_equation');
 Route::get('workbook/mass_change', [WorkbookController::class, 'mass_change'])
 ->middleware(['auth', 'verified'])->name('workbook.mass_change');
+Route::get('workbook/mass_change_NAHCO3', [WorkbookController::class, 'mass_change_NAHCO3'])
+->middleware(['auth', 'verified'])->name('workbook.mass_change_NAHCO3');
 Route::get('workbook/animal_function', [WorkbookController::class, 'animal_function'])
 ->middleware(['auth', 'verified'])->name('workbook.animal_function');
 Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])

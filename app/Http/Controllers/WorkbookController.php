@@ -7244,6 +7244,162 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 気体が生じる化学反応（炭酸水素ナトリウム）
+    public function mass_change_NAHCO3() {
+        $ratio_HCl_per_NaHCO3 = 31 + rand(1, 2);    // NaHCO3 1g に反応する うすい塩酸の質量[g]
+        $max_NaHCO3 = 2 + 0.2 * rand(1, 4); // ビーカーA～Dのうすい塩酸に反応するNaHCO3の最大量[g]
+        $mass_HCl = $max_NaHCO3 * $ratio_HCl_per_NaHCO3;    // ビーカーA～Dのうすい塩酸の質量
+        $ratio_CO2_per_NaHCO3 = 0.5;     // NaHCO3 1g によって生じるCO2の質量
+        $a = rand(6, 9);
+
+        $table_common = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+            <tr class=\"bg-gray-100\">
+                <td class=\"border border-gray-400 p-5\"></td>
+                <td class=\"border border-gray-400\">ビーカー</td>
+                <td class=\"border border-gray-400\">A</td>
+                <td class=\"border border-gray-400\">B</td>
+                <td class=\"border border-gray-400\">C</td>
+                <td class=\"border border-gray-400\">D</td>
+            </tr>
+            <tr class=\"bg-gray-100\">
+                <td class=\"border border-gray-400\">反応前</td>
+                <td class=\"border border-gray-400 text-left\">①うすい塩酸[g]</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
+            </tr>
+            <tr class=\"bg-gray-100\">
+                <td class=\"border border-gray-400\">追加分</td>
+                <td class=\"border border-gray-400 text-left\">②炭酸水素ナトリウム[g]</td>
+                <td class=\"border border-gray-400\">1.0</td>
+                <td class=\"border border-gray-400\">2.0</td>
+                <td class=\"border border-gray-400\">3.0</td>
+                <td class=\"border border-gray-400\">4.0</td>
+            </tr>";
+
+        $q_table = $table_common .
+            "<tr class=\"bg-gray-100\">
+                <td class=\"border border-gray-400\">反応後</td>
+                <td class=\"border border-gray-400 text-left\">③溶液の質量[g]</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 1 - $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 2 - (2 * $ratio_CO2_per_NaHCO3), 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 3 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 4 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+            </tr>
+        </table>";
+
+        $exp_table = $table_common .
+            "<tr class=\"bg-gray-100\">
+                <td class=\"border border-gray-400\" rowspan=\"2\">反応後</td>
+                <td class=\"border border-gray-400 text-left\">③溶液の質量[g]</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 1 - $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 2 - (2 * $ratio_CO2_per_NaHCO3), 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 3 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 4 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+            </tr>
+            <tr class=\"bg-gray-100 text-red-500 font-bold\">
+                <td class=\"border border-gray-400 text-left\">④生じた気体の質量[g]</td>
+                <td class=\"border border-gray-400\">{$ratio_CO2_per_NaHCO3}</td>
+                <td class=\"border border-gray-400\">" . number_format($ratio_CO2_per_NaHCO3 * 2, 1) . "</td>
+                <td class=\"border border-gray-400\">" . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . "</td>
+                <td class=\"border border-gray-400\">" . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . "</td>
+            </tr>
+        </table>
+        ";
+        // <p>maxNaHCO3:{$max_NaHCO3}、ratioCO2perNaHCO3:{$ratio_CO2_per_NaHCO3}</p>
+        $q_common = "<p class=\"leading-[2]\">濃度が同じうすい塩酸が入ったビーカー 4 つ（A～D）を用意する。</p>
+                <p class=\"leading-[2]\">ビーカーごとに異なる量の炭酸水素ナトリウムを加えると、いずれも気体が生じた。</p>
+                <p class=\"leading-[2]\">うすい塩酸や加えた炭酸水素ナトリウムの質量は、下表のとおり。</p>
+                {$q_table}";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => $q_common .
+                        "<p class=\"text-xl leading-[2]\">問．加えた炭酸水素ナトリウムがすべて反応するとき、</p>
+                        <p class=\"text-xl leading-[2]\">炭酸水素ナトリウム 1 g につき何 g の気体が生じるか。</p>",
+                'a_type' => 3,
+                'a' => "{$ratio_CO2_per_NaHCO3} g",
+                'e_type' => 3,
+                'e' => "<p>まず、生じた気体の質量(④)を表に書き加える。質量保存の法則から、① + ② = ③ + ④ になる。</p>
+                        {$exp_table}
+                        <p>ビーカー A、B では、②：④ の比が一定（2：1）なので、② がすべて反応していることがわかる。</p>
+                        <p>よって、炭酸水素ナトリウム 1 g につき、{$ratio_CO2_per_NaHCO3} g の気体が生じている。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $q_common .
+                        "<p class=\"text-xl leading-[2]\">問．この実験と同じ濃度のうすい塩酸 {$mass_HCl} g に炭酸水素</p>
+                        <p class=\"text-xl leading-[2]\">ナトリウムを加えると、最大で何 g の気体が生じるか。</p>",
+                'a_type' => 3,
+                'a' => number_format($max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>まず、生じた気体の質量(④)を表に書き加える。質量保存の法則から、① + ② = ③ + ④ になる。</p>
+                        {$exp_table}
+                        <p>ビーカー C、D を比べると、加えた ② の量が違うのに、生じた気体の質量は同じである。</p>
+                        <p>よって、炭酸水素ナトリウムをさらに加えても、気体はこれ以上生じないと考えられる。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $q_common .
+                        "<p class=\"text-xl leading-[2]\">問．この実験と同じ濃度のうすい塩酸 500 g に {$a}.0 g の</p>
+                        <p class=\"text-xl leading-[2]\">炭酸水素ナトリウムを加えると、何 g の気体が生じるか。</p>",
+                'a_type' => 3,
+                'a' =>  number_format($a/2, 1) . " g",
+                'e_type' => 3,
+                'e' => "<p>まず、生じた気体の質量(④)を表に書き加える。質量保存の法則から、① + ② = ③ + ④ になる。</p>
+                        {$exp_table}
+                        <p>ビーカー A、B では、②：④ の比が一定（2：1）なので、② がすべて反応していることがわかる。</p>
+                        <p>一方、ビーカー C、D を比べると、加えた ② の量が違うのに、生じた気体の質量は同じである。</p>
+                        <p>つまり、C、D ではうすい塩酸が不足して炭酸水素ナトリウムの一部しか反応していない。</p>
+                        <p>ただし、ビーカー B ではうすい塩酸 {$mass_HCl} g に ② 2.0 g がすべて反応しているのだから、</p>
+                        <p>その 5 倍以上の量のうすい塩酸に対しては、② も 5 倍（10.0 g）以上は完全に反応するはずである。</p>
+                        <p>よって、② {$a}.0 g はすべて反応する。②：④ の比（2：1）より、{$a}.0 ÷ 2 = " . number_format($a/2, 1) . " g の気体が生じる。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $q_common .
+                        "<p class=\"text-xl leading-[2]\">問．この実験と同じ濃度のうすい塩酸 500 g に {$a}.0 g の</p>
+                        <p class=\"text-xl leading-[2]\">炭酸水素ナトリウムを加えると、反応後の溶液の質量は何 g になるか。</p>",
+                'a_type' => 3,
+                'a' =>  500 + $a - $a/2 . " g",
+                'e_type' => 3,
+                'e' => "<p>まず、生じた気体の質量(④)を表に書き加える。質量保存の法則から、① + ② = ③ + ④ になる。</p>
+                        {$exp_table}
+                        <p>ビーカー A、B では、②：④ の比が一定（2：1）なので、② がすべて反応していることがわかる。</p>
+                        <p>一方、ビーカー C、D を比べると、加えた ② の量が違うのに、生じた気体の質量は同じである。</p>
+                        <p>つまり、C、D ではうすい塩酸が不足して炭酸水素ナトリウムの一部しか反応していない。</p>
+                        <p>ただし、ビーカー B ではうすい塩酸 {$mass_HCl} g に ② 2.0 g がすべて反応しているのだから、</p>
+                        <p>その 5 倍以上の量のうすい塩酸に対しては、② も 5 倍（10.0 g）以上は完全に反応するはずである。</p>
+                        <p>よって、② {$a}.0 g はすべて反応する。②：④ の比（2：1）より、{$a}.0 ÷ 2 = " . number_format($a/2, 1) . " g の気体が生じる。</p>
+                        <p>質量保存の法則より、① + ② = ③ + ④ なので、500 + {$a}.0 = ③ + " . number_format($a/2, 1) . "。よって、③ = " . 500 + $a - $a/2 . " g</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $q_common .
+                        "<p class=\"text-xl leading-[2]\">問．この実験で気体の発生が止まるのは、</p>
+                        <p class=\"text-xl leading-[2]\">炭酸水素ナトリウムを何 g 加えたときか。</p>",
+                'a_type' => 3,
+                'a' =>  "{$max_NaHCO3} g",
+                'e_type' => 3,
+                'e' => "<p>まず、生じた気体の質量(④)を表に書き加える。質量保存の法則から、① + ② = ③ + ④ になる。</p>
+                        {$exp_table}
+                        <p>ビーカー A、B では、②：④ の比が一定（2：1）なので、② がすべて反応していることがわかる。</p>
+                        <p>一方、ビーカー C、D を比べると、加えた ② の量が違うのに、生じた気体の質量は同じである。</p>
+                        <p>よって、炭酸水素ナトリウムをさらに加えても、気体はこれ以上生じないと考えられる。</p>
+                        <p>これより、うすい塩酸 {$mass_HCl} g から生じる気体は、最大で " . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . " g である。</p>
+                        <p>②：④ = 2：1 より、②：" . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . " = 2：1。これを解くと、② = {$max_NaHCO3} g。</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "気体が生じる化学反応";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 動物の仕組みと働き
     public function animal_function() {
         // q：問、a：答、e：解説
