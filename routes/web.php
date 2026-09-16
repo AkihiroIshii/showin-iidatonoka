@@ -272,8 +272,14 @@ Route::get('workbook/kanjiP3', [WorkbookController::class, 'kanjiP3'])
 Route::get('workbook/kanjiP4', [WorkbookController::class, 'kanjiP4'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.kanjiP4');
 //算数
+Route::get('workbook/make_ten', [WorkbookController::class, 'make_ten'])
+->middleware(['auth', 'verified'])->name('workbook.make_ten');
+Route::get('workbook/make_hundred', [WorkbookController::class, 'make_hundred'])
+->middleware(['auth', 'verified'])->name('workbook.make_hundred');
 Route::get('workbook/add_sub_per10', [WorkbookController::class, 'add_sub_per10'])
 ->middleware(['auth', 'verified'])->name('workbook.add_sub_per10');
+Route::get('workbook/mul5_10', [WorkbookController::class, 'mul5_10'])
+->middleware(['auth', 'verified'])->name('workbook.mul5_10');
 Route::get('workbook/day_to_hour', [WorkbookController::class, 'day_to_hour'])
 ->middleware(['auth', 'verified'])->name('workbook.day_to_hour');
 Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
@@ -284,6 +290,8 @@ Route::get('workbook/ratio2', [WorkbookController::class, 'ratio2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.ratio2');
 Route::get('workbook/select_eq_decimal', [WorkbookController::class, 'select_eq_decimal'])
 ->middleware(['auth', 'verified'])->name('workbook.select_eq_decimal');
+Route::get('workbook/mul314plus', [WorkbookController::class, 'mul314plus'])
+->middleware(['auth', 'verified'])->name('workbook.mul314plus');
 Route::get('workbook/velocity', [WorkbookController::class, 'velocity1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.velocity1');
 Route::get('workbook/velocity2', [WorkbookController::class, 'velocity2'])
@@ -414,6 +422,8 @@ Route::get('workbook/postfix_modification', [WorkbookController::class, 'postfix
 ->middleware(['auth', 'verified'])->name('workbook.postfix_modification');
 Route::get('workbook/eng_adjective_usage', [WorkbookController::class, 'eng_adjective_usage'])
 ->middleware(['auth', 'verified'])->name('workbook.eng_adjective_usage');
+Route::get('workbook/eng_find_noun', [WorkbookController::class, 'eng_find_noun'])
+->middleware(['auth', 'verified'])->name('workbook.eng_find_noun');
 
 Route::get('workbook/e_word_verb1', [WorkbookController::class, 'e_word_verb1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.e_word_verb1');

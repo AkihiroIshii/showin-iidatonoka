@@ -56,6 +56,74 @@ class WorkbookController extends Controller
     }
 
     /***************** 単元別問題作成 *****************/
+    // 10をつくる
+    public function make_ten() {
+        $a = rand(1, 9);
+        $b = 10 - $a;
+
+        $exp = "";
+        for ($i = 0; $i < $a; $i++) {
+            $exp .= "○";
+        }
+        $exp .= " + ";
+        for ($i = 0; $i < $b; $i++) {
+            $exp .= "○";
+        }
+        $exp .= " = 10";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>□ に あてはまる かずを こたえましょう。</p>
+                        <p class=\"text-xl\">{$a} + □ = 10</p>",
+                'a_type' => 2,
+                'a' => "{$b}",
+                'e_type' => 3,
+                'e' => "{$exp}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "10をつくる";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 100をつくる
+    public function make_hundred() {
+        $a = 10 * rand(1, 9);
+        $b = 100 - $a;
+
+        $exp = "<p>○ = 10 とすると、つぎのようになります。</p><p>";
+        for ($i = 0; $i < $a/10; $i++) {
+            $exp .= "○";
+        }
+        $exp .= " + ";
+        for ($i = 0; $i < $b/10; $i++) {
+            $exp .= "○";
+        }
+        $exp .= " = 100</p>";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>□ に あてはまる かずを こたえましょう。</p>
+                        <p class=\"text-xl\">{$a} + □ = 100</p>",
+                'a_type' => 2,
+                'a' => "{$b}",
+                'e_type' => 3,
+                'e' => "{$exp}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "100をつくる";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 10単位のたし算・ひき算
     public function add_sub_per10() {
         $a = 10 * rand(1, 9);
@@ -92,94 +160,117 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 10日は何時間？
-    public function day_to_hour() {
-        $days = [2,3,4,5,7,9,10];   // 1, 6, 8 は除く。
-        $idx = rand(0, count($days)-1);
-        $day = $days[$idx];
-        $hour = 24 * $day;
+    // 5倍、10倍
+    public function mul5_10() {
+        $a_arr = [2, 3, 4, 6, 7];
+        $a_idx = rand(0, count($a_arr)-1);
+        $a = $a_arr[$a_idx];
+        $a5 = 5 * $a;
+        $a10 = 10 * $a;
 
-        $exp = "<p>1日は 24時間なので、24時間を {$day}回たします。</p>
-                <p>24時間は、20時間と 4時間にわけてみましょう。</p>
-                <div class=\"text-left\">
-                <p>24時間</p>
-                <p>= ○○○○○ ○○○○○ ○○○○○ ○○○○○　○○○○</p>
-                <p>= [10] [10] ○○○○</p>
-                </div>
-                <p>すると、{$day}日は つぎのように あらわせます。</p>
-                <div class=\"text-left\">";
-        for ($i = 1; $i <= $day; $i++) {
-            $exp .= "<p class=\"pl-8 [line-height:initial]\">[10] [10]　○○○○　ここまでで、" . $i * 20 . " + " . $i * 4 . " = " . $i * 24 . "時間。</p>";
+        $exp10 = "<p>{$a} を 10 回たすのは、つぎのように あらわせます。</p>";
+        for ($i = 0; $i < $a; $i++) {
+            $exp10 .= "<p class=\"leading-[2]\">☺　　○　　○　　○　　○　　○　　○　　○　　○　　○</p>";
         }
-        $exp .= "</div>";
-        //解説を場合分け
-        // if ($day == 5) {
-        //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
-        //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>";
-        // } elseif ($day == 10) {
-        //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
-        //             <p>24 を 10かい たすのは、10 を 24かい たすのとおなじ。</p>
-        //             <p>つまり、10円玉が 24まいで 240円になるのとおなじ。</p>";
-        // } elseif ($day == 9) {
-        //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
-        //             <p>9 日は 10 日よりも 1日（24時間）すくないので、</p>
-        //             <div class=\"text-left\">
-        //                 <p>9 日 = 10 日 － 1 日</p>
-        //                 <p>= 240 時間 － 24 時間</p>
-        //                 <p>= 240 時間 － 20 時間 － 4 時間</p>
-        //                 <p>= 220 時間 － 4 時間</p>
-        //                 <p>= 216 時間。</p>
-        //             </div>";
-        // } elseif ($day > 5) {
-        //     $exp = "<p>まず {$day} 日を 5 日と " . $day - 5 . " 日にわけてみます。</p>
-        //             <p>1 日は 24 時間なので、10 日で 240 時間。</p>
-        //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>
-        //             <p>のこりの " . $day - 5 . " 日が何時間かは、つぎのように かんがえます。</p>";
-        //     for ($i = 1; $i < $day - 5; $i++) {
-        //         $exp .= "24 + ";
-        //     }
-        //     $exp .= "24</p><p> = ";
-        //     for ($i = 1; $i < $day - 5; $i++) {
-        //         $exp .= "(20 + 4) + ";
-        //     }
-        //     $exp .= "(20 + 4)</p><p> = (";
-        //     for ($i = 1; $i < $day - 5; $i++) {
-        //         $exp .= "20 + ";
-        //     }
-        //     $exp .= "20) + (";
-        //     for ($i = 1; $i < $day - 5; $i++) {
-        //         $exp .= "4 + ";
-        //     }
-        //     $exp .= "4)</p><p> = ". 20 * ($day - 5) . " + " . 4 * ($day - 5) . " = " . 24*($day - 5) . " 時間。
-        //     <p>よって、{$day} 日は 120 時間＋" . 24*($day - 5) . " 時間 = {$hour} 時間。";
-        // } else {
-        //     $exp = "<p>1 日は 24 時間なので、{$day} 日が何時間かは つぎのように かんがえます。</p>";
-        //     for ($i = 1; $i < $day; $i++) {
-        //         $exp .= "24 + ";
-        //     }
-        //     $exp .= "24</p><p> = ";
-        //     for ($i = 1; $i < $day; $i++) {
-        //         $exp .= "(20 + 4) + ";
-        //     }
-        //     $exp .= "(20 + 4)</p><p> = (";
-        //     for ($i = 1; $i < $day; $i++) {
-        //         $exp .= "20 + ";
-        //     }
-        //     $exp .= "20) + (";
-        //     for ($i = 1; $i < $day; $i++) {
-        //         $exp .= "4 + ";
-        //     }
-        //     $exp .= "4)</p><p> = ". 20 * $day . " + " . 4 * $day . " = {$hour} 時間。";
-        // } 
+        $exp10 .= "<p>これは つぎのように、10 を {$a} 回たすのと同じです。</p>";
+        $exp10 .= "<p class=\"leading-[2]\">☺　　☺　　☺　　☺　　☺　　☺　　☺　　☺　　☺　　☺</p>";
+        for ($i = 0; $i < $a - 1; $i++) {
+            $exp10 .= "<p class=\"leading-[2]\">○　　○　　○　　○　　○　　○　　○　　○　　○　　○</p>";
+        }
+        $exp10 .= "<p>よって、";
+        for ($i = 0; $i < $a - 1; $i++) {
+            $exp10 .= "10 + ";
+        }
+        $exp10 .= "10 = {$a10}.</p>
+            <p>もとのかずの {$a} に、0 をひとつ ふやせば {$a10} になりますね。</p>";
+
+        // 5回足すときの解説
+        $exp5 = "<p>{$a} を 5 回たすのは、つぎのように あらわせます。</p>";
+        for ($i = 0; $i < $a; $i++) {
+            $exp5 .= "<p class=\"leading-[2]\">☺　　○　　○　　○　　○</p>";
+        }
+        $exp5 .= "<p>これは つぎのように、5 を {$a} 回たすのと同じです。</p>";
+        $exp5 .= "<p class=\"leading-[2]\">☺　　☺　　☺　　☺　　☺</p>";
+        for ($i = 0; $i < $a - 1; $i++) {
+            $exp5 .= "<p class=\"leading-[2]\">○　　○　　○　　○　　○</p>";
+        }
+        $exp5 .= "<p>よって、";
+        for ($i = 0; $i < $a - 1; $i++) {
+            $exp5 .= "5 + ";
+        }
+        $exp5 .= "5 = {$a5}.</p>";
 
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
         $questions = [
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">{$day} 日は何時間（なんじかん）ですか。</p>",
+                'q' => "<p>{$a} を 10 回たすと いくつになりますか。</p>",
                 'a_type' => 2,
-                'a' => "{$hour}\,時間",
+                'a' => "{$a10}",
+                'e_type' => 3,
+                'e' => "{$exp10}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>{$a} を 5 回たすと いくつになりますか。</p>",
+                'a_type' => 2,
+                'a' => "{$a5}",
+                'e_type' => 3,
+                'e' => "{$exp5}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "5倍、10倍";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 10日は何時間？
+    public function day_to_hour() {
+        $day = rand(2, 10);
+        $hour = 24 * $day;
+
+        $exp = "<p>1 日は 24 時間です。◎ = 10、○ = 1 とすると、24 時間は ◎◎○○○○ とあらわせます。</p>
+                <p>よって、{$day} 日 = ";
+        for ($i = 0; $i < $day - 1; $i++) {
+            $exp .= "◎◎○○○○ + ";
+        }
+        $exp .= "◎◎○○○○</p>
+                <p>= ";
+        for ($i = 0; $i < $day; $i++) {
+            $exp .= "◎◎ ";
+        }
+        for ($i = 0; $i < $day; $i++) {
+            $exp .= "○○○○ ";
+        }
+        $exp .= "</p>
+                <p>= " . 20*$day . " + " . 4*$day . " = <span class=\"underline\">{$hour} 時間</span></p>";
+        if ($day > 5) {
+            $exp .= "<p>(※)5 日 = 120 時間 を おぼえておくと べんりです。</p>
+                    <p>5 日 = ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ </p>
+                    <p>= ◎◎ ◎◎ ◎◎ ◎◎ ◎◎ + ○○○○ ○○○○ ○○○○ ○○○○ ○○○○ </p>
+                    <p>= 100 + 20 = 120 時間</p>
+                    <p>すると、{$day} 日 = 5 日 + " . $day - 5 . " 日 = 120 時間 + ";
+            for ($i = 0; $i < $day - 5; $i++) {
+                $exp .= "◎◎ ";
+            }
+            for ($i = 0; $i < $day - 5; $i++) {
+                $exp .= "○○○○ ";
+            }
+            $exp .= "</p>
+                    <p>= 120 時間 + " . 20*($day - 5) . " 時間 + " . 4*($day - 5) . " 時間 = <span class=\"underline\">{$hour} 時間</span></p>";
+        }
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>□ に あてはまる かずを こたえましょう。</p>
+                        <p class=\"text-xl\">{$day} 日 = □ 時間</p>",
+                'a_type' => 2,
+                'a' => "{$hour}",
                 'e_type' => 3,
                 'e' => "{$exp}",
             ],
@@ -189,6 +280,104 @@ class WorkbookController extends Controller
         $unitname = "10日は何時間？";
         return view('workbook.unit_template', compact('unitname','question'));
     }
+
+    // // 10日は何時間？（旧）
+    // public function day_to_hour() {
+    //     $days = [2,3,4,5,7,9,10];   // 1, 6, 8 は除く。
+    //     $idx = rand(0, count($days)-1);
+    //     $day = $days[$idx];
+    //     $hour = 24 * $day;
+
+    //     $exp = "<p>1日は 24時間なので、24時間を {$day}回たします。</p>
+    //             <p>24時間は、20時間と 4時間にわけてみましょう。</p>
+    //             <div class=\"text-left\">
+    //             <p>24時間</p>
+    //             <p>= ○○○○○ ○○○○○ ○○○○○ ○○○○○　○○○○</p>
+    //             <p>= [10] [10] ○○○○</p>
+    //             </div>
+    //             <p>すると、{$day}日は つぎのように あらわせます。</p>
+    //             <div class=\"text-left\">";
+    //     for ($i = 1; $i <= $day; $i++) {
+    //         $exp .= "<p class=\"pl-8 [line-height:initial]\">[10] [10]　○○○○　ここまでで、" . $i * 20 . " + " . $i * 4 . " = " . $i * 24 . "時間。</p>";
+    //     }
+    //     $exp .= "</div>";
+    //     //解説を場合分け
+    //     // if ($day == 5) {
+    //     //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
+    //     //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>";
+    //     // } elseif ($day == 10) {
+    //     //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
+    //     //             <p>24 を 10かい たすのは、10 を 24かい たすのとおなじ。</p>
+    //     //             <p>つまり、10円玉が 24まいで 240円になるのとおなじ。</p>";
+    //     // } elseif ($day == 9) {
+    //     //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
+    //     //             <p>9 日は 10 日よりも 1日（24時間）すくないので、</p>
+    //     //             <div class=\"text-left\">
+    //     //                 <p>9 日 = 10 日 － 1 日</p>
+    //     //                 <p>= 240 時間 － 24 時間</p>
+    //     //                 <p>= 240 時間 － 20 時間 － 4 時間</p>
+    //     //                 <p>= 220 時間 － 4 時間</p>
+    //     //                 <p>= 216 時間。</p>
+    //     //             </div>";
+    //     // } elseif ($day > 5) {
+    //     //     $exp = "<p>まず {$day} 日を 5 日と " . $day - 5 . " 日にわけてみます。</p>
+    //     //             <p>1 日は 24 時間なので、10 日で 240 時間。</p>
+    //     //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>
+    //     //             <p>のこりの " . $day - 5 . " 日が何時間かは、つぎのように かんがえます。</p>";
+    //     //     for ($i = 1; $i < $day - 5; $i++) {
+    //     //         $exp .= "24 + ";
+    //     //     }
+    //     //     $exp .= "24</p><p> = ";
+    //     //     for ($i = 1; $i < $day - 5; $i++) {
+    //     //         $exp .= "(20 + 4) + ";
+    //     //     }
+    //     //     $exp .= "(20 + 4)</p><p> = (";
+    //     //     for ($i = 1; $i < $day - 5; $i++) {
+    //     //         $exp .= "20 + ";
+    //     //     }
+    //     //     $exp .= "20) + (";
+    //     //     for ($i = 1; $i < $day - 5; $i++) {
+    //     //         $exp .= "4 + ";
+    //     //     }
+    //     //     $exp .= "4)</p><p> = ". 20 * ($day - 5) . " + " . 4 * ($day - 5) . " = " . 24*($day - 5) . " 時間。
+    //     //     <p>よって、{$day} 日は 120 時間＋" . 24*($day - 5) . " 時間 = {$hour} 時間。";
+    //     // } else {
+    //     //     $exp = "<p>1 日は 24 時間なので、{$day} 日が何時間かは つぎのように かんがえます。</p>";
+    //     //     for ($i = 1; $i < $day; $i++) {
+    //     //         $exp .= "24 + ";
+    //     //     }
+    //     //     $exp .= "24</p><p> = ";
+    //     //     for ($i = 1; $i < $day; $i++) {
+    //     //         $exp .= "(20 + 4) + ";
+    //     //     }
+    //     //     $exp .= "(20 + 4)</p><p> = (";
+    //     //     for ($i = 1; $i < $day; $i++) {
+    //     //         $exp .= "20 + ";
+    //     //     }
+    //     //     $exp .= "20) + (";
+    //     //     for ($i = 1; $i < $day; $i++) {
+    //     //         $exp .= "4 + ";
+    //     //     }
+    //     //     $exp .= "4)</p><p> = ". 20 * $day . " + " . 4 * $day . " = {$hour} 時間。";
+    //     // } 
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "<p class=\"text-xl\">{$day} 日は何時間（なんじかん）ですか。</p>",
+    //             'a_type' => 2,
+    //             'a' => "{$hour}\,時間",
+    //             'e_type' => 3,
+    //             'e' => "{$exp}",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "10日は何時間？";
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
 
     // 10倍、100倍
     public function mul100() {
@@ -314,6 +503,77 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "式の選択（小数）";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 3.14倍＋3.14倍
+    public function mul314plus() {
+        $n_arr = [2, 3, 4, 6, 7];
+        $idx = rand(0, count($n_arr)-1);
+        $a = $n_arr[$idx];
+        $idx = rand(0, count($n_arr)-1);
+        $b = $n_arr[$idx];
+        while($a == $b) {
+            $idx = rand(0, count($n_arr)-1);
+            $b = $n_arr[$idx];
+        }
+        $ans = ($a + $b) * 3.14;
+
+        // 解説
+        $exp = "<p>似たような計算例として ({$a} × 5) + ({$b} × 5) を考えると、次のように表せます。</p>
+            <p class=\"leading-[2]\">";
+        for ($i = 0; $i < $a - 1; $i++) {
+            $exp .= "☺　　";
+        }
+        $exp .= "☺　　　　　　";
+        for ($i = 0; $i < $b - 1; $i++) {
+            $exp .= "☺　　";
+        }
+        $exp .= "☺</p>";
+
+        for ($j = 0; $j < 4; $j++) {
+            $exp .= "<p class=\"leading-[2]\">";
+            for ($i = 0; $i < $a - 1; $i++) {
+                $exp .= "○　　";
+            }
+            $exp .= "○　　　　　　";
+            for ($i = 0; $i < $b - 1; $i++) {
+                $exp .= "○　　";
+            }
+            $exp .= "○</p>";
+        }
+        $exp .= "<p>これは次のように、 5 × ({$a} + {$b}) = 5 × " . $a + $b . " を考えるのと同じです。</p>";
+        for ($j = 0; $j < 5; $j++) {
+            $exp .= "<p class=\"leading-[2]\">☺　　";
+            for ($i = 0; $i < $a - 2; $i++) {
+                $exp .= "○　　";
+            }
+            $exp .= "○　　　　　　";
+            for ($i = 0; $i < $b - 1; $i++) {
+                $exp .= "○　　";
+            }
+            $exp .= "○</p>";
+        }
+        $exp .= "<p>同じように、({$a} × 3.14) + ({$b} × 3.14) = ({$a} + {$b}) × 3.14 が成り立ちます。</p>
+                <p>よって、({$a} × 3.14) + ({$b} × 3.14) = " . $a + $b . " × 3.14 = {$ans}。</p>
+                <p class=\"underline\">このように計算すると、3.14 を含む計算は 1 回で済みます。</p>";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。（目標解答時間：30秒）</p>
+                        <p>\(({$a} \\times 3.14) + ({$b} \\times 3.14)\)</p>",
+                'a_type' => 2,
+                'a' => "{$ans}",
+                'e_type' => 3,
+                'e' => "{$exp}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "3.14倍 + 3.14倍";
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
@@ -5652,6 +5912,65 @@ class WorkbookController extends Controller
         $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "形容詞の用法";
         return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 英文法 名詞を見つける
+    public function eng_find_noun(Request $request) {
+        $sentences = [
+            ['e' => "There are giraffes and zebras over there.", 'j' => "向こうに ○○ とシマウマがいます。", 'a' => "giraffes（キリン）",
+                'exp' => "There are ～（～がいる。）の構文に気付けば、「向こうに giraffes と zebras がいる」と解釈できる。"],
+            ['e' => "This aquarium has whale sharks.", 'j' => "この ○○ にはジンベイザメがいます。", 'a' => "aquarium（水族館）",
+                'exp' => "This と has さえわかれば、「この aquarium は whale sharks を持っている」と解釈できる。"],
+            ['e' => "He became the emperor after the war.", 'j' => "彼はその戦争の後に ○○ になった。", 'a' => "[the] emperor（皇帝）",
+                'exp' => "became と after さえわかれば、「彼はその war の後に the emperor になった。」と解釈できる。"],
+            ['e' => "Socrates was a Greek philosopher.", 'j' => "ソクラテスはギリシャの ○○ でした。", 'a' => "philosopher（哲学者）",
+                'exp' => "<p>was さえわかれば、「Socrates は a Greek philosopher だった。」と解釈でき、</p>
+                        <p>「ギリシャの ○○」が「Greek philosopher」に対応付くとわかる。</p>"],
+            ['e' => "Many people witnessed the Phantom of the Opera.", 'j' => "多くの人が ○○ を目撃した。", 'a' => "[the] Phantom of the Opera（オペラ座の怪人）",
+                'exp' => "<p>the Phantom of the Opera が文中でも大文字になっていることから、固有名詞であると判断できる。</p>
+                        <p>Many people は「多くの人」なので、残る witnessed は動詞だとわかる。</p>
+                        <p>語尾が ed なので、「目撃した」という過去形ともつじつまが合う。</p>"],
+            ['e' => "Take me with you on your next voyage.", 'j' => "あなたの次の ○○ に連れて行ってください。", 'a' => "voyage（航海）",
+                'exp' => "<p>まず、Take me with you が「あなたと一緒に私を連れて行って」と解釈できる。</p>
+                        <p>on は様々な訳し方があるが、「あなたの次の voyage に」と捉えれば前半とつながる。</p>"],
+            ['e' => "Have you ever eaten Gum-Gum Fruit?", 'j' => "あなたは ○○ を食べたことがありますか。", 'a' => "Gum-Gum Fruit（ゴムゴムの実）",
+                'exp' => "<p>Gum-Gum Fruit は文中で大文字になっていることから固有名詞だとわかる。漫画 One piece を読んでいなくても、</p>
+                        <p>現在完了形の用法を理解していれば「あなたは Gum-Gum Fruit を食べたことがありますか」と解釈できるはず。"],
+            ['e' => "How long will you stay at this village?", 'j' => "どのくらいの間この ○○ に留まるのですか。", 'a' => "village（村）",
+                'exp' => "<p>How long（どのくらいの長さ） / will you stay（滞在するのですか） / at this village（この village に）</p>
+                        <p>と、分解して考えること。How long は距離にも期間にも使うが、stay があるので期間と捉えるのが適切。</p>"],
+            ['e' => "I'm a man who is going to be King of the Pirates.", 'j' => "私は ○○ になる男だ。", 'a' => "King of the Pirates（海賊王）",
+                'exp' => "<p>King of the Pirates は文中で大文字になっていることから固有名詞だとわかる。</p>
+                        <p>who は主格の関係代名詞で、\"I'm a man.\" + \"I am going to be～\" をつないでいる。</p>
+                        <p>be going to～（～の予定だ）の表現と関係代名詞の文法が組み合わさっているので解釈が難しいが、</p>
+                        <p>先に固有名詞を見つけることができれば、文法の解釈にも気づきやすくなる。</p>"],
+            ['e' => "If you fight the navy with me now, you'll be one of the bad buy.", 'j' => "もし今あなたが私と一緒に ○○ と戦えば、あなたも悪人の一人になります。", 'a' => "[the] navy（海軍）",
+                'exp' => "<p>接続詞 if の用法を理解していて、fight が動詞だと気づけば、「もし今あなたが私と一緒に</p>
+                        <p>the navy と fight すれば、あなたは one of the bad guy になる」と解釈できるはず。</p>"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の和文の ○○ は、英文のどの部分に対応するでしょうか。</p>
+                        <ul class=\"pl-5 text-left leading-[2]\">
+                            <li>和文：{$s['j']}</li>
+                            <li>英文：{$s['e']}</li>
+                        </ul>",
+                'a_type' => 1,
+                'a' => "{$s['a']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "名詞を見つける";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // // 英単語　動詞１

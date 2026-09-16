@@ -32,12 +32,21 @@
                         <x-td>算数</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.make_ten')}}">10をつくる</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.make_hundred')}}">100をつくる</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.add_sub_per10')}}">10単位のたし算・ひき算</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.mul5_10')}}">⇗5倍、10倍</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
                                     <a href="{{route('workbook.day_to_hour')}}">10日は何時間？</a>
@@ -62,6 +71,9 @@
                                 </x-button-link>
                                 <x-button-link color="lime">
                                     <a href="{{route('workbook.select_eq_decimal')}}">式の選択（小数）</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
+                                    <a href="{{route('workbook.mul314plus')}}">⇗3.14倍 + 3.14倍</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
                                     <a href="{{route('workbook.unit.velocity1')}}">速さ１</a>
@@ -498,6 +510,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.eng_find_noun')}}">名詞を見つける</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
