@@ -816,6 +816,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.h_math_log')}}">対数</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.h_math_number_sequence')}}">数列</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

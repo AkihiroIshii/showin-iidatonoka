@@ -8786,7 +8786,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p>1972年に学制が発布されて義務教育が始まったが、学校に行かせない親が多くいたのはなぜか。</p>
+                'q' => "<p>1872年に学制が発布されて義務教育が始まったが、学校に行かせない親が多くいたのはなぜか。</p>
                         ",
                 'a_type' => 3,
                 'a' => "<ul class=\"text-2xl pl-5 list-none text-left\">
@@ -10401,6 +10401,377 @@ class WorkbookController extends Controller
         $subject = "custom";    // カスタムの選択ができることを blade に伝える。
         $unitname = "対数（数Ⅱ）";
         return view('workbook.unit_template', compact('unitname','question','subject','flags'));
+    }
+
+    // 数列（数Ｂ）
+    public function h_math_number_sequence(Request $request) {
+        $a = 5 * rand(1, 10);   // 初項
+        $a2 = rand(2, 5);       // 初項（小さめ）
+        $d = 2 * rand(1, 5);    // 公差
+
+        $r = rand(2, 8);    // 公比
+        $r2 = rand(2, 4);   // 公比（小さめ）
+        $n50 = 50 + 2 * rand(0, 10);    // n:50～70
+        $n20 = 20 + 2 * rand(0, 10);    // n:20～40
+        $n5 = 5 + rand(0, 5);          // n:5～10
+
+        // 等差数列
+        $ad_q_str = "";
+        for ($i = 1; $i < 5; $i++) {
+            $ad_q_str .= $this->seq_d_a($a, $d, $i) . ", ";
+        }
+        $ad_q_str .= "...";
+        if ($a > $d) {
+            $ad_a_str = "{$d}n +" . $a - $d;
+        } else {
+            $ad_a_str = "{$d}n" . $a - $d;
+        }
+
+        // 等比数列
+        $ar_q_str = "";
+        for ($i = 1; $i < 5; $i++) {
+            $ar_q_str .= $a*$r**($i-1) . ", ";
+        }
+        $ar_q_str .= "...";
+        if ($a % $r == 0) {
+            $ar_a_str =  $a / $r . " \\times {$r}^n";
+            $ar_exp_str = "{$a} \\times {$r}^{n-1} = {$ar_a_str}";
+        } else {
+            $ar_a_str = "{$a} \\times {$r}^{n-1}";
+            $ar_exp_str = $ar_a_str;
+        }
+
+        // a_n = ar^n - d
+        $arr_1_q_str = "";
+        for ($i = 1; $i < 5; $i++) {
+            $arr_1[$i] = $a2*$r2**$i - $i*$d;
+            $arr_1_q_str .= "({$a2}\\cdot " . $r2**$i . " - " . $i*$d . "),\,\, ";
+        }
+        $arr_1_q_str .= "...";
+        if($d / 2 == 1) {
+            $d_div2_c = ""; 
+        } else {
+            $d_div2_c = $d/2;
+        }
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数列の一般項を表せ。</p>
+                        <p>\({$arr_1_q_str}\)</p>",
+                'a_type' => 2,
+                'a' => "a_n = {$a2}\cdot {$r2}^n - {$d}n",
+                'e_type' => 3,
+                'e' => "<p></p>",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "等差数列 {$ad_q_str} の一般項を表せ。",
+                'a_type' => 2,
+                'a' => "a_n = {$ad_a_str}",
+                'e_type' => 3,
+                'e' => "<p>等差数列の一般項は、\(a_n = a + (n-1)d\) と表せる。初項は {$a}、公差は {$d} とわかるので、</p>
+                        <p>\(a_n = {$a} + (n-1) \\times {$d} = {$ad_a_str}\)</p>",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "等比数列 {$ar_q_str} の一般項を表せ。",
+                'a_type' => 2,
+                'a' => "a_n = {$ar_a_str}",
+                'e_type' => 3,
+                'e' => "<p>等比数列の一般項は、\(a_n = ar^{n-1}\) と表せる。初項は {$a}、公比は {$r} とわかるので、</p>
+                        <p>\(a_n = {$ar_exp_str}\)</p>",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "初項 \(a\)、公差 \(d\) の等差数列について、一般項を表せ。",
+                'a_type' => 2,
+                'a' => "a_n = a + (n-1)d",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                a_1 &= a \\\\
+                                a_2 &= a + d \\\\
+                                a_3 &= a + d + d &= a + 2d \\\\
+                                a_4 &= a + d + d + d &= a + 3d \\\\
+                            \\end{aligned}
+                        \]
+                        <p>同様に考えて、\(a_n = a + (n-1)d\).</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>初項 \(a\)、公差 \(d\) の等差数列について、第 \(n\) 項までの和 \(S_n\) を表せ。</p>
+                        <p>ただし、最後の項の値を \(a_n\) として使ってもよい。</p>",
+                'a_type' => 3,
+                'a' => "<p>\(\displaystyle S_n = \\frac{n}{\,2\,} \{2a+(n-1)d\}\) または \(\displaystyle S_n = \\frac{n}{\,2\,} (a+a_n)\)",
+                'e_type' => 3,
+                'e' => "<p>まず、簡単な具体例として、初項 3、公差 2 の等差数列の第 7 項までの和 \(s\) を考える。</p>
+                        $$ s = 3 + 5 + 7 + 9 + 11 + 13 + 15 $$
+                        <p>次に、これを逆順に並べて書くと次のようになる。</p>
+                        $$ s = 15 + 13 + 11 + 9 + 7 + 5 + 3 $$
+                        <p>これらの各項を足すと、</p>
+                        $$ 2s = 18 + 18 + 18 + 18 + 18 + 18 + 18 = 7 \\times 18 $$
+                        <p>よって、両辺を 2 で割れば、\(\displaystyle s = \\frac{7}{\,2\,} \\times 18 \) と表せる。これを一般化すると、</p>
+                        \[
+                            \\begin{aligned}
+                                S_n &= a + (a+d) + (a+2d) + ... + \{a+(n-2)d\} + \{a+(n-1)d\} \\\\
+                                S_n &= \{a+(n-1)d\} + \{a+(n-2)d\} + ... + (a+2d) + (a+d) + a \\\\
+                                \\therefore 2S_n &= \{2a+(n-1)d\} + ... + \{2a+(n-1)d\} = n\{2a+(n-1)d\} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>よって、両辺を 2 で割れば、\(\displaystyle S_n = \\frac{n}{\,2\,} \{2a+(n-1)d\} \) と表せる。</p>
+                        <p>また、最後の項の値 \(a_n\) がわかっているときは、次の形でも表すことができる。</p>
+                        $$ S_n = \\frac{n}{\,2\,} \{2a+(n-1)d\} = \\frac{n}{\,2\,} \big[a + \{a+(n-1)d\}\big] = \\frac{n}{\,2\,} (a+a_n) $$
+                        <p>\(a_n\) の値がわかっているときは、こちらで考えた方が計算が楽であることが多い。</p>
+                        ",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "初項 \(a\)、公比 \(r\) の等比数列について、一般項を表せ。",
+                'a_type' => 2,
+                'a' => "a_n = ar^{n-1}",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                a_1 &= a \\\\
+                                a_2 &= a \\times r &= ar \\\\
+                                a_3 &= a \\times r \\times r &= ar^2 \\\\
+                                a_4 &= a \\times r \\times r \\times r &= ar^3 \\\\
+                            \\end{aligned}
+                        \]
+                        <p>同様に考えて、\(a_n = ar^{n-1}\).</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>初項 \(a\)、公比 \(r(\\ne 1)\) の等比数列について、第 \(n\) 項までの和 \(S_n\) を表せ。</p>",
+                'a_type' => 2,
+                'a' => "S_n = \\frac{\,a(1 - r^n)\,}{1-r}",
+                'e_type' => 3,
+                'e' => "<p>\(S_n\) と \(rS_n\) を書き出して、次のように考える。</p>
+                        \[
+                            \\begin{aligned}
+                                S_n &=& a \,+\, &ar + ar^2 + ... + ar^{n-2} + ar^{n-1} \\\\
+                                rS_n &=& &ar +  ar^2 + ... + ar^{n-1} + ar^{n-1} + ar^n \\\\
+                            \\end{aligned}
+                        \]
+                        \[
+                            \\begin{aligned}
+                                \\therefore S_n - rS_n &= a - ar^n \\\\
+                                (1 - r)S_n &= a(1 - r^n) \\\\
+                                S_n &= \\frac{\,a(1 - r^n)\,}{1-r} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>なお、\(r=1\) では分母が \(0\) になってしまい定義できないが、\(r=1\) のときは</p>
+                        <p>すべての項について \(a_n = ar^n = a \\times 1^n = a\) なので、\(S_n = na\) になる。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"mt-4\">\(\displaystyle \sum_{k=1}^n (a_n + b_n) = \sum_{k=1}^n a_n + \sum_{k=1}^n b_n \) が成り立つことを確認しなさい。</p>",
+                'a_type' => 3,
+                'a' => "\[
+                            \\begin{aligned}
+                                \sum_{k=1}^n (a_n + b_n) &= (a_1 + b_1) + (a_2 + b_2) + ... + (a_n + b_n) \\\\
+                                    &= (a_1 + a_2 + ... + a_n) + (b_1 + b_2 + ... + b_n) \\\\
+                                    &= \sum_{k=1}^n a_n + \sum_{k=1}^n b_n.
+                            \\end{aligned}
+                        \]",
+                'e_type' => 3,
+                'e' => "<p>些細な変形であっても、ちゃんと納得して使えるようになっておくことが大切です。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(n\) までの自然数の和を求めなさい。</p>",
+                'a_type' => 3,
+                'a' => "<p>\(\displaystyle \\frac{1}{\,2\,}n(n+1) \)",
+                'e_type' => 3,
+                'e' => "<p>自然数の和を \(\sum\) で表したものが、\(\displaystyle \sum_{k=1}^{n} k = \\frac{1}{\,2\,}n(n+1)\) の公式である。これは</p>
+                        <p>公式として覚えた方がよいが、導出方法も知っておくこと。求める和を \(S\) とすると、</p>
+                        $$ S = 1 + 2 + 3 + ... + (n-2) + (n-1) + n $$
+                        <p>次に、これを逆順に並べて書くと次のようになる。</p>
+                        $$ S = n + (n-1) + (n-2) + ... + 3 + 2 + 1 $$
+                        <p>これらの各項を足すと、</p>
+                        $$ 2S = (n+1) + (n+1) + (n+1) + ... = n \\times (n+1) $$
+                        <p>よって、両辺を 2 で割れば、\(\displaystyle S = \\frac{1}{\,2\,}n(n+1) \) と表せる。</p>
+                        <p>【別解】
+                        <p>自然数の和は、初項 1、公差 1 の等差数列の和である。等差数列の和の公式より、</p>
+                        $$ S = \\frac{n}{\,2\,}(a + a_n) = \\frac{n}{\,2\,}(1 + n). $$
+                        <p>(※)等差数列の和の公式も、上述の手順と同じ考え方で導出できる。</p>
+                        ",
+            ],
+
+            [
+                'q_type' => 3,
+                'q' => "<p>\(\displaystyle \sum_{k=1}^{{$n20}} k^2\) を計算しなさい。</p>",
+                'a_type' => 2,
+                'a' => ($n20/6)*($n20+1)*(2*$n20+1),
+                'e_type' => 3,
+                'e' => "<p>公式 \(\displaystyle \sum_{k=1}^n k^2  = \\frac{n}{\,6\,}(n+1)(2n+1) \) に、\(n={$n20}\) を代入すればよい。</p>
+                        $$ \sum_{k=1}^{{$n20}} k^2  = \\frac{{$n20}}{\,6\,}({$n20}+1)(2\\times{$n20}+1)
+                            = \\frac{{$n20}}{\,6\,} \\times " . $n20 + 1 . " \\times " . 2 * $n20 + 1 . "
+                            = " . ($n20/6)*($n20+1)*(2*$n20+1) . ".$$
+                        <p>【補足】</p>
+                        <p>この公式は導出が面倒なので暗記しておくこと。一応、導出方法も確認しておこう。</p>
+                        <p>唐突だが、\( (k+1)^3 = k^3 + 3k^2 + 3k + 1 \) より、\( (k+1)^3 - k^3 = 3k^2 + 3k + 1 \).</p>
+                        <p>さて、この左辺の級数和 \(\displaystyle \sum_{k=1}^n \{(k+1)^3 - k^3\} \) は具体的に考えると簡単な形になる。</p>
+                        \[
+                            \\begin{aligned}
+                                \sum_{k=1}^n \{(k+1)^3 - k^3\} &= (2^3 - 1^3) + (3^3 - 2^3) + ... + \{n^3 - (n-1)^3\} + \{(n+1)^3 - n^3\} \\\\
+                                    &= (\cancel{2^3} - 1^3) + (\cancel{3^3} - \cancel{2^3}) + ... + \{\cancel{n^3} - \cancel{(n-1)^3}\} + \{(n+1)^3 - \cancel{n^3}\} \\\\
+                                    &= (n+1)^3 - 1
+                            \\end{aligned}
+                        \]
+                        <p>これを踏まえて先ほどの方程式 \( (k+1)^3 - k^3 = 3k^2 + 3k + 1 \) の両辺の級数和を考えると、</p>
+                        \[
+                            \\begin{aligned}
+                                \sum_{k=1}^n \{(k+1)^3 - k^3\} &= \sum_{k=1}^n (3k^2 + 3k + 1) \\\\
+                                (n+1)^3 - 1 &= 3\sum_{k=1}^n k^2 + 3\sum_{k=1}^n k + \sum_{k=1}^n 1 \\\\
+                                (n^3 + 3n^2 + 3n + \cancel{1}) - \cancel{1} &= 3\sum_{k=1}^n k^2 + 3\\times \\frac{1}{\,2\,}n(n+1) + n \\\\
+                                3\sum_{k=1}^n k^2 &= (n^3 + 3n^2 + 3n) - \{ 3\\times \\frac{1}{\,2\,}n(n+1) + n \} \\\\
+                                    &= n^3 + 3n^2 + 3n - \\frac{3}{\,2\,}n^2 - \\frac{3}{\,2\,}n - n \\\\
+                                    &= n^3 + \\frac{3}{\,2\,}n^2 + \\frac{1}{\,2\,}n \\\\
+                                    &= \\frac{n}{\,2\,} (2n^2 + 3n + 1) \\\\
+                                    &= \\frac{n}{\,2\,} (n+1)(2n+1) \\\\
+                                \\therefore \sum_{k=1}^n k^2 &= \\frac{n}{\,6\,} (n+1)(2n+1) \\\\
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(\displaystyle \sum_{k=1}^{{$n5}} k^3\) を計算しなさい。</p>",
+                'a_type' => 2,
+                'a' => ((1/2)*$n5*($n5+1))**2,
+                'e_type' => 3,
+                'e' => "<p>公式 \(\displaystyle \sum_{k=1}^n k^3  = \\left\{\\frac{1}{\,2\,}n(n+1) \\right\}^2 \) に、\(n={$n5}\) を代入すればよい。</p>
+                        $$ \sum_{k=1}^{{$n5}} k^3  = \\left\{ \\frac{1}{\,2\,} \\times {$n5} \\times ({$n5}+1) \\right\}^2
+                            = \\left( \\frac{1}{\,2\,} \\times {$n5} \\times " . $n5 + 1 . " \\right)^2 
+                            = " . (1/2)*$n5*($n5+1) . "^2 = " . ((1/2)*$n5*($n5+1))**2 . " .$$
+                        <p>【補足】</p>
+                        <p>この公式は、\(\displaystyle \sum_{k=1}^n k^2\) と同様に導出が面倒なので暗記しておくこと。</p>
+                        <p>\(\displaystyle \sum_{k=1}^n k = \\frac{1}{\,2\,}n(n+1) \) を２乗した形なので覚えやすい。導出は次の通り。</p>
+                        <p>唐突だが、\( (k+1)^4 \) を展開する。\(\{(k+1)^2\}^2\) を計算してもよいが、ここでは二項定理を使ってみよう。</p>
+                        \[
+                            \\begin{aligned}
+                                (k+1)^4 &= \sum_{r=0}^4 {}_4 \mathrm{C}_r \, k^{4-r} \, 1^r \\\\
+                                    &= {}_4 \mathrm{C}_0 \, k^4 + {}_4 \mathrm{C}_1 \, k^3 + {}_4 \mathrm{C}_2 \, k^2 + {}_4 \mathrm{C}_1 \, k^1 + {}_4 \mathrm{C}_4 \, 1 \\\\
+                                    &= k^4 + 4k^3 + 6k^2 + 4k + 1
+                            \\end{aligned}
+                        \]
+                        <p>これより、\(\displaystyle (k+1)^4 - k^4 = 4k^3 + 6k^2 + 4k + 1 \)・・・①.</p>
+                        <p>さて、この左辺の級数和は、具体的に考えると簡単な形になる。</p>
+                        \[
+                            \\begin{aligned}
+                                \sum_{k=1}^n \{(k+1)^4 - k^4\} &= (2^4 - 1^4) + (3^4 - 2^4) + ... + \{n^4 - (n-1)^4\} + \{(n+1)^4 - n^4\} \\\\
+                                    &= (\cancel{2^4} - 1^4) + (\cancel{3^4} - \cancel{2^4}) + ... + \{\cancel{n^4} - \cancel{(n-1)^4}\} + \{(n+1)^4 - \cancel{n^4}\} \\\\
+                                    &= (n+1)^4 - 1
+                            \\end{aligned}
+                        \]
+                        <p>これを踏まえて先ほどの方程式(①)の両辺の級数和を考えると、</p>
+                        \[
+                            \\begin{aligned}
+                                \sum_{k=1}^n \{(k+1)^4 - k^4\} &= \sum_{k=1}^n (4k^3 + 6k^2 + 4k + 1) \\\\
+                                (n+1)^4 - 1 &= 4\sum_{k=1}^n k^3 + 6\sum_{k=1}^n k^2 + 4\sum_{k=1}^n k + \sum_{k=1}^n 1 \\\\
+                                (n^4 + 4n^3 + 6n^2 + 4n + \cancel{1}) - \cancel{1} &= 4\sum_{k=1}^n k^3 + 6\\times \\frac{n}{\,6\,}(n+1)(2n+1) + 4\\times \\frac{1}{\,2\,}n(n+1) + n \\\\
+                                4\sum_{k=1}^n k^3 &= (n^4 + 4n^3 + 6n^2 + 4n) - 6\\times \\frac{n}{\,6\,}(n+1)(2n+1) - 4\\times \\frac{1}{\,2\,}n(n+1) - n \\\\
+                                    &= (n^4 + 4n^3 + 6n^2 + 4n) - n(n+1)(2n+1) - 2n(n+1) - n \\\\
+                                    &= (n^4 + 4n^3 + 6n^2 + 4n) - n(2n^2+3n+1) - (2n^2+2n) - n \\\\
+                                    &= (n^4 + 4n^3 + 6n^2 + 4n) - 2n^3 - 3n^2 -n - 2n^2 -2n - n \\\\
+                                    &= n^4 + 2n^3 + n^2 \\\\
+                                    &= n^2(n^2 + 2n + 1) \\\\
+                                    &= n^2(n+1)^2 \\\\
+                                \\therefore \sum_{k=1}^n k^3 &= \\frac{1}{\,4\,}n^2(n+1)^2 = \\left\{\\frac{1}{\,2\,}n(n+1) \\right\}^2. \\\\
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+            [
+                'q_type' => 1,
+                'q' => "初項 {$a}、公差 {$d} の等差数列について、第{$n20}項から第{$n50}項までの和 \(S\) を求めよ。",
+                'a_type' => 2,
+                'a' => (($n50 - ($n20 - 1)) / 2) * ($this->seq_d_a($a, $d, $n20) + $this->seq_d_a($a, $d, $n50)),
+                'e_type' => 3,
+                'e' => "<p>初項 \(a\)、公差 \(d\) の等差数列の一般項は、\(a_n = a + (n-1)d\) と表せるので、</p>
+                        <p>\(a_{{$n20}} = {$a} + ({$n20}-1)\\times{$d} = " . $this->seq_d_a($a, $d, $n20) . "\).</p>
+                        <p>\(a_{{$n50}} = {$a} + ({$n50}-1)\\times{$d} = " . $this->seq_d_a($a, $d, $n50) . "\).</p>
+                        <p>すると本問は、\(" . $this->seq_d_a($a, $d, $n20) . ", " . $this->seq_d_a($a, $d, $n20) + $d
+                            . ", ... , " . $this->seq_d_a($a, $d, $n50) . "\) という数列の和を求めるのと同じである。</p>
+                        <p>この数列の項数は \({$n50} - ({$n20}-1) = " . $n50 - ($n20 - 1) . "\)であり、初項は \(" . $this->seq_d_a($a, $d, $n20) . "\)、公差は \({$d}\) である。</p>
+                        <p>等差数列の第 \(n\) 項までの和は、\(\displaystyle S_n = \\frac{n}{\,2\,}(a + a_n)\) と表せるので、</p>
+                        $$ S = \\frac{" . $n50 - ($n20 - 1) . "}{\,2\,}(" . $this->seq_d_a($a, $d, $n20) . " + " . $this->seq_d_a($a, $d, $n50) . ")
+                            = " . (($n50 - ($n20 - 1)) / 2) * ($this->seq_d_a($a, $d, $n20) + $this->seq_d_a($a, $d, $n50)) . ".$$
+                        <p>【補足】</p>
+                        <p>等差数列の第 \(n\) 項までの和は、\(\displaystyle S_n = \\frac{n}{\,2\,}\{2a + (n-1)d\}\) とも表せるので、</p>
+                        $$ S = \\frac{" . $n50 - ($n20 - 1) . "}{\,2\,}\{2\\times" . $this->seq_d_a($a, $d, $n20) . " + (" . $n50 - ($n20 - 1) . " - 1) \\times{$d}\}
+                            = \\frac{" . $n50 - ($n20 - 1) . "}{\,2\,}(" . 2*$this->seq_d_a($a, $d, $n20) . " + " . (($n50 - ($n20 - 1))-1) * $d . ")
+                            = " . (($n50 - ($n20 - 1)) / 2) * ($this->seq_d_a($a, $d, $n20) + $this->seq_d_a($a, $d, $n50)) . ".$$
+                        <p>と計算しても求まるが、\(\{2a + (n-1)d\}\) の分だけ計算の手間が増える。また、もとの数列に</p>
+                        <p>対して \(S = S_{{$n50}} - S_{" . $n20-1 . "}\) でも求まるが、これは級数和の計算が 2 回必要になってしまう。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の数列の初項から第 \(n\) 項までの和を表せ。</p>
+                        <p>\({$arr_1_q_str}\)</p>",
+                'a_type' => 2,
+                'a' => $this->fracnum_to_str($a2*$r2, $r2-1, "", 1) . "({$r2}^n - 1) - {$d_div2_c}n(n+1)",
+                'e_type' => 3,
+                'e' => "<p>一般項は、\(a_n = {$a2}\cdot {$r2}^n - {$d}n\) と表せるので、</p>
+                        \[
+                            \\begin{aligned}
+                                \sum_{k=1}^n a_k &= \sum_{k=1}^n ({$a2}\cdot {$r2}^k - {$d}k) \\\\
+                                    &= " . $a2 * $r2 . "\sum_{k=1}^n {$r2}^{k-1} - {$d}\sum_{k=1}^n k \\\\
+                                    &= " . $a2 * $r2 . "\\times \\frac{\,{$r2}^n - 1\,}{{$r2} - 1} - {$d}\\times \\frac{1}{\,2\,}n(n+1) \\\\
+                                    &= " . $this->fracnum_to_str($a2*$r2, $r2-1, "", 1) . "({$r2}^n - 1) - {$d_div2_c}n(n+1).                
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+        ];
+        // $q_index = rand(0,count($questions)-1);
+        // $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
+        $flag2 = $request->boolean('flag2');    // 計算問題
+        $flags = ['flag1' => '基礎', 'flag2' => '計算'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(0,count($questions)-5);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(count($questions)-4, count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "数列（数B）";
+        return view('workbook.unit_template', compact('unitname','question','subject','flags'));
+    }
+
+    // 等差数列の項（初項、公差、項数）
+    private function seq_d_a($a, $d, $n)
+    {
+        $a_n = $a + ($n - 1) * $d;
+        return $a_n;
+    }
+
+    // 等差数列の和（初項、公差、項数）
+    private function seq_d_s($a, $d, $n)
+    {
+        $S = $n * (2*$a + ($n-1)*$d) / 2;
+        return $S;
+    }
+
+    // 等差数列の和（初項、公差、項数、最終項）
+    private function seq_d_s2($a, $d, $n, $an)
+    {
+        $S = $n * ($a + $an) / 2;
+        return $S;
     }
 
     /******* 高校英語 **********/
