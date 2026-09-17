@@ -4742,6 +4742,72 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 読解 中１（１）
+    public function eng_reading_J1_1(Request $request) {
+        $sentences = [
+            ['e' => "There is / a dog / under the table", 'j' => "いる / （一匹の）犬が / テーブルの下に", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では There is～ が要点。"],
+            ['e' => "He speaks / English / very well", 'j' => "彼は話す / 英語を / とても上手に", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では He speaks が要点。"],
+            ['e' => "She is the leader / of team A", 'j' => "彼女はリーダーです / Aチームの", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では She is～ が要点。"],
+            ['e' => "I run / in the park / every Saturday.", 'j' => "私は走る / 公園内を / 毎週土曜日に", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では I run が要点。"],
+            ['e' => "I know / your father", 'j' => "私は知っている / あなたのお父さんを", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では I know が要点。"],
+            ['e' => "She went / to the concert / with her mother", 'j' => "彼女は行った / そのコンサートに / 彼女のお母さんと", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では She went が要点。"],
+            ['e' => "I usually practice / kendo / in the gym / after school", 'j' => "私はたいてい練習する / 剣道を / 体育館で / 放課後に", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。ここでは動詞(practice)の前に副詞(usually)が挟まっている。"],
+            ['e' => "They came / from Italy / by airplane / two days ago", 'j' => "彼らは来た / イタリアから / 飛行機で / 二日前に", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では They came が要点で、from 以降は補足情報。"],
+            ['e' => "I bought / a blue shirt / for my sister", 'j' => "私は買った / 青いシャツを / 妹（姉）に", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では I bought が要点。"],
+            ['e' => "We thank / you / for your advice", 'j' => "私たちは感謝している / あなたに / あなたの（してくれた）アドバイスについて", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では We thank が要点。"],
+            ['e' => "He is / in a town / in France", 'j' => "彼はいます / ある町に / フランスの", 
+                'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では He is が要点。"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を \" / \" の区切りごとに英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を \" / \" の区切りごとに和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "中１読解（１）";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
 
     // 英単語 不規則動詞
     public function eng_irregular_verb(Request $request) {

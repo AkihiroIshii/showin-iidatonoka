@@ -496,6 +496,9 @@
                         <x-td>読解</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="purple">
+                                    <a href="{{route('workbook.eng_reading_J1_1')}}">読解練習１</a>
+                                </x-button-link>
                                 {{-- <x-button-link color="purple">
                                     <a href="{{route('workbook.sentence_structure1')}}">be動詞と一般動詞</a>
                                 </x-button-link> --}}
