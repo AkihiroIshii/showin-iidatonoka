@@ -4745,27 +4745,27 @@ class WorkbookController extends Controller
     // 読解 中１（１）
     public function eng_reading_J1_1(Request $request) {
         $sentences = [
-            ['e' => "There is / a dog / under the table", 'j' => "いる / （一匹の）犬が / テーブルの下に", 
+            ['e' => "There is / a dog / under the table.", 'j' => "いる / （一匹の）犬が / テーブルの下に", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では There is～ が要点。"],
-            ['e' => "He speaks / English / very well", 'j' => "彼は話す / 英語を / とても上手に", 
+            ['e' => "He speaks / English / very well.", 'j' => "彼は話す / 英語を / とても上手に", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では He speaks が要点。"],
-            ['e' => "She is the leader / of team A", 'j' => "彼女はリーダーです / Aチームの", 
+            ['e' => "She is the leader / of team A.", 'j' => "彼女はリーダーです / Aチームの", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では She is～ が要点。"],
             ['e' => "I run / in the park / every Saturday.", 'j' => "私は走る / 公園内を / 毎週土曜日に", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では I run が要点。"],
-            ['e' => "I know / your father", 'j' => "私は知っている / あなたのお父さんを", 
+            ['e' => "I know / your father.", 'j' => "私は知っている / あなたのお父さんを", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では I know が要点。"],
-            ['e' => "She went / to the concert / with her mother", 'j' => "彼女は行った / そのコンサートに / 彼女のお母さんと", 
+            ['e' => "She went / to the concert / with her mother.", 'j' => "彼女は行った / そのコンサートに / 彼女のお母さんと", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では She went が要点。"],
-            ['e' => "I usually practice / kendo / in the gym / after school", 'j' => "私はたいてい練習する / 剣道を / 体育館で / 放課後に", 
+            ['e' => "I usually practice / kendo / in the gym / after school.", 'j' => "私はたいてい練習する / 剣道を / 体育館で / 放課後に", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。ここでは動詞(practice)の前に副詞(usually)が挟まっている。"],
-            ['e' => "They came / from Italy / by airplane / two days ago", 'j' => "彼らは来た / イタリアから / 飛行機で / 二日前に", 
+            ['e' => "They came / from Italy / by airplane / two days ago.", 'j' => "彼らは来た / イタリアから / 飛行機で / 二日前に", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では They came が要点で、from 以降は補足情報。"],
-            ['e' => "I bought / a blue shirt / for my sister", 'j' => "私は買った / 青いシャツを / 妹（姉）に", 
+            ['e' => "I bought / a blue shirt / for my sister.", 'j' => "私は買った / 青いシャツを / 妹（姉）に", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では I bought が要点。"],
-            ['e' => "We thank / you / for your advice", 'j' => "私たちは感謝している / あなたに / あなたの（してくれた）アドバイスについて", 
+            ['e' => "We thank / you / for your advice.", 'j' => "私たちは感謝している / あなたに / あなたの（してくれた）アドバイスについて", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では We thank が要点。"],
-            ['e' => "He is / in a town / in France", 'j' => "彼はいます / ある町に / フランスの", 
+            ['e' => "He is / in a town / in France.", 'j' => "彼はいます / ある町に / フランスの", 
                 'exp' => "英語は基本的にまず 主語＋動詞 がくる。この文では He is が要点。"],
         ];
         $idx = rand(0, count($sentences)-1);
@@ -5460,6 +5460,80 @@ class WorkbookController extends Controller
         }
         $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
         $unitname = "中２英語まとめ";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    // 読解 中２（２）
+    public function eng_reading_J2_2(Request $request) {
+        $sentences = [
+            ['e' => "I like / to listen / to the radio.", 'j' => "私は好きだ / 聞くことが / ラジオを", 
+                'exp' => "to listen は不定詞の名詞的用法。区切りを跨ぐが、listen to～ も意識すること。"],
+            ['e' => "We can dance / all day.", 'j' => "私たちは踊れる / 一日中", 
+                'exp' => "can は助動詞で、be動詞や一般動詞の直前に置かれる。all day は熟語として覚えておこう。"],
+            ['e' => "I forgot / to tell / him / her message.", 'j' => "私は忘れた / 伝えることを / 彼に / 彼女のメッセージを", 
+                'exp' => "to tell は不定詞の名詞的用法。I forgot / to tell / her message / to him. でもよい。"],
+            ['e' => "I think / (that) this flower is the cutest / in this garden.", 'j' => "私は思う / この花が一番かわいいと / この庭園で", 
+                'exp' => "<p>接続詞 that を使った文。主節の主語と動詞は I think で、従属節の主語と動詞は this flower is である。</p>
+                        <p>This flower is the cutest. I think so. と言い換えてもよい。cutest は cute の最上級。</p>"],
+            ['e' => "I was called / my name / from far away.", 'j' => "私は呼ばれた / 私の名を / 遠くから", 
+                'exp' => "受け身の過去形。この文の要点は I was called である。"],
+            ['e' => "He was absent / from school / yesterday / because he got / sick.", 'j' => "彼は休んだ / 学校を / 昨日 / なぜなら彼はかかったからだ / 病気に", 
+                'exp' => "<p>接続詞 because が２つの文を繋いでいるため、少し長い文になっている。</p>
+                        <p>接続詞や前置詞(fromなど)で意味を区切ると解釈しやすくなる。</p>
+                        <p>区切りを跨ぐが、absent from と get sick は熟語としても覚えておこう。</p>"],
+            ['e' => "He is thinking / about the plan / for the trip / next week.", 'j' => "彼は考えている / 計画について / その旅行の / 来週の", 
+                'exp' => "少し長い文だが、about, for, next と前置詞が多いので、意味の区切りは見つけやすい。"],
+            ['e' => "Driving / for a long time / without taking a rest / is dangerous.", 'j' => "運転すること / 長時間 / 休憩を取らずに / 危険だ", 
+                'exp' => "<p>動名詞を使った文で、主語（Driving for a long time without taking a rest）がかなり長い。</p>
+                        <p>このようなときは、動詞（ここでは is）を見つけると、その前はすべて主語だと気付ける。</p>
+                        <p>driving や taking は be動詞と一緒に使えば進行形だが、ここでは違うため動名詞である。</p>
+                        <p>ただ、英語は主語が大きいのを好まないので、次のように表現する方が自然だろう。</p>
+                        <p>It is dangerous / driving for a long time / without taking a rest.</p>"],
+            ['e' => "It was raining / when the old man visited / the house.", 'j' => "雨が降っていた / そのおじいさんが訪ねたとき / その家を", 
+                'exp' => "<p>接続詞 (when) があるので、その前後にそれぞれ 主語と動詞 がある。</p>
+                        <p>主節では It was、従属節では the old man visited である。</p>
+                        <p>the old man のように、主語が１単語ではない場合にも慣れておこう。</p>"],
+            ['e' => "Did you go / to the hotel / last week?", 'j' => "あなたは行きましたか / そのホテルに / 先週", 
+                'exp' => "to the hotel は前置詞で区切れるのでわかりやすい。last week のような副詞にも慣れよう。"],
+        ];
+        $idx = rand(0, count($sentences)-1);
+        $s = $sentences[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 4,
+                'q1' => "次の文を \" / \" の区切りごとに英訳しなさい。",
+                'q2' => "{$s['j']}",
+                'a_type' => 1,
+                'a' => "{$s['e']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+            [
+                'q_type' => 4,
+                'q1' => "次の文を \" / \" の区切りごとに和訳しなさい。",
+                'q2' => "{$s['e']}",
+                'a_type' => 1,
+                'a' => "{$s['j']}",
+                'e_type' => 3,
+                'e' => "{$s['exp']}",
+            ],
+        ];
+        // チェックボックス「和訳」「英訳」の値を取得。
+        $ja = $request->boolean('ja');
+        $en = $request->boolean('en');
+        if ($en == true && $ja == false) {
+            $question = $questions[0];            
+        } else if ($en == false && $ja == true) {
+            $question = $questions[1];            
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "eng";   // 英語の単元（和訳、英訳あり）であることをbladeに伝える。
+        $unitname = "中２読解（２）";
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 

@@ -507,6 +507,9 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="purple">
+                                    <a href="{{route('workbook.eng_reading_J2_2')}}">読解練習２</a>
+                                </x-button-link>
+                                <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_reading_J2_1')}}">桃太郎</a>
                                 </x-button-link>
                             </div>

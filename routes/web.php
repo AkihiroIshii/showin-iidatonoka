@@ -415,6 +415,8 @@ Route::get('workbook/eng_summaryJ2', [WorkbookController::class, 'eng_summaryJ2'
 ->middleware(['auth', 'verified'])->name('workbook.eng_summaryJ2');
 Route::get('workbook/eng_reading_J2_1', [WorkbookController::class, 'eng_reading_J2_1'])
 ->middleware(['auth', 'verified'])->name('workbook.eng_reading_J2_1');
+Route::get('workbook/eng_reading_J2_2', [WorkbookController::class, 'eng_reading_J2_2'])
+->middleware(['auth', 'verified'])->name('workbook.eng_reading_J2_2');
 
 Route::get('workbook/present_perfect', [WorkbookController::class, 'present_perfect'])
 ->middleware(['auth', 'verified'])->name('workbook.present_perfect');
