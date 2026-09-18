@@ -1068,37 +1068,163 @@ class WorkbookController extends Controller
     }
 
     // 一次方程式まとめ
-    public function linear_equation_summary() {
-        // a, b, c をランダムに決める
-        // $primes = $this->get_primes(2, 11);    // 11以下の素数を2つ取得する。
-        // $a = $primes[0];
-        // $b = $primes[1];
+    public function linear_equation_summary(Request $request) {
         $a = rand(2, 5);
         $b = rand(1, 5);
         $c = (-1)**rand(1,2) * rand(1, 4);
         $d = $a + rand(2, 4);
         $e = rand(1, 3);
 
+        // 基礎
+        $basic01_str = $this->fracnum_to_str($c, $a, "", 1);
+        $basic02_str = $this->fracnum_to_str($c - $b, $a, "", 1);
+        $basic02_exp = "<p>まず、左辺には \(x\) の項だけを残し、他の定数項は右辺に移項する。</p>
+                        \[
+                            \\begin{aligned}
+                                {$a}x + {$b} &= {$c} \\\\
+                                {$a}x &= {$c} - {$b} \\\\
+                                {$a}x &= " . $c - $b . " \\\\ ";
+        if ($b == $c) {
+            $basic02_exp .=     "\\therefore x &= 0
+                            \\end{aligned}
+                        \]";
+            $basic02_a = 0;
+        } else {
+            $basic02_exp .=     "{$a}x \\times \\frac{1}{\,{$a}\,} &= " . $c - $b . " \\times \\frac{1}{\,{$a}\,} \\\\
+                                x &= {$basic02_str} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>次のように途中式を省いて処理できるまで繰り返そう。</p>
+                        \[
+                            \\begin{aligned}
+                                {$a}x + {$b} &= {$c} \\\\
+                                {$a}x &= " . $c - $b . " \\\\
+                                x &= {$basic02_str} \\\\
+                            \\end{aligned}
+                        \]";
+            $basic02_a = $basic02_str;
+        }
+
+        // 基礎
+        $basic03_d_sub_a_str = $this->num_to_str($d - $a, 1, 1);
+        $basic03_ans = $this->fracnum_to_str($e + $b, $d - $a, "", 1);
+        $basic04_ans = $this->fracnum_to_str($b, $d - $a, "", 1);
+
+        // 応用
         $no2_ans_numerator = $a*$e + $b;
         $no2_ans_denominator = $d - $a;
         $no2_ans_str = $this->fracnum_to_str($no2_ans_numerator, $no2_ans_denominator, "", 1);
-
-        // // x = ac / b
-        // $numerator = $a * $c;
-        // $denominator = $b;
-
-        // $ans_str = $this->fracnum_to_str($numerator, $denominator, "", 1);
 
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
         $questions = [
             [
                 'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。（目標解答時間：5 秒）</p>
+                        <p>\({$a}x = {$c}\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "x = {$basic01_str}",
+                'e_type' => 3,
+                'e' => "<p>まず、両辺に {$a} の逆数をかけて（両辺を {$a} で割り）、変形すると求まる。</p>
+                        \[
+                            \\begin{aligned}
+                                {$a}x \\times \\frac{1}{\,{$a}\,} &= {$c} \\times \\frac{1}{\,{$a}\,} \\\\
+                                \cancel{{$a}}x \\times \\frac{1}{\,\cancel{{$a}}\,} &= {$basic01_str} \\\\
+                                x &= {$basic01_str} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>この式変形の理屈が理解できれば、毎回ここまで途中式を書かなくてもよい。</p>
+                        <p>\({$a}x = {$c}\) を見た瞬間に、\(\displaystyle x = \\frac{{$c}}{\,{$a}\,}\) と変形できるようになること。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。（目標解答時間：10 秒）</p>
+                        <p>\({$a}x + {$b} = {$c}\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "x = {$basic02_a}",
+                'e_type' => 3,
+                'e' => $basic02_exp,
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。（目標解答時間：10 秒）</p>
+                        <p>\({$d}x - {$b} = {$a}x + {$e}\)</p>
+                        ",
+                'a_type' => 2,
+                'a' => "x = {$basic03_ans}",
+                'e_type' => 3,
+                'e' => "<p>まず、左辺には \(x\) の項だけを残し、他の定数項は右辺に移項する。</p>
+                        \[
+                            \\begin{aligned}
+                                {$d}x - {$b} &= {$a}x + {$e} \\\\
+                                {$d}x - {$a}x &= {$e} + {$b} \\\\
+                                {$basic03_d_sub_a_str}x &= " . $e + $b . " \\\\
+                                {$basic03_d_sub_a_str}x \\times \\frac{1}{\,{$basic03_d_sub_a_str}\,} &= " . $e + $b . " \\times \\frac{1}{\,{$basic03_d_sub_a_str}\,} \\\\
+                                \cancel{{$basic03_d_sub_a_str}}x \\times \\frac{1}{\,\cancel{{$basic03_d_sub_a_str}}\,} &= {$basic03_ans} \\\\
+                                x &= {$basic03_ans} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>次のように途中式を省いて処理できるまで繰り返そう。</p>
+                        \[
+                            \\begin{aligned}
+                                {$d}x - {$b} &= {$a}x + {$e} \\\\
+                                {$basic03_d_sub_a_str}x &= " . $e + $b . " \\\\
+                                x &= {$basic03_ans} \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。（目標解答時間：10 秒）</p>
+                        $$ \\frac{\,{$b}\,}{x} + {$a} = {$d} $$
+                        ",
+                'a_type' => 2,
+                'a' => "x = {$basic04_ans}",
+                'e_type' => 3,
+                'e' => "<p>まず、左辺には \(x\) を含む項だけを残し、他の定数項は右辺に移項する。</p>
+                        \[
+                            \\begin{aligned}
+                                \\frac{\,{$b}\,}{x} + {$a} &= {$d} \\\\
+                                \\frac{\,{$b}\,}{x} &= {$d} - {$a} \\\\
+                                \\frac{\,{$b}\,}{x} &= " . $d - $a . " \\\\
+                            \\end{aligned}
+                        \]
+                        <p>\(x\) は普通の数と同様に扱えるので、両辺を \(x\) 倍すると、</p>
+                        \[
+                            \\begin{aligned}
+                                \\frac{\,{$b}\,}{x} \\times x &= " . $d - $a . " \\times x \\\\
+                                \\frac{\,{$b}\,}{\cancel{x}} \\times \cancel{x} &= " . $d - $a . "x \\\\
+                                {$b} &= " . $d - $a . "x \\\\
+                            \\end{aligned}
+                        \]
+                        <p>\(x\) の項を左側にするため、両辺を入れ替えて、</p>
+                        \[
+                            \\begin{aligned}
+                                " . $d - $a . "x &= {$b} \\\\
+                                \\therefore x &= {$basic04_ans}
+                            \\end{aligned}
+                        \]
+                        <p>次のように途中式を省いて処理できるまで繰り返そう。</p>
+                        \[
+                            \\begin{aligned}
+                                \\frac{\,{$b}\,}{x} + {$a} &= {$d} \\\\
+                                \\frac{\,{$b}\,}{x} &= " . $d - $a . " \\\\
+                                {$b} &= " . $d - $a . "x \\\\
+                                {$basic04_ans} &= x
+                            \\end{aligned}
+                        \]
+                        <p>最後は、\(x = ○○\) 、\( ○○ = x\) どちらの形でも構わない。</p>",
+            ],
+
+            [
+                'q_type' => 3,
                 'q' => "<p>次の方程式を解きなさい。（目標解答時間：1 分）</p>
                         <p>\(\displaystyle \\frac{\,x+{$a}\,}{2} - \\frac{\,x-{$b}\,}{3} = {$c}\)</p>
                         ",
                 'a_type' => 2,
-                'a' => 6*$c - 3*$a - 2*$b,
+                'a' => "x = " . 6*$c - 3*$a - 2*$b,
                 'e_type' => 3,
                 'e' => "<p>分母を払うため、2 と 3 の最小公倍数である 6 を両辺にかける。</p>
                         <p>\(\displaystyle \\frac{\,x+{$a}\,}{2} \\times 6 - \\frac{\,x-{$b}\,}{3} \\times 6 = {$c} \\times 6\)</p>
@@ -1119,7 +1245,7 @@ class WorkbookController extends Controller
                         <p>\(\displaystyle \\frac{\,{$d}x-{$b}\,}{{$a}} = x + {$e}\)</p>
                         ",
                 'a_type' => 2,
-                'a' => $no2_ans_str,
+                'a' => "x = {$no2_ans_str}",
                 'e_type' => 3,
                 'e' => "<p>分母を払うため、両辺を {$a} 倍してから変形する。</p>
                         \[
@@ -1134,10 +1260,26 @@ class WorkbookController extends Controller
                         ",
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
+        // $q_index = rand(0,count($questions)-1);
+        // $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
+        $flag2 = $request->boolean('flag2');    // 計算問題
+        $flags = ['flag1' => '基礎', 'flag2' => 'まとめ'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(0, 3);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(4, 5);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
         $unitname = "一次方程式まとめ";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
     // 文字式で表す
@@ -10006,6 +10148,16 @@ class WorkbookController extends Controller
             ['kana' => "そらの <span class=\"text-3xl font-bold\">ゆうひ</span>が きれいだ。", 'kanji' => "空の<span class=\"text-3xl font-bold\">夕日</span>がきれいだ。", 'exp' => ''],
             ['kana' => "おとうとは しょうがく <span class=\"text-3xl font-bold\">いちねんせい</span> です。", 'kanji' => "おとうとは小学<span class=\"text-3xl font-bold\">一年生</span>です。", 'exp' => ''],
             ['kana' => "まちに <span class=\"text-3xl font-bold\">ひゃくにん</span> あつまった。", 'kanji' => "町に<span class=\"text-3xl font-bold\">百人</span>あつまった。", 'exp' => ''],
+            ['kana' => "たなばたに <span class=\"text-3xl font-bold\">たけ</span>を かざった。", 'kanji' => "七夕に<span class=\"text-3xl font-bold\">竹</span>をかざった。", 'exp' => ''],
+            ['kana' => "プールで <span class=\"text-3xl font-bold\">みみ</span>に みずが はいった。", 'kanji' => "プールで<span class=\"text-3xl font-bold\">耳</span>に水が入った。", 'exp' => ''],
+            ['kana' => "ぼくは <span class=\"text-3xl font-bold\">くさ</span>むしりの めいじんです。", 'kanji' => "ぼくは<span class=\"text-3xl font-bold\">草</span>むしりの名人です。", 'exp' => ''],
+            ['kana' => "もうすぐ <span class=\"text-3xl font-bold\">でぐち</span>です。", 'kanji' => "もうすぐ<span class=\"text-3xl font-bold\">出口</span>です。", 'exp' => ''],
+            ['kana' => "おおきく <span class=\"text-3xl font-bold\">もじ</span>を かく。", 'kanji' => "大きく<span class=\"text-3xl font-bold\">文字</span>をかく。", 'exp' => ''],
+            ['kana' => "うみで きれいな <span class=\"text-3xl font-bold\">かい</span>を みつけた。", 'kanji' => "うみできれいな<span class=\"text-3xl font-bold\">貝</span>を見つけた。", 'exp' => ''],
+            ['kana' => "<span class=\"text-3xl font-bold\">おかね</span>を せんえん もらった。", 'kanji' => "<span class=\"text-3xl font-bold\">お金</span>を千円もらった。", 'exp' => ''],
+            // ['kana' => "<span class=\"text-3xl font-bold\"></span>", 'kanji' => "<span class=\"text-3xl font-bold\"></span>", 'exp' => ''],
+            // ['kana' => "<span class=\"text-3xl font-bold\"></span>", 'kanji' => "<span class=\"text-3xl font-bold\"></span>", 'exp' => ''],
+            // ['kana' => "<span class=\"text-3xl font-bold\"></span>", 'kanji' => "<span class=\"text-3xl font-bold\"></span>", 'exp' => ''],
         ];
         $idx = rand(0, count($sentences)-1);
         $s = $sentences[$idx];
@@ -10386,11 +10538,6 @@ class WorkbookController extends Controller
                 'kanji' => "副大臣が問題発言をした。",
                 'exp' => "",
             ],
-            // [
-            //     'kana' => 'うんどうかいで ときょうそうへの さんかを きぼうする。',
-            //     'kanji' => "運動会で徒競走への参加を希望する。",
-            //     'exp' => "",
-            // ],
             [
                 'kana' => 'りかの じっけんで かがみを つかう。',
                 'kanji' => "理科の実験で鏡を使う。",
@@ -10421,16 +10568,11 @@ class WorkbookController extends Controller
                 'kanji' => "季節が秋に変わる。",
                 'exp' => "",
             ],
-            // [
-            //     'kana' => "",
-            //     'kanji' => "",
-            //     'exp' => "",
-            // ],
-            // [
-            //     'kana' => "",
-            //     'kanji' => "",
-            //     'exp' => "",
-            // ],
+            [
+                'kana' => "さくねんよりも さんかしゃが おおい。",
+                'kanji' => "昨年よりも参加者が多い。",
+                'exp' => "",
+            ],
             // [
             //     'kana' => "",
             //     'kanji' => "",
