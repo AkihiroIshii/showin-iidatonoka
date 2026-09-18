@@ -327,6 +327,8 @@ Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'p
 ->middleware(['auth', 'verified'])->name('workbook.plot_proportional_function');
 Route::get('workbook/read_proportional_function', [WorkbookController::class, 'read_proportional_function'])
 ->middleware(['auth', 'verified'])->name('workbook.read_proportional_function');
+Route::get('workbook/table_proportional_function', [WorkbookController::class, 'table_proportional_function'])
+->middleware(['auth', 'verified'])->name('workbook.table_proportional_function');
 Route::get('workbook/domain_proportional_function', [WorkbookController::class, 'domain_proportional_function'])
 ->middleware(['auth', 'verified'])->name('workbook.domain_proportional_function');
 // Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
@@ -356,6 +358,8 @@ Route::get('workbook/read_linear_function', [WorkbookController::class, 'read_li
 ->middleware(['auth', 'verified'])->name('workbook.read_linear_function');
 Route::get('workbook/domain_linear_function', [WorkbookController::class, 'domain_linear_function'])
 ->middleware(['auth', 'verified'])->name('workbook.domain_linear_function');
+Route::get('workbook/table_linear_function', [WorkbookController::class, 'table_linear_function'])
+->middleware(['auth', 'verified'])->name('workbook.table_linear_function');
 // Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_linear_function'])
 // ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function');
 Route::get('workbook/plot_linear_function2', [WorkbookController::class, 'plot_linear_function2'])

@@ -1740,6 +1740,67 @@ class WorkbookController extends Controller
     //     return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
     // }
 
+    // 比例（表）
+    public function table_proportional_function() {
+        // 変数
+        $a = (-1)**rand(1, 2) * rand(1, 4);
+        $diff = rand(1, 4); // xの値の差
+        $x1 = (-1)**rand(1, 2) * rand(1, 5);
+
+        $x2 = $x1 + $diff;
+        $x3 = $x2 + $diff;
+        $x4 = $x3 + $diff;
+        $y1 = $a * $x1;
+        $y2 = $a * $x2;
+        $y3 = $a * $x3;
+        $y4 = $a * $x4;
+
+        $a_str = $this->num_to_str($a, 1, 1);
+
+        $xy_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5 w-20\">\(x\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x1}\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x2}\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x3}\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x4}\)</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 w-20\">\(y\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$y1}\)</td>
+                            <td class=\"border border-gray-400 w-20\"></td>
+                            <td class=\"border border-gray-400 w-20\">（　　）</td>
+                            <td class=\"border border-gray-400 w-20\">\({$y4}\)</td>
+                        </tr>
+                    </table>
+                    ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>\(y\) は \(x\) に比例する。表中の（　　）に入る数を答えなさい。</p>
+                        {$xy_table}",
+                'a_type' => 2,
+                'a' => "{$y3}",
+                'e_type' => 3,
+                'e' => "<p>\(y\) が \(x\) に比例するので、\(y = ax\) の関係が成り立つ。</p>
+                        <p>表の一列目の値（\(x={$x1},\,y={$y1}\)）を代入すると、\({$y1} = a \\times " . $this->add_braket($x1) . "\)。</p>
+                        <p>これより、\(a = {$a}\)。よって、表の三列目の \(y\) の値を \(y_3\) とすれば、</p>
+                        <p>\(y_3 = ax_3 = {$a} \\times " . $this->add_braket($x3) . " = {$y3}\).</p>
+                        <p>【補足】</p>
+                        <p>表の四列目の値（\(x={$x4},\,y={$y4}\)）を \(y=ax\) に代入すると、\({$y4} = a \\times " . $this->add_braket($x4) . "\)。</p>
+                        <p>これより、\(a = {$a}\)。このように、表の四列目 \(x,\,y\) を使って \(a\) を求めても構わない。</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "比例（表）";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 比例（変域）
     public function domain_proportional_function() {
         // |a| = 1/2, 1, 2, 3 のいずれか
@@ -3306,6 +3367,99 @@ class WorkbookController extends Controller
         return view('workbook.unit.linear_function3', compact('unitname','question','plots'));
     }
 
+    // 一次関数（表）
+    public function table_linear_function() {
+        // 変数
+        $a = (-1)**rand(1, 2) * rand(1, 4);
+        $b = (-1)**rand(1, 2) * rand(1, 4);
+        $diff = rand(1, 4); // xの値の差
+        $x1 = (-1)**rand(1, 2) * rand(1, 5);
+
+        $x2 = $x1 + $diff;
+        $x3 = $x2 + $diff;
+        $x4 = $x3 + $diff;
+        $y1 = $a * $x1 + $b;
+        $y2 = $a * $x2 + $b;
+        $y3 = $a * $x3 + $b;
+        $y4 = $a * $x4 + $b;
+
+        $a_str = $this->num_to_str($a, 1, 1);
+        $b_str = $this->add_plus($b);
+
+        $xy_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5 w-20\">\(x\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x1}\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x2}\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x3}\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$x4}\)</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 w-20\">\(y\)</td>
+                            <td class=\"border border-gray-400 w-20\">\({$y1}\)</td>
+                            <td class=\"border border-gray-400 w-20\"></td>
+                            <td class=\"border border-gray-400 w-20\">（　　）</td>
+                            <td class=\"border border-gray-400 w-20\">\({$y4}\)</td>
+                        </tr>
+                    </table>
+                    ";
+
+        if($y1 == 0) {
+            $exp_part = "これより、\(y_3 = {$y3}\)</p>";
+        } else {
+            $exp_part = "この方程式を解くには、まず両辺を " . $x3 - $x1 . " 倍して、</p>
+                        \[
+                            \\begin{aligned}
+                                \\frac{ y_3 " . $this->add_plus_vanish_zero(-$y1) . "}{\," . $x3 - $x1 . "\,} \\times " . $x3 - $x1 . " &= $a \\times " . $x3 - $x1 . " \\\\
+                                y_3 " . $this->add_plus_vanish_zero(-$y1) . " &= " . $a * ($x3 - $x1) . " \\\\
+                                y_3 &= " . $a * ($x3 - $x1) . $this->add_plus_vanish_zero($y1) . " \\\\
+                                \\therefore y_3 &= {$y3}
+                            \\end{aligned}
+                        \]";
+        }
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>\(y\) は \(x\) の一次関数である。表中の（　　）に入る数を答えなさい。</p>
+                        {$xy_table}",
+                'a_type' => 2,
+                'a' => "{$y3}",
+                'e_type' => 3,
+                'e' => "<p>\(y\) が \(x\) の一次関数ということは、変化の割合（\(y\) の変化量 / \(x\) の変化量）は一定である。</p>
+                        <p>表から、\(x = {$x1}\) では \(y = {$y1}\)、\(x = {$x4}\) では \(y = {$y4}\) だとわかるので、変化の割合 \(a\) は、</p>
+                        $$ a = \\frac{ y_4 - y_1 }{\,x_4 - x_1 } = \\frac{ {$y4} - " . $this->add_braket($y1) . "}{\,{$x4} - " . $this->add_braket($x1) . "\,} 
+                            = \\frac{" . $y4 - $y1 . "}{\," . $x4 - $x1 . "\,} = {$a}.$$
+                        <p>よって、\(a = {$a}\)。ここから解法が３つに分かれる。</p>
+                        <p>【解法１】</p>{$xy_table}
+                        <p>変化の割合は一定なので、他のペアで考えても同じ値になる。表一列目（\(x={$x1}\)）と</p>
+                        <p>三列目（\(x={$x3}\)）の値で同様に考えよう。\(x={$x3}\) のときの \(y\) の値を \(y_3\) とすれば、</p>
+                        $$ a = \\frac{ y_3 - y_1 }{\,x_3 - x_1 } = \\frac{ y_3 - " . $this->add_braket($y1) . "}{\,{$x3} - " . $this->add_braket($x1) . "\,} 
+                            = \\frac{ y_3 " . $this->add_plus_vanish_zero(-$y1) . "}{\," . $x3 - $x1 . "\,}$$
+                        <p>しつこいが、変化の割合は一定なので、この値は先ほど求めた \(a = {$a}\) に一致するはずである。</p>
+                        <p>よって、\(\displaystyle  \\frac{ y_3 " . $this->add_plus_vanish_zero(-$y1) . "}{\," . $x3 - $x1 . "\,} = $a\) が成り立つ。
+                        {$exp_part}
+                        <p>【解法２】</p>{$xy_table}
+                        <p>\(a = {$a}\) がわかったので、一次関数は \(y = {$a_str}x + b\) と表せる。これに、表一列目の</p>
+                        <p>\(x,\,y\) を代入すれば、\({$y1} = {$a} \\times " . $this->add_braket($x1) . " + b\)。これを \(b\) について解けば、\(b = {$b}\) が求まる。</p>
+                        <p>よって、\(y = {$a_str}x {$b_str}\) と表せる。これに、表三列目の \(x={$x3}\) を代入すれば、\(y_3 = {$y3}\) が求まる。</p>
+                        <p>【解法３】</p>
+                        <p class=\"underline\">変化の割合とは、\(x\) が \(1\) 増えたときに \(y\) がどれだけ変化するかを表した量である。</p>
+                        <p>\(a = {$a}\) なので、\(x\) が \(1\) 増えたときに \(y\) は \({$a}\) 変化することがわかる。</p>
+                        <p>表の一列目と三列目を比べると、\(x\) は \(". $x3 - $x1 . "\) 増えているので、\(y\) は \(" . $x3 - $x1 . "a = " . ($x3 - $x1) * $a . "\) 変化する。</p>
+                        <p>よって、\(y_3 = y_1 " . $this->add_plus(($x3 - $x1) * $a) . " 
+                            = {$y1} " . $this->add_plus(($x3 - $x1) * $a) . " = {$y3}\).</p>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "一次関数（表）";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 一次関数（交点の座標）
     public function plot_linear_function2() {
         // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
@@ -4220,6 +4374,28 @@ class WorkbookController extends Controller
     {
         if ($n < 0) {
             return "(" . $n . ")";
+        } else {
+            return $n;
+        }
+    }
+
+    // 正の数のみ＋付きで返す。
+    private function add_plus($n)
+    {
+        if ($n > 0) {
+            return "+" . $n;
+        } else {
+            return $n;
+        }
+    }
+
+    // 正の数は＋付きで返す。0の場合は表示しない。
+    private function add_plus_vanish_zero($n)
+    {
+        if ($n == 0) {
+            return "";
+        } elseif ($n > 0) {
+            return "+" . $n;
         } else {
             return $n;
         }

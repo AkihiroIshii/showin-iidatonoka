@@ -246,6 +246,9 @@
                                     <a href="{{route('workbook.read_proportional_function')}}">比例（グラフ読取）</a>
                                 </x-button-link>
                                 <x-button-link>
+                                    <a href="{{route('workbook.table_proportional_function')}}">表の読取</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.domain_proportional_function')}}">変域</a>
                                 </x-button-link>
                                 {{-- <x-button-link>
@@ -264,6 +267,9 @@
                                 {{-- <x-button-link>
                                     <a href="{{route('workbook.unit.plot_linear_function')}}">一次関数（グラフ描画）</a>
                                 </x-button-link> --}}
+                                <x-button-link>
+                                    <a href="{{route('workbook.table_linear_function')}}">表の読取</a>
+                                </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.domain_linear_function')}}">変域</a>
                                 </x-button-link>
