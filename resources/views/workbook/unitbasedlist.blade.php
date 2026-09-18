@@ -245,6 +245,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.read_proportional_function')}}">比例（グラフ読取）</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.domain_proportional_function')}}">変域</a>
+                                </x-button-link>
                                 {{-- <x-button-link>
                                     <a href="{{route('workbook.unit.plot_proportional_function')}}">比例（グラフ描画）</a>
                                 </x-button-link> --}}
