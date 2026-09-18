@@ -352,6 +352,8 @@ Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_li
 ->middleware(['auth', 'verified'])->name('workbook.plot_linear_function');
 Route::get('workbook/read_linear_function', [WorkbookController::class, 'read_linear_function'])
 ->middleware(['auth', 'verified'])->name('workbook.read_linear_function');
+Route::get('workbook/domain_linear_function', [WorkbookController::class, 'domain_linear_function'])
+->middleware(['auth', 'verified'])->name('workbook.domain_linear_function');
 // Route::get('workbook/plot_linear_function', [WorkbookController::class, 'plot_linear_function'])
 // ->middleware(['auth', 'verified'])->name('workbook.unit.plot_linear_function');
 Route::get('workbook/plot_linear_function2', [WorkbookController::class, 'plot_linear_function2'])

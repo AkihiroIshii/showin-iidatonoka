@@ -2926,6 +2926,165 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
+    // 一次関数（変域）
+    public function domain_linear_function() {
+        // |a| = 1/2, 1, 2, 3 のいずれか
+        $a_numerators = [1, 2, 4, 6];
+        $a_idx = rand(0, 3);
+        $a_numerator = (-1)**rand(1, 2) * $a_numerators[$a_idx];
+        $a_denominator = 2;
+        $b = (-1)**rand(1, 2) * rand(1, 3);
+
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
+
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
+        $b_str = $b > 0 ? ("+" . $b) : $b;
+
+        // 変域
+        $x1 = -rand(1, 4);
+        $x2 = rand(1, 4);
+        // a=1/2 のときは、解説の表記を簡単にする（yを整数値にする）ためにx1,x2を偶数にする。
+        if (abs($a) < 1) {
+            $x1 *= 2;
+            $x2 *= 2;
+        }
+        $y1 = $a * $x1 + $b;
+        $y2 = $a * $x2 + $b;
+
+        // グラフ描画用
+        $size = 300;    //viewportの大きさ
+        $val_size = max([abs($x1), abs($x2), abs($y1), abs($y2)]) * 4; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+        $py = $a * $a_denominator + $b;    // プロットする点Pでの y の値
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = $x1 * $scale;
+        $to_x = $x2 * $scale;
+        $from_y = ($a * $x1 + $b) * $scale;
+        $to_y = ($a * $x2 + $b) * $scale;
+
+        $plot_par_e = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        $plot_con_e = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"1\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"1\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
+            <!-- 変域 -->
+            <line x1=\"" . $from_x . "\" y1=\"0\" x2=\"" . $to_x . "\" y2=\"0\" stroke=\"blue\" stroke-width=\"2\" />
+            <circle cx=\"" . ( $x1 * $scale ) . "\" cy=\"0\" r=\"4\" fill=\"blue\" stroke=\"blue\" stroke-width=\"1\" />
+            <circle cx=\"" . ( $x2 * $scale ) . "\" cy=\"0\" r=\"4\" fill=\"none\" stroke=\"blue\" stroke-width=\"1\" />
+            <line x1=\"0\" y1=\"" . -$from_y . "\" x2=\"0\" y2=\"" . -$to_y . "\" stroke=\"green\" stroke-width=\"2\" />
+            <circle cx=\"0\" cy=\"" . ( -$y1 * $scale ) . "\" r=\"4\" fill=\"green\" stroke=\"green\" stroke-width=\"1\" />
+            <circle cx=\"0\" cy=\"" . ( -$y2 * $scale ) . "\" r=\"4\" fill=\"none\" stroke=\"green\" stroke-width=\"1\" />
+            <!-- 端点 -->
+            <circle cx=\"" . ( $x1 * $scale ) . "\" cy=\"" . ( -$y1 * $scale) . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . ($x1 + 1) * $scale . "\" y=\"" . -$y1 * $scale . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$x1},{$y1})
+            </text>
+            <circle cx=\"" . ( $x2 * $scale ) . "\" cy=\"" . ( -$y2 * $scale) . "\" r=\"5\" fill=\"none\" stroke=\"red\" stroke-width=\"2\" />
+            <text x=\"" . ($x2 + 1) * $scale . "\" y=\"" . -$y2 * $scale . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$x2},{$y2})
+            </text>
+            <!-- 軸から端点の補助線 -->
+            <line x1=\"" . $from_x . "\" y1=\"" . -$from_y . "\" x2=\"0\" y2=\"" . -$from_y . "\" stroke=\"green\" stroke-width=\"1\" stroke-dasharray=\"2\" />
+            <line x1=\"" . $to_x . "\" y1=\"" . -$to_y . "\" x2=\"0\" y2=\"" . -$to_y . "\" stroke=\"green\" stroke-width=\"1\" stroke-dasharray=\"2\" />
+            <line x1=\"" . $from_x . "\" y1=\"" . -$from_y . "\" x2=\"" . $from_x . "\" y2=\"0\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"2\" />
+            <line x1=\"" . $to_x . "\" y1=\"" . -$to_y . "\" x2=\"" . $to_x . "\" y2=\"0\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"2\" />
+        ";
+
+        $exp_x2y_str_common = "<p>変域の両端（\(x={$x1},\,x={$x2}\)）での \(y\) の値をそれぞれ求める。\(\displaystyle y = {$ax_str} {$b_str}\) より、</p>
+                    <div class=\"pl-5 text-center\">
+                        <p>\(x = {$x1}\) のとき、\(\displaystyle y = {$a_str} \\times ({$x1}) {$b_str} = " . $a*$x1 . " {$b_str} = {$y1}.\)</p>
+                        <p>\(x = {$x2}\) のとき、\(\displaystyle y = {$a_str} \\times {$x2} {$b_str} = " . $a*$x2 . " {$b_str} = {$y2}.\)</p>
+                    </div>";
+
+        if ($a > 0) {
+            $a_x2y_str = "{$y1}\leqq y <{$y2}";
+            $exp_x2y_str = "{$exp_x2y_str_common}
+                        <p>よって、\(({$x1},\,{$y1}),\,({$x2},\,{$y2})\) の二点間が変域になるので、\(y\) の変域は <span class=\"text-green-600\">\({$y1}\leqq y <{$y2}\)</span>.</p>
+                        <p>(※)<span class=\"text-blue-600\">\({$x1}\leqq x <{$x2}\)</span> より \(x={$x2}\) の点は含まないため、対応する \(y={$y2}\) も変域に含めてはならない。</p>
+                        <p>つまり、\(y\leqq {$y2}\) としてはならない。下のグラフのイメージをしっかり描けるようにしておくこと。</p>";
+            $q_y2x_str = $a_x2y_str;
+            $exp_y2x_str = "<p>変域の両端（\(y={$y1},\,y={$y2}\)）での \(x\) の値をそれぞれ求める。\(\displaystyle y = {$ax_str} {$b_str}\) より、</p>
+                        <div class=\"pl-5 text-center\">
+                            <p>\(y = {$y1}\) のとき、\(\displaystyle {$y1} = {$ax_str} {$b_str}\)。これを解いて、\(x = {$x1}\).</p>
+                            <p>\(y = {$y2}\) のとき、\(\displaystyle {$y2} = {$ax_str} {$b_str}\)。これを解いて、\(x = {$x2}\).</p>
+                        </div>
+                        <p>よって、\(({$x1},\,{$y1}),\,({$x2},\,{$y2})\) の二点間が変域になるので、\(x\) の変域は <span class=\"text-blue-600\">\({$x1}\leqq x <{$x2}\)</span>.</p>
+                        <p>(※)<span class=\"text-green-600\">\({$q_y2x_str}\)</span> より \(y={$y2}\) の点は含まないため、対応する \(x={$x2}\) も変域に含めてはならない。</p>
+                        <p>つまり、\({$x2}\leqq x\) としてはならない。下のグラフのイメージをしっかり描けるようにしておくこと。</p>";
+        } else {
+            $a_x2y_str = "{$y2}< y \leqq{$y1}";
+            $exp_x2y_str = "{$exp_x2y_str_common}
+                        <p>よって、\(({$x1},\,{$y1}),\,({$x2},\,{$y2})\) の二点間が変域になるので、\(y\) の変域は <span class=\"text-green-600\">\({$y2}< y \leqq{$y1}\)</span>.・・・(※)</p>
+                        <p>傾きが負の場合は \(x\) と \(y\) の大小関係が逆転するので注意すること。\(y={$y1}\) は最大値であり、最小値ではない。</p> 
+                        <p>(※)<span class=\"text-blue-600\">\({$x1}\leqq x <{$x2}\)</span> より \(x={$x2}\) の点は含まないため、対応する \(y={$y2}\) も変域に含めてはならない。</p>
+                        <p>つまり、\({$y2}\leqq y\) としてはならない。下のグラフのイメージをしっかり描けるようにしておくこと。</p>";
+            $q_y2x_str = $a_x2y_str;
+            $exp_y2x_str = "<p>変域の両端（\(y={$y2},\,y={$y1}\)）での \(x\) の値をそれぞれ求める。\(\displaystyle y = {$ax_str} {$b_str}\) より、</p>
+                        <div class=\"pl-5 text-center\">
+                            <p>\(y = {$y2}\) のとき、\(\displaystyle {$y2} = {$ax_str} {$b_str}\)。これを解いて、\(x = {$x2}\).</p>
+                            <p>\(y = {$y1}\) のとき、\(\displaystyle {$y1} = {$ax_str} {$b_str}\)。これを解いて、\(x = {$x1}\).</p>
+                        </div>
+                        <p>よって、\(({$x2},\,{$y2}),\,({$x1},\,{$y1})\) の二点間が変域になるので、\(x\) の変域は <span class=\"text-blue-600\">\({$x1}\leqq x <{$x2}\)</span>.・・・(※)</p>
+                        <p>傾きが負の場合は \(x\) と \(y\) の大小関係が逆転するので注意すること。\(x={$x1}\) は最小値であり、最大値ではない。</p> 
+                        <p>(※)<span class=\"text-green-600\">\({$q_y2x_str}\)</span> より \(y={$y2}\) の点は含まないため、対応する \(x={$x2}\) も変域に含めてはならない。</p>
+                        <p>つまり、\({$x2}\leqq x\) としてはならない。下のグラフのイメージをしっかり描けるようにしておくこと。</p>";
+        }
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の関数について、\(y\) の変域を求めなさい。</p>
+                         $$ y = {$ax_str} {$b_str} $$
+                         $$ ({$x1}\leqq x <{$x2})$$",
+                'a_type' => 2,
+                'a' => $a_x2y_str,
+                'e_type' => 6,
+                'e' => "{$exp_x2y_str}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の関数について、\(x\) の変域を求めなさい。</p>
+                         $$ y = {$ax_str} {$b_str} $$
+                         $$ ({$q_y2x_str})$$",
+                'a_type' => 2,
+                'a' => "{$x1}\leqq x <{$x2}",
+                'e_type' => 6,
+                'e' => "{$exp_y2x_str}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "一次関数（変域）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
     // ２点を通る直線
     public function linear_function3() {
         // y=ax+b

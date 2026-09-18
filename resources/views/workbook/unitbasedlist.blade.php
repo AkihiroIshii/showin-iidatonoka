@@ -262,6 +262,9 @@
                                     <a href="{{route('workbook.unit.plot_linear_function')}}">一次関数（グラフ描画）</a>
                                 </x-button-link> --}}
                                 <x-button-link>
+                                    <a href="{{route('workbook.domain_linear_function')}}">変域</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.unit.linear_function3')}}">２点を通る直線</a>
                                 </x-button-link>
                                 <x-button-link>
