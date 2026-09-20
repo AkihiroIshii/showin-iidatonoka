@@ -21,16 +21,12 @@
                             次の格言
                         </button>
                     </form>
-                    <p class="m-4 font-klee">{{ $kakugen->sentence }}（{{ $kakugen->person }}）</p>
                 </div>
-            
-                <details class="text-center">
-                    <summary class="text-red-400 font-bold">詳細</summary>
-                    <div class="inline-block items-center text-center m-4 p-2 rounded shadow whitespace-nowrap overflow-hidden text-ellipsis bg-pink-200 font-klee text-lg">
-                        <p>出典：{{ $kakugen->reference }}</p>
-                        <p>{{ $kakugen->comment }}</p>
-                    </div>
-                </details>                    
+                <div class="w-2/3 mx-auto text-center">
+                    <p class="m-4 font-klee">{{ $kakugen->sentence }}（{{ $kakugen->person }}）</p>
+                    <p class="text-right">出典：{{ $kakugen->reference }}</p>
+                    <p>{{ $kakugen->comment }}</p>
+                </div>
             </div>
         </div>
     </div>
