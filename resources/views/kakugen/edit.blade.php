@@ -36,7 +36,7 @@
                     <div>
                         <x-input-error :messages="$errors->get('reference')" class="mt-2" />
                         <label for="reference" class="font-semibold mt-4">出典</label>
-                        <input type="date" name="reference" class="w-auto py-2 border border-gray-300 rounded-md" id="reference" value="{{old('reference', $kakugen->reference)}}">
+                        <input type="string" name="reference" class="w-auto py-2 border border-gray-300 rounded-md" id="reference" value="{{old('reference', $kakugen->reference)}}">
                     </div>
                 </div>
                 <div class="mt-8">
