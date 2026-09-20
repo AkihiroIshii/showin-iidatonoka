@@ -38,24 +38,38 @@
         @endforeach --}}
     {{-- </div> --}}
 
+    <!-- 格言 -->
+    @if(Auth::user()->role == "admin")
+        <a href="{{route('kakugen.create')}}" class="text-blue-600">格言：新規作成</a>
+    @endif
+    <div class="font-kree text-center bg-sky-100 mb-4 p-2">
+        @if(Auth::user()->role == "admin")
+            <td class="border border-slate-300 px-4">
+                <a href="{{route('kakugen.edit', $kakugen->id)}}" class="text-blue-600">編集</a>
+            </td>
+            {{$kakugen->sentence}}（{{$kakugen->person}}）
+        @endif
+        {{-- {{$kakugen->sentence}}（{{$kakugen->person}}） --}}
+    </div>
     <!-- PC表示用 -->
     {{-- <div class="hidden sm:block mx-auto px-6 py-4"> --}}
 
         <!-- Navigation Links -->
-        <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-            {{-- <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
+        {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+            <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
                 単元別学習
-            </x-nav-link> --}}
-            {{-- <x-nav-link :href="route('workbook.randomsetting')" :active="request()->routeIs('workbook.randomsetting')">
+            </x-nav-link>
+            <x-nav-link :href="route('workbook.randomsetting')" :active="request()->routeIs('workbook.randomsetting')">
                 ランダム出題
-            </x-nav-link> --}}
-            {{-- <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
+            </x-nav-link>
+            <x-nav-link :href="route('event')" :active="request()->routeIs('event')">
                 スケジュール管理
             </x-nav-link>
             <x-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
                 先生のおすすめ
-            </x-nav-link> --}}
-        </div>
+            </x-nav-link>
+        </div> --}}
+
 
         <!-- 現在の課題を表示 -->
         <div class="mb-6">

@@ -18,6 +18,7 @@ use App\Http\Controllers\ExamresultController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\InformationController;
+use App\Http\Controllers\KakugenController;
 use App\Http\Controllers\KenteiController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\MessageController;
@@ -560,6 +561,18 @@ Route::get('/kentei/{kentei}/edit', [KenteiController::class, 'edit'])
 ->middleware(['auth', 'verified'])->name('kentei.edit');
 Route::patch('/kentei/{kentei}', [KenteiController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('kentei.update');
+
+/* 格言 */
+Route::get('kakugen', [KakugenController::class, 'index'])
+->middleware(['auth', 'verified'])->name('kakugen');
+Route::get('/kakugen/create', [KakugenController::class, 'create'])
+->middleware(['auth', 'verified'])->name('kakugen.create');
+Route::post('/kakugen', [KakugenController::class, 'store'])
+->middleware(['auth', 'verified'])->name('kakugen.store');
+Route::get('/kakugen/{kakugen}/edit', [KakugenController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('kakugen.edit');
+Route::patch('/kakugen/{kakugen}', [KakugenController::class, 'update'])
+->middleware(['auth', 'verified'])->name('kakugen.update');
 
 /* 振替 */
 Route::get('transfer', [TransferController::class, 'index'])

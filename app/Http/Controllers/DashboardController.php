@@ -7,9 +7,11 @@ use App\Models\User;
 use App\Models\School;
 use App\Models\Event;
 use App\Models\Information;
+use App\Models\Kakugen;
 use App\Models\Usualtarget;
 use App\Models\TopChoice;
 use App\Traits\EventTrait;
+use App\Traits\KakugenTrait;
 use App\Traits\UsualtargetTrait;
 use App\Traits\TopChoiceTrait;
 use Carbon\Carbon;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     use EventTrait;
+    use KakugenTrait;
     use UsualtargetTrait;
     use TopChoiceTrait;
 
@@ -47,6 +50,8 @@ class DashboardController extends Controller
             ->orderBy('updated_at','desc')
             ->get();
 
-        return view('dashboard', compact('user','top_choices','events','usualtargets','kadais','informations'));
+        // 格言を取得
+        $kakugen = $this->getKakugen();
+        return view('dashboard', compact('user','top_choices','events','usualtargets','kadais','informations','kakugen'));
     } 
 }
