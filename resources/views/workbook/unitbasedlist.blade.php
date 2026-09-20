@@ -498,9 +498,9 @@
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.postfix_modification')}}">後置修飾（分詞、関係代名詞）</a>
                                 </x-button-link>
-                                <x-button-link color="purple">
+                                {{-- <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_adjective_usage')}}">◎形容詞の用法</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                     </tr>
