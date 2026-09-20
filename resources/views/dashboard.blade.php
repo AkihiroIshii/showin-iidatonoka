@@ -47,7 +47,9 @@
             <td class="border border-slate-300 px-4">
                 <a href="{{route('kakugen.edit', $kakugen->id)}}" class="text-blue-600">編集</a>
             </td>
-            {{$kakugen->sentence}}（{{$kakugen->person}}）
+            <a href="{{route('kakugen.show', $kakugen)}}">
+                {{$kakugen->sentence}}（{{$kakugen->person}}）
+            </a>
         @endif
         {{-- {{$kakugen->sentence}}（{{$kakugen->person}}） --}}
     </div>

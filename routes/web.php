@@ -563,8 +563,10 @@ Route::patch('/kentei/{kentei}', [KenteiController::class, 'update'])
 ->middleware(['auth', 'verified'])->name('kentei.update');
 
 /* 格言 */
-Route::get('kakugen', [KakugenController::class, 'index'])
-->middleware(['auth', 'verified'])->name('kakugen');
+Route::get('kakugen/{kakugen}/show', [KakugenController::class, 'show'])
+->middleware(['auth', 'verified'])->name('kakugen.show');
+Route::get('kakugen/reshow', [KakugenController::class, 'reshow'])
+->middleware(['auth', 'verified'])->name('kakugen.reshow');
 Route::get('/kakugen/create', [KakugenController::class, 'create'])
 ->middleware(['auth', 'verified'])->name('kakugen.create');
 Route::post('/kakugen', [KakugenController::class, 'store'])

@@ -5,9 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\Kakugen;
+use App\Traits\KakugenTrait;
 
 class KakugenController extends Controller
 {
+    use KakugenTrait;
+    
+    public function show(Kakugen $kakugen) {
+        return view('kakugen.show', compact('kakugen'));
+    }
+
+    public function reshow() {
+        // 格言を取得
+        $kakugen = $this->getKakugen();
+        return view('kakugen.show', compact('kakugen'));
+    }
+
     public function create() {
         //ログインユーザ
         return view('kakugen.create');
