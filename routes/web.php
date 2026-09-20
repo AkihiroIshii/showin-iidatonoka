@@ -518,6 +518,11 @@ Route::get('workbook/h_math_log', [WorkbookController::class, 'h_math_log'])
 ->middleware(['auth', 'verified'])->name('workbook.h_math_log');
 Route::get('workbook/h_math_number_sequence', [WorkbookController::class, 'h_math_number_sequence'])
 ->middleware(['auth', 'verified'])->name('workbook.h_math_number_sequence');
+// 化学
+Route::get('workbook/h_sci_significant_figures', [WorkbookController::class, 'h_sci_significant_figures'])
+->middleware(['auth', 'verified'])->name('workbook.h_sci_significant_figures');
+Route::get('workbook/h_sci_mol', [WorkbookController::class, 'h_sci_mol'])
+->middleware(['auth', 'verified'])->name('workbook.h_sci_mol');
 // 英語
 Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relative'])
 ->middleware(['auth', 'verified'])->name('workbook.h_eng_relative');

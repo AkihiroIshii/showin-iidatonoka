@@ -841,6 +841,19 @@
                         </x-td>
                     </tr>
                     <tr>
+                        <x-td>化学</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.h_sci_significant_figures')}}">有効数字</a>
+                                </x-button-link>
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.h_sci_mol')}}">物質量</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
                         <x-td>英語</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">

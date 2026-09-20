@@ -11548,6 +11548,229 @@ class WorkbookController extends Controller
         return $S;
     }
 
+    /******* 高校化学 **********/
+    // 有効数字
+    public function h_sci_significant_figures(Request $request) {
+        $e1 = (-1)**rand(1, 2)*rand(1, 10);   // 指数
+        $e2 = (-1)**rand(1, 2)*rand(1, 10);   // 指数
+        $ep = rand(1, 10);   // 指数
+
+        $a = rand(1, 8);
+        $b = rand(1, 8);
+        $c = rand(1, 8);
+        $d = rand(1, 8);
+        $e3 = rand(-6, 2);
+
+        $n = 1000*$a + 100*$b + 10*$c + $d;
+        $digit = rand(2, 3);    // 有効数字の桁数
+        $n_after = round($n, $digit - 4);   // 四捨五入後の$n
+        
+        $a_after = substr($n_after, 0, 1);   //四捨五入後の$b
+        $b_after = substr($n_after, 1, 1);   //四捨五入後の$b
+        $c_after = substr($n_after, 2, 1);   //四捨五入後の$c
+        $expo_after = ($e3 + 3) == 1 ? "" : $e3 + 3;    // 最後に 10^1 となったら 10 の指数(0)は非表示
+
+        // 答え（文字列）の生成
+        $no2_ans = "{$a_after}.{$b_after}";
+        // 有効数字 3 桁のとき
+        if ($digit == 3) {
+            $no2_ans .= "{$c_after}";
+        }
+
+        // 整理後、○○ × 10^0 の場合
+        if ($expo_after == 0) {
+            $no2_ans .= "";
+            $no2_exp_part = "\\fallingdotseq {$no2_ans}";
+        // 整理後、○○ × 10^1 の場合
+        } elseif ($expo_after == 1) {
+            $no2_ans .= "\\times 10";
+            $no2_exp_part = "= {$a}.{$b}{$c}{$d} \\times 10^{{$expo_after}} 
+                \\fallingdotseq {$no2_ans}";
+        } else {
+            $no2_ans .= "\\times 10^{{$expo_after}}";
+            $no2_exp_part = "= {$a}.{$b}{$c}{$d} \\times 10^{{$expo_after}} 
+                \\fallingdotseq {$no2_ans}";
+        }
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の値を \(10^n\) の形にまとめなさい。</p>
+                        $$ \\frac{\,10^{{$e1}} \\times 10^{{$e2}}\,}{10^{{$ep}}} $$",
+                'a_type' => 2,
+                'a' => "10^{" . $e1 + $e2 - $ep . "}",
+                'e_type' => 3,
+                'e' => "$$
+                            \\frac{\,10^{{$e1}} \\times 10^{{$e2}}\,}{10^{{$ep}}}
+                            = \\frac{\,10^{{$e1}" . $this->add_plus($e2) . "}\,}{10^{{$ep}}}
+                            = 10^{" . $e1 + $e2 . "} \\times 10^{{-$ep}}
+                            = 10^{" . $e1 + $e2 - $ep . "}
+                        $$
+                        <p>(※)先に約分してもよい。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の値を有効数字 {$digit} 桁で表しなさい。</p>
+                        $$" . (1000*$a + 100*$b + 10*$c + $d) * 10**$e3 . "$$",
+                'a_type' => 2,
+                'a' => "{$no2_ans}",
+                'e_type' => 3,
+                'e' => "$$
+                            " . (1000*$a + 100*$b + 10*$c + $d) * 10**$e3 . "
+                            {$no2_exp_part}
+                        $$",
+            ],
+ 
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $unitname = "有効数字";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 物質量
+    public function h_sci_mol(Request $request) {
+        $n = 0.5 * rand(1, 6);    // モル数（物質量）
+        $v = 22.4 * $n; // 体積（L）
+        $a = rand(2, 6);
+        $ns = 0.1 * rand(1, 8);    // 小さめの n (0.1 ～ 0.8)
+        $vl = 250 * rand(1, 2);    // 溶液の体積(mL)
+        $MA = 40 + 4 * rand(1, 10);  // 金属 M の原子量
+        $Md = 1.2 * rand(1, 4);     // 金属 M の密度(g/cm^3)
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>酸素分子 " . 6 * $n . ".0 × 10\(^{23}\) 個は何 mol か。</p>",
+                'a_type' => 2,
+                'a' => "{$n} \,\mathrm{mol}",
+                'e_type' => 3,
+                'e' => "<p>原子や分子 10\(^{23}\) 個のまとまりを、1 mol（モル）という。</p>
+                        $$ \\frac{\," . 6 * $n . ".0 \\times 10^{23}\,}{6.0 \\times 10^{23}} = {$n} \,\mathrm{mol}.$$",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>標準状態で " . number_format($v, 1) . " L の酸素は何 mol か。</p>",
+                'a_type' => 2,
+                'a' => "{$n} \,\mathrm{mol}",
+                'e_type' => 3,
+                'e' => "<p>標準状態での気体は 1 mol で 22.4 L であるから、</p>
+                        $$ \\frac{\,"  . number_format($v, 1) . "\,}{\,22.4\,} = {$n} \,\mathrm{mol}.$$",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>CO\(_2\) は {$n} mol で何 g か。ただし、原子量は C = 12、O = 16 とする。</p>",
+                'a_type' => 2,
+                'a' => 44 * $n . "\,\mathrm{g}",
+                'e_type' => 3,
+                'e' => "<p>CO\(_2\) の分子量は、12 + 16 × 2 = 44。つまり、1 mol につき 44 g なので、</p>
+                        <p>{$n} mol の質量は、 44 × {$n} = " . 44 * $n . " g.</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>標準状態での窒素 {$n} mol は何 L か。</p>",
+                'a_type' => 2,
+                'a' => 22.4 * $n . "\,\mathrm{L}",
+                'e_type' => 3,
+                'e' => "<p>標準状態での気体は 1 mol で 22.4 L であるから、</p>
+                        $$ 22.4 \\times {$n} = " . 22.4 * $n . " \,\mathrm{L}.$$",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>" . number_format(18 * $n, 1) . " g の水の物質量を求めよ。ただし、原子量は H = 1、O = 16 とする。</p>",
+                'a_type' => 2,
+                'a' => "{$n}\,\mathrm{mol}",
+                'e_type' => 3,
+                'e' => "<p>水、つまり H\(_2\)O の分子量は、1 × 2 + 16 = 18。つまり、1 mol につき 18 g なので、</p>
+                        $$ \\frac{\," . number_format(18 * $n, 1) . "\,}{\,18\,} = {$n} \,\mathrm{mol}.$$",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>炭化水素 C\(_{{$a}}\)H\(_{" . 2 * $a . "}\) の分子量を求めよ。ただし、原子量は H = 1、C = 12 とする。</p>",
+                'a_type' => 2,
+                'a' => 12*$a + 2*$a,
+                'e_type' => 3,
+                'e' => "<p>炭化水素 C\(_{{$a}}\)H\(_{" . 2 * $a . "}\) の分子量は、{$a} × 12 + " . 2 * $a . " × 1 = " . 12*$a + 2*$a,
+            ],
+
+            [
+                'q_type' => 3,
+                'q' => "<p>Na\(_2\)CO\(_3\) " . 106 * $ns . " g に含まれるナトリウムイオンは何個か。</p>
+                        <p>ただし、原子量は Na = 23、C = 12、O = 16 とする。</p>",
+                'a_type' => 2,
+                'a' => number_format(12 * $ns, 1) . " × 10^{23} \,個",
+                'e_type' => 3,
+                'e' => "<p>【①Na\(_2\)CO\(_3\) の分子量を求める】</p>
+                        <p>23 × 2 + 12 + 16 × 3 = 46 + 12 + 48 = 106.</p>
+                        <p>【②Na\(_2\)CO\(_3\) " . 106 * $ns . " g の物質量を求める】</p>
+                        <p>①より、1 mol あたり 106 g なので、" . 106 * $ns . " ÷ 106 = " . $ns . " mol。</p>
+                        <p>【③Na\(^+\) の物質量を求める】</p>
+                        <p>分子式より、1 mol の Na\(_2\)CO\(_3\) には、2 mol の Na\(^+\) が含まれていることがわかる。</p>
+                        <p>よって、Na\(^+\) の物質量は、" . $ns . " × 2 = " . $ns * 2 . " mol。</p>
+                        <p>【④Na\(^+\) の個数を求める】</p>
+                        <p>1 mol で 6.0 × 10\(^{23}\) 個なので、" . $ns * 2 . " × (6.0 × 10\(^{23}\)) = " . number_format(12 * $ns, 1) . " × 10\(^{23}\) 個。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>塩化亜鉛（ZnCl\(_2\)）" . 136 * $ns . " g を水に溶かして {$vl} mL にした溶液は何 mol/L か。</p>
+                        <p>ただし、原子量は Zn = 65、Cl = 35.5 とする。</p>",
+                'a_type' => 2,
+                'a' => $ns / ($vl / 1000) . " \,\mathrm{mol/L}",
+                'e_type' => 3,
+                'e' => "<p>【①ZnCl\(_2\) の分子量を求める】</p>
+                        <p>65 + 35.5 × 2 = 65 + 71 = 136.</p>
+                        <p>【②ZnCl\(_2\) " . 136 * $ns . " g の物質量を求める】</p>
+                        <p>①より、1 mol あたり 136 g なので、" . 136 * $ns . " ÷ 136 = " . $ns . " mol。</p>
+                        <p>(※) 1 mol : 136 g = \(x\) mol : " . 136 * $ns . " g を解いて求めてもよい。</p>
+                        <p>【③モル濃度を求める】</p>
+                        <p>{$vl} mL = " . $vl / 1000 . " L なので、{$ns} mol ÷ " . $vl / 1000 . " L = " . $ns / ($vl / 1000) . " mol/L。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>ある金属 M の結晶は、その体積 " . $Md * $a . " × 10\(^{-23}\) cm\(^3\) につき 4 個の割合で M の原子が含まれる。 </p>
+                        <p>また、金属 M の結晶の密度は {$Md} g/cm\(^3\) である。金属 M の原子量を求めよ。</p>",
+                'a_type' => 2,
+                'a' =>  ($Md**2 * $a / 4) * 6,
+                'e_type' => 3,
+                'e' => "<p>体積、個数、密度、原子量と、様々な単位が混在している。わかるものから紐づけしていこう。</p>
+                        <p>まず、結晶の体積 " . $Md * $a . " × 10\(^{-23}\) cm\(^3\) につき 4 個の割合で M の原子が含まれるので、</p>
+                        <p>1 個あたりの体積は、" . $Md * $a . " × 10\(^{-23}\) ÷ 4 = <span class=\"underline\">" . $Md * $a / 4 . " × 10\(^{-23}\) cm\(^3\)/個</span>である。</p>
+                        <p>次に、この " . $Md * $a / 4 . " × 10\(^{-23}\) cm\(^3\) の結晶、つまり M 原子 1 個あたりで何 g に相当するかを考える。</p>
+                        <p>M 原子 1 個あたりの質量を m [g] とすると、{$Md} [g] : 1 [cm\(^3\)] = m [g] : " . $Md * $a / 4 . " × 10\(^{-23}\) [cm\(^3\)] が成り立つ。</p>
+                        <p>これを解いて、m = {$Md} × (" . $Md * $a / 4 . " × 10\(^{-23}\)) = <span class=\"underline\">" . $Md**2 * $a / 4 . " × 10\(^{-23}\) g/個</span>。すると、原子量とは原子 6.0 × 10\(^{23}\) 個</p>
+                        <p>（1 mol）分の質量のことなので、(" . $Md**2 * $a / 4 . " × 10\(^{-23}\))[g/個] × (6.0 × 10\(^{23}\))[個/mol] = " . ($Md**2 * $a / 4) * 6 . "[g/mol].</p>
+                        ",
+            ],
+        ];
+        // $q_index = rand(0,count($questions)-1);
+        // $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
+        $flag2 = $request->boolean('flag2');    // 計算問題
+        $flags = ['flag1' => '基礎', 'flag2' => '実践'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(0, 5);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(6, count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "物質量";
+        return view('workbook.unit_template', compact('unitname','question','subject','flags'));
+    }
+
     /******* 高校英語 **********/
     // 関係詞
     public function h_eng_relative(Request $request) {
