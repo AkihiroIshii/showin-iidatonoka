@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Traits\UserTrait;
 use App\Models\Workbook;
+use App\Models\Unit;
 
 class WorkbookController extends Controller
 {
@@ -42,7 +43,16 @@ class WorkbookController extends Controller
             ->orderBy('grade','desc')
             ->get();
 
-        return view('workbook.index', compact('user','workbooks'));
+        // 問題集に存在する単元のリストを作成
+        $wb_units = $workbooks->pluck('unit');
+
+        // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+        $units['eng'] = Unit::query()
+            ->where('subject','英語')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
+
+        return view('workbook.index', compact('user','workbooks','units'));
     }
 
     public function summary_list(Request $request) {
@@ -51,6 +61,15 @@ class WorkbookController extends Controller
         $units[] = "";
         // dd($eng_J1);
         $workbooks = Workbook::query();
+
+        // 問題集に存在する単元のリストを作成
+        $wb_units = $workbooks->pluck('unit');
+
+        // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+        $wb_unit_sets['eng'] = Unit::query()
+            ->where('subject','英語')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
 
         /******** 英語 *********/
         // 学年別
@@ -68,50 +87,12 @@ class WorkbookController extends Controller
                     $query->whereIn('grade', $grades);
                 });
         } elseif ($request->input('target') == 'eng_unit') {
-            if ($request->boolean('eng_be_verb')) {
-                $units[] = "be動詞";
-            }
-            if ($request->boolean('eng_general_verb')) {
-                $units[] = "一般動詞";
-            }
-            if ($request->boolean('eng_interrogative')) {
-                $units[] = "疑問詞";
-            }
-            if ($request->boolean('eng_personal_pronoun')) {
-                $units[] = "代名詞";
-            }
-            if ($request->boolean('eng_past_verb')) {
-                $units[] = "過去形";
-            }
-            if ($request->boolean('eng_progressive_tense')) {
-                $units[] = "進行形";
-            }
-            if ($request->boolean('eng_conjection')) {
-                $units[] = "接続詞";
-            }
-            if ($request->boolean('eng_infinitive')) {
-                $units[] = "不定詞";
-            }
-            if ($request->boolean('eng_gerund')) {
-                $units[] = "動名詞";
-            }
-            if ($request->boolean('eng_auxiliary_verb')) {
-                $units[] = "助動詞";
-            }
-            if ($request->boolean('eng_comparative')) {
-                $units[] = "比較級";
-            }
-            if ($request->boolean('eng_passive_voice')) {
-                $units[] = "受動態";
-            }
-            if ($request->boolean('eng_present_perfect')) {
-                $units[] = "現在完了";
-            }
-            if ($request->boolean('eng_svo_infinitive')) {
-                $units[] = "SVO+不定詞";
-            }
-            if ($request->boolean('eng_postfix_modification')) {
-                $units[] = "後置修飾（分詞、関係代名詞）";
+            // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+            foreach ($wb_unit_sets['eng'] as $eng_unit) {
+                if ($request->boolean($eng_unit->physical_name)) {
+                    // チェックされている単元の論理名（be動詞など）を配列に格納
+                    $units[] = $eng_unit->logical_name;
+                }
             }
             $workbooks = $workbooks
                 ->where('subject','英語')
@@ -119,14 +100,13 @@ class WorkbookController extends Controller
                 ->when(count($units) > 0, function ($query) use ($units) {
                     $query->whereIn('unit', $units);
                 });
-
         }
 
         $workbooks = $workbooks
             ->orderBy('grade','asc')
             ->get();
 
-        return view('workbook.summary_list', compact('workbooks'));
+        return view('workbook.summary_list', compact('workbooks','units'));
     }
 
     public function unitbasedlist(User $user) {

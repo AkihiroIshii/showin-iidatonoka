@@ -45,13 +45,13 @@
                 <div class="flex mt-4">
                     <div class="px-6 w-24 shirink-0 font-bold">学年別</div>
                     <div class="flex flex-wrap gap-y-2">
-                        <label>
+                        <label class="w-auto px-4">
                             <input type="checkbox" name="eng_J1" value="1">中１
                         </label>
-                        <label>
+                        <label class="w-auto px-4">
                             <input type="checkbox" name="eng_J2" value="1">中２
                         </label>
-                        <label>
+                        <label class="w-auto px-4">
                             <input type="checkbox" name="eng_J3" value="1">中３
                         </label>
                         <button type="submit" name="target" value="eng_grade" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
@@ -62,51 +62,12 @@
                 <div class="flex mt-4">
                     <div class="px-6 w-36 shirink-0 font-bold">単元別</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
-                        <label>
-                            <input type="checkbox" name="eng_be_verb" value="1">be動詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_general_verb" value="1">一般動詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_interrogative" value="1">疑問詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_personal_pronoun" value="1">代名詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_past_verb" value="1">過去形
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_progressive_tense" value="1">進行形
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_conjection" value="1">接続詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_infinitive" value="1">不定詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_gerund" value="1">動名詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_auxiliary_verb" value="1">助動詞
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_comparative" value="1">比較級
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_passive_voice" value="1">受動態
-                        </label>
-                        <label>
-                            <input type="checkbox" name="eng_present_perfect" value="1">現在完了
-                        </label>
-                        <label class="w-36">
-                            <input type="checkbox" name="eng_svo_infinitive" value="1">SVO+不定詞
-                        </label>
-                        <label class="w-64">
-                            <input type="checkbox" name="eng_postfix_modification" value="1">後置修飾（分詞、関係代名詞）
-                        </label>
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['eng'] as $eng_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $eng_unit->physical_name }}" value="1">{{ $eng_unit->logical_name }}
+                            </label>
+                        @endforeach
                         <button type="submit" name="target" value="eng_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
                             単元別 問題表示
                         </button>

@@ -15,7 +15,11 @@
             $trClass = '';
             $message = '';
         @endphp
-        <p class="text-center font-bold text-blue-500">復習用の問題集です。解説を見ても理解できない人は、解説の【　】に書かれている単元の基礎を復習しましょう。</p>
+        @if($workbooks->isEmpty())
+            <p class="text-center">該当する問題がありません(´･ω･｀)ｺﾞﾒﾝﾈ</p>
+        @else
+            <p class="text-center font-bold text-blue-500">復習用の問題集です。解説を見ても理解できない人は、解説の【　】に書かれている単元の基礎を復習しましょう。</p>
+        @endif
         <!-- 問題表示 -->
         <!-- スマホ表示用 -->
         <div class="sm:hidden">
