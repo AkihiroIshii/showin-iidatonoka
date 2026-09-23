@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Traits\UserTrait;
+use App\Models\Grade;
 use App\Models\Workbook;
 use App\Models\Unit;
 
@@ -43,8 +44,9 @@ class WorkbookController extends Controller
             ->orderBy('grade','desc')
             ->get();
 
-        // 問題集に存在する単元のリストを作成
+        // 問題集に存在する単元、学年のリストを作成
         $wb_units = $workbooks->pluck('unit');
+        $wb_grades = $workbooks->pluck('grade');
 
         // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
         $units['eng'] = Unit::query()
@@ -52,7 +54,12 @@ class WorkbookController extends Controller
             ->whereIn('logical_name', $wb_units)
             ->get();
 
-        return view('workbook.index', compact('user','workbooks','units'));
+        // 単元テーブル(units)から、問題集に存在する学年のみ、物理名＆論理名を取得
+        $grades['eng'] = Grade::query()
+            ->whereIn('physical_name', $wb_grades)
+            ->get();
+
+        return view('workbook.index', compact('user','workbooks','units','grades'));
     }
 
     public function summary_list(Request $request) {

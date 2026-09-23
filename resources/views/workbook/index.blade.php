@@ -44,22 +44,19 @@
                 <div class="flex mt-4">
                     <div class="px-6 w-24 shirink-0 font-bold">学年別</div>
                     <div class="flex flex-wrap gap-y-2">
-                        <label class="w-auto px-4">
-                            <input type="checkbox" name="eng_J1" value="1">中１
-                        </label>
-                        <label class="w-auto px-4">
-                            <input type="checkbox" name="eng_J2" value="1">中２
-                        </label>
-                        <label class="w-auto px-4">
-                            <input type="checkbox" name="eng_J3" value="1">中３
-                        </label>
+                        <!-- 問題集に存在する学年のみチェックボックスを表示 -->
+                        @foreach($grades['eng'] as $eng_grade)
+                            <label class="w-auto px-4">
+                                <input type="checkbox" name="eng_{{ $eng_grade->physical_name }}" value="1">{{ $eng_grade->grade }}
+                            </label>
+                        @endforeach
                         <button type="submit" name="target" value="eng_grade" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
                             学年別 問題表示
                         </button>
                     </div>
                 </div>
                 <div class="flex mt-4">
-                    <div class="px-6 w-36 shirink-0 font-bold">単元別</div>
+                    <div class="px-6 w-24 shirink-0 font-bold">単元別</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['eng'] as $eng_unit)
