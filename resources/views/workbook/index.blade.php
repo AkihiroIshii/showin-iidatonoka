@@ -32,14 +32,14 @@
                             <input type="radio" name="eng_type" value="並び替え" checked> 並び替え
                         </label>
                         <label>
-                            <input type="radio" name="eng_type" value="空所補充" checked> 空所補充
+                            <input type="radio" name="eng_type" value="空所補充"> 空所補充
                         </label>
-                        <label>
+                        {{-- <label>
                             <input type="radio" name="eng_type" value="全訳"> 全訳
                         </label>
                         <label>
                             <input type="radio" name="eng_type" value="読解"> 読解
-                        </label>
+                        </label> --}}
                     </div>
                 </div>
                 <div class="flex mt-4">
