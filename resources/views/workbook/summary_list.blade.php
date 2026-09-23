@@ -30,7 +30,7 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/4">解説</td>
                     </div>
                 </tr>
-                @foreach($workbooks as $workbook)
+                @foreach($workbooks as $i => $workbook)
                     {{-- @dd($workbooks)             --}}
                     @php
                         if($workbook->subject == '国語') {
@@ -56,17 +56,15 @@
                         <td class="border border-slate-300 px-4">{!! $workbook->question !!}</td>
                         <td class="border border-slate-300 px-4">
                             <details>
-                                <summary>答え</summary>
+                                <summary>答えを見る
+                                </summary>
                                 <p>{!! $workbook->answer !!}</p>
                             </details>    
                         </td>
                         <td class="border border-slate-300 px-4">
-                            {{-- <details>
-                                <summary>解説</summary>
-                                <p>{!! $workbook->explanation !!}</p>
-                            </details>     --}}
-                            <!-- 解説ボタン -->
-                            <button type="button" onclick="document.getElementById('explanationModal').classList.remove('hidden')" class="text-blue-600 underline">
+                            <button type="button"
+                                    onclick="showExplanation({{ $i }})"
+                                    class="text-blue-600 underline">
                                 解説
                             </button>
                         </td>
@@ -78,27 +76,55 @@
 
     <!-- モーダル -->
     <div id="explanationModal"
-        class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
-        onclick="if(event.target === this) this.classList.add('hidden')">
+        class="hidden fixed inset-0 z-50 bg-black/50
+                flex items-center justify-center p-4"
+        onclick="if (event.target === this) closeExplanation()">
 
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+        <div class="bg-white rounded-lg shadow-lg
+                    w-full max-w-2xl max-h-[80vh] overflow-y-auto">
 
             <div class="flex justify-between items-center border-b p-4">
-                <h2 class="text-lg font-bold">解説</h2>
+                <h2 class="text-lg font-bold">
+                    解説
+                </h2>
 
                 <button type="button"
-                        onclick="document.getElementById('explanationModal').classList.add('hidden')"
-                        class="text-gray-500 hover:text-gray-800 text-2xl">
+                        onclick="closeExplanation()"
+                        class="text-gray-500 text-2xl">
                     ×
                 </button>
             </div>
 
-            <div class="p-6">
-                <p>問題：　{!! $workbook->question !!}</p>
-                <p>答え：　{!! $workbook->answer !!}</p>
-                <p>解説：　{!! $workbook->explanation !!}</p>
+            <div id="explanationContent" class="p-6">
             </div>
 
         </div>
     </div>
+
+    <script>
+        const questions = @json(
+            collect($workbooks)->pluck('question')->values()
+        );
+        const answers = @json(
+            collect($workbooks)->pluck('answer')->values()
+        );
+        const explanations = @json(
+            collect($workbooks)->pluck('explanation')->values()
+        );
+
+        function showExplanation(index) {
+            document.getElementById('explanationContent').innerHTML =
+                "<p>問題：　" + questions[index]
+                    + "</p><p>答え：　" + answers[index]
+                    + "</p><p>解説：　" + explanations[index] + "</p>";
+
+            document.getElementById('explanationModal')
+                .classList.remove('hidden');
+        }
+
+        function closeExplanation() {
+            document.getElementById('explanationModal')
+                .classList.add('hidden');
+        }
+    </script>
 </x-app-layout>
