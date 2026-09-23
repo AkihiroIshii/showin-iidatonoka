@@ -18,7 +18,12 @@
         @if($workbooks->isEmpty())
             <p class="text-center">該当する問題がありません(´･ω･｀)ｺﾞﾒﾝﾈ</p>
         @else
-            <p class="text-center font-bold text-blue-500">復習用の問題集です。解説を見ても理解できない人は、解説の【　】に書かれている単元の基礎を復習しましょう。</p>
+            <div class="ml-10">
+                <ul class="list-disc text-left font-bold">
+                    <li>復習用の問題集です。<span class="underline">解説を見ても理解できない人は、解説の【　】に書かれている単元の基礎を復習しましょう。</span></li>
+                    <li>ページを読み込むたびに、最大 10 件の問題をランダムに表示します。</li>
+                </ul>
+            </div>
         @endif
         <!-- 問題表示 -->
         <!-- スマホ表示用 -->
@@ -115,7 +120,7 @@
         onclick="if (event.target === this) closeExplanation()">
 
         <div class="bg-white rounded-lg shadow-lg
-                    w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+                    w-[95vw] h-[90vh] overflow-y-auto">
 
             <div class="flex justify-between items-center border-b p-4">
                 <h2 class="text-lg font-bold">

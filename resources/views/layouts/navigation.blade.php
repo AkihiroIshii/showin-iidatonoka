@@ -24,10 +24,10 @@
                     <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
                         単元別学習
                     </x-nav-link>
-                    @if(Auth::user()->role == "admin")
                     <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
-                        問題集
+                        問題集(new!)
                     </x-nav-link>
+                    @if(Auth::user()->role == "admin")
                         <x-nav-link :href="route('admin.students')" :active="request()->routeIs('admin.students')">
                             生徒一覧
                         </x-nav-link>

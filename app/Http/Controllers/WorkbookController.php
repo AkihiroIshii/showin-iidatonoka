@@ -103,7 +103,8 @@ class WorkbookController extends Controller
         }
 
         $workbooks = $workbooks
-            ->orderBy('grade','asc')
+            ->inRandomOrder()
+            ->take(10)
             ->get();
 
         return view('workbook.summary_list', compact('workbooks','units'));
