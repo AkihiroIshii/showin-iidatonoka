@@ -87,12 +87,12 @@
                                 <a href="{{route('workbook.edit', $workbook)}}" class="text-blue-600">●</a>
                             </td>
                         @endif
-                        <td class="border border-slate-300 px-4">{!! $workbook->question !!}</td>
+                        <td class="border border-slate-300 px-4 font-times text-xl">{!! $workbook->question !!}</td>
                         <td class="border border-slate-300 px-4">
                             <details>
                                 <summary>答えを見る
                                 </summary>
-                                <p>
+                                <p class="font-times text-red-500 text-lg">
                                     {!! $workbook->answer !!}
                                     <button type="button"
                                             onclick="showExplanation({{ $i }})"
@@ -129,7 +129,7 @@
                 </button>
             </div>
 
-            <div id="explanationContent" class="p-6">
+            <div id="explanationContent" class="p-6 text-xl">
             </div>
 
         </div>
@@ -153,7 +153,7 @@
             document.getElementById('explanationContent').innerHTML =
                 "<p>問題：　" + questions[index]
                     + "</p><p>答え：　" + answers[index] + "　【" + units[index] + "】"
-                    + "</p><p>解説：</p><div class=\"pl-4\">" + explanations[index] + "</div>";
+                    + "</p><p>解説：</p><div class=\"pl-4 font-klee\">" + explanations[index] + "</div>";
 
             document.getElementById('explanationModal')
                 .classList.remove('hidden');
