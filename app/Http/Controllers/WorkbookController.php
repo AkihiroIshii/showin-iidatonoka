@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Traits\UserTrait;
 use App\Models\Workbook;
@@ -44,6 +45,90 @@ class WorkbookController extends Controller
         return view('workbook.index', compact('user','workbooks'));
     }
 
+    public function summary_list(Request $request) {
+        // $eng_J1 = $request->boolean('eng_J1');
+        $grades[] = "";
+        $units[] = "";
+        // dd($eng_J1);
+        $workbooks = Workbook::query();
+
+        /******** 英語 *********/
+        // 学年別
+        if ($request->input('target') == 'eng_grade') {
+            if ($request->boolean('eng_J1')) {
+                $grades[] = "J1";
+            }
+            if ($request->boolean('eng_J2')) {
+                $grades[] = "J2";
+            }
+            $workbooks = $workbooks
+                ->where('subject','英語')
+                ->where('q_type', $request->input('eng_type'))
+                ->when(count($grades) > 0, function ($query) use ($grades) {
+                    $query->whereIn('grade', $grades);
+                });
+        } elseif ($request->input('target') == 'eng_unit') {
+            if ($request->boolean('eng_be_verb')) {
+                $units[] = "be動詞";
+            }
+            if ($request->boolean('eng_general_verb')) {
+                $units[] = "一般動詞";
+            }
+            if ($request->boolean('eng_interrogative')) {
+                $units[] = "疑問詞";
+            }
+            if ($request->boolean('eng_personal_pronoun')) {
+                $units[] = "代名詞";
+            }
+            if ($request->boolean('eng_past_verb')) {
+                $units[] = "過去形";
+            }
+            if ($request->boolean('eng_progressive_tense')) {
+                $units[] = "進行形";
+            }
+            if ($request->boolean('eng_conjection')) {
+                $units[] = "接続詞";
+            }
+            if ($request->boolean('eng_infinitive')) {
+                $units[] = "不定詞";
+            }
+            if ($request->boolean('eng_gerund')) {
+                $units[] = "動名詞";
+            }
+            if ($request->boolean('eng_auxiliary_verb')) {
+                $units[] = "助動詞";
+            }
+            if ($request->boolean('eng_comparative')) {
+                $units[] = "比較級";
+            }
+            if ($request->boolean('eng_passive_voice')) {
+                $units[] = "受動態";
+            }
+            if ($request->boolean('eng_present_perfect')) {
+                $units[] = "現在完了";
+            }
+            if ($request->boolean('eng_svo_infinitive')) {
+                $units[] = "SVO+不定詞";
+            }
+            if ($request->boolean('eng_postfix_modification')) {
+                $units[] = "後置修飾（分詞、関係代名詞）";
+            }
+            $workbooks = $workbooks
+                ->where('subject','英語')
+                ->where('q_type', $request->input('eng_type'))
+                ->when(count($units) > 0, function ($query) use ($units) {
+                    $query->whereIn('unit', $units);
+                });
+
+        }
+
+        $workbooks = $workbooks
+            ->orderBy('grade','asc')
+            ->get();
+
+        return view('workbook.summary_list', compact('workbooks'));
+    }
+
     public function unitbasedlist(User $user) {
         $user = $this->targetUser(Auth::user());
 
@@ -53,6 +138,26 @@ class WorkbookController extends Controller
             ->get();
 
         return view('workbook.unitbasedlist', compact('user','workbooks'));
+    }
+
+    public function edit(Workbook $workbook) {
+        return view('workbook.edit', compact('workbook'));
+    }
+
+    public function create() {
+        return view('workbook.create');
+    }
+
+    public function store(Request $request) {
+        $workbook = Workbook::create($request->all());
+        $request->session()->flash('message', '登録しました');
+        return back();
+    }
+
+    public function update(Request $request, Workbook $workbook) {
+        $workbook->update($request->all());
+        $request->session()->flash('message', '更新しました');
+        return back();
     }
 
     /***************** 単元別問題作成 *****************/

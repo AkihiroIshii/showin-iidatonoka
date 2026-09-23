@@ -10,9 +10,13 @@ class Workbook extends Model
         'id',
         'subject',
         'field',
+        'q_type',
+        'unit',
         'grade',
+        'term',
         'question',
         'answer',
+        'explanation',
         'reference',
     ];
 }

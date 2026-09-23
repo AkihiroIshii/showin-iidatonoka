@@ -95,35 +95,35 @@ class AdminController extends Controller
     // }
 
 
-    /** 問題集 */
-    public function workbook() {
-        $workbooks = Workbook::query()
-            ->orderBy('subject','asc')
-            ->orderBy('grade','desc')
-            ->get();
+    /** 問題集 2026/9/23 WorkbookController に移植*/ 
+    // public function workbook() {
+    //     $workbooks = Workbook::query()
+    //         ->orderBy('subject','asc')
+    //         ->orderBy('grade','desc')
+    //         ->get();
 
-        return view('admin.workbook.index', compact('workbooks'));
-    }
+    //     return view('admin.workbook.index', compact('workbooks'));
+    // }
 
-    public function edit_workbook(Workbook $workbook) {
-        return view('admin.workbook.edit', compact('workbook'));
-    }
+    // public function edit_workbook(Workbook $workbook) {
+    //     return view('admin.workbook.edit', compact('workbook'));
+    // }
 
-    public function create_workbook() {
-        return view('admin.workbook.create');
-    }
+    // public function create_workbook() {
+    //     return view('admin.workbook.create');
+    // }
 
-    public function store_workbook(WorkbookRequest $request) {
-        $workbook = Workbook::create($request->all());
-        $request->session()->flash('message', '登録しました');
-        return back();
-    }
+    // public function store_workbook(WorkbookRequest $request) {
+    //     $workbook = Workbook::create($request->all());
+    //     $request->session()->flash('message', '登録しました');
+    //     return back();
+    // }
 
-    public function update_workbook(WorkbookRequest $request, Workbook $workbook) {
-        $workbook->update($request->all());
-        $request->session()->flash('message', '更新しました');
-        return back();
-    }
+    // public function update_workbook(WorkbookRequest $request, Workbook $workbook) {
+    //     $workbook->update($request->all());
+    //     $request->session()->flash('message', '更新しました');
+    //     return back();
+    // }
 
     /** ユーザ */
     public function create_user() {

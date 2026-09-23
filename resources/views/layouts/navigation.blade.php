@@ -25,14 +25,14 @@
                         単元別学習
                     </x-nav-link>
                     @if(Auth::user()->role == "admin")
+                    <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
+                        問題集
+                    </x-nav-link>
                         <x-nav-link :href="route('admin.students')" :active="request()->routeIs('admin.students')">
                             生徒一覧
                         </x-nav-link>
                         <x-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
                             メンテナンス
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
-                            問題集
                         </x-nav-link>
                     <!-- 生徒、保護者 -->
                     @else
@@ -127,7 +127,7 @@
                 <x-responsive-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
                     メンテナンス
                 </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.workbook')" :active="request()->routeIs('admin.workbook')">
+                <x-responsive-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
                     問題集
                 </x-responsive-nav-link>
             <!--　生徒、保護者 -->

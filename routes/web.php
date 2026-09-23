@@ -111,16 +111,16 @@ Route::get('/admin/maintain', [AdminController::class, 'maintain'])
 ->middleware(['auth', 'verified'])->name('admin.maintain');
 
 /** 管理者＞問題集 */
-Route::get('/admin/workbook', [AdminController::class, 'workbook'])
-->middleware(['auth', 'verified'])->name('admin.workbook');
-Route::get('/admin/workbook/create', [AdminController::class, 'create_workbook'])
-->middleware(['auth', 'verified'])->name('admin.workbook.create');
-Route::post('/admin/workbook/store', [AdminController::class, 'store_workbook'])
-->middleware(['auth', 'verified'])->name('admin.workbook.store');
-Route::get('/admin/workbook/{workbook}/edit', [AdminController::class, 'edit_workbook'])
-->middleware(['auth', 'verified'])->name('admin.workbook.edit');
-Route::patch('workbook/{workbook}', [AdminController::class, 'update_workbook'])
-->middleware(['auth', 'verified'])->name('admin.workbook.update');
+// Route::get('/admin/workbook', [AdminController::class, 'workbook'])
+// ->middleware(['auth', 'verified'])->name('admin.workbook');
+// Route::get('/admin/workbook/create', [AdminController::class, 'create_workbook'])
+// ->middleware(['auth', 'verified'])->name('admin.workbook.create');
+// Route::post('/admin/workbook/store', [AdminController::class, 'store_workbook'])
+// ->middleware(['auth', 'verified'])->name('admin.workbook.store');
+// Route::get('/admin/workbook/{workbook}/edit', [AdminController::class, 'edit_workbook'])
+// ->middleware(['auth', 'verified'])->name('admin.workbook.edit');
+// Route::patch('workbook/{workbook}', [AdminController::class, 'update_workbook'])
+// ->middleware(['auth', 'verified'])->name('admin.workbook.update');
 
 /* 管理者＞ユーザ */
 Route::get('/admin/user/create', [AdminController::class, 'create_user'])
@@ -252,6 +252,17 @@ Route::patch('/examresult/{examresult}', [ExamresultController::class, 'update']
 /* 問題集 */
 Route::get('workbook', [WorkbookController::class, 'index'])
 ->middleware(['auth', 'verified'])->name('workbook');
+Route::get('workbook/summary_list', [WorkbookController::class, 'summary_list'])
+->middleware(['auth', 'verified'])->name('workbook.summary_list');
+Route::get('/workbook/create', [WorkbookController::class, 'create'])
+->middleware(['auth', 'verified'])->name('workbook.create');
+Route::post('/workbook/store', [WorkbookController::class, 'store'])
+->middleware(['auth', 'verified'])->name('workbook.store');
+Route::get('/workbook/{workbook}/edit', [WorkbookController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('workbook.edit');
+Route::patch('workbook/{workbook}', [WorkbookController::class, 'update'])
+->middleware(['auth', 'verified'])->name('workbook.update');
+
 Route::get('workbook/reference', [WorkbookController::class, 'reference'])
 ->middleware(['auth', 'verified'])->name('workbook.reference');
 Route::get('workbook/grammar', [WorkbookController::class, 'grammar'])
