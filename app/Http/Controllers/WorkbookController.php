@@ -8428,43 +8428,213 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 湿度
-    public function humidity() {
-        // h = m/M * 100
-        $h = rand(1, 90);   //湿度
-        $M = rand(5, 20);   //飽和水蒸気量[g/m^3]
-        $m = $M * $h / 100;  //実際の水蒸気量[g/m^3]
+    // 湿度（旧）
+    // public function humidity() {
+    //     // h = m/M * 100
+    //     $h = rand(1, 90);   //湿度
+    //     $M = rand(5, 20);   //飽和水蒸気量[g/m^3]
+    //     $m = $M * $h / 100;  //実際の水蒸気量[g/m^3]
 
+    //     $questions = [
+    //         [
+    //             'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、実際の水蒸気量は\,{$m}\,\mathrm{g/m^3}\,とする。このときの湿度を求めなさい。\)",
+    //             'a' => "{$h}\,\mathrm{\%}",
+    //             'e' => "<p>\(\displaystyle
+    //                         \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
+    //                         h=\\frac{\mathnormal{m}}{\,M\,}=\\frac{ \,{$m}\, }{ \,{$M}\, } \\times 100 = {$h}\,[\%]}。
+    //                     \)</p>",
+    //         ],
+    //         [
+    //             'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの水蒸気量を求めなさい。\)",
+    //             'a' => "{$m}\,\mathrm{g/m^3}",
+    //             'e' => "<p>\(\displaystyle
+    //                         \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
+    //                         {$h}=\\frac{\,\mathnormal{m}\,}{\,{$M}\,}\\times 100。これを解いて、\mathnormal{m}={$m}\,[g/m^3]}。
+    //                     \)</p>",
+    //         ],
+    //         [
+    //             'q' => "\(ある気温での水蒸気量が\,{$m}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの飽和水蒸気量を求めなさい。\)",
+    //             'a' => "{$M}\,\mathrm{g/m^3}",
+    //             'e' => "<p>\(\displaystyle
+    //                         \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
+    //                         {$h}=\\frac{\,{$m}\,}{\,M\,}\\times 100。これを解いて、M={$M}\,[g/m^3]}。
+    //                     \)</p>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "湿度・水蒸気量";
+    //     return view('workbook.unit.child', compact('unitname','question'));
+    // }
+
+    // 湿度
+    public function humidity(Request $request) {
+        $terms = [
+            ['term' => '露点', 'mean' => '水蒸気が結露し始める気温。',
+                'exp' => '<p>露点まで気温が低下すると、水蒸気が水滴になって現れる。これは、気温の低下と</p>
+                            <p>ともに飽和水蒸気量も少なくなり、飽和状態（湿度100%）に達したためである。</p>'],
+            ['term' => '水蒸気量', 'mean' => '空気 1 m\(^3\) あたりに含まれる水蒸気の質量。', 'exp' => '単位は g/m\(^3\) を用いる。'],
+            ['term' => '飽和水蒸気量', 'mean' => '湿度100%のときの水蒸気量。',
+                'exp' => '<p>飽和水蒸気量は気温によって異なり、気温が高いほど飽和水蒸気量は多くなる。</p>
+                        <p>つまり、高気温ではなかなか飽和状態にならないので、多くの水蒸気を含むことができる。</p>
+                        <p>反対に、低気温では飽和状態になりやすく、飽和するとそれ以上水蒸気を含められずに結露する。</p>'],
+            ['term' => '湿度', 'mean' => '飽和水蒸気量に対する水蒸気量の割合を百分率で表したもの。', 
+                'exp' => '$$ 湿度[\%] = \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100 $$
+                            <p>(※)飽和水蒸気量は気温によって異なる。</p>'],
+        ];
+        $idx = rand(0,count($terms)-1);
+        $term = $terms[$idx];
+
+        //表からの読み取り計算用
+        $T_diff = rand(2, 4);   // 表中の気温の間隔
+
+        $T0 = rand(2, 10);  // 基準の気温
+        for ($i = 1; $i <= 6; $i++) {
+            $T[$i] = $T0 + $T_diff * $i;    // 気温は一定間隔にする。
+            $M[$i] = number_format(round($T[$i]**2 / 40 + 6, 0) + 0.5 * rand(0, 1), 1); // それっぽい値にするためで、あまり深い意味はない計算。
+        }
+
+        //湿度
+        $Hl = 4 * rand(12, 24); // 48～96%
+        $Hh = 4 * rand(2, 10); // 8～40%
+
+        $T_idx1 = rand(1, 3);    // 表のT1~T5のうち、どれを使うかを決める。
+        $T_idx2 = rand(4, 6);    // 表のT1~T5のうち、どれを使うかを決める。
+        $Tl = $T[$T_idx1];
+        $Th = $T[$T_idx2];
+        $Ml = $M[$T_idx1];
+        $Mh = $M[$T_idx2];
+
+        //実際の水蒸気量[g/m^3]
+        $ml = $Ml * $Hl / 100;
+        $mh = $Mh * $Hh / 100;
+
+        $v = 5 * rand(1, 10);   // 空間の体積
+
+        $q_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5 w-60\">気温[℃]</td>";
+                            for ($i = 1; $i <= 6; $i++) {
+                                $q_table .= "<td class=\"border border-gray-400 w-20\">{$T[$i]}</td>";
+                            }
+                        $q_table .= "</tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 w-60\">飽和水蒸気量[g/m\(^3\)]</td>";
+                            for ($i = 1; $i <= 6; $i++) {
+                                $q_table .= "<td class=\"border border-gray-400 w-20\">{$M[$i]}</td>";
+                            }
+                        $q_table .= "</tr>
+                    </table>
+                    ";
+
+        $calc_qas = [
+            [
+                'q' => "気温が {$Th}℃ で水蒸気量が {$mh} g/m\(^3\) のとき、湿度は何％か。",
+                'a' => "{$Hh}％",
+                'e' => "<p>湿度は次のように定義される。</p>
+                        $$ 湿度[\%] = \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100.$$
+                        <p>表より、気温が {$Th}℃ のときの飽和水蒸気量は {$Mh} g/m\(^3\) であるから、式に代入して、</p>
+                        $$ 湿度[\%] = \\frac{\,{$mh}\,}{\,{$Mh}\,} \\times 100 = {$Hh}[\%]. $$
+                        ",
+            ],
+            [
+                'q' => "気温が {$Th}℃ では、湿度が{$Hh}％だった。このときの水蒸気量を求めなさい。",
+                'a' => "{$mh} g/m\(^3\)",
+                'e' => "<p>湿度は次のように定義される。</p>
+                        $$ \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100 = 湿度[\%].$$
+                        <p>表より、気温が {$Th}℃ のときの飽和水蒸気量は {$Mh} g/m\(^3\) であるから、</p>
+                        <p>水蒸気量を \(x\) g/m\(^3\) とすると、</p>
+                        \[
+                            \\begin{aligned}
+                                \\frac{\,x\,}{\,{$Mh}\,} \\times 100 &= {$Hh} \\\\
+                                \\therefore x &= \\frac{\,{$Hh} \\times {$Mh}\,}{100} = {$mh}
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+            [
+                'q' => "気温が {$Th}℃ で湿度が {$Hh}％のとき、{$v} m\(^3\) の空気には何 g の水蒸気が含まれるか。",
+                'a' => $v * $mh . " g",
+                'e' => "<p>まず、気温が {$Th}℃ で湿度が {$Hh}％のときでの水蒸気量を求める。水蒸気量は次の関係を満たす。</p>
+                        $$ \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100 = 湿度[\%].$$
+                        <p>表より、気温が {$Th}℃ のときの飽和水蒸気量は {$Mh} g/m\(^3\) であるから、</p>
+                        <p>水蒸気量を \(x\) g/m\(^3\) とすると、</p>
+                        \[
+                            \\begin{aligned}
+                                \\frac{\,x\,}{\,{$Mh}\,} \\times 100 &= {$Hh} \\\\
+                                \\therefore x &= \\frac{\,{$Hh} \\times {$Mh}\,}{100} = {$mh}
+                            \\end{aligned}
+                        \]
+                        <p>水蒸気量は 1 m\(^3\) あたりに含まれる水蒸気の質量[g]であるから、</p>
+                        <p>{$v} m\(^3\) あたりの水蒸気量は、{$mh}[g/m\(^3\)] × {$v}[m\(^3\)] = " . $v * $mh . " g.</p>
+                        ",
+            ],
+            [
+                'q' => "露点が {$Tl}℃のとき、同じ空気の気温 {$Th}℃ での湿度は何％か。整数値で答えよ。",
+                'a' => round($Ml * 100 / $Mh, 0) . "％",
+                'e' => "<p>露点とは、水蒸気が水滴になり始める気温であるが、これは空気が飽和状態に達したと考えてよい。</p>
+                        <p>つまり、露点とは湿度が 100% になる気温であり、このとき水蒸気量 = 飽和水蒸気量である。</p>
+                        <p>表より、 {$Tl}℃での飽和水蒸気量は {$Ml} g/m\(^3\) なので、<span class=\"underline\">この空気の水蒸気量も {$Ml} g/m\(^3\)</span> である。</p>
+                        <p>さて、次に気温 {$Th}℃について考える。湿度は次のように定義される。</p>
+                        $$ 湿度[\%] = \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100.$$
+                        <p>表より、気温が {$Th}℃ のときの飽和水蒸気量は {$Mh} g/m\(^3\) であるから、式に代入して、</p>
+                        $$ 湿度[\%] = \\frac{\,{$Ml}\,}{\,{$Mh}\,} \\times 100 \\fallingdotseq " . round($Ml * 100 / $Mh, 0) . "[\%]. $$
+                        ",
+            ],
+        ];
+        $idx = rand(0,count($calc_qas)-1);
+        $calc_qa = $calc_qas[$idx];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
         $questions = [
             [
-                'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、実際の水蒸気量は\,{$m}\,\mathrm{g/m^3}\,とする。このときの湿度を求めなさい。\)",
-                'a' => "{$h}\,\mathrm{\%}",
-                'e' => "<p>\(\displaystyle
-                            \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
-                            h=\\frac{\mathnormal{m}}{\,M\,}=\\frac{ \,{$m}\, }{ \,{$M}\, } \\times 100 = {$h}\,[\%]}。
-                        \)</p>",
+                'q_type' => 3,
+                'q' => "「{$term['term']}」の意味を説明しなさい。",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$term['mean']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['exp']}",
             ],
             [
-                'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの水蒸気量を求めなさい。\)",
-                'a' => "{$m}\,\mathrm{g/m^3}",
-                'e' => "<p>\(\displaystyle
-                            \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
-                            {$h}=\\frac{\,\mathnormal{m}\,}{\,{$M}\,}\\times 100。これを解いて、\mathnormal{m}={$m}\,[g/m^3]}。
-                        \)</p>",
+                'q_type' => 3,
+                'q' => "<p>次の意味をもつ用語を答えなさい。</p>
+                        <p class=\"text-xl\">{$term['mean']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$term['term']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['exp']}",
             ],
             [
-                'q' => "\(ある気温での水蒸気量が\,{$m}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの飽和水蒸気量を求めなさい。\)",
-                'a' => "{$M}\,\mathrm{g/m^3}",
-                'e' => "<p>\(\displaystyle
-                            \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
-                            {$h}=\\frac{\,{$m}\,}{\,M\,}\\times 100。これを解いて、M={$M}\,[g/m^3]}。
-                        \)</p>",
+                'q_type' => 3,
+                'q' => "<p>ある場所での気温と飽和水蒸気量が、次表の関係を満たすとする。</p>
+                        {$q_table}
+                        <p>問．{$calc_qa['q']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">{$calc_qa['a']}</p>",
+                'e_type' => 3,
+                'e' => "{$calc_qa['e']}",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "湿度・水蒸気量";
-        return view('workbook.unit.child', compact('unitname','question'));
+
+        // チェックボックスの値を取得。
+        $term = $request->boolean('term');    // 用語の確認
+        $calc = $request->boolean('calc');    // 計算問題
+        if ($term == true && $calc == false) {
+            $q_index = rand(0,1);
+            $question = $questions[$q_index];
+        } else if ($term == false && $calc == true) {
+            $q_index = rand(2,count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "science";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "湿度";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
     // 電磁気
