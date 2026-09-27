@@ -1,5 +1,5 @@
 <x-app-layout>
-    @if(Auth::user()->role == "admin")
+    @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 問題集＞新規登録
@@ -38,6 +38,7 @@
                             <x-input-error :messages="$errors->get('field')" class="mt-2" />
                             <label for="field" class="font-semibold mt-4">分野</label>
                             <input type="string" name="field" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="field" value="{{old('field')}}">
+                            英文法、英単語など
                         </div>
                     </div>
 
@@ -46,14 +47,42 @@
                             <x-input-error :messages="$errors->get('q_type')" class="mt-2" />
                             <label for="q_type" class="font-semibold mt-4">種別</label>
                             <input type="string" name="q_type" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="q_type" value="{{old('q_type')}}">
+                            【英語】並び替え／空所補充
                         </div>
                     </div>
+
+                    {{-- <div class="mt-8">
+                        <div>
+                            <x-input-error :messages="$errors->get('unit')" class="mt-2" />
+                            <label for="unit" class="font-semibold mt-4">単元</label>
+                            <input type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="unit" value="{{old('unit')}}">
+                            単元の種類分、選択画面にチェックボックスが表示されます。
+                        </div>
+                    </div> --}}
 
                     <div class="mt-8">
                         <div>
                             <x-input-error :messages="$errors->get('unit')" class="mt-2" />
                             <label for="unit" class="font-semibold mt-4">単元</label>
-                            <input type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="unit" value="{{old('unit')}}">
+                            <select type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md" id="unit">
+                                <option value="">選択してください。</option>
+                                @foreach($units as $unit)
+                                    <option value="{{ $unit->logical_name }}" {{ old('unit') == $unit->logical_name ? 'selected' : '' }}>
+                                        {{ $unit->subject }}：{{ $unit->logical_name }}
+                                    </option>
+                                @endforeach
+                            </select>     
+                            {{-- @php
+                                $subjects = ['国語','数学','算数','社会','理科','英語','化学','物理'];
+                            @endphp
+                            <select type="string" name="subject" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
+                                <option value="">選択してください。</option>
+                                @foreach($subjects as $subject)
+                                    <option value="{{ $subject }}" {{ old('subject') == $subject ? 'selected' : '' }}>
+                                        {{ $subject }}
+                                    </option>
+                                @endforeach
+                            </select>      --}}
                         </div>
                     </div>
 
@@ -71,7 +100,8 @@
                                         {{ $grade }}
                                     </option>
                                 @endforeach
-                            </select>     
+                            </select>
+                            この単元を学習する学年
                         </div>
                     </div>
 
@@ -90,6 +120,7 @@
                                     </option>
                                 @endforeach
                             </select>     
+                            学習する学期（目安）。まだ用途が決まっていないので適当でよいです。
                         </div>
                     </div>
 
@@ -97,7 +128,7 @@
                         <div>
                             <x-input-error :messages="$errors->get('question')" class="mt-2" />
                             <label for="question" class="font-semibold mt-4">問題</label>
-                            <textarea name="question" class="w-full py-2 border border-gray-300 rounded-md" id="question">{{old('question')}}</textarea>
+                            <textarea name="question" class="w-full h-32 py-2 border border-gray-300 rounded-md" id="question">{{old('question')}}</textarea>
                         </div>
                     </div>
 
@@ -114,17 +145,17 @@
                         <div>
                             <x-input-error :messages="$errors->get('explanation')" class="mt-2" />
                             <label for="explanation" class="font-semibold mt-4">解説</label>
-                            <textarea name="explanation" class="w-full py-2 border border-gray-300 rounded-md" id="explanation">{{old('explanation')}}</textarea>
+                            <textarea name="explanation" class="w-full h-32 py-2 border border-gray-300 rounded-md" id="explanation">{{old('explanation')}}</textarea>
                         </div>
                     </div>
 
-                    <div class="mt-8">
+                    {{-- <div class="mt-8">
                         <div>
                             <x-input-error :messages="$errors->get('reference')" class="mt-2" />
                             <label for="reference" class="font-semibold mt-4">参考</label>
                             <textarea name="reference" class="w-full py-2 border border-gray-300 rounded-md" id="reference">{{old('reference')}}</textarea>
                         </div>
-                    </div>
+                    </div> --}}
 
 
                     <x-primary-button class="mt-4">

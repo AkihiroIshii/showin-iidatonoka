@@ -18,5 +18,6 @@ class Workbook extends Model
         'answer',
         'explanation',
         'reference',
+        'campus_id',
     ];
 }

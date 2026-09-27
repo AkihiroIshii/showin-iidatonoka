@@ -61,7 +61,7 @@
                         <x-input-error :messages="$errors->get('grade')" class="mt-2" />
                         <label for="subject" class="font-semibold mt-4">学年</label>
                         @php
-                            $grades = ['小４','小５','小６','中１','中２','中３','高１','高２','高３','保護者'];
+                            $grades = ['小４','小５','小６','中１','中２','中３','高１','高２','高３','保護者','塾長'];
                         @endphp
                         <select type="string" name="grade" class="w-auto py-2 border border-gray-300 rounded-md" id="grade">
                             <option value="">選択してください。</option>

@@ -15,8 +15,8 @@
             $trClass = '';
             $message = '';
         @endphp
-        @if(Auth::user()->role == "admin")
-            <a href="{{route('workbook.create')}}" :active="request()->routeIs('admin.workbook.create')" class="text-blue-600">新規登録</a>
+        @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
+            <a href="{{route('workbook.create')}}" :active="request()->routeIs('workbook.create')" class="text-blue-600">新規登録</a>
         @endif
         <!-- 問題表示 -->
         <div>

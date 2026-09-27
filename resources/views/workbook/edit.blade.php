@@ -1,5 +1,5 @@
 <x-app-layout>
-    @if(Auth::user()->role == "admin")
+    @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 問題集＞編集
@@ -30,7 +30,7 @@
                                         {{ $subject }}
                                     </option>
                                 @endforeach
-                            </select>     
+                            </select>    
                         </div>
                     </div>
 
@@ -50,11 +50,37 @@
                         </div>
                     </div>
 
-                    <div class="mt-8">
+                    {{-- <div class="mt-8">
                         <div>
                             <x-input-error :messages="$errors->get('unit')" class="mt-2" />
                             <label for="unit" class="font-semibold mt-4">単元</label>
                             <input type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="unit" value="{{old('unit', $workbook->unit)}}">
+                        </div>
+                    </div> --}}
+
+                    <div class="mt-8">
+                        <div>
+                            <x-input-error :messages="$errors->get('unit')" class="mt-2" />
+                            <label for="unit" class="font-semibold mt-4">単元</label>
+                            <select type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md" id="unit">
+                                <option value="">選択してください。</option>
+                                @foreach($units as $unit)
+                                    <option value="{{ $unit->logical_name }}" {{ old('unit', $workbook->unit) == $unit->logical_name ? 'selected' : '' }}>
+                                        {{ $unit->subject }}：{{ $unit->logical_name }}
+                                    </option>
+                                @endforeach
+                            </select>     
+                            {{-- @php
+                                $subjects = ['国語','数学','算数','社会','理科','英語','化学','物理'];
+                            @endphp
+                            <select type="string" name="subject" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
+                                <option value="">選択してください。</option>
+                                @foreach($subjects as $subject)
+                                    <option value="{{ $subject }}" {{ old('subject') == $subject ? 'selected' : '' }}>
+                                        {{ $subject }}
+                                    </option>
+                                @endforeach
+                            </select>      --}}
                         </div>
                     </div>
 

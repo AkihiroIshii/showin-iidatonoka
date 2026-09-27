@@ -63,8 +63,8 @@
         <div class="hidden sm:block mb-6 max-w-full">
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <tr class="bg-gray-300">
-                    @if(Auth::user()->role == "admin")
-                        <th class="px-8">編集</th>
+                    @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
+                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-6"></th>
                     @endif
                     <div class="w-5/6">
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/2">問題</td>
@@ -86,12 +86,14 @@
                         }
                     @endphp
                     <tr class={!! $trClass !!}>
-                        @if(Auth::user()->role == "admin")
+                        @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
                             <td>
-                                <a href="{{route('workbook.edit', $workbook)}}" class="text-blue-600">●</a>
+                                <a href="{{route('workbook.edit', $workbook)}}" class="text-blue-600">編集</a>
                             </td>
                         @endif
-                        <td class="border border-slate-300 px-4 font-times text-xl">{!! $workbook->question !!}</td>
+                        <td class="border border-slate-300 px-4">
+                            <pre class="font-times text-xl">{!! $workbook->question !!}</pre>
+                        </td>
                         <td class="border border-slate-300 px-4">
                             <details>
                                 <summary>答えを見る
@@ -133,7 +135,9 @@
                 </button>
             </div>
 
-            <div id="explanationContent" class="p-6 text-xl">
+            <div>
+            <pre id="explanationContent" class="p-6 text-xl">
+            </pre>
             </div>
 
         </div>

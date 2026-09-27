@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="text-right text-sm font-bold text-blue-700">(※)帰るときは必ずログアウト（Log Out）↑</div>
+        <div class="text-right text-sm font-bold text-blue-700">(※)帰るときは必ずログアウト↑</div>
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{$user->name}}さんのダッシュボード
         </h2>

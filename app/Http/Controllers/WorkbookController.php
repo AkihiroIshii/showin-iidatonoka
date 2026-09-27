@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Traits\UserTrait;
+use App\Models\Campus;
 use App\Models\Grade;
 use App\Models\Workbook;
 use App\Models\Unit;
@@ -39,7 +41,16 @@ class WorkbookController extends Controller
     public function index(User $user) {
         $user = $this->targetUser(Auth::user());
 
+        // if ($user->grade == "塾長") {
+        //     $campus_id = Campus::query()
+        //         ->select('id')
+        //         ->where('chief_id', $user->user_id)
+        //         ->get();
+        // }
+        // dd($user->campus_id);
+
         $workbooks = Workbook::query()
+            ->where('campus_id', $user->campus_id)
             ->orderBy('subject','asc')
             ->orderBy('grade','desc')
             ->get();
@@ -63,11 +74,13 @@ class WorkbookController extends Controller
     }
 
     public function summary_list(Request $request) {
+        $user = $this->targetUser(Auth::user());
         // $eng_J1 = $request->boolean('eng_J1');
         $grades[] = "";
         $units[] = "";
         // dd($eng_J1);
-        $workbooks = Workbook::query();
+        $workbooks = Workbook::query()
+            ->where('campus_id', $user->campus_id);
 
         // 問題集に存在する単元のリストを作成
         $wb_units = $workbooks->pluck('unit');
@@ -86,6 +99,9 @@ class WorkbookController extends Controller
             }
             if ($request->boolean('eng_J2')) {
                 $grades[] = "J2";
+            }
+            if ($request->boolean('eng_J3')) {
+                $grades[] = "J3";
             }
             $workbooks = $workbooks
                 ->where('subject','英語')
@@ -129,21 +145,56 @@ class WorkbookController extends Controller
     }
 
     public function edit(Workbook $workbook) {
-        return view('workbook.edit', compact('workbook'));
+        // 単元テーブル(units)から、単元の物理名＆論理名を取得
+        $units = Unit::query()->get();
+        return view('workbook.edit', compact('workbook', 'units'));
     }
 
     public function create() {
-        return view('workbook.create');
+        // 単元テーブル(units)から、単元の物理名＆論理名を取得
+        $units = Unit::query()->get();
+        return view('workbook.create', compact('units'));
     }
 
     public function store(Request $request) {
-        $workbook = Workbook::create($request->all());
+        $validated = $request->validate([
+            'subject' => 'required',
+            'field' => 'nullable',
+            'q_type' => 'required',
+            'unit' => 'required',
+            'grade' => 'nullable',
+            'term' => 'nullable',
+            'question' => 'required',
+            'answer' => 'required',
+            'explanation' => 'required',
+            'reference' => 'nullable',
+        ]);
+
+        $user_id = Session::get('target_students');
+        $campus_id = User::query()
+            ->where('id', $user_id)
+            ->value('campus_id');
+        $validated['campus_id'] = $campus_id;
+        $workbook = Workbook::create($validated);
         $request->session()->flash('message', '登録しました');
         return back();
     }
 
     public function update(Request $request, Workbook $workbook) {
-        $workbook->update($request->all());
+        $validated = $request->validate([
+            'subject' => 'required',
+            'field' => 'nullable',
+            'q_type' => 'required',
+            'unit' => 'required',
+            'grade' => 'nullable',
+            'term' => 'nullable',
+            'question' => 'required',
+            'answer' => 'required',
+            'explanation' => 'required',
+            'reference' => 'nullable',
+        ]);
+
+        $workbook->update($validated);
         $request->session()->flash('message', '更新しました');
         return back();
     }
