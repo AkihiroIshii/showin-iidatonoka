@@ -4538,15 +4538,17 @@ class WorkbookController extends Controller
         $ab_add_str2 = $this->num_to_str($a + $b, 1, 2);
 
         // 解の公式用 x=(p±√q)/r
-        $primes = $this->get_primes(3, 11);
-        // $p = $primes[2];
-        // $q = $primes[1];
-        // $r = 2*$primes[0]; 
-        $a = 1;
-        $b = -2*rand(1, 3);
-        $c = -rand(1, 3);
-        $p = -$b/2;
-        $q = $p**2 - $c;
+        $a2 = 1;
+        $b2 = -2*rand(1, 3);
+        $c2 = -rand(1, 3);
+        $p = -$b2/2;
+        $q = $p**2 - $c2;
+        while ($q == 4) {
+            $b2 = -2*rand(1, 3);
+            $c2 = -rand(1, 3);
+            $p = -$b2/2;
+            $q = $p**2 - $c2;
+        }
         // $c_str = $this->fracnum_to_str($b**2 - $q, 4*$a, "", 1);
 
         // q：問、a：答、e：解説
@@ -4628,20 +4630,20 @@ class WorkbookController extends Controller
             [
                 'q_type' => 3,
                 'q' => "<p>次の方程式を解きなさい。</p>
-                        $$ x^2 " . $this->add_plus($b) . "x " . $this->add_plus($c) . " = 0 $$",
+                        $$ x^2 " . $this->add_plus($b2) . "x " . $this->add_plus($c2) . " = 0 $$",
                 'a_type' => 2,
                 'a' => "x = {$p}\,\pm \sqrt{{$q}}",
                 'e_type' => 3,
                 'e' => "<p class=\"leading-[2]\">方程式 \(ax^2+bx+c=0\) について、解の公式が成り立つ。</p>
                         $$ x = \\frac{\,-b\,\pm \sqrt{b^2 - 4ac}\,}{2a} $$
-                        これに、\(\displaystyle a = {$a}、b = {$b}、c = " . $this->add_plus($c) . "\) を代入すると、</p>
+                        これに、\(\displaystyle a = {$a2}、b = {$b2}、c = " . $this->add_plus($c2) . "\) を代入すると、</p>
                         \[
                             \\begin{aligned}
-                                x &= \\frac{\,-({$b})\,\pm \sqrt{({$b})^2 - 4\\times{$a} \\times " . $this->add_braket($c) . "}\,}{2\\times{$a}} \\\\
-                                  &= \\frac{\," . -$b . "\,\pm \sqrt{" . $b**2 . $this->add_plus(-4*$a*$c) . "}\,}{" . 2*$a . "}
-                                  = \\frac{\," . -$b . "\,\pm \sqrt{" . $b**2 -4*$a*$c . "}\,}{" . 2*$a . "}
-                                  = \\frac{\," . -$b . "\,\pm 2\sqrt{" . ($b**2 -4*$a*$c)/4 . "}\,}{" . 2*$a . "} \\\\
-                                  &= \\frac{\,2(" . -$b/2 . "\,\pm \sqrt{" . ($b**2 -4*$a*$c)/4 . "})\,}{" . 2*$a . "}
+                                x &= \\frac{\,-({$b2})\,\pm \sqrt{({$b2})^2 - 4\\times{$a2} \\times " . $this->add_braket($c2) . "}\,}{2\\times{$a2}} \\\\
+                                  &= \\frac{\," . -$b2 . "\,\pm \sqrt{" . $b2**2 . $this->add_plus(-4*$a2*$c2) . "}\,}{" . 2*$a2 . "}
+                                  = \\frac{\," . -$b2 . "\,\pm \sqrt{" . $b2**2 -4*$a2*$c2 . "}\,}{" . 2*$a2 . "}
+                                  = \\frac{\," . -$b2 . "\,\pm 2\sqrt{" . ($b2**2 -4*$a2*$c2)/4 . "}\,}{" . 2*$a2 . "} \\\\
+                                  &= \\frac{\,2(" . -$b2/2 . "\,\pm \sqrt{" . ($b2**2 -4*$a2*$c2)/4 . "})\,}{" . 2*$a2 . "}
                                   = {$p}\,\pm \sqrt{{$q}} \\\\
                             \\end{aligned}
                         \]
