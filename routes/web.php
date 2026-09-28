@@ -399,6 +399,11 @@ Route::get('workbook/sqrt_natural', [WorkbookController::class, 'sqrt_natural'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_natural');
 Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
 ->middleware(['auth', 'verified'])->name('workbook.expansion');
+Route::get('workbook/quadratic_equation', [WorkbookController::class, 'quadratic_equation'])
+->middleware(['auth', 'verified'])->name('workbook.quadratic_equation');
+// 入試対策
+Route::get('workbook/math_entrance_exam_1', [WorkbookController::class, 'math_entrance_exam_1'])
+->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_1');
 // 英語
 Route::get('workbook/be_verb', [WorkbookController::class, 'be_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.be_verb');

@@ -229,6 +229,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.quadratic_equation')}}">二次方程式</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
@@ -363,8 +366,12 @@
                             </div>
                         </x-td>
                         <x-td class="font-bold">
+                            {{-- <p>長野県公立高校入試対策</p>
                             <div class="flex flex-wrap gap-4">
-                            </div>
+                                <x-button-link>
+                                    <a href="{{route('workbook.math_entrance_exam_1')}}">問１</a>
+                                </x-button-link>
+                            </div> --}}
                         </x-td>
                     </tr>
                 </tbody>

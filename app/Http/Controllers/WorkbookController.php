@@ -956,6 +956,13 @@ class WorkbookController extends Controller
 
     // 正負の数
     public function positive_negative() {
+        $unitname = "正負の数";
+        $result = $this->get_positive_negative();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    public function get_positive_negative() {
         $a = (-1)**rand(1,2) * rand(2, 9);
         $b = (-1)**rand(1,2) * rand(2, 9);
 
@@ -1022,7 +1029,7 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "正負の数";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return compact('question');
     }
 
     // 分配法則１
@@ -1086,39 +1093,15 @@ class WorkbookController extends Controller
         ]);
     }
 
-    // // 一次方程式(2)(※)旧
-    // public function linear_equation2() {
-    //     // a, b, c をランダムに決める
-    //     $a = rand(2, 9);
-    //     $b = rand(1, 9);
-    //     if ($a == $b) {
-    //         $b = $a + rand(1,9);
-    //     }
-    //     $c = rand(1, 9);
-
-    //     // x = ac / b
-    //     $numerator = $a * $c;
-    //     $denominator = $b;
-
-    //     // 最大公約数を求める
-    //     $gcd = $this->gcd($numerator, $denominator);
-
-    //     // 約分
-    //     $numerator /= $gcd;
-    //     $denominator /= $gcd;
-
-    //     // 分母が1なら整数として表示
-    //     if ($denominator == 1) {
-    //         $answer = $numerator;
-    //     } else {
-    //         $answer = $numerator . '/' . $denominator;
-    //     }
-
-    //     return view('workbook.unit.linear_equation2', compact('a','b','c','answer','numerator','denominator'));
-    // }
-
     // 一次方程式(2)
     public function linear_equation2() {
+        $unitname = "\(\displaystyle \\frac{b}{\,a\,}x=c\)";
+        $result = $this->get_linear_equation2();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    public function get_linear_equation2() {
         // a, b, c をランダムに決める
         $primes = $this->get_primes(2, 11);    // 11以下の素数を2つ取得する。
         $a = $primes[0];
@@ -1152,7 +1135,8 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "\(\displaystyle \\frac{b}{\,a\,}x=c\)";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return compact('question');
+        // return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 一次方程式(3)
@@ -4525,6 +4509,150 @@ class WorkbookController extends Controller
         return view('workbook.unit.child', compact('unitname','question'));
     }
 
+    // 二次方程式
+    public function quadratic_equation() {
+        $unitname = "二次方程式";
+        $result = $this->get_quadratic_equation();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_quadratic_equation() {
+        $a = (-1)**rand(1, 2) * rand(1, 13);
+        $b = (-1)**rand(1, 2) * rand(1, 13);
+        while (abs($a) == abs($b)) {
+            $b = rand(1, 9);
+        }
+        $ab_add = $a + $b;
+        $ab_mul = $a * $b;
+        $ab_add_str = $this->num_to_str($ab_add, 0, 1);
+        $ab_mul_str = $this->num_to_str($ab_mul, 0, 0);
+        $a_str = $this->num_to_str($a, 0, 0);
+        $b_str = $this->num_to_str($b, 0, 0);
+
+        // (x+a)^2, (x-a)^2, (x+a)(x-a) 用
+        $a_abs = abs($a);
+        $a2_str = 2 * $a_abs;
+        $apow_str = $a**2;
+
+        //因数分解用
+        $ab_add_str2 = $this->num_to_str($a + $b, 1, 2);
+
+        // 解の公式用 x=(p±√q)/r
+        $primes = $this->get_primes(3, 11);
+        // $p = $primes[2];
+        // $q = $primes[1];
+        // $r = 2*$primes[0]; 
+        $a = 1;
+        $b = -2*rand(1, 3);
+        $c = -rand(1, 3);
+        $p = -$b/2;
+        $q = $p**2 - $c;
+        // $c_str = $this->fracnum_to_str($b**2 - $q, 4*$a, "", 1);
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。</p>
+                        <p>\( x^2 {$ab_add_str}x {$ab_mul_str} = 0\)",
+                'a_type' => 2,
+                'a' => "x = " . -$a . ",\," . -$b,
+                'e_type' => 3,
+                'e' => "<p class=\"leading-[2]\">左辺が因数分解できるので、</p>
+                        \[
+                            \\begin{aligned}
+                                x^2 {$ab_add_str}x {$ab_mul_str} &= 0 \\\\
+                                (x{$a_str})(x{$b_str}) &= 0 \\\\
+                            \\end{aligned}
+                        \]
+                        <p class=\"leading-[2]\">\(ab = 0\) ならば、\(a,\,b\) のどちらかが \(0\) である必要があるので、</p>
+                        <p>\(x{$a_str} = 0\) または \(x{$b_str} = 0\)。よって、 \(x = " . -$a . ",\," . -$b . "\)</p> 
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。</p>
+                        <p>\( x^2 + {$a2_str}x + {$apow_str} = 0\)",
+                'a_type' => 2,
+                'a' => "x = " . -$a_abs,
+                'e_type' => 3,
+                'e' => "<p class=\"leading-[2]\">左辺が因数分解できるので、</p>
+                        \[
+                            \\begin{aligned}
+                                x^2 + {$a2_str}x + {$apow_str} &= 0 \\\\
+                                (x+{$a_abs})^2 &= 0 \\\\
+                                \\therefore x &= " . -$a_abs . "
+                            \\end{aligned}
+                        \]
+                        <p class=\"leading-[2]\">(※)このように、二次方程式では解が２つあるとは限らない。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。</p>
+                        <p>\( x^2 - {$a2_str}x + {$apow_str} = 0\)",
+                'a_type' => 2,
+                'a' => "x = {$a_abs}",
+                'e_type' => 3,
+                'e' => "<p class=\"leading-[2]\">左辺が因数分解できるので、</p>
+                        \[
+                            \\begin{aligned}
+                                x^2 - {$a2_str}x + {$apow_str} &= 0 \\\\
+                                (x-{$a_abs})^2 &= 0 \\\\
+                                \\therefore x &= {$a_abs}
+                            \\end{aligned}
+                        \]
+                        <p class=\"leading-[2]\">(※)このように、二次方程式では解が２つあるとは限らない。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。</p>
+                        <p>\( x^2 - {$apow_str} = 0\)",
+                'a_type' => 2,
+                'a' => "x = \pm\,{$a_abs}",
+                'e_type' => 3,
+                'e' => "<p class=\"leading-[2]\">左辺が因数分解できるので、</p>
+                        \[
+                            \\begin{aligned}
+                                x^2 - {$apow_str} &= 0 \\\\
+                                (x+{$a_abs})(x-{$a_abs}) &= 0 \\\\
+                            \\end{aligned}
+                        \]
+                        <p class=\"leading-[2]\">\(ab = 0\) ならば、\(a,\,b\) のどちらかが \(0\) である必要があるので、\(x = \pm\,{$a_abs}\)。</p>
+                        <p class=\"leading-[2]\">【別解】</p>
+                        <p class=\"leading-[2]\">定数項を右辺に移項して、\(x^2 = {$apow_str}\)。よって、\(x = \pm\,{$a_abs}\)。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。</p>
+                        $$ x^2 " . $this->add_plus($b) . "x " . $this->add_plus($c) . " = 0 $$",
+                'a_type' => 2,
+                'a' => "x = {$p}\,\pm \sqrt{{$q}}",
+                'e_type' => 3,
+                'e' => "<p class=\"leading-[2]\">方程式 \(ax^2+bx+c=0\) について、解の公式が成り立つ。</p>
+                        $$ x = \\frac{\,-b\,\pm \sqrt{b^2 - 4ac}\,}{2a} $$
+                        これに、\(\displaystyle a = {$a}、b = {$b}、c = " . $this->add_plus($c) . "\) を代入すると、</p>
+                        \[
+                            \\begin{aligned}
+                                x &= \\frac{\,-({$b})\,\pm \sqrt{({$b})^2 - 4\\times{$a} \\times " . $this->add_braket($c) . "}\,}{2\\times{$a}} \\\\
+                                  &= \\frac{\," . -$b . "\,\pm \sqrt{" . $b**2 . $this->add_plus(-4*$a*$c) . "}\,}{" . 2*$a . "}
+                                  = \\frac{\," . -$b . "\,\pm \sqrt{" . $b**2 -4*$a*$c . "}\,}{" . 2*$a . "}
+                                  = \\frac{\," . -$b . "\,\pm 2\sqrt{" . ($b**2 -4*$a*$c)/4 . "}\,}{" . 2*$a . "} \\\\
+                                  &= \\frac{\,2(" . -$b/2 . "\,\pm \sqrt{" . ($b**2 -4*$a*$c)/4 . "})\,}{" . 2*$a . "}
+                                  = {$p}\,\pm \sqrt{{$q}} \\\\
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 自然数になるような √(an)
     public function sqrt_natural() {
         $ns = [2, 3, 5, 7, 11, 13];
@@ -4546,7 +4674,24 @@ class WorkbookController extends Controller
         return view('workbook.unit.sqrt_natural', compact('n','p','a','question'));
     }
 
-
+    // 入試　問１
+    public function math_entrance_exam_1() {
+        $unitname = "問１";
+        $idx = rand(0, 1);
+        if ($idx == 0) {
+            $result = $this->get_positive_negative();
+        } else {
+            $result = $this->get_linear_equation2();
+        }
+        $question = $result['question'];
+        $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";
+        $plot_con_q = isset($result['plot_con_q']) ? $result['plot_con_q'] : "";
+        $plot_par_a = isset($result['plot_par_a']) ? $result['plot_par_a'] : "";
+        $plot_con_a = isset($result['plot_con_a']) ? $result['plot_con_a'] : "";
+        $plot_par_e = isset($result['plot_par_e']) ? $result['plot_par_e'] : "";
+        $plot_con_e = isset($result['plot_con_e']) ? $result['plot_con_e'] : "";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_a','plot_con_a','plot_par_e','plot_con_e'));
+    }
 
     /******** 共通関数 **********/
     // 最大公約数
