@@ -69,6 +69,49 @@
                         </button>
                     </div>
                 </div>
+
+                <!--------------- 社会 --------------->
+                <x-h3 color="yellow">社会</x-h3>
+                <div class="flex">
+                    <div class="px-6 w-24 shirink-0 font-bold">種別</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <label>
+                            <input type="radio" name="soc_type" value="用語" checked> 用語
+                        </label>
+                        <label>
+                            <input type="radio" name="soc_type" value="説明"> 説明
+                        </label>
+                    </div>
+                </div>
+                {{-- <div class="flex mt-4">
+                    <div class="px-6 w-24 shirink-0 font-bold">学年別</div>
+                    <div class="flex flex-wrap gap-y-2">
+                        <!-- 問題集に存在する学年のみチェックボックスを表示 -->
+                        @foreach($grades['soc'] as $soc_grade)
+                            <label class="w-auto px-4">
+                                <input type="checkbox" name="soc_{{ $soc_grade->physical_name }}" value="1">{{ $soc_grade->grade }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="soc_grade" class="inline-block p-2 rounded shadow bg-yellow-200 font-bold">
+                            学年別 問題表示
+                        </button>
+                    </div>
+                </div> --}}
+                <div class="flex mt-4">
+                    <div class="px-6 w-24 shirink-0 font-bold">歴史</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['his'] as $his_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $his_unit->physical_name }}" value="1">{{ $his_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="soc_unit" class="inline-block p-2 rounded shadow bg-yellow-200 font-bold">
+                            歴史 問題表示
+                        </button>
+                    </div>
+                </div>
+
             </form>
         </div>
     </div>

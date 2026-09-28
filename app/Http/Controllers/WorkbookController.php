@@ -57,78 +57,197 @@ class WorkbookController extends Controller
 
         // 問題集に存在する単元、学年のリストを作成
         $wb_units = $workbooks->pluck('unit');
-        $wb_grades = $workbooks->pluck('grade');
+        $wb_grades['eng'] = $workbooks
+            ->where('subject', '英語')
+            ->pluck('grade');
+        $wb_grades['his'] = $workbooks
+            ->where('field', '歴史')
+            ->pluck('grade');
 
         // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
         $units['eng'] = Unit::query()
             ->where('subject','英語')
             ->whereIn('logical_name', $wb_units)
             ->get();
+        $units['his'] = Unit::query()
+            ->where('field','歴史')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
 
         // 単元テーブル(units)から、問題集に存在する学年のみ、物理名＆論理名を取得
         $grades['eng'] = Grade::query()
-            ->whereIn('physical_name', $wb_grades)
+            ->whereIn('physical_name', $wb_grades['eng'])
             ->get();
+        // $grades['soc'] = Grade::query()
+        //     ->whereIn('physical_name', $wb_grades['soc'])
+        //     ->get();
 
-        return view('workbook.index', compact('user','workbooks','units','grades'));
+        return view('workbook.index', compact('user','units','grades'));
     }
+
+    // backup用
+    // public function summary_list(Request $request) {
+    //     $user = $this->targetUser(Auth::user());
+    //     $grades[] = "";
+    //     $units[] = "";
+
+    //     $workbooks = Workbook::query()
+    //         ->where('campus_id', $user->campus_id);
+
+    //     // 問題集に存在する単元のリストを作成
+    //     $wb_units = $workbooks->pluck('unit');
+
+    //     /******** 英語 *********/
+    //     // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+    //     $wb_unit_sets['eng'] = Unit::query()
+    //         ->where('subject','英語')
+    //         ->whereIn('logical_name', $wb_units)
+    //         ->get();
+
+    //     // 学年別
+    //     if ($request->input('target') == 'eng_grade') {
+    //         if ($request->boolean('eng_J1')) {
+    //             $grades[] = "J1";
+    //         }
+    //         if ($request->boolean('eng_J2')) {
+    //             $grades[] = "J2";
+    //         }
+    //         if ($request->boolean('eng_J3')) {
+    //             $grades[] = "J3";
+    //         }
+    //         $workbooks = $workbooks
+    //             ->where('subject','英語')
+    //             ->where('q_type', $request->input('eng_type'))
+    //             ->when(count($grades) > 0, function ($query) use ($grades) {
+    //                 $query->whereIn('grade', $grades);
+    //             });
+    //     } elseif ($request->input('target') == 'eng_unit') {
+    //         // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+    //         foreach ($wb_unit_sets['eng'] as $eng_unit) {
+    //             if ($request->boolean($eng_unit->physical_name)) {
+    //                 // チェックされている単元の論理名（be動詞など）を配列に格納
+    //                 $units[] = $eng_unit->logical_name;
+    //             }
+    //         }
+    //         $workbooks = $workbooks
+    //             ->where('subject','英語')
+    //             ->where('q_type', $request->input('eng_type'))
+    //             ->when(count($units) > 0, function ($query) use ($units) {
+    //                 $query->whereIn('unit', $units);
+    //             });
+    //     }
+
+    //     $workbooks = $workbooks
+    //         ->inRandomOrder()
+    //         ->take(10)
+    //         ->get();
+
+    //     return view('workbook.summary_list', compact('workbooks','units'));
+    // }
 
     public function summary_list(Request $request) {
         $user = $this->targetUser(Auth::user());
-        // $eng_J1 = $request->boolean('eng_J1');
         $grades[] = "";
         $units[] = "";
-        // dd($eng_J1);
+
         $workbooks = Workbook::query()
             ->where('campus_id', $user->campus_id);
 
         // 問題集に存在する単元のリストを作成
         $wb_units = $workbooks->pluck('unit');
 
-        // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
-        $wb_unit_sets['eng'] = Unit::query()
-            ->where('subject','英語')
-            ->whereIn('logical_name', $wb_units)
-            ->get();
-
         /******** 英語 *********/
-        // 学年別
-        if ($request->input('target') == 'eng_grade') {
-            if ($request->boolean('eng_J1')) {
-                $grades[] = "J1";
-            }
-            if ($request->boolean('eng_J2')) {
-                $grades[] = "J2";
-            }
-            if ($request->boolean('eng_J3')) {
-                $grades[] = "J3";
-            }
-            $workbooks = $workbooks
+        if ($request->input('target') == 'eng_grade' || $request->input('target') == 'eng_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['eng'] = Unit::query()
                 ->where('subject','英語')
-                ->where('q_type', $request->input('eng_type'))
-                ->when(count($grades) > 0, function ($query) use ($grades) {
-                    $query->whereIn('grade', $grades);
-                });
-        } elseif ($request->input('target') == 'eng_unit') {
-            // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
-            foreach ($wb_unit_sets['eng'] as $eng_unit) {
-                if ($request->boolean($eng_unit->physical_name)) {
-                    // チェックされている単元の論理名（be動詞など）を配列に格納
-                    $units[] = $eng_unit->logical_name;
-                }
-            }
-            $workbooks = $workbooks
-                ->where('subject','英語')
-                ->where('q_type', $request->input('eng_type'))
-                ->when(count($units) > 0, function ($query) use ($units) {
-                    $query->whereIn('unit', $units);
-                });
-        }
+                ->whereIn('logical_name', $wb_units)
+                ->get();
 
-        $workbooks = $workbooks
-            ->inRandomOrder()
-            ->take(10)
-            ->get();
+            // 学年別
+            if ($request->input('target') == 'eng_grade') {
+                if ($request->boolean('eng_J1')) {
+                    $grades[] = "J1";
+                }
+                if ($request->boolean('eng_J2')) {
+                    $grades[] = "J2";
+                }
+                if ($request->boolean('eng_J3')) {
+                    $grades[] = "J3";
+                }
+                $workbooks = $workbooks
+                    ->where('subject','英語')
+                    ->where('q_type', $request->input('eng_type'))
+                    ->when(count($grades) > 0, function ($query) use ($grades) {
+                        $query->whereIn('grade', $grades);
+                    });
+            } elseif ($request->input('target') == 'eng_unit') {
+                // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+                foreach ($wb_unit_sets['eng'] as $eng_unit) {
+                    if ($request->boolean($eng_unit->physical_name)) {
+                        // チェックされている単元の論理名（be動詞など）を配列に格納
+                        $units[] = $eng_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('subject','英語')
+                    ->where('q_type', $request->input('eng_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
+
+            $workbooks = $workbooks
+                ->inRandomOrder()
+                ->take(10)
+                ->get();
+
+        /******** 社会 *********/
+        } elseif ($request->input('target') == 'soc_grade' || $request->input('target') == 'soc_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['soc'] = Unit::query()
+                ->where('subject','社会')
+                ->whereIn('logical_name', $wb_units)
+                ->get();
+
+            // 学年別
+            if ($request->input('target') == 'soc_grade') {
+                if ($request->boolean('soc_J1')) {
+                    $grades[] = "J1";
+                }
+                if ($request->boolean('soc_J2')) {
+                    $grades[] = "J2";
+                }
+                if ($request->boolean('soc_J3')) {
+                    $grades[] = "J3";
+                }
+                $workbooks = $workbooks
+                    ->where('subject','社会')
+                    ->where('q_type', $request->input('soc_type'))
+                    ->when(count($grades) > 0, function ($query) use ($grades) {
+                        $query->whereIn('grade', $grades);
+                    });
+            } elseif ($request->input('target') == 'soc_unit') {
+                // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+                foreach ($wb_unit_sets['soc'] as $soc_unit) {
+                    if ($request->boolean($soc_unit->physical_name)) {
+                        // チェックされている単元の論理名（be動詞など）を配列に格納
+                        $units[] = $soc_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('subject','社会')
+                    ->where('q_type', $request->input('soc_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
+
+            $workbooks = $workbooks
+                ->inRandomOrder()
+                ->take(10)
+                ->get();
+        }
 
         return view('workbook.summary_list', compact('workbooks','units'));
     }
@@ -4537,7 +4656,7 @@ class WorkbookController extends Controller
         //因数分解用
         $ab_add_str2 = $this->num_to_str($a + $b, 1, 2);
 
-        // 解の公式用 x=(p±√q)/r
+        // 解の公式用 x=p±√q ⇒　x^2 -2px + (p^2 - q) = 0
         $a2 = 1;
         $b2 = -2*rand(1, 3);
         $c2 = -rand(1, 3);
@@ -4679,11 +4798,17 @@ class WorkbookController extends Controller
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 1);
-        if ($idx == 0) {
-            $result = $this->get_positive_negative();
-        } else {
-            $result = $this->get_linear_equation2();
+        $idx = rand(0, 2);
+        switch ($idx) {
+            case 0:
+                $result = $this->get_positive_negative();
+                break;
+            case 1:
+                $result = $this->get_linear_equation2();
+                break;
+            case 2:
+                $result = $this->get_quadratic_equation();
+                break;
         }
         $question = $result['question'];
         $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";

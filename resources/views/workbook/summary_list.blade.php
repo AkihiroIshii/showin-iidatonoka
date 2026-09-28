@@ -66,10 +66,8 @@
                     @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-6"></th>
                     @endif
-                    <div class="w-5/6">
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/2">問題</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-1/2">答え</td>
-                    </div>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4 w-2/3">問題</th>
+                    <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">答え</th>
                 </tr>
                 @foreach($workbooks as $i => $workbook)
                     @php
@@ -92,7 +90,7 @@
                             </td>
                         @endif
                         <td class="border border-slate-300 px-4">
-                            <pre class="font-times text-xl">{!! $workbook->question !!}</pre>
+                            <pre class="font-times text-xl whitespace-normal">{!! $workbook->question !!}</pre>
                         </td>
                         <td class="border border-slate-300 px-4">
                             <details>
@@ -136,7 +134,7 @@
             </div>
 
             <div>
-            <pre id="explanationContent" class="p-6 text-xl">
+            <pre id="explanationContent" class="p-6 text-xl whitespace-normal">
             </pre>
             </div>
 
