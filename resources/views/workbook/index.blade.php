@@ -23,6 +23,7 @@
             <form method="GET" action="{{ route('workbook.summary_list') }}">
                 <!-- 和訳のみなど絞る場合はチェックボックスを表示 -->
 
+                <!--------------- 英語 --------------->
                 <x-h3 color="purple">英語</x-h3>
                 <div class="flex">
                     <div class="px-6 w-24 shirink-0 font-bold">種別</div>
@@ -83,20 +84,20 @@
                         </label>
                     </div>
                 </div>
-                {{-- <div class="flex mt-4">
-                    <div class="px-6 w-24 shirink-0 font-bold">学年別</div>
-                    <div class="flex flex-wrap gap-y-2">
-                        <!-- 問題集に存在する学年のみチェックボックスを表示 -->
-                        @foreach($grades['soc'] as $soc_grade)
-                            <label class="w-auto px-4">
-                                <input type="checkbox" name="soc_{{ $soc_grade->physical_name }}" value="1">{{ $soc_grade->grade }}
+                <div class="flex mt-4">
+                    <div class="px-6 w-24 shirink-0 font-bold">地理</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['geo'] as $geo_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $geo_unit->physical_name }}" value="1">{{ $geo_unit->logical_name }}
                             </label>
                         @endforeach
-                        <button type="submit" name="target" value="soc_grade" class="inline-block p-2 rounded shadow bg-yellow-200 font-bold">
-                            学年別 問題表示
+                        <button type="submit" name="target" value="geo_unit" class="inline-block p-2 rounded shadow bg-yellow-200 font-bold">
+                            地理 問題表示
                         </button>
                     </div>
-                </div> --}}
+                </div>
                 <div class="flex mt-4">
                     <div class="px-6 w-24 shirink-0 font-bold">歴史</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
@@ -106,11 +107,81 @@
                                 <input type="checkbox" name="{{ $his_unit->physical_name }}" value="1">{{ $his_unit->logical_name }}
                             </label>
                         @endforeach
-                        <button type="submit" name="target" value="soc_unit" class="inline-block p-2 rounded shadow bg-yellow-200 font-bold">
+                        <button type="submit" name="target" value="his_unit" class="inline-block p-2 rounded shadow bg-yellow-200 font-bold">
                             歴史 問題表示
                         </button>
                     </div>
                 </div>
+                <div class="flex mt-4">
+                    <div class="px-6 w-24 shirink-0 font-bold">公民</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['civ'] as $civ_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $civ_unit->physical_name }}" value="1">{{ $civ_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="civ_unit" class="inline-block p-2 rounded shadow bg-yellow-200 font-bold">
+                            公民 問題表示
+                        </button>
+                    </div>
+                </div>
+
+                {{-- <!--------------- 理科 --------------->
+                <x-h3 color="green">理科</x-h3>
+                <div class="flex">
+                    <div class="px-6 w-24 shirink-0 font-bold">種別</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <label>
+                            <input type="radio" name="sci_type" value="用語" checked> 用語
+                        </label>
+                        <label>
+                            <input type="radio" name="sci_type" value="説明"> 説明
+                        </label>
+                    </div>
+                </div>
+                <div class="flex mt-4">
+                    <div class="px-6 w-24 shirink-0 font-bold">単元別</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['sci'] as $sci_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $sci_unit->physical_name }}" value="1">{{ $sci_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="geo_unit" class="inline-block p-2 rounded shadow bg-green-200 font-bold">
+                            理科 問題表示
+                        </button>
+                    </div>
+                </div>
+
+                <!--------------- 国語 --------------->
+                <x-h3 color="red">国語</x-h3>
+                <div class="flex">
+                    <div class="px-6 w-24 shirink-0 font-bold">種別</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <label>
+                            <input type="radio" name="jap_type" value="用語" checked> 用語
+                        </label>
+                        <label>
+                            <input type="radio" name="jap_type" value="説明"> 説明
+                        </label>
+                    </div>
+                </div>
+                <div class="flex mt-4">
+                    <div class="px-6 w-24 shirink-0 font-bold">単元別</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['jap'] as $geo_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $jap_unit->physical_name }}" value="1">{{ $jap_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="geo_unit" class="inline-block p-2 rounded shadow bg-red-200 font-bold">
+                            国語 問題表示
+                        </button>
+                    </div>
+                </div> --}}
 
             </form>
         </div>

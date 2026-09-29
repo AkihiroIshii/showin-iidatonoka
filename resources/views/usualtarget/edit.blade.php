@@ -29,7 +29,7 @@
                 <div class="mt-8">
                     <div>
                         <label for="content" class="font-semibold mt-4">月間目標</label>
-                        <textarea type="text" name="content" class="w-full py-2 border border-gray-300 rounded-md" id="content">{{old('content', $usualtarget->content)}}</textarea>
+                        <textarea type="text" name="content" class="w-full py-2 border border-gray-300 rounded-md h-48" id="content">{{old('content', $usualtarget->content)}}</textarea>
                     </div>
                 </div>
                 <div class="mt-8">

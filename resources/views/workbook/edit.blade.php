@@ -21,7 +21,7 @@
                             <x-input-error :messages="$errors->get('subject')" class="mt-2" />
                             <label for="subject" class="font-semibold mt-4">科目</label>
                             @php
-                                $subjects = ['国語','数学','算数','社会','理科','英語','化学','物理'];
+                                $subjects = ['英語','社会'];
                             @endphp
                             <select type="string" name="subject" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
                                 <option value="">選択してください。</option>
@@ -35,53 +35,33 @@
                     </div>
 
                     <div class="mt-8">
-                        <div>
-                            <x-input-error :messages="$errors->get('field')" class="mt-2" />
-                            <label for="field" class="font-semibold mt-4">分野</label>
-                            <input type="string" name="field" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="field" value="{{old('field', $workbook->field)}}">
-                        </div>
+                        <x-input-error :messages="$errors->get('field')" class="mt-2" />
+                        <label for="field" class="font-semibold mt-4">分野</label>
+                        <select type="string" name="field" class="w-auto py-2 border border-gray-300 rounded-md" id="field">
+                            <option value="{{ $workbook->field }}" {{ old('subject', $workbook->field) == $workbook->field ? 'selected' : 'まず教科を選択してください' }}>
+                                {{ $workbook->field }}
+                            </option>
+                        </select>
                     </div>
 
                     <div class="mt-8">
-                        <div>
-                            <x-input-error :messages="$errors->get('q_type')" class="mt-2" />
-                            <label for="q_type" class="font-semibold mt-4">種別</label>
-                            <input type="string" name="q_type" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="q_type" value="{{old('q_type', $workbook->q_type)}}">
-                        </div>
+                        <x-input-error :messages="$errors->get('q_type')" class="mt-2" />
+                        <label for="q_type" class="font-semibold mt-4">種別</label>
+                        <select type="string" name="q_type" class="w-auto py-2 border border-gray-300 rounded-md" id="q_type">
+                            <option value="{{ $workbook->q_type }}" {{ old('q_type', $workbook->q_type) == $workbook->q_type ? 'selected' : 'まず教科を選択してください' }}>
+                                {{ $workbook->q_type }}
+                            </option>
+                        </select>
                     </div>
 
-                    {{-- <div class="mt-8">
-                        <div>
-                            <x-input-error :messages="$errors->get('unit')" class="mt-2" />
-                            <label for="unit" class="font-semibold mt-4">単元</label>
-                            <input type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md px-3" id="unit" value="{{old('unit', $workbook->unit)}}">
-                        </div>
-                    </div> --}}
-
                     <div class="mt-8">
-                        <div>
-                            <x-input-error :messages="$errors->get('unit')" class="mt-2" />
-                            <label for="unit" class="font-semibold mt-4">単元</label>
-                            <select type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md" id="unit">
-                                <option value="">選択してください。</option>
-                                @foreach($units as $unit)
-                                    <option value="{{ $unit->logical_name }}" {{ old('unit', $workbook->unit) == $unit->logical_name ? 'selected' : '' }}>
-                                        {{ $unit->subject }}：{{ $unit->logical_name }}
-                                    </option>
-                                @endforeach
-                            </select>     
-                            {{-- @php
-                                $subjects = ['国語','数学','算数','社会','理科','英語','化学','物理'];
-                            @endphp
-                            <select type="string" name="subject" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
-                                <option value="">選択してください。</option>
-                                @foreach($subjects as $subject)
-                                    <option value="{{ $subject }}" {{ old('subject') == $subject ? 'selected' : '' }}>
-                                        {{ $subject }}
-                                    </option>
-                                @endforeach
-                            </select>      --}}
-                        </div>
+                        <x-input-error :messages="$errors->get('unit')" class="mt-2" />
+                        <label for="unit" class="font-semibold mt-4">単元</label>
+                        <select type="string" name="unit" class="w-auto py-2 border border-gray-300 rounded-md" id="unit">
+                            <option value="{{ $workbook->unit }}" {{ old('unit', $workbook->unit) == $workbook->unit ? 'selected' : 'まず教科を選択してください' }}>
+                                {{ $workbook->unit }}
+                            </option>
+                        </select>
                     </div>
 
                     <div class="mt-8">
@@ -159,4 +139,205 @@
             @endauth
         </div>
     @endif
+<script>
+    // PHPの$unitsをJavaScriptに渡す
+    const units = @json($units);
+
+    // 編集画面では元の値を取得
+    const oldField = @json(old('field', $workbook->field ?? null));
+    const oldQtype = @json(old('q_type', $workbook->q_type ?? null));
+    const oldUnit = @json(old('unit', $workbook->unit ?? null));
+
+    const subjectSelect = document.getElementById('subject');
+    const fieldSelect = document.getElementById('field');
+    const qtypeSelect = document.getElementById('q_type');
+    const unitSelect = document.getElementById('unit');
+
+    // 教科ごとの分野
+    const fields = {
+        '英語': ['英単語', '英文法'],
+        '社会': ['地理', '歴史', '公民'],
+    };
+
+    // 教科ごとの種別
+    const qtypes = {
+        '英語': ['並び替え', '空所補充'],
+        '社会': ['用語', '説明'],
+    };
+
+    // 分野の更新
+    function updateFields() {
+
+        const subject = subjectSelect.value;
+
+        console.log('subject =', subject);
+
+        // 一旦、fieldを空にする
+        fieldSelect.innerHTML = '';
+
+        // その教科に対応するfieldを取得
+        const fieldList = fields[subject] || [];
+
+        console.log('fieldList =', fieldList);
+
+        if (fieldList.length === 0) {
+            fieldSelect.innerHTML =
+                '<option value="">選択してください</option>';
+            return;
+        }
+
+        // 先頭の項目
+        const firstOption = document.createElement('option');
+        firstOption.value = '';
+        firstOption.textContent = '選択してください';
+        fieldSelect.appendChild(firstOption);
+
+        // fieldを追加
+        fieldList.forEach(field => {
+            const option = document.createElement('option');
+
+            option.value = field;
+            option.textContent = field;
+
+            // 編集画面はこれも追加
+            if (String(field) === String(oldField)) {
+                option.selected = true;
+            }
+            fieldSelect.appendChild(option);
+        });
+    }
+
+    // 種別の更新
+    function updateQtypes() {
+
+        const subject = subjectSelect.value;
+
+        // 一旦、fieldを空にする
+        qtypeSelect.innerHTML = '';
+
+        // その教科に対応するfieldを取得
+        const qtypeList = qtypes[subject] || [];
+
+        console.log('qtypeList =', qtypeList);
+
+        if (qtypeList.length === 0) {
+            qtypeSelect.innerHTML =
+                '<option value="">選択してください</option>';
+            return;
+        }
+
+        // 先頭の項目
+        const firstOption = document.createElement('option');
+        firstOption.value = '';
+        firstOption.textContent = '選択してください';
+        qtypeSelect.appendChild(firstOption);
+
+        // 種別を追加
+        qtypeList.forEach(qtype => {
+            const option = document.createElement('option');
+
+            option.value = qtype;
+            option.textContent = qtype;
+
+            // 編集画面はこれも追加
+            if (String(qtype) === String(oldQtype)) {
+                option.selected = true;
+            }
+            qtypeSelect.appendChild(option);
+        });
+    }
+
+    // 単元の更新
+    function updateUnits() {
+
+        const subject = subjectSelect.value;
+
+        // 一旦空にする
+        unitSelect.innerHTML = '';
+
+        if (subject === '') {
+            unitSelect.innerHTML =
+                '<option value="">まず教科を選択してください</option>';
+            return;
+        }
+
+        // 選択した教科だけに絞る
+        const filteredUnits = units.filter(unit => {
+            return unit.subject === subject;
+        });
+
+        // 先頭の項目
+        const firstOption = document.createElement('option');
+        firstOption.value = '';
+        firstOption.textContent = '単元を選択してください';
+        unitSelect.appendChild(firstOption);
+
+        // 単元を追加
+        filteredUnits.forEach(unit => {
+
+            const option = document.createElement('option');
+
+            option.value = unit.logical_name;
+            option.textContent = unit.logical_name;
+
+            // 編集画面はこれも追加
+            if (String(unit.logical_name) === String(oldUnit)) {
+                option.selected = true;
+            }
+            unitSelect.appendChild(option);
+        });
+    }
+
+    // 単元の更新（社会）
+    function updateUnitsSociety() {
+
+        const subject = subjectSelect.value;
+
+        if (subject === '社会') {
+            const field = fieldSelect.value;
+
+            // 一旦空にする
+            unitSelect.innerHTML = '';
+
+            // 選択した分野だけに絞る
+            const filteredUnits = units.filter(unit => {
+                return unit.field === field;
+            });
+
+            // 先頭の項目
+            const firstOption = document.createElement('option');
+            firstOption.value = '';
+            firstOption.textContent = '単元を選択してください';
+            unitSelect.appendChild(firstOption);
+
+            // 単元を追加
+            filteredUnits.forEach(unit => {
+
+                const option = document.createElement('option');
+
+                option.value = unit.logical_name;
+                option.textContent = unit.logical_name;
+
+                // 編集画面はこれも追加
+                if (String(unit.logical_name) === String(oldUnit)) {
+                    option.selected = true;
+                }
+                unitSelect.appendChild(option);
+            });
+        }
+    }
+
+    // 教科が変更されたとき
+    subjectSelect.addEventListener('change', updateFields);
+    subjectSelect.addEventListener('change', updateQtypes);
+    subjectSelect.addEventListener('change', updateUnits);
+
+    // 分野が変更されたとき
+    fieldSelect.addEventListener('change', updateUnitsSociety);
+
+    // 初期表示
+    updateFields();
+    updateQtypes();
+    updateUnits();
+</script>
 </x-app-layout>

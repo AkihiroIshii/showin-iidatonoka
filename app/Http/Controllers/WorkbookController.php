@@ -60,17 +60,34 @@ class WorkbookController extends Controller
         $wb_grades['eng'] = $workbooks
             ->where('subject', '英語')
             ->pluck('grade');
-        $wb_grades['his'] = $workbooks
-            ->where('field', '歴史')
-            ->pluck('grade');
-
+// dd($wb_units);
         // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+        /***** 英語 *****/
         $units['eng'] = Unit::query()
             ->where('subject','英語')
             ->whereIn('logical_name', $wb_units)
             ->get();
+        /***** 社会 *****/
+        $units['geo'] = Unit::query()
+            ->where('field','地理')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
         $units['his'] = Unit::query()
             ->where('field','歴史')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
+        $units['civ'] = Unit::query()
+            ->where('field','公民')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
+        /***** 理科 *****/
+        $units['sci'] = Unit::query()
+            ->where('subject','理科')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
+        /***** 国語 *****/
+        $units['jap'] = Unit::query()
+            ->where('subject','国語')
             ->whereIn('logical_name', $wb_units)
             ->get();
 
@@ -78,10 +95,8 @@ class WorkbookController extends Controller
         $grades['eng'] = Grade::query()
             ->whereIn('physical_name', $wb_grades['eng'])
             ->get();
-        // $grades['soc'] = Grade::query()
-        //     ->whereIn('physical_name', $wb_grades['soc'])
-        //     ->get();
 
+// dd($units);
         return view('workbook.index', compact('user','units','grades'));
     }
 
@@ -197,58 +212,122 @@ class WorkbookController extends Controller
                     });
             }
 
-            $workbooks = $workbooks
-                ->inRandomOrder()
-                ->take(10)
-                ->get();
-
-        /******** 社会 *********/
-        } elseif ($request->input('target') == 'soc_grade' || $request->input('target') == 'soc_unit') {
+        /******** 地理 *********/
+        } elseif ($request->input('target') == 'geo_unit') {
             // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
-            $wb_unit_sets['soc'] = Unit::query()
-                ->where('subject','社会')
+            $wb_unit_sets['geo'] = Unit::query()
+                ->where('field','地理')
                 ->whereIn('logical_name', $wb_units)
                 ->get();
 
-            // 学年別
-            if ($request->input('target') == 'soc_grade') {
-                if ($request->boolean('soc_J1')) {
-                    $grades[] = "J1";
-                }
-                if ($request->boolean('soc_J2')) {
-                    $grades[] = "J2";
-                }
-                if ($request->boolean('soc_J3')) {
-                    $grades[] = "J3";
-                }
-                $workbooks = $workbooks
-                    ->where('subject','社会')
-                    ->where('q_type', $request->input('soc_type'))
-                    ->when(count($grades) > 0, function ($query) use ($grades) {
-                        $query->whereIn('grade', $grades);
-                    });
-            } elseif ($request->input('target') == 'soc_unit') {
-                // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
-                foreach ($wb_unit_sets['soc'] as $soc_unit) {
-                    if ($request->boolean($soc_unit->physical_name)) {
-                        // チェックされている単元の論理名（be動詞など）を配列に格納
-                        $units[] = $soc_unit->logical_name;
+            if ($request->input('target') == 'geo_unit') {
+                foreach ($wb_unit_sets['geo'] as $geo_unit) {
+                    if ($request->boolean($geo_unit->physical_name)) {
+                        $units[] = $geo_unit->logical_name;
                     }
                 }
                 $workbooks = $workbooks
-                    ->where('subject','社会')
+                    ->where('field','地理')
                     ->where('q_type', $request->input('soc_type'))
                     ->when(count($units) > 0, function ($query) use ($units) {
                         $query->whereIn('unit', $units);
                     });
             }
 
-            $workbooks = $workbooks
-                ->inRandomOrder()
-                ->take(10)
+        /******** 歴史 *********/
+        } elseif ($request->input('target') == 'his_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['his'] = Unit::query()
+                ->where('field','歴史')
+                ->whereIn('logical_name', $wb_units)
                 ->get();
+
+            if ($request->input('target') == 'his_unit') {
+                foreach ($wb_unit_sets['his'] as $his_unit) {
+                    if ($request->boolean($his_unit->physical_name)) {
+                        $units[] = $his_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('field','歴史')
+                    ->where('q_type', $request->input('soc_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
+
+        /******** 公民 *********/
+        } elseif ($request->input('target') == 'civ_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['civ'] = Unit::query()
+                ->where('field','公民')
+                ->whereIn('logical_name', $wb_units)
+                ->get();
+
+            if ($request->input('target') == 'civ_unit') {
+                foreach ($wb_unit_sets['civ'] as $civ_unit) {
+                    if ($request->boolean($civ_unit->physical_name)) {
+                        $units[] = $civ_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('field','公民')
+                    ->where('q_type', $request->input('soc_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
+
+        /******** 理科 *********/
+        } elseif ($request->input('target') == 'sci_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['sci'] = Unit::query()
+                ->where('subject','理科')
+                ->whereIn('logical_name', $wb_units)
+                ->get();
+
+            if ($request->input('target') == 'sci_unit') {
+                foreach ($wb_unit_sets['sci'] as $sci_unit) {
+                    if ($request->boolean($sci_unit->physical_name)) {
+                        $units[] = $sci_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('subject','理科')
+                    ->where('q_type', $request->input('sci_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
+
+        /******** 国語 *********/
+        } elseif ($request->input('target') == 'jap_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['jap'] = Unit::query()
+                ->where('subject','国語')
+                ->whereIn('logical_name', $wb_units)
+                ->get();
+
+            if ($request->input('target') == 'jap_unit') {
+                foreach ($wb_unit_sets['jap'] as $jap_unit) {
+                    if ($request->boolean($jap_unit->physical_name)) {
+                        $units[] = $jap_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('subject','国語')
+                    ->where('q_type', $request->input('jap_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
         }
 
+        // ランダムに10問取得
+        $workbooks = $workbooks
+            ->inRandomOrder()
+            ->take(10)
+            ->get();
         return view('workbook.summary_list', compact('workbooks','units'));
     }
 

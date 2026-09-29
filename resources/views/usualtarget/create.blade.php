@@ -27,7 +27,7 @@
             <div class="mt-8">
                 <div>
                     <label for="content" class="font-semibold mt-4">月間目標 or 課題</label>
-                    <textarea name="content" class="w-full py-2 border border-gray-300 rounded-md" id="content"></textarea>
+                    <textarea name="content" class="w-full py-2 border border-gray-300 rounded-md h-48" id="content"></textarea>
                 </div>
             </div>
             <div class="mt-8">
