@@ -89,14 +89,14 @@
                                 <a href="{{route('workbook.edit', $workbook)}}" class="text-blue-600">編集</a>
                             </td>
                         @endif
-                        <td class="border border-slate-300 px-4">
-                            <pre class="font-times text-xl whitespace-normal">{!! $workbook->question !!}</pre>
+                        <td class="border border-slate-300 px-4 py-4">
+                            <pre class="font-klee text-xl whitespace-normal">{!! $workbook->question !!}</pre>
                         </td>
                         <td class="border border-slate-300 px-4">
                             <details>
                                 <summary>答えを見る
                                 </summary>
-                                <p class="font-times text-red-500 text-lg">
+                                <p class="font-klee text-red-500 text-lg">
                                     {!! $workbook->answer !!}
                                     <button type="button"
                                             onclick="showExplanation({{ $i }})"
