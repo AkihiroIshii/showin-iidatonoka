@@ -171,6 +171,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.mul_div_monomials')}}">単項式の乗除</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -366,12 +369,12 @@
                             </div>
                         </x-td>
                         <x-td class="font-bold">
-                            {{-- <p>長野県公立高校入試対策</p>
+                            <p>長野県公立高校入試対策（β版）</p>
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
                                     <a href="{{route('workbook.math_entrance_exam_1')}}">問１</a>
                                 </x-button-link>
-                            </div> --}}
+                            </div>
                         </x-td>
                     </tr>
                 </tbody>

@@ -1157,6 +1157,7 @@ class WorkbookController extends Controller
         $unitname = "正負の数";
         $result = $this->get_positive_negative();
         $question = $result['question'];
+        $question['q'] = $question['q'] . "<p class=\"leading-[2]\">（目標解答時間：５秒）</p>";
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
@@ -1177,7 +1178,7 @@ class WorkbookController extends Controller
         $questions = [
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。（目標解答時間：5 秒）</p>
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
                         <p>\({$str_a_plus_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_plus_b}",
@@ -1193,7 +1194,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。（目標解答時間：5 秒）</p>
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
                         <p>\({$str_a_minus_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_minus_b}",
@@ -1209,7 +1210,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。（目標解答時間：5 秒）</p>
+                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
                         <p>\({$str_a_mul_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_mul_b}",
@@ -3051,6 +3052,150 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question', 'plot_par_q','plot_con_q', 'plot_par_e','plot_con_e'));
     }
 
+    // 単項式の乗除
+    public function mul_div_monomials() {
+        $unitname = "単項式の乗除";
+        $result = $this->get_mul_div_monomials();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_mul_div_monomials() {
+        // a x^m y^s ÷ (b x^n y^t)
+        // a > b, m > n, s > t
+        $b = rand(2, 4);
+        $a = $b + rand(1, 4);
+        $n = rand(1, 2);
+        $m = $n + rand(1, 2);
+        $t = rand(1, 2);
+        $s = $t + rand(1, 2);
+
+        $q1_str = "{$a}x^{$m}y^{$s} \\div {$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{" . $this->num_to_str($t, 1, 1) . "}";
+        $a1_str = $this->fracnum_to_str($a, $b, "x", 1) . "^{" . $this->num_to_str($m - $n, 1, 1) . "}y^{" . $this->num_to_str($s - $t, 1, 1) . "}";
+
+        $q2_str = "{$a}x^{$m}y^{" . $this->num_to_str($t, 1, 1) . "} \\div {$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{$s}";
+        $a_div_b = $this->simplify_fraction($a, $b);
+        $a_dived = $this->num_to_str($a_div_b['numerator'], 1, 1);
+        $b_dived = $this->num_to_str($a_div_b['denominator'], 1, 1);
+        $a2_str = "\\frac{\,{$a_dived}x^{" . $this->num_to_str($m - $n, 1, 1) . "}\,}{{$b_dived}y^{" . $this->num_to_str($s - $t, 1, 1) . "}}";
+
+        $q3_str = "{$a}x^{$m}y^{$s} \\times {$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{" . $this->num_to_str($t, 1, 1) . "}";
+        $a3_str = $a * $b . "x^{" . $m + $n . "}y^{" . $s + $t . "}";
+
+        $q4_str = "{$a}x^{$m}y^{$s} \\div x^{" . $this->num_to_str($n, 1, 1) . "} \\div {$b}y^{" . $this->num_to_str($t, 1, 1) . "}";
+        $a4_str = $a1_str;
+
+        $q5_str = "x^{$m} \\div {$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{$s} \\times {$a}y^{" . $this->num_to_str($t, 1, 1) . "}";
+        $a5_str = $a2_str;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        $$ {$q1_str} $$
+                        ",
+                'a_type' => 2,
+                'a' => $a1_str,
+                'e_type' => 3,
+                'e' => "<p>係数、\(x\) の次数、\(y\) の次数を、それぞれ処理すると整理しやすい。</p>
+                        <ul>
+                            <li>係数 ・・・・・ \(\displaystyle {$a} \\div {$b} = " . $this->fracnum_to_str($a, $b, "", 1) . "\)</li>
+                            <li>\(x\) の次数 ・・・ \(x^{$m} \\div x^{" . $this->num_to_str($n, 1, 1) . "} = x^{" . $this->num_to_str($m - $n, 1, 1) . "}\)</li>
+                            <li>\(y\) の次数 ・・・ \(y^{$s} \\div y^{" . $this->num_to_str($t, 1, 1) . "} = y^{" . $this->num_to_str($s - $t, 1, 1) . "}\)</li>
+                        </ul>
+                        <p>途中式は分けて書かなくてもよいが、頭の中では次のように順番に処理をするとよい。</p>
+                        $$
+                            {$q1_str}
+                                = \\frac{\,{$a}x^{$m}y^{$s}\,}{{$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{" . $this->num_to_str($t, 1, 1) . "}} 
+                                = " . $this->fracnum_to_str($a, $b, "", 1) . "\\times \\frac{\,x^{\cancel{$m}" . $this->num_to_str($m - $n, 1, 1) . "}y^{$s}\,}{\cancel{x^{$n}}y^{" . $this->num_to_str($t, 1, 1) . "}} 
+                                = " . $this->fracnum_to_str($a, $b, "", 1) . "x^{" . $this->num_to_str($m - $n, 1, 1) . "} \\times \\frac{\,y^{\cancel{$s}" . $this->num_to_str($s - $t, 1, 1) . "}\,}{\cancel{y^{" . $this->num_to_str($t, 1, 1) . "}}}
+                                = {$a1_str}
+                        $$
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        $$ {$q2_str} $$
+                        ",
+                'a_type' => 2,
+                'a' => $a2_str,
+                'e_type' => 3,
+                'e' => "<p>係数、\(x\) の次数、\(y\) の次数を、それぞれ処理すると整理しやすい。</p>
+                        <ul>
+                            <li>係数 ・・・・・ \(\displaystyle {$a} \\div {$b} = " . $this->fracnum_to_str($a, $b, "", 1) . "\)</li>
+                            <li>\(x\) の次数 ・・・ \(x^{$m} \\div x^{" . $this->num_to_str($n, 1, 1) . "} = x^{" . $this->num_to_str($m - $n, 1, 1) . "}\)</li>
+                            <li>\(y\) の次数 ・・・ \(\displaystyle y^{" . $this->num_to_str($t, 1, 1) . "} \\div y^{$s} = \\frac{1}{\,y^{" . $this->num_to_str($s - $t, 1, 1) . "}\,}\)</li>
+                        </ul>
+                        <p>途中式は分けて書かなくてもよいが、頭の中では次のように順番に処理をするとよい。</p>
+                        $$
+                            {$q2_str}
+                            = \\frac{\,{$a}x^{$m}y^{" . $this->num_to_str($t, 1, 1) . "}\,}{{$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{$s}}
+                            = \\frac{\,{$a_dived}x^{\cancel{$m}" . $this->num_to_str($m - $n, 1, 1) . "}y^{" . $this->num_to_str($t, 1, 1) . "}\,}{{$b_dived}\cancel{x^{" . $this->num_to_str($n, 1, 1) . "}}y^{$s}} 
+                            = \\frac{\,{$a_dived}x^{" . $this->num_to_str($m - $n, 1, 1) . "}\cancel{y^{" . $this->num_to_str($t, 1, 1) . "}}\,}{{$b_dived}y^{\cancel{$s}" . $this->num_to_str($s - $t, 1, 1) . "}} 
+                            = {$a2_str}
+                        $$
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        $$ {$q3_str} $$
+                        ",
+                'a_type' => 2,
+                'a' => $a3_str,
+                'e_type' => 3,
+                'e' => "<p>係数、\(x\) の次数、\(y\) の次数を、それぞれ処理すると整理しやすい。</p>
+                        <ul>
+                            <li>係数 ・・・・・ \( {$a} \\times {$b} = " . $a * $b . "\)</li>
+                            <li>\(x\) の次数 ・・・ \(x^{$m} \\times x^{" . $this->num_to_str($n, 1, 1) . "} = x^{" . $m + $n . "}\)</li>
+                            <li>\(y\) の次数 ・・・ \(y^{$s} \\times y^{" . $this->num_to_str($t, 1, 1) . "} = y^{" . $s + $t . "}\)</li>
+                        </ul>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        $$ {$q4_str} $$
+                        ",
+                'a_type' => 2,
+                'a' => $a4_str,
+                'e_type' => 3,
+                'e' => "<p>割り算はかけ算に変換してから計算する。</p>
+                        \[
+                            \\begin{aligned}
+                                {$q4_str} &= {$a}x^{$m}y^{$s} \\times \\frac{1}{\,x^{" . $this->num_to_str($n, 1, 1) . "}\,} \\times \\frac{1}{\,{$b}y^{" . $this->num_to_str($t, 1, 1) . "}\,} \\\\
+                                    &= \\frac{\,{$a}x^{$m}y^{$s}\,}{\,{$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{" . $this->num_to_str($t, 1, 1) . "}\,}
+                                    = {$a4_str}
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        $$ {$q5_str} $$
+                        ",
+                'a_type' => 2,
+                'a' => $a5_str,
+                'e_type' => 3,
+                'e' => "<p>割り算はかけ算に変換してから計算する。</p>
+                        \[
+                            \\begin{aligned}
+                                {$q5_str} &= x^{$m} \\times \\frac{1}{\,{$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{$s}\,} \\times {$a}y^{" . $this->num_to_str($t, 1, 1) . "} \\\\
+                                    &= \\frac{\,{$a}x^{$m}y^{" . $this->num_to_str($t, 1, 1) . "}\,}{\,{$b}x^{" . $this->num_to_str($n, 1, 1) . "}y^{" . $this->num_to_str($s, 1, 1) . "}\,}
+                                    = {$a5_str}
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 連立方程式
     public function simultaneous_equation() {
         // ax + by = p, cx + dy = q
@@ -4877,15 +5022,18 @@ class WorkbookController extends Controller
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 2);
+        $idx = rand(0, 3);
         switch ($idx) {
             case 0:
                 $result = $this->get_positive_negative();
                 break;
             case 1:
-                $result = $this->get_linear_equation2();
+                $result = $this->get_mul_div_monomials();
                 break;
             case 2:
+                $result = $this->get_linear_equation2();
+                break;
+            case 3:
                 $result = $this->get_quadratic_equation();
                 break;
         }

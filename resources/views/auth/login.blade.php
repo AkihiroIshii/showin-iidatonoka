@@ -5,8 +5,8 @@
         @csrf
         
         <h2 class="mb-4 fs-2">
-            <p class="text-sm">松陰塾飯田殿岡校</p>
-            <p class="text-xl">目標管理システム</p>
+            <p class="text-sm font-klee">松陰塾飯田殿岡校</p>
+            <p class="text-xl font-klee">目標管理＆反復演習システム　Sazaren</p>
         </h2>
         <!-- 退塾した生徒がログインしようとしたら表示 -->
         @if(session('errMsg'))
