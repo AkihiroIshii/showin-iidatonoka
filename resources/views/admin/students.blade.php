@@ -1,8 +1,8 @@
 <x-app-layout>
-    @if(Auth::user()->role == "admin")
+    @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
         <x-slot name="header">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                管理者専用ページ（生徒一覧）
+                塾長専用ページ（生徒一覧）
             </h2>
         </x-slot>
         <div class="mx-auto px-6">
@@ -27,7 +27,9 @@
 
             <x-h3>生徒一覧</x-h3>
             <!-- 新規作成 -->
-            <a href="{{route('admin.user.create')}}" class="text-blue-600">新規ユーザ作成</a>           
+            @if(Auth::user()->role == "admin")
+                <a href="{{route('admin.user.create')}}" class="text-blue-600">新規ユーザ作成</a>
+            @endif
             <div>
                 <table class="border-separate border border-slate-400 m-auto table-fixed">
                     <tr class="bg-gray-300">
@@ -35,7 +37,7 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">生徒名</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">学年</td>
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">挑戦中の目標</td>
-                        <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">単元更新日</td>
+                        {{-- <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">単元更新日</td> --}}
                     </tr>
                     @foreach($users as $user)
                         @php
@@ -49,6 +51,8 @@
                                 $trClass = 'bg-yellow-100';
                             } elseif(strpos($user->grade, '高') !== false)  {
                                 $trClass = 'bg-pink-100';
+                            } else {
+                                $trClass = '';
                             }
                         @endphp
                         <tr class="{!! $trClass !!}">
@@ -62,7 +66,7 @@
                                     {{$user->due_date}}：{{$user->content}}
                                 @endif
                             </td>
-                            <td class="border border-slate-300 px-4">{{$user->updated_at}}</td>
+                            {{-- <td class="border border-slate-300 px-4">{{$user->updated_at}}</td> --}}
                         </tr>
                     @endforeach
                 </table>

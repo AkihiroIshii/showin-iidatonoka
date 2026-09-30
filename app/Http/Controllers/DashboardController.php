@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Campus;
 use App\Models\School;
 use App\Models\Event;
 use App\Models\Information;
@@ -52,6 +53,12 @@ class DashboardController extends Controller
 
         // 格言を取得
         $kakugen = $this->getKakugen();
-        return view('dashboard', compact('user','top_choices','events','usualtargets','kadais','informations','kakugen'));
+
+        // キャンパスを取得
+        $campus = Campus::query()
+            ->where('id', Auth::user()->campus_id)
+            ->first();
+// dd($campus);
+        return view('dashboard', compact('user','top_choices','events','usualtargets','kadais','informations','kakugen','campus'));
     } 
 }

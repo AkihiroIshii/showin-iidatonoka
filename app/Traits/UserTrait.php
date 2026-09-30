@@ -38,7 +38,14 @@ trait UserTrait
 
         // ユーザ一覧を取得
         $users = User::where('grade', '!=', '保護者')
-            // ->whereNull('expiration_date')
+            ->where('grade', '!=', '塾長')
+            // ->where('campus_id', Auth::user()->campus_id)
+            ->when(Auth::user()->role == 'admin', function($q){
+                return $q->whereNull('campus_id');
+            })
+            ->when(isset(Auth::user()->campus_id), function($q){
+                return $q->where('campus_id', Auth::user()->campus_id);
+            })
             ->leftJoin('schools', function($join) {
                 $join->on('users.school_id', '=', 'schools.id');
             })

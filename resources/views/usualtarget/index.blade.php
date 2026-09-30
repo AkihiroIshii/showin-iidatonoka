@@ -5,7 +5,7 @@
         @endif
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             月間目標
-            @if(Auth::user()->role == "admin")
+            @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
                 ：{{$user->name}}
             @endif
         </h2>
@@ -18,7 +18,7 @@
         @endphp
         
         <!-- 新規作成 -->
-        @if(Auth::user()->role == "admin")
+        @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
             <a href="{{route('usualtarget.create', $user)}}" class="text-blue-600">新規作成</a>
         @endif
 
@@ -42,12 +42,12 @@
             </div>
         @endif --}}
 
-        @if(Auth::user()->role == "admin")
+        @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
             <!-- 現在の課題を表示 -->
             <div class="mb-6">
                 <table class="border-separate border border-slate-400 m-auto table-fixed">
                     <tr class="bg-gray-300">
-                        @if(Auth::user()->role == "admin")
+                        @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
                             <th></th>
                         @endif
                         <x-th>生徒名</x-th>
@@ -55,7 +55,7 @@
                     </tr>
                     @foreach($kadais as $kadai)
                         <tr>
-                            @if(Auth::user()->role == "admin")
+                            @if(Auth::user()->role == "admin"|| Auth::user()->grade == "塾長")
                                 <th class="border border-slate-300 px-4 w-1/12">
                                     <a href="{{route('usualtarget.edit',  ['usualtarget' => $kadai->id])}}" class="text-blue-600">編集</a>
                                 </th>
@@ -116,7 +116,7 @@
                 @endif
                 <table class="border-separate border border-slate-400 m-auto table-fixed mt-2">
                     <tr class="bg-gray-300">
-                        @if(Auth::user()->role == "admin")
+                        @if(Auth::user()->role == "admin"|| Auth::user()->grade == "塾長")
                             <th></th>
                         @endif
                         {{-- <x-th>設定日</x-th> --}}
@@ -128,7 +128,7 @@
                     </tr>
                     @foreach($usualtargets as $usualtarget)
                         <tr>
-                            @if(Auth::user()->role == "admin")
+                            @if(Auth::user()->role == "admin"|| Auth::user()->grade == "塾長")
                                 <th class="border border-slate-300 px-4 w-1/12">
                                     <a href="{{route('usualtarget.edit', $usualtarget)}}" class="text-blue-600">編集</a>
                                 </th>

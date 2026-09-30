@@ -84,10 +84,12 @@
                         }
                     @endphp
                     <tr class={!! $trClass !!}>
-                        @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
+                        @if(Auth::user()->role == "admin" || (Auth::user()->grade == "塾長" && Auth::user()->campus_id == $workbook->campus_id))
                             <td>
                                 <a href="{{route('workbook.edit', $workbook)}}" class="text-blue-600">編集</a>
                             </td>
+                        @elseif(Auth::user()->grade == "塾長")
+                            <td></td>
                         @endif
                         <td class="border border-slate-300 px-4 py-4">
                             <pre class="font-klee text-xl whitespace-normal">{!! $workbook->question !!}</pre>

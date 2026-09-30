@@ -48,9 +48,15 @@ class WorkbookController extends Controller
         //         ->get();
         // }
         // dd($user->campus_id);
-
+        $setting_code = Campus::query()
+            ->where('id', Auth::user()->campus_id)
+            ->value('setting_code');
+// dd($setting_code);
         $workbooks = Workbook::query()
-            ->where('campus_id', $user->campus_id)
+            ->when($setting_code === "0", function($q) use($user) {
+                return $q->where('campus_id', $user->campus_id);
+            })
+            // ->where('campus_id', $user->campus_id)
             ->orderBy('subject','asc')
             ->orderBy('grade','desc')
             ->get();
@@ -165,8 +171,17 @@ class WorkbookController extends Controller
         $grades[] = "";
         $units[] = "";
 
+        $setting_code = Campus::query()
+            ->where('id', Auth::user()->campus_id)
+            ->value('setting_code');
+// dd($setting_code);
         $workbooks = Workbook::query()
-            ->where('campus_id', $user->campus_id);
+            ->when($setting_code === "0" || is_null($setting_code), function($q) use($user) {
+                return $q->where('campus_id', $user->campus_id);
+            });
+
+        // $workbooks = Workbook::query()
+        //     ->where('campus_id', $user->campus_id);
 
         // 問題集に存在する単元のリストを作成
         $wb_units = $workbooks->pluck('unit');

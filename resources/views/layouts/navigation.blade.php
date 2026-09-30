@@ -27,15 +27,20 @@
                     <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
                         問題集(new!)
                     </x-nav-link>
-                    @if(Auth::user()->role == "admin")
+                    @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
                         <x-nav-link :href="route('admin.students')" :active="request()->routeIs('admin.students')">
                             生徒一覧
                         </x-nav-link>
+                        <x-nav-link :href="route('campus.edit')" :active="request()->routeIs('campus.edit')">
+                            設定
+                        </x-nav-link>
+                    @endif
+                    @if(Auth::user()->role == "admin")
                         <x-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
                             メンテナンス
                         </x-nav-link>
                     <!-- 生徒、保護者 -->
-                    @else
+                    @elseif(Auth::user()->grade != "塾長")
                         {{-- @elseif(Auth::user()->grade == "保護者") --}}
                         <x-nav-link :href="route('usualtarget')" :active="request()->routeIs('usualtarget')">
                             月間目標

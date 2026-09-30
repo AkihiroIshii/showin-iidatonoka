@@ -82,8 +82,7 @@ class UsualtargetController extends Controller
         // 日々の目標を更新
         $validated = $request->validate([
             'content' => 'required',
-            // 'due_date' => 'required',
-            // 'achieve_flg' => 'nullable|boolean',
+            'due_date' => 'nullable',
             'achieve_flg' => 'nullable',
             'coin' => 'nullable|integer',
             'comment' => 'nullable',

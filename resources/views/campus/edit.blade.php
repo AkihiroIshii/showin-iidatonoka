@@ -1,9 +1,8 @@
 <x-app-layout>
-    @if(Auth::user()->role == "admin" || (Auth::user()->grade == "塾長" && Auth::user()->campus_id == $user->campus_id))
+    @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
         <x-slot name="header">
-            @include('layouts.adminmenu')
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                月間目標（管理者）＞{{ $user->name }}＞編集
+                設定（塾長専用ページ）
             </h2>
         </x-slot>
 
@@ -22,11 +21,33 @@
                     </ul>
                 </div>
             @endif
-            <form method="post" action="{{ route('usualtarget.update', $usualtarget) }}">
+            <form method="post" action="{{ route('campus.update', $campus) }}">
                 @csrf
                 @method('patch')
 
                 <div class="mt-8">
+                    <div>
+                        <x-input-error :messages="$errors->get('setting_code')" class="mt-2" />
+                        <label for="setting_code" class="font-semibold w-36 mt-4">問題集の表示対象</label>
+                        @php
+                            $setting_codes = [
+                                '0' => '自校舎のオリジナル問題のみ。',
+                                '1' => '飯田殿岡校の問題も表示する。',
+                                '2' => '飯田殿岡校の問題と格言を表示する。',
+                            ];
+                        @endphp
+                        <select type="string" name="setting_code" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
+                            <option value="">選択してください。</option>
+                            @foreach($setting_codes as $key => $val)
+                                <option value="{{ $key }}" {{ old('subject', $campus->setting_code) == $key ? 'selected' : '' }}>
+                                    {{ $val }}
+                                </option>
+                            @endforeach
+                        </select>　(※)格言はダッシュボードにランダム表示されます。    
+                    </div>
+                </div>
+                
+                {{-- <div class="mt-8">
                     <div>
                         <label for="content" class="font-semibold mt-4">月間目標</label>
                         <textarea type="text" name="content" class="w-full py-2 border border-gray-300 rounded-md h-48" id="content">{{old('content', $usualtarget->content)}}</textarea>
@@ -43,25 +64,7 @@
                         <label for="achieve_flg" class="font-semibold mt-4">状況</label>2:現在の課題、1:目標達成、0:未達成
                         <input type="text" name="achieve_flg" class="py-2 border border-gray-300 rounded-md" id="achieve_flg" value="{{old('achieve_flg', $usualtarget->achieve_flg)}}">
                     </div>
-                </div>
-                {{-- <div class="mt-8">
-                    <div>
-                        <label for="comment" class="font-semibold mt-4">振り返り</label>
-                        <textarea name="comment" class="w-full py-2 border border-gray-300 rounded-md" id="comment">{{old('comment', $usualtarget->comment)}}</textarea>
-                    </div>
                 </div> --}}
-                <div class="mt-8">
-                    <div>
-                        <label for="teacher_comment" class="font-semibold mt-4">先生の評価</label>
-                        <textarea name="teacher_comment" class="w-full py-2 border border-gray-300 rounded-md" id="teacehr_comment">{{old('comment', $usualtarget->teacher_comment)}}</textarea>
-                    </div>
-                </div>
-                <div class="mt-8">
-                    <div>
-                        <label for="coin" class="font-semibold mt-4">獲得コイン数</label>
-                        <input type="integer" name="coin" class="w-full py-2 border border-gray-300 rounded-md" id="coin" value="{{old('coin', $usualtarget->coin)}}">
-                    </div>
-                </div>
 
                 <x-primary-button class="mt-4">
                     更新

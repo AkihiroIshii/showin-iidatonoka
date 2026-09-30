@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Response;
 use App\Events\ChatEvent;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AishowinController;
+use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CoinController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompletedUnitController;
@@ -92,6 +93,12 @@ Route::get('/admin/students', [AdminController::class, 'students'])
 ->middleware(['auth', 'verified'])->name('admin.students');
 Route::get('/admin/setStudent/{user}', [AdminController::class, 'setStudent'])
 ->middleware(['auth', 'verified'])->name('admin.setStudent');
+
+/**　校舎（キャンパス） */
+Route::get('campus/edit', [CampusController::class, 'edit'])
+->middleware(['auth', 'verified'])->name('campus.edit');
+Route::patch('campus/{campus}/update', [CampusController::class, 'update'])
+->middleware(['auth', 'verified'])->name('campus.update');
 
 
 /** 管理者＞ワーク演習 */

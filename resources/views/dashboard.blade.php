@@ -42,16 +42,18 @@
     @if(Auth::user()->role == "admin")
         <a href="{{route('kakugen.create')}}" class="text-blue-600">格言：新規作成</a>
     @endif
-    <div class="font-kree text-center bg-sky-100 mb-4 p-2">
-        @if(Auth::user()->role == "admin")
-            <td class="border border-slate-300 px-4">
-                <a href="{{route('kakugen.edit', $kakugen->id)}}" class="text-blue-600">編集</a>
-            </td>
-        @endif
-        <a href="{{route('kakugen.show', $kakugen)}}">
-            {{$kakugen->sentence}}（{{$kakugen->person}}）
-        </a>
-    </div>
+    @if(is_null($campus) || $campus->setting_code == 2)
+        <div class="font-kree text-center bg-sky-100 mb-4 p-2">
+            @if(Auth::user()->role == "admin")
+                <td class="border border-slate-300 px-4">
+                    <a href="{{route('kakugen.edit', $kakugen->id)}}" class="text-blue-600">編集</a>
+                </td>
+            @endif
+            <a href="{{route('kakugen.show', $kakugen)}}">
+                {{$kakugen->sentence}}（{{$kakugen->person}}）
+            </a>
+        </div>
+    @endif
     <!-- PC表示用 -->
     {{-- <div class="hidden sm:block mx-auto px-6 py-4"> --}}
 
