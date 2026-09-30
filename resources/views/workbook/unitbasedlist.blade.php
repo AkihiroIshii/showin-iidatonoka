@@ -174,6 +174,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.mul_div_monomials')}}">単項式の乗除</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.regularity')}}">☆規則性（\(n\) で表す）</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

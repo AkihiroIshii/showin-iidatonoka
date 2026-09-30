@@ -369,6 +369,8 @@ Route::get('workbook/coordinates_triangle', [WorkbookController::class, 'coordin
 // 数学（中2）
 Route::get('workbook/mul_div_monomials', [WorkbookController::class, 'mul_div_monomials'])
 ->middleware(['auth', 'verified'])->name('workbook.mul_div_monomials');
+Route::get('workbook/regularity', [WorkbookController::class, 'regularity'])
+->middleware(['auth', 'verified'])->name('workbook.regularity');
 Route::get('workbook/simultaneous_equation', [WorkbookController::class, 'simultaneous_equation'])
 ->middleware(['auth', 'verified'])->name('workbook.simultaneous_equation');
 Route::get('workbook/simultaneous_equation2', [WorkbookController::class, 'simultaneous_equation2'])

@@ -1559,6 +1559,25 @@ class WorkbookController extends Controller
                         \]
                         <p>最後は、\(x = ○○\) 、\( ○○ = x\) どちらの形でも構わない。</p>",
             ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の方程式を解きなさい。（目標解答時間：10 秒）</p>
+                        $$ {$a} : {$b} = {$e} : x $$
+                        ",
+                'a_type' => 2,
+                'a' => "x = " . $this->fracnum_to_str($b * $e, $a, "", 1),
+                'e_type' => 3,
+                'e' => "<p>\(a : b = c : d\) のとき、\(ad = bc\) が成り立つ。よって、</p>
+                        \[
+                            \\begin{aligned}
+                                {$a} : {$b} &= {$e} : x \\\\
+                                {$a}x &= {$b} \\times {$e} \\\\
+                                x &= " . $b * $e . " \\times \\frac{1}{\,{$a}\,} \\\\
+                                x &= " . $this->fracnum_to_str($b * $e, $a, "", 1) . "
+                            \\end{aligned}
+                        \]
+                        ",
+            ],
 
             [
                 'q_type' => 3,
@@ -1610,10 +1629,10 @@ class WorkbookController extends Controller
         $flag2 = $request->boolean('flag2');    // 計算問題
         $flags = ['flag1' => '基礎', 'flag2' => 'まとめ'];
         if ($flag1 == true && $flag2 == false) {
-            $q_index = rand(0, 3);
+            $q_index = rand(0, 4);
             $question = $questions[$q_index];
         } else if ($flag1 == false && $flag2 == true) {
-            $q_index = rand(4, 5);
+            $q_index = rand(5, 6);
             $question = $questions[$q_index];
         } else {
             $q_index = rand(0,count($questions)-1);
@@ -3204,6 +3223,98 @@ class WorkbookController extends Controller
                             \\end{aligned}
                         \]
                         ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
+    // 規則性（nで表す）
+    public function regularity() {
+        $unitname = "規則性（\(n\) で表す）";
+        $result = $this->get_regularity();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_regularity() {
+        $n = rand(10, 30);
+        $a = rand(1, 5);
+        $d = rand(2, 7);
+        while ($a == $d) {
+            $d = rand(2, 7);
+        }
+
+        $q1_str = "<ul class=\"pl-5 text-left\">";
+        for($i = 1; $i <= 4; $i++) {
+            $ad_arr[$i] = $a + ($i - 1) * $d;
+            $q1_str .= "<li>{$i} 列目：";
+            for($j = 1; $j <= $ad_arr[$i]; $j++) {
+                $q1_str .= "☺";
+            }
+            $q1_str .= "</li>";
+        }
+        $q1_str .= "</ul>";
+        $ad_n = $a + ($n - 1) * $d;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次のように、1列目から順に {$ad_arr[1]}人, {$ad_arr[2]}人, {$ad_arr[3]}人, {$ad_arr[4]}人,... と人が並んでいる。</p>
+                        {$q1_str}
+                        <p>この列と人数には規則性がある。{$n} 列目には何人が並んでいると考えられるか。</p>
+                        ",
+                'a_type' => 2,
+                'a' => "{$ad_n}人",
+                'e_type' => 3,
+                'e' => "<p>1列目が {$a}人で、その後は {$d}人ずつ増えているので、</p>
+                        <p>\(n\) 列目の人数を \(a_n\) とすると、\(a_n = {$a} + (n - 1) \\times {$d} = {$d}n" . $this->add_plus($a - $d) . "\)。</p>
+                        <p>よって、{$n} 列目の人数は、\(a_{{$n}} = {$d} \\times {$n}" . $this->add_plus($a - $d) . " = " . $d * $n . $this->add_plus($a - $d) . " = {$ad_n} 人\)。</p>
+                        ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>二つの奇数の和は偶数になることを示せ。</p>",
+                'a_type' => 3,
+                'a' => "<p>偶数は \(2\) の倍数なので、整数 \(m\) を用いて \(2m\) と表せる。</p>
+                        <p>偶数に \(1\) を足すと奇数になるので、奇数は \(2m + 1\)と表せる。</p>
+                        <p>二つの奇数をそれぞれ \(2m+1,\,2n+1\) と表すと、これらの和は、</p>
+                        \[
+                            \\begin{aligned}
+                                (2m+1)+(2n+1) &= 2m+2n+2 \\\\
+                                    &= 2(m+n+1)
+                            \\end{aligned}
+                        \]
+                        <p>すると、\((m+n+1)\) は整数なので、</p>
+                        <p>\(2(m+n+1)\) は \(2\) の倍数、すなわち偶数である。</p>
+                        <p>よって、二つの奇数の和は偶数になる。</p>
+                        ",
+                'e_type' => 3,
+                'e' => "",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>３桁の整数を考える。各位の数の和が３の倍数になるとき、</p>
+                        <p>もとの３桁の整数も３の倍数であることを示せ。</p>",
+                'a_type' => 3,
+                'a' => "<p>３桁の整数について、百の位を \(a\), 十の位を \(b\), 一の位を \(c\) とおく。</p>
+                        <p>すると、３桁の整数は、\(100a + 10b + c\) と表せる。さて、前提より</p>
+                        <p>各位の和は３の倍数なので、\(a+b+c = 3m\) と表せる。このことを考慮して変形すると、</p>
+                        \[
+                            \\begin{aligned}
+                                100a + 10b + c &= (99 + 1)a + (9 + 1)b + c \\\\
+                                    &= (99a + 9b) + (a + b + c) \\\\
+                                    &= 3(33a + 3b) + 3m \\\\
+                                    &= 3(33a + 3b + m)
+                            \\end{aligned}
+                        \]
+                        <p>\((33a + 3b + m)\) は整数なので、\(3(33a + 3b + m)\) は \(3\) の倍数である。</p>
+                        <p>すなわち、各位の和が３の倍数であれば、もとの３桁の整数も３の倍数である。</p>
+                        ",
+                'e_type' => 3,
+                'e' => "",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
