@@ -386,7 +386,7 @@
 
             <!---------------------------------------- 英語 ---------------------------------------->
             <x-h3 color="purple">英語</x-h3>
-            <p class="text-center font-bold text-red-600">2026/9/13：中２、中３は、まず「中１まとめ」の英文をスラスラ読めて、和訳ができるようにしましょう。</p>
+            <p class="text-center font-bold text-red-600">2026/9/30：英語は順次「問題集」に移行しています。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -425,7 +425,7 @@
                         <x-td>英文法</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link color="purple">
+                                {{-- <x-button-link color="purple">
                                     <a href="{{route('workbook.be_verb')}}">be動詞</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
@@ -445,7 +445,7 @@
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_summaryJ1')}}">◎中１まとめ</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                                 {{-- <div>
                                     be動詞
                                     <x-button-link color="purple">
@@ -477,7 +477,7 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link color="purple">
+                                {{-- <x-button-link color="purple">
                                     <a href="{{route('workbook.conjection')}}">接続詞</a>
                                 </x-button-link>
                                 <x-button-link color="purple">
@@ -497,17 +497,17 @@
                                 </x-button-link>
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_summaryJ2')}}">◎中２まとめ</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link color="purple">
+                                {{-- <x-button-link color="purple">
                                     <a href="{{route('workbook.present_perfect')}}">現在完了</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
+                                </x-button-link> --}}
+                                {{-- <x-button-link color="purple">
                                     <a href="{{route('workbook.svo_infinitive')}}">SVO+不定詞</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.postfix_modification')}}">後置修飾（分詞、関係代名詞）</a>
                                 </x-button-link>
@@ -681,6 +681,7 @@
 
             <!---------------------------------------- 社会 ---------------------------------------->
             <x-h3 id="society" color="yellow">社会</x-h3>
+            <p class="text-center font-bold text-red-600">2026/9/30：社会は順次「問題集」に移行しています。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -722,12 +723,12 @@
                         <x-td>歴史</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link color="yellow">
+                                {{-- <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_kodai')}}">縄文、弥生、古墳</a>
                                 </x-button-link>
                                 <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_asuka_nara')}}">飛鳥、奈良</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -735,12 +736,12 @@
                                 <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_bakumatsu')}}">幕末</a>
                                 </x-button-link>
-                                <x-button-link color="yellow">
+                                {{-- <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_meiji')}}">明治維新</a>
                                 </x-button-link>
                                 <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_meiji2')}}">明治（議会、戦争）</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">

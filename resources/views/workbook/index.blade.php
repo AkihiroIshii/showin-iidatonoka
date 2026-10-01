@@ -25,14 +25,21 @@
 
                 <!--------------- 英語 --------------->
                 <x-h3 color="purple">英語</x-h3>
+                <p class="font-semibold text-l">＜学年別＞</p>
                 <div class="flex">
-                    <div class="px-6 w-24 shirink-0 font-bold">種別</div>
+                    <div class="px-6 w-32 shirink-0 font-bold">種別</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
                         <label>
                             <input type="radio" name="eng_type" value="並び替え" checked> 並び替え
                         </label>
                         <label>
                             <input type="radio" name="eng_type" value="空所補充"> 空所補充
+                        </label>
+                        <label>
+                            <input type="radio" name="eng_type" value="和訳"> 和訳
+                        </label>
+                        <label>
+                            <input type="radio" name="eng_type" value="英作文"> 英作文
                         </label>
                         {{-- <label>
                             <input type="radio" name="eng_type" value="全訳"> 全訳
@@ -43,7 +50,7 @@
                     </div>
                 </div>
                 <div class="flex mt-4">
-                    <div class="px-6 w-24 shirink-0 font-bold">学年別</div>
+                    <div class="px-6 w-32 shirink-0 font-bold">学年</div>
                     <div class="flex flex-wrap gap-y-2">
                         <!-- 問題集に存在する学年のみチェックボックスを表示 -->
                         @foreach($grades['eng'] as $eng_grade)
@@ -56,7 +63,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="flex mt-4">
+                <p class="font-semibold text-l">＜単元別＞</p>
+                {{-- <div class="flex mt-4">
                     <div class="px-6 w-24 shirink-0 font-bold">単元別</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
@@ -67,6 +75,62 @@
                         @endforeach
                         <button type="submit" name="target" value="eng_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
                             単元別 問題表示
+                        </button>
+                    </div>
+                </div> --}}
+                <div class="flex mt-4">
+                    <div class="px-6 w-32 shirink-0 font-bold">並び替え</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['eng_order'] as $eng_order_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $eng_order_unit->physical_name }}" value="1">{{ $eng_order_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="eng_order_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
+                            並び替え 問題表示
+                        </button>
+                    </div>
+                </div>
+                <div class="flex mt-4">
+                    <div class="px-6 w-32 shirink-0 font-bold">空所補充</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['eng_blank'] as $eng_blank_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $eng_blank_unit->physical_name }}" value="1">{{ $eng_blank_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="eng_blank_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
+                            空所補充 問題表示
+                        </button>
+                    </div>
+                </div>
+                <div class="flex mt-4">
+                    <div class="px-6 w-32 shirink-0 font-bold">和訳</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['eng_translation'] as $eng_translation_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $eng_translation_unit->physical_name }}" value="1">{{ $eng_translation_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="eng_translation_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
+                            和訳 問題表示
+                        </button>
+                    </div>
+                </div>
+                <div class="flex mt-4">
+                    <div class="px-6 w-32 shirink-0 font-bold">英作文</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['eng_composition'] as $eng_composition_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $eng_composition_unit->physical_name }}" value="1">{{ $eng_composition_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="eng_composition_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
+                            英作文 問題表示
                         </button>
                     </div>
                 </div>
@@ -85,7 +149,7 @@
                     </div>
                 </div>
                 <div class="flex mt-4">
-                    <div class="px-6 w-24 shirink-0 font-bold">地理</div>
+                    <div class="px-6 w-32 shirink-0 font-bold">地理</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['geo'] as $geo_unit)
@@ -99,7 +163,7 @@
                     </div>
                 </div>
                 <div class="flex mt-4">
-                    <div class="px-6 w-24 shirink-0 font-bold">歴史</div>
+                    <div class="px-6 w-32 shirink-0 font-bold">歴史</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['his'] as $his_unit)
@@ -113,7 +177,7 @@
                     </div>
                 </div>
                 <div class="flex mt-4">
-                    <div class="px-6 w-24 shirink-0 font-bold">公民</div>
+                    <div class="px-6 w-32 shirink-0 font-bold">公民</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['civ'] as $civ_unit)

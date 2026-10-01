@@ -66,12 +66,46 @@ class WorkbookController extends Controller
         $wb_grades['eng'] = $workbooks
             ->where('subject', '英語')
             ->pluck('grade');
-// dd($wb_units);
+
+        // 問題集に存在する英語の単元を、種別(q_type)ごとに取得
+        $wb_units_qtype['eng_order'] = $workbooks
+            ->where('subject','英語')
+            ->where('q_type','並び替え')
+            ->unique('unit')
+            ->pluck('unit');
+        $wb_units_qtype['eng_blank'] = $workbooks
+            ->where('subject','英語')
+            ->where('q_type','空所補充')
+            ->unique('unit')
+            ->pluck('unit');
+        $wb_units_qtype['eng_translation'] = $workbooks
+            ->where('subject','英語')
+            ->where('q_type','和訳')
+            ->unique('unit')
+            ->pluck('unit');
+        $wb_units_qtype['eng_composition'] = $workbooks
+            ->where('subject','英語')
+            ->where('q_type','英作文')
+            ->unique('unit')
+            ->pluck('unit');
+            // dd($wb_units_qtype);
         // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
         /***** 英語 *****/
-        $units['eng'] = Unit::query()
+        $units['eng_order'] = Unit::query()
             ->where('subject','英語')
-            ->whereIn('logical_name', $wb_units)
+            ->whereIn('logical_name', $wb_units_qtype['eng_order'])
+            ->get();
+        $units['eng_blank'] = Unit::query()
+            ->where('subject','英語')
+            ->whereIn('logical_name', $wb_units_qtype['eng_blank'])
+            ->get();
+        $units['eng_translation'] = Unit::query()
+            ->where('subject','英語')
+            ->whereIn('logical_name', $wb_units_qtype['eng_translation'])
+            ->get();
+        $units['eng_composition'] = Unit::query()
+            ->where('subject','英語')
+            ->whereIn('logical_name', $wb_units_qtype['eng_composition'])
             ->get();
         /***** 社会 *****/
         $units['geo'] = Unit::query()
@@ -187,7 +221,8 @@ class WorkbookController extends Controller
         $wb_units = $workbooks->pluck('unit');
 
         /******** 英語 *********/
-        if ($request->input('target') == 'eng_grade' || $request->input('target') == 'eng_unit') {
+        // if ($request->input('target') == 'eng_grade' || $request->input('target') == 'eng_unit') {
+        if (substr($request->input('target'), 0, 3) == 'eng') {
             // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
             $wb_unit_sets['eng'] = Unit::query()
                 ->where('subject','英語')
@@ -211,7 +246,8 @@ class WorkbookController extends Controller
                     ->when(count($grades) > 0, function ($query) use ($grades) {
                         $query->whereIn('grade', $grades);
                     });
-            } elseif ($request->input('target') == 'eng_unit') {
+            // 単元別
+            } else {
                 // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
                 foreach ($wb_unit_sets['eng'] as $eng_unit) {
                     if ($request->boolean($eng_unit->physical_name)) {
@@ -219,12 +255,40 @@ class WorkbookController extends Controller
                         $units[] = $eng_unit->logical_name;
                     }
                 }
-                $workbooks = $workbooks
-                    ->where('subject','英語')
-                    ->where('q_type', $request->input('eng_type'))
-                    ->when(count($units) > 0, function ($query) use ($units) {
-                        $query->whereIn('unit', $units);
-                    });
+                
+                // 並び替え
+                if ($request->input('target') == 'eng_order_unit') {
+                    $workbooks = $workbooks
+                        ->where('subject','英語')
+                        ->where('q_type', '並び替え')
+                        ->when(count($units) > 0, function ($query) use ($units) {
+                            $query->whereIn('unit', $units);
+                        });
+                // 空所補充
+                } elseif ($request->input('target') == 'eng_blank_unit') {
+                    $workbooks = $workbooks
+                        ->where('subject','英語')
+                        ->where('q_type', '空所補充')
+                        ->when(count($units) > 0, function ($query) use ($units) {
+                            $query->whereIn('unit', $units);
+                        });
+                // 和訳
+                } elseif ($request->input('target') == 'eng_translation_unit') {
+                    $workbooks = $workbooks
+                        ->where('subject','英語')
+                        ->where('q_type', '和訳')
+                        ->when(count($units) > 0, function ($query) use ($units) {
+                            $query->whereIn('unit', $units);
+                        });
+                // 英作文
+                } elseif ($request->input('target') == 'eng_composition_unit') {
+                    $workbooks = $workbooks
+                        ->where('subject','英語')
+                        ->where('q_type', '英作文')
+                        ->when(count($units) > 0, function ($query) use ($units) {
+                            $query->whereIn('unit', $units);
+                        });
+                }
             }
 
         /******** 地理 *********/
