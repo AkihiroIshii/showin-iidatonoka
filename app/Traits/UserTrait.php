@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Grade;
 
 // use Carbon\Carbon;
 
@@ -37,8 +38,8 @@ trait UserTrait
         // dd($subUnit);
 
         // ユーザ一覧を取得
-        $users = User::where('grade', '!=', '保護者')
-            ->where('grade', '!=', '塾長')
+        $users = User::where('users.grade', '!=', '保護者')
+            ->where('users.grade', '!=', '塾長')
             // ->where('campus_id', Auth::user()->campus_id)
             ->when(Auth::user()->role == 'admin', function($q){
                 return $q->whereNull('campus_id');
@@ -48,6 +49,9 @@ trait UserTrait
             })
             ->leftJoin('schools', function($join) {
                 $join->on('users.school_id', '=', 'schools.id');
+            })
+            ->leftJoin('grades', function($join) {
+                $join->on('users.grade', '=', 'grades.grade');
             })
             ->leftJoinSub($subQuery, 'ut', function($join) {
                 $join->on('users.id', '=', 'ut.user_id');
@@ -60,14 +64,15 @@ trait UserTrait
                 users.name as user_name,
                 schools.name as school_name,
                 users.grade,
+                grades.g_order,
                 users.plan,
                 users.expiration_date,
                 ut.content,
                 ut.due_date,
                 cu.updated_at
             ')
-            ->orderBy('users.expiration_date','asc')
-            ->orderBy('users.grade','desc')
+            // ->orderBy('users.expiration_date','asc')
+            ->orderBy('grades.g_order','desc')
             ->orderBy('users.user_id','asc')
             ->orderBy('schools.name','asc')
             ->get();

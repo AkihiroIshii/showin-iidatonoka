@@ -41,7 +41,8 @@
                     </tr>
                     @foreach($users as $user)
                         @php
-                            if(isset($user->expiration_date)) {
+                            // if(isset($user->expiration_date)) {
+                            if(isset($user->expiration_date) && ($user->expiration_date < \Carbon\Carbon::now())) {
                                 $trClass = 'bg-gray-300';
                             } elseif(strpos($user->grade, '中３') !== false) {
                                 $trClass = 'bg-sky-200';

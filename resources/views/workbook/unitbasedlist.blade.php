@@ -534,9 +534,9 @@
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_reading_J2_2')}}">読解練習２</a>
                                 </x-button-link>
-                                <x-button-link color="purple">
+                                {{-- <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_reading_J2_1')}}">桃太郎</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">

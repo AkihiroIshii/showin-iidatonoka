@@ -25,12 +25,17 @@
                         単元別学習
                     </x-nav-link>
                     <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
-                        問題集(new!)
+                        問題集
+                    </x-nav-link>
+                    <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
+                        公式集
                     </x-nav-link>
                     @if(Auth::user()->role == "admin" || Auth::user()->grade == "塾長")
                         <x-nav-link :href="route('admin.students')" :active="request()->routeIs('admin.students')">
                             生徒一覧
                         </x-nav-link>
+                    @endif
+                    @if(Auth::user()->grade == "塾長")
                         <x-nav-link :href="route('campus.edit')" :active="request()->routeIs('campus.edit')">
                             設定
                         </x-nav-link>
@@ -50,25 +55,24 @@
                                 過去問
                             </x-nav-link>
                         @endif
+                    @endif
+                    <!-- 松陰塾の管理者、生徒、保護者のみ（campus_id is null） -->
+                    @if(is_null(Auth::user()->campus_id))
                         <x-nav-link :href="route('coin')" :active="request()->routeIs('coin')">
                             コイン
                         </x-nav-link>
                         <x-nav-link :href="route('meeting.video')" :active="request()->routeIs('meeting.video')">
                             通話
                         </x-nav-link>
-                    @endif
-                    <!-- 管理者、生徒共通 -->
-                    <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
-                        公式集
-                    </x-nav-link>
-                    <x-nav-link :href="route('link')" :active="request()->routeIs('link')">
-                        その他情報
-                    </x-nav-link>
-                    {{-- @if(Auth::user()->role != "admin")
-                        <x-nav-link :href="route('message')" :active="request()->routeIs('message')">
-                            チャット（開発中）
+                        <x-nav-link :href="route('link')" :active="request()->routeIs('link')">
+                            その他情報
                         </x-nav-link>
-                    @endif --}}
+                        {{-- @if(Auth::user()->role != "admin")
+                            <x-nav-link :href="route('message')" :active="request()->routeIs('message')">
+                                チャット（開発中）
+                            </x-nav-link>
+                        @endif --}}
+                    @endif
                 </div>
             </div>
 
