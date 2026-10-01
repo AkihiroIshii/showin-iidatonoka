@@ -248,16 +248,23 @@ class WorkbookController extends Controller
                     });
             // 単元別
             } else {
-                // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
-                foreach ($wb_unit_sets['eng'] as $eng_unit) {
-                    if ($request->boolean($eng_unit->physical_name)) {
-                        // チェックされている単元の論理名（be動詞など）を配列に格納
-                        $units[] = $eng_unit->logical_name;
-                    }
-                }
+                // // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+                // foreach ($wb_unit_sets['eng'] as $eng_unit) {
+                //     if ($request->boolean($eng_unit->physical_name)) {
+                //         // チェックされている単元の論理名（be動詞など）を配列に格納
+                //         $units[] = $eng_unit->logical_name;
+                //     }
+                // }
                 
                 // 並び替え
                 if ($request->input('target') == 'eng_order_unit') {
+                    // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+                    foreach ($wb_unit_sets['eng'] as $eng_unit) {
+                        if ($request->boolean('order_' . $eng_unit->physical_name)) {
+                            // チェックされている単元の論理名（be動詞など）を配列に格納
+                            $units[] = $eng_unit->logical_name;
+                        }
+                    }
                     $workbooks = $workbooks
                         ->where('subject','英語')
                         ->where('q_type', '並び替え')
@@ -266,6 +273,13 @@ class WorkbookController extends Controller
                         });
                 // 空所補充
                 } elseif ($request->input('target') == 'eng_blank_unit') {
+                    // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+                    foreach ($wb_unit_sets['eng'] as $eng_unit) {
+                        if ($request->boolean('blank_' . $eng_unit->physical_name)) {
+                            // チェックされている単元の論理名（be動詞など）を配列に格納
+                            $units[] = $eng_unit->logical_name;
+                        }
+                    }
                     $workbooks = $workbooks
                         ->where('subject','英語')
                         ->where('q_type', '空所補充')
@@ -274,6 +288,13 @@ class WorkbookController extends Controller
                         });
                 // 和訳
                 } elseif ($request->input('target') == 'eng_translation_unit') {
+                    // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+                    foreach ($wb_unit_sets['eng'] as $eng_unit) {
+                        if ($request->boolean('translation_' . $eng_unit->physical_name)) {
+                            // チェックされている単元の論理名（be動詞など）を配列に格納
+                            $units[] = $eng_unit->logical_name;
+                        }
+                    }
                     $workbooks = $workbooks
                         ->where('subject','英語')
                         ->where('q_type', '和訳')
@@ -282,6 +303,13 @@ class WorkbookController extends Controller
                         });
                 // 英作文
                 } elseif ($request->input('target') == 'eng_composition_unit') {
+                    // 問題集に存在する英語の単元についてのみ、workbook画面で選択された単元を確認。
+                    foreach ($wb_unit_sets['eng'] as $eng_unit) {
+                        if ($request->boolean('composition_' . $eng_unit->physical_name)) {
+                            // チェックされている単元の論理名（be動詞など）を配列に格納
+                            $units[] = $eng_unit->logical_name;
+                        }
+                    }
                     $workbooks = $workbooks
                         ->where('subject','英語')
                         ->where('q_type', '英作文')

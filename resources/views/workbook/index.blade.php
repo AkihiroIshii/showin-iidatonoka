@@ -84,7 +84,7 @@
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['eng_order'] as $eng_order_unit)
                             <label class="w-auto pl-2">
-                                <input type="checkbox" name="{{ $eng_order_unit->physical_name }}" value="1">{{ $eng_order_unit->logical_name }}
+                                <input type="checkbox" name="order_{{ $eng_order_unit->physical_name }}" value="1">{{ $eng_order_unit->logical_name }}
                             </label>
                         @endforeach
                         <button type="submit" name="target" value="eng_order_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
@@ -98,7 +98,7 @@
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['eng_blank'] as $eng_blank_unit)
                             <label class="w-auto pl-2">
-                                <input type="checkbox" name="{{ $eng_blank_unit->physical_name }}" value="1">{{ $eng_blank_unit->logical_name }}
+                                <input type="checkbox" name="blank_{{ $eng_blank_unit->physical_name }}" value="1">{{ $eng_blank_unit->logical_name }}
                             </label>
                         @endforeach
                         <button type="submit" name="target" value="eng_blank_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
@@ -112,7 +112,7 @@
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['eng_translation'] as $eng_translation_unit)
                             <label class="w-auto pl-2">
-                                <input type="checkbox" name="{{ $eng_translation_unit->physical_name }}" value="1">{{ $eng_translation_unit->logical_name }}
+                                <input type="checkbox" name="translation_{{ $eng_translation_unit->physical_name }}" value="1">{{ $eng_translation_unit->logical_name }}
                             </label>
                         @endforeach
                         <button type="submit" name="target" value="eng_translation_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
@@ -126,7 +126,7 @@
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
                         @foreach($units['eng_composition'] as $eng_composition_unit)
                             <label class="w-auto pl-2">
-                                <input type="checkbox" name="{{ $eng_composition_unit->physical_name }}" value="1">{{ $eng_composition_unit->logical_name }}
+                                <input type="checkbox" name="composition_{{ $eng_composition_unit->physical_name }}" value="1">{{ $eng_composition_unit->logical_name }}
                             </label>
                         @endforeach
                         <button type="submit" name="target" value="eng_composition_unit" class="inline-block p-2 rounded shadow bg-purple-200 font-bold">
