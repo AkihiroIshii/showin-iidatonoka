@@ -1195,88 +1195,269 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 速さ１
-    public function velocity1() {
+    // // 速さ１
+    // public function velocity1() {
+    //     $v = rand(2, 9);    // m/s
+    //     $t = 10 * rand(1, 9);    // s
+    //     $d = $v * $t;   // m
+
+    //     $questions = [
+    //         [
+    //             'q' => "\,{$d}\,\mathrm{m}\,の距離を\,{$t}\,秒で通過する物体の速さ（秒速）を求めなさい。",
+    //             'a' => "{$v}\,\mathrm{m/秒}",
+    //             'e' => "秒速とは、１秒あたりに進む距離のことである。よって、\mathrm{秒速[m/秒] = 距離[m] \div 時間[秒] = {$d}[m] \div {$t}[秒] = {$v}[m/秒] }。",
+    //         ],
+    //         [
+    //             'q' => "\,{$d}\,\mathrm{m}\,の距離を、秒速\,{$v}\,\mathrm{m}で通過するのにかかる時間を求めなさい。",
+    //             'a' => "{$t}\,秒",
+    //             'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
+    //                     よって、\mathrm{かかる時間[秒] = 距離[m] \div 速さ[m/秒] = {$d}[m] \div {$v}[m/秒] = {$t}[秒] }。",
+    //         ],
+    //         [
+    //             'q' => "秒速\,{$v}\,\mathrm{m}で\,{$t}\,秒間動き続けると、何\,\mathrm{m}\,進むか。",
+    //             'a' => "{$d}\,\mathrm{m}",
+    //             'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
+    //                     よって、\mathrm{{$t}秒あればその\,{$t}\,倍進めるので、{$v}[m/秒] \\times {$t}[秒] = {$d}[m] }。",
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.velocity1', compact('question'));
+    // }
+
+    // 速さ
+    public function velocity(Request $request) {
+        // 基礎
         $v = rand(2, 9);    // m/s
-        $t = 10 * rand(1, 9);    // s
+        $t = rand(3, 9);    // s
         $d = $v * $t;   // m
 
-        $questions = [
-            [
-                'q' => "\,{$d}\,\mathrm{m}\,の距離を\,{$t}\,秒で通過する物体の速さ（秒速）を求めなさい。",
-                'a' => "{$v}\,\mathrm{m/秒}",
-                'e' => "秒速とは、１秒あたりに進む距離のことである。よって、\mathrm{秒速[m/秒] = 距離[m] \div 時間[秒] = {$d}[m] \div {$t}[秒] = {$v}[m/秒] }。",
-            ],
-            [
-                'q' => "\,{$d}\,\mathrm{m}\,の距離を、秒速\,{$v}\,\mathrm{m}で通過するのにかかる時間を求めなさい。",
-                'a' => "{$t}\,秒",
-                'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
-                        よって、\mathrm{かかる時間[秒] = 距離[m] \div 速さ[m/秒] = {$d}[m] \div {$v}[m/秒] = {$t}[秒] }。",
-            ],
-            [
-                'q' => "秒速\,{$v}\,\mathrm{m}で\,{$t}\,秒間動き続けると、何\,\mathrm{m}\,進むか。",
-                'a' => "{$d}\,\mathrm{m}",
-                'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
-                        よって、\mathrm{{$t}秒あればその\,{$t}\,倍進めるので、{$v}[m/秒] \\times {$t}[秒] = {$d}[m] }。",
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.velocity1', compact('question'));
-    }
-
-    // 速さ２
-    public function velocity2() {
-        $v_ms = rand(2, 9);    // m/s
-        $t_s = 10 * rand(1, 9);    // s
-        $d_m = $v_ms * $t_s;   // m
-
-        $v_mm = $v_ms * 60; // m/min
+        // 単位変換
+        $v_mm = $v * 60; // m/min
         $v_km = $v_mm / 1000; // km/min
 
-        // 時速算出用（上記の変数と独立）
         $v_km2 = rand(2, 9);    //km/min
         $v_kh2 = $v_km2 * 60; // km/h
 
-        // さらに独立な変数
         $v_kh3 = 18 * rand(1, 20);   // km/h
         $v_ms3 = $v_kh3 * 1000 / 3600;   // m/s
 
+        // グラフ描画用
+        $width = 400;    //viewportの大きさ
+        $height = 100;
+        $w_margin = 50;
+        $xunit = ($width - $w_margin) * ($v / $d);
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        $plot_con_e = "<rect x=\"0\" y=\"0\" width=\"" . $width - $w_margin . "\" height=\"" . $height / 3 . "\" fill=\"transparent\" stroke=\"black\"/>";
+        $plot_con_e .= "<rect x=\"0\" y=\"0\" width=\"{$xunit}\" height=\"" . $height / 3 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+        for ($i = 0; $i <= $t; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*$xunit . "\" y1=\"0\" x2 =\"" . $i*$xunit . "\" y2=\"" . $height / 3 . "\" stroke=\"black\" stroke-width=\"0.4\"/>
+                            <text x=\"" . $i * $xunit . "\" y=\"" . $height * (1/6) . "\" font-weight=\"bold\" font-size=\"16\" >
+                                {$i}秒
+                            </text>";
+        }
+        // 座標軸先端の矢印を定義
+        $plot_con_e .= "
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+            </defs>
+            <!-- 速さと距離の矢印 -->
+            <line x1=\"0\" y1=\"" . $height / 3 . "\" x2 =\"{$xunit}\" y2=\"" . $height / 3 . "\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <text x=\"" . (0.7 * $xunit) / 2 . "\" y=\"" . $height * (3 / 5) . "\" font-weight=\"bold\" font-size=\"16\" >
+                {$v} m
+            </text>
+            <line x1=\"0\" y1=\"" . $height * (5/6) . "\" x2 =\"" . $width - $w_margin . "\" y2=\"" . $height * (5/6) . "\" stroke=\"black\" stroke-width=\"2\" marker-start=\"url(#arrow)\" marker-end=\"url(#arrow)\"/>
+            <text x=\"" . 0.9 * ($width - $w_margin) / 2 . "\" y=\"" . $height * (5/7) . "\" font-weight=\"bold\" font-size=\"16\" >
+                {$d} m
+            </text>
+        ";
+
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
         $questions = [
             [
-                'q' => "秒速\,{$v_ms}\,\mathrm{m}\,を分速 [\mathrm{m/分}] に直せ。",
+                'q_type' => 3,
+                'q' => "<p>{$d} m の距離を {$t} 秒で通過する物体の速さ（秒速）を求めなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$v}\,\mathrm{m/秒}",
+                'e_type' => 7,
+                'e' => "<p>秒速とは、１秒あたりに進む距離のことである。よって、</p>
+                        \[
+                            \\begin{aligned}
+                                秒速\,[\mathrm{m}/秒] &=& 距離\,[\mathrm{m}] &\\div 時間\,[秒] \\\\
+                                        &=& {$d}\,[\mathrm{m}] &\\div {$t}\,[秒] \\\\
+                                        &=& {$v}\,[\mathrm{m}/秒]
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>{$d} m の距離を、秒速 {$v} m で通過するのにかかる時間を求めなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$t}\,秒",
+                'e_type' => 7,
+                'e' => "<p>秒速とは、１秒あたりに進む距離のことである。よって、</p>
+                        \[
+                            \\begin{aligned}
+                                かかる時間\,[秒] &=& 距離\,[\mathrm{m}] &\\div 速さ\,[\mathrm{m}/秒] \\\\
+                                        &=& {$d}\,[\mathrm{m}] &\\div {$v}\,[\mathrm{m}/秒] \\\\
+                                        &=& {$t}\,[秒]
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>秒速 {$v} m で {$t} 秒間動き続けると、何 m 進むか。</p>",
+                'a_type' => 2,
+                'a' => "{$d}\,\mathrm{m}",
+                'e_type' => 7,
+                'e' => "<p>秒速とは、１秒あたりに進む距離のことである。よって、</p>
+                        \[
+                            \\begin{aligned}
+                                進む距離\,[\mathrm{m}] &=& 速さ\,[\mathrm{m}/秒] &\\times 時間\,[秒] \\\\
+                                        &=& {$v}\,[\mathrm{m}/秒] &\\times {$t}\,[秒] \\\\
+                                        &=& {$d}\,[\mathrm{m}]
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>秒速 {$v} m を分速 [m/分] に直せ。</p>",
+                'a_type' => 2,
                 'a' => "{$v_mm}\,\mathrm{m/分}",
-                'e' => "\mathrm{秒速\,{$v_ms}\,m\,では1秒間に\,{$v_ms}\,m\,進むので、1分間（60秒間）あれば\,{$v_ms} \\times 60 = {$v_mm}\,m\,進める。}",
+                'e_type' => 3,
+                'e' => "<p>秒速 {$v} m では 1 秒間に {$v} m 進むので、</p>
+                        <p>1 分間（60秒間）では {$v} × 60 = {$v_mm} m 進む。</p>",
             ],
             [
-                'q' => "分速\,{$v_mm}\,\mathrm{m}\,を秒速 [\mathrm{m/秒}] に直せ。",
-                'a' => "{$v_ms}\,\mathrm{m/秒}",
-                'e' => "\mathrm{分速\,{$v_mm}\,m\,では1分間（60秒間)に\,{$v_mm}\,m\,進む。1秒間では\,{$v_mm} \div 60 = {$v_ms}\,m\,しか進まない。}",
+                'q_type' => 3,
+                'q' => "<p>分速 {$v_mm} m を秒速 [m/秒] に直せ。</p>",
+                'a_type' => 2,
+                'a' => "{$v}\,\mathrm{m/秒}",
+                'e_type' => 3,
+                'e' => "<p>分速 {$v_mm} m では 1 分間（60秒間）に {$v_mm} m 進むので、</p>
+                        <p>1 秒間では {$v_mm} ÷ 60 = {$v} m 進む。</p>",
             ],
             [
-                'q' => "分速\,{$v_mm}\,\mathrm{m}\,を、\mathrm{km}\,単位の分速 [\mathrm{km/分}] に直せ。",
+                'q_type' => 3,
+                'q' => "<p>分速 {$v_mm} m を分速 [km/分] に直せ。</p>",
+                'a_type' => 2,
                 'a' => "{$v_km}\,\mathrm{km/分}",
-                'e' => "\mathrm{分速であることに変わりはないので、距離の単位の違いだけ考えればよい。1km=1000mなので、{$v_mm} \div 1000 = {$v_km}。}",
+                'e_type' => 3,
+                'e' => "<p>分速であることに変わりはないので、距離の単位の違い（m → km）だけ考えればよい。</p>
+                        <p>1 km = 1000 m なので、{$v_mm} m = {$v_km} km。よって、{$v_km} [km/分]。</p>",
             ],
             [
-                'q' => "分速\,{$v_km2}\,\mathrm{km}\,を時速 [\mathrm{km/時}] に直せ。",
+                'q_type' => 3,
+                'q' => "<p>分速 {$v_km2} km を時速 [km/時] に直せ。</p>",
+                'a_type' => 2,
                 'a' => "{$v_kh2}\,\mathrm{km/時}",
-                'e' => "\mathrm{分速\,{$v_km2}\,km\,では1分間に\,{$v_km2}\,km\,進むので、1時間（60分間）あれば\,{$v_km2} \\times 60 = {$v_kh2}\,km\,進める。}",
+                'e_type' => 3,
+                'e' => "<p>分速 {$v_km2} km では 1 分間に {$v_km2} km 進むので、</p>
+                        <p>1 時間（60分間）では {$v_km2} × 60 = {$v_kh2} km 進む。</p>",
             ],
             [
-                'q' => "時速\,{$v_kh3}\,\mathrm{km}\,を秒速 [\mathrm{m/秒}] に直せ。",
+                'q_type' => 3,
+                'q' => "<p>時速 {$v_kh3} km を秒速 [m/秒] に直せ。</p>",
+                'a_type' => 2,
                 'a' => "{$v_ms3}\,\mathrm{m/秒}",
-                'e' => "\mathrm{
-                            {$v_kh3}\,[km/時] = \\frac{ \,{{ $v_kh3 }}\,[km]\, }{ 1\,[時間] }
-                            = \\frac{ \,{{ $v_kh3 }}\\times 1000\,[m]\, }{ 60 \\times 60\,[秒] }
-                            = {$v_ms3}\,[m/秒]
-                        }",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                {$v_kh3}\,[\mathrm{km}/時]
+                                &= \\frac{ \,{{ $v_kh3 }}\,[\mathrm{km}]\, }{ 1\,[時間] } 
+                                    = \\frac{ \,{{ $v_kh3 }}\\times 1000\,[\mathrm{m}]\, }{ 60\,[分] } \\\\
+                                &= \\frac{ \," . $v_kh3 * 1000 . "\,[\mathrm{m}]\, }{ 60 \\times 60\,[秒] }
+                                    = \\frac{ \," . $v_kh3 * 1000 . "\,[\mathrm{m}]\, }{ 3600\,[秒] } \\\\
+                                &= \\frac{ \," . $v_kh3 * 10 . "\,[\mathrm{m}]\, }{ 36\,[秒] }
+                                    = {$v_ms3}\,[\mathrm{m}/秒]
+                            \\end{aligned}
+                        \]",
             ],
         ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.velocity2', compact('question'));
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 基礎
+        $flag2 = $request->boolean('flag2');    // 単位変換
+        $flags = ['flag1' => '基礎', 'flag2' => '単位変換'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(0, 2);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(3, 7);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "速さ";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e','subject','flags'));
     }
+
+    // // 速さ２
+    // public function velocity2() {
+    //     $v_ms = rand(2, 9);    // m/s
+    //     $t_s = 10 * rand(1, 9);    // s
+    //     $d_m = $v_ms * $t_s;   // m
+
+    //     $v_mm = $v_ms * 60; // m/min
+    //     $v_km = $v_mm / 1000; // km/min
+
+    //     // 時速算出用（上記の変数と独立）
+    //     $v_km2 = rand(2, 9);    //km/min
+    //     $v_kh2 = $v_km2 * 60; // km/h
+
+    //     // さらに独立な変数
+    //     $v_kh3 = 18 * rand(1, 20);   // km/h
+    //     $v_ms3 = $v_kh3 * 1000 / 3600;   // m/s
+
+    //     $questions = [
+    //         [
+    //             'q' => "秒速\,{$v_ms}\,\mathrm{m}\,を分速 [\mathrm{m/分}] に直せ。",
+    //             'a' => "{$v_mm}\,\mathrm{m/分}",
+    //             'e' => "\mathrm{秒速\,{$v_ms}\,m\,では1秒間に\,{$v_ms}\,m\,進むので、1分間（60秒間）あれば\,{$v_ms} \\times 60 = {$v_mm}\,m\,進める。}",
+    //         ],
+    //         [
+    //             'q' => "分速\,{$v_mm}\,\mathrm{m}\,を秒速 [\mathrm{m/秒}] に直せ。",
+    //             'a' => "{$v_ms}\,\mathrm{m/秒}",
+    //             'e' => "\mathrm{分速\,{$v_mm}\,m\,では1分間（60秒間)に\,{$v_mm}\,m\,進む。1秒間では\,{$v_mm} \div 60 = {$v_ms}\,m\,しか進まない。}",
+    //         ],
+    //         [
+    //             'q' => "分速\,{$v_mm}\,\mathrm{m}\,を、\mathrm{km}\,単位の分速 [\mathrm{km/分}] に直せ。",
+    //             'a' => "{$v_km}\,\mathrm{km/分}",
+    //             'e' => "\mathrm{分速であることに変わりはないので、距離の単位の違いだけ考えればよい。1km=1000mなので、{$v_mm} \div 1000 = {$v_km}。}",
+    //         ],
+    //         [
+    //             'q' => "分速\,{$v_km2}\,\mathrm{km}\,を時速 [\mathrm{km/時}] に直せ。",
+    //             'a' => "{$v_kh2}\,\mathrm{km/時}",
+    //             'e' => "\mathrm{分速\,{$v_km2}\,km\,では1分間に\,{$v_km2}\,km\,進むので、1時間（60分間）あれば\,{$v_km2} \\times 60 = {$v_kh2}\,km\,進める。}",
+    //         ],
+    //         [
+    //             'q' => "時速\,{$v_kh3}\,\mathrm{km}\,を秒速 [\mathrm{m/秒}] に直せ。",
+    //             'a' => "{$v_ms3}\,\mathrm{m/秒}",
+    //             'e' => "\mathrm{
+    //                         {$v_kh3}\,[km/時] = \\frac{ \,{{ $v_kh3 }}\,[km]\, }{ 1\,[時間] }
+    //                         = \\frac{ \,{{ $v_kh3 }}\\times 1000\,[m]\, }{ 60 \\times 60\,[秒] }
+    //                         = {$v_ms3}\,[m/秒]
+    //                     }",
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.velocity2', compact('question'));
+    // }
 
     // 分数の乗除
     public function fraction_muldiv() {

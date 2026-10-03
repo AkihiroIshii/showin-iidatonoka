@@ -79,10 +79,7 @@
                                     <a href="{{route('workbook.mul314plus')}}">⇗3.14倍 + 3.14倍</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
-                                    <a href="{{route('workbook.unit.velocity1')}}">速さ１</a>
-                                </x-button-link>
-                                <x-button-link color="lime">
-                                    <a href="{{route('workbook.unit.velocity2')}}">速さ２</a>
+                                    <a href="{{route('workbook.velocity')}}">速さ</a>
                                 </x-button-link>
                             </div>
                         </x-td>

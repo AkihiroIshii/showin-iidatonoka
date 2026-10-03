@@ -313,10 +313,8 @@ Route::get('workbook/select_eq_decimal', [WorkbookController::class, 'select_eq_
 ->middleware(['auth', 'verified'])->name('workbook.select_eq_decimal');
 Route::get('workbook/mul314plus', [WorkbookController::class, 'mul314plus'])
 ->middleware(['auth', 'verified'])->name('workbook.mul314plus');
-Route::get('workbook/velocity', [WorkbookController::class, 'velocity1'])
-->middleware(['auth', 'verified'])->name('workbook.unit.velocity1');
-Route::get('workbook/velocity2', [WorkbookController::class, 'velocity2'])
-->middleware(['auth', 'verified'])->name('workbook.unit.velocity2');
+Route::get('workbook/velocity', [WorkbookController::class, 'velocity'])
+->middleware(['auth', 'verified'])->name('workbook.velocity');
 Route::get('workbook/fraction_muldiv', [WorkbookController::class, 'fraction_muldiv'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.fraction_muldiv');
 //数学
