@@ -184,6 +184,15 @@
                                     {!! $plot_con_e !!}
                                 </svg>
                             </div>
+                        @elseif ($question['e_type'] == 7)
+                            <p class="text-lg m-4">{!! $question['e'] !!}</p>
+                            <div class="flex justify-center">
+                                <svg width="{{ $plot_par_e['width'] }}" height="{{ $plot_par_e['height'] }}"
+                                    viewBox="0 0 {{ $plot_par_e['width'] }} {{ $plot_par_e['height'] }}"
+                                    class="border">
+                                    {!! $plot_con_e !!}
+                                </svg>
+                            </div>
                         @endif
                     </div>
 

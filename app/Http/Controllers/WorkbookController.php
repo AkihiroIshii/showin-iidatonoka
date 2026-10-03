@@ -51,7 +51,7 @@ class WorkbookController extends Controller
         $setting_code = Campus::query()
             ->where('id', Auth::user()->campus_id)
             ->value('setting_code');
-// dd($setting_code);
+
         // setting_codeが0なら自校舎の問題のみ抽出。nullなら殿岡校なので殿岡校のみ表示。
         $workbooks = Workbook::query()
             ->when($setting_code === "0", function($q) use($user) {
@@ -140,7 +140,7 @@ class WorkbookController extends Controller
             ->whereIn('physical_name', $wb_grades['eng'])
             ->get();
 
-// dd($units);
+
         return view('workbook.index', compact('user','units','grades'));
     }
 
@@ -212,7 +212,7 @@ class WorkbookController extends Controller
         $setting_code = Campus::query()
             ->where('id', Auth::user()->campus_id)
             ->value('setting_code');
-// dd($setting_code);
+
         $workbooks = Workbook::query()
             ->when($setting_code === "0" || is_null($setting_code), function($q) use($user) {
                 return $q->where('campus_id', $user->campus_id);
@@ -842,7 +842,66 @@ class WorkbookController extends Controller
 
         return view('workbook.unit.mul100', compact('a','b','m1','m2','ans'));
     }
- 
+
+    // // 割合
+    // public function ratio1() {
+    //     $num = 10 * rand(1, 20);
+    //     $wari = rand(1, 9); //割
+    //     $waribiki = 10 - $wari;     //例：6割＝4割引
+    //     $bu = rand(1, 9); //分
+    //     $per_array = [1, 2, 4, 5, 10, 12, 20, 25, 50, 80];  // % の候補
+    //     $per_idx = array_rand($per_array);
+    //     $per = $per_array[$per_idx];
+    //     $val1 = $num * (0.1 * $wari); 
+    //     $val2 = $num * (0.01 * $bu);
+    //     $val_waribiki = $num * (1 - 0.1 * $wari);
+    //     $val_1wari = $num * 0.1;
+    //     $val_1bu = $num * 0.01;
+    //     $val_1per = $num * 0.01;
+    //     $val_per = $num * 0.01 * $per;
+    //     $val_per2 = 0.01 * $per;
+
+    //     $questions = [
+    //         [
+    //             'q' => "\({$num}\,の\,{$wari}\,割はいくつか。\)",
+    //             'a' => "{$val1}",
+    //             'e' => "<div>
+    //                         <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
+    //                         <p>\(\displaystyle {$num}\,の\,1\,割（0.1倍）が\,{$val_1wari}\,なので、{$val_1wari}\,\\times{$wari} = {$val1}\,と計算してもよい.\)</p>
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\({$num}\,の\,{$bu}\,分（ぶ）はいくつか。\)",
+    //             'a' => "{$val2}",
+    //             'e' => "<div>
+    //                         <p>\(\displaystyle {$bu}\,分は\,0.0{$bu}\\left(=\\frac{{$bu}}{\,100\,} \\right)倍なので、{$num}\,\\times\,0.0{$bu} = {$val2}.\)</p>
+    //                         <p>\(\displaystyle {$num}\,の\,1\,分（0.01倍）が\,{$val_1bu}\,なので、{$val_1bu}\,\\times{$bu} = {$val2}\,と計算してもよい.\)</p>
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\({$num}\,の\,{$per}\,\%\,はいくつか。\)",
+    //             'a' => "{$val_per}",
+    //             'e' => "<div>
+    //                         <p>\(\displaystyle {$per}\,\%\,は\,{$val_per2}\\left(=\\frac{{$per}}{\,100\,} \\right)\,倍なので、{$num}\,\\times{$val_per2} = {$val_per}.\)</p>
+    //                         <p>\(\displaystyle {$num}\,の\,1\,\%（0.01倍）が\,{$val_1per}\,なので、{$val_1per}\,\\times{$per} = {$val_per}\,と計算してもよい.\)</p>
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\({$num}\,の\,{$wari}\,割引はいくつか。\)",
+    //             'a' => "{$val_waribiki}",
+    //             'e' => "<div>
+    //                         <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
+    //                         <p>\(これをもとの値から割り引くと、{$num} - {$val1} = {$val_waribiki}.\)</p>
+    //                         <p>\(また、{$wari}\,割引はもとの値の{$waribiki}\,割と同じなので、{$num} \\times 0.{$waribiki} = {$val_waribiki}\,と計算してもよい.\)</p>
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "割合";
+    //     return view('workbook.unit.child', compact('unitname','question'));
+    // }
+
     // 割合
     public function ratio1() {
         $num = 10 * rand(1, 20);
@@ -860,35 +919,81 @@ class WorkbookController extends Controller
         $val_1per = $num * 0.01;
         $val_per = $num * 0.01 * $per;
         $val_per2 = 0.01 * $per;
-        
+
+        // グラフ描画用
+        $width = 550;    //viewportの大きさ
+        $height = 30;
+        $w_margin = 50;
+
+        $graph_para = [
+            ['div' => 10, 'xunit' => ($width - $w_margin) / 10, 'n' => $wari, 'val' => $val1],
+            ['div' => 100, 'xunit' => ($width - $w_margin) / 100, 'n' => $bu, 'val' => $val2],
+            ['div' => 100, 'xunit' => ($width - $w_margin) / 100, 'n' => $per, 'val' => $val_per],
+            ['div' => 10, 'xunit' => ($width - $w_margin) / 10, 'n' => 10 - $wari, 'val' => $val_waribiki],
+        ];
+        $q_index = rand(0,count($graph_para)-1);
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        // 帯を作る
+        $plot_con_e = "<rect x=\"0\" y=\"0\" width=\"" . $width - $w_margin . "\" height=\"{$height}\" fill=\"transparent\" stroke=\"black\"/>
+                        <rect x=\"0\" y=\"0\" width=\"" . $graph_para[$q_index]['n'] * $graph_para[$q_index]['xunit'] . "\" height=\"{$height}\" fill=\"blue\" fill-opacity=\"0.2\"/>
+                        <text x=\"" . $graph_para[$q_index]['n'] * $graph_para[$q_index]['xunit'] . "\" y=\"" . $height / 2 . "\" font-weight=\"bold\" font-size=\"16\" >
+                            {$graph_para[$q_index]['val']}
+                        </text>
+                        <text x=\"" . ($width - $w_margin) . "\" y=\"" . $height / 2 . "\" font-weight=\"bold\" font-size=\"16\" >
+                            {$num}
+                        </text>";
+        // 区切り線を引く
+        for ($i = 0; $i <= $graph_para[$q_index]['div']; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*$graph_para[$q_index]['xunit'] . "\" y1=\"0\" x2 =\"" . $i*$graph_para[$q_index]['xunit'] . "\" y2=\"{$height}\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+        // 中央（５割）のラインを太く
+        $plot_con_e .= "<line x1=\"" . ($width - $w_margin) / 2 . "\" y1=\"0\" x2 =\"" . ($width - $w_margin) / 2 . "\" y2=\"{$height}\" stroke=\"black\" stroke-width=\"2\"/>";
+
         $questions = [
             [
-                'q' => "\({$num}\,の\,{$wari}\,割はいくつか。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl m-4\">{$num} の {$wari} 割はいくつか。</p>",
+                'a_type' => 1,
                 'a' => "{$val1}",
+                'e_type' => 7,
                 'e' => "<div>
                             <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
                             <p>\(\displaystyle {$num}\,の\,1\,割（0.1倍）が\,{$val_1wari}\,なので、{$val_1wari}\,\\times{$wari} = {$val1}\,と計算してもよい.\)</p>
                         </div>",
             ],
             [
-                'q' => "\({$num}\,の\,{$bu}\,分（ぶ）はいくつか。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl m-4\">{$num} の {$bu} 分（ぶ）はいくつか。</p>",
+                'a_type' => 1,
                 'a' => "{$val2}",
+                'e_type' => 7,
                 'e' => "<div>
                             <p>\(\displaystyle {$bu}\,分は\,0.0{$bu}\\left(=\\frac{{$bu}}{\,100\,} \\right)倍なので、{$num}\,\\times\,0.0{$bu} = {$val2}.\)</p>
                             <p>\(\displaystyle {$num}\,の\,1\,分（0.01倍）が\,{$val_1bu}\,なので、{$val_1bu}\,\\times{$bu} = {$val2}\,と計算してもよい.\)</p>
                         </div>",
             ],
             [
-                'q' => "\({$num}\,の\,{$per}\,\%\,はいくつか。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl m-4\">{$num} の {$per} % はいくつか。</p>",
+                'a_type' => 1,
                 'a' => "{$val_per}",
+                'e_type' => 7,
                 'e' => "<div>
                             <p>\(\displaystyle {$per}\,\%\,は\,{$val_per2}\\left(=\\frac{{$per}}{\,100\,} \\right)\,倍なので、{$num}\,\\times{$val_per2} = {$val_per}.\)</p>
                             <p>\(\displaystyle {$num}\,の\,1\,\%（0.01倍）が\,{$val_1per}\,なので、{$val_1per}\,\\times{$per} = {$val_per}\,と計算してもよい.\)</p>
                         </div>",
             ],
             [
-                'q' => "\({$num}\,の\,{$wari}\,割引はいくつか。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl m-4\">{$num} の {$wari} 割引はいくつか。</p>",
+                'a_type' => 1,
                 'a' => "{$val_waribiki}",
+                'e_type' => 7,
                 'e' => "<div>
                             <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
                             <p>\(これをもとの値から割り引くと、{$num} - {$val1} = {$val_waribiki}.\)</p>
@@ -896,10 +1001,70 @@ class WorkbookController extends Controller
                         </div>",
             ],
         ];
-        $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "割合";
-        return view('workbook.unit.child', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
+    // 約分
+    public function reduction_of_fraction(Request $request) {
+        // 変数
+        $primes = $this->get_primes(2, 9);
+        $mul = rand(2, 9);
+        $numerator = $primes[0] * $mul;
+        $denominator = $primes[1] * $mul;
+
+        // グラフ描画用
+        $width = 300;    //viewportの大きさ
+        $height = 100;
+        $xunit = [
+            $width / $denominator,
+            $width / $primes[1],
+        ];
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        $plot_con_e = "";
+        // 約分前の帯
+        for ($i = 0; $i <= $denominator; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*$xunit[0] . "\" y1=\"0\" x2 =\"" . $i*$xunit[0] . "\" y2=\"" . $height / 3 . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+        $plot_con_e .= "<rect x=\"0\" y=\"0\" width=\"{$width}\" height=\"" . $height / 3 . "\" fill=\"transparent\" stroke=\"black\"/>";
+        $plot_con_e .= "<rect x=\"0\" y=\"0\" width=\"" . $numerator * $xunit[0] . "\" height=\"" . $height / 3 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+        // 約分後の帯
+        for ($i = 0; $i <= $primes[1]; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*$xunit[1] . "\" y1=\"" . 2 * $height / 3 . "\" x2 =\"" . $i*$xunit[1] . "\" y2=\"" . $height . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+        $plot_con_e .= "<rect x=\"0\" y=\"" . 2 * $height / 3 . "\" width=\"{$width}\" height=\"" . $height / 3 . "\" fill=\"transparent\" stroke=\"black\"/>";
+        $plot_con_e .= "<rect x=\"0\" y=\"" . 2 * $height / 3 . "\" width=\"" . $numerator * $xunit[0] . "\" height=\"" . $height / 3 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>約分しなさい。</p>
+                        $$\\frac{\,{$numerator}\,}{\,{$denominator}\,}$$",
+                'a_type' => 2,
+                'a' => "\\frac{\,{$primes[0]}\,}{\,{$primes[1]}\,}",
+                'e_type' => 7,
+                'e' => "<p>{$mul} で約分すると、
+                        \(\displaystyle \\frac{\,{$numerator}\,}{\,{$denominator}\,}
+                            = \\frac{\,\cancel{{$numerator}}^{$primes[0]}\,}{\,\cancel{{$denominator}}_{$primes[1]}\,}
+                            = \\frac{\,{$primes[0]}\,}{\,{$primes[1]}\,} \)</p>
+                        <p class=\"mb-4\">下の図のように、
+                            \(\displaystyle \\frac{\,{$numerator}\,}{\,{$denominator}\,}
+                            = \\frac{\,{$primes[0]}\,}{\,{$primes[1]}\,} \)
+                             であり、大きさは変わらない。</p>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "約分";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
     // 式の選択（小数）

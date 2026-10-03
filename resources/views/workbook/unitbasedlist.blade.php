@@ -70,6 +70,9 @@
                                     <a href="{{route('workbook.unit.ratio1')}}">割合</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.reduction_of_fraction')}}">約分</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.select_eq_decimal')}}">式の選択（小数）</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
