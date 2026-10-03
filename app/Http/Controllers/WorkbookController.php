@@ -52,9 +52,13 @@ class WorkbookController extends Controller
             ->where('id', Auth::user()->campus_id)
             ->value('setting_code');
 // dd($setting_code);
+        // setting_codeが0なら自校舎の問題のみ抽出。nullなら殿岡校なので殿岡校のみ表示。
         $workbooks = Workbook::query()
             ->when($setting_code === "0", function($q) use($user) {
                 return $q->where('campus_id', $user->campus_id);
+            })
+            ->when(is_null($setting_code), function($q) use($user) {
+                return $q->whereNull('campus_id');
             })
             // ->where('campus_id', $user->campus_id)
             ->orderBy('subject','asc')
