@@ -303,6 +303,8 @@ Route::get('workbook/day_to_hour', [WorkbookController::class, 'day_to_hour'])
 ->middleware(['auth', 'verified'])->name('workbook.day_to_hour');
 Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.mul100');
+Route::get('workbook/math_unit_conversion', [WorkbookController::class, 'math_unit_conversion'])
+->middleware(['auth', 'verified'])->name('workbook.math_unit_conversion');
 Route::get('workbook/ratio1', [WorkbookController::class, 'ratio1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.ratio1');
 Route::get('workbook/ratio2', [WorkbookController::class, 'ratio2'])

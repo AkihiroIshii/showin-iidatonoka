@@ -902,6 +902,213 @@ class WorkbookController extends Controller
     //     return view('workbook.unit.child', compact('unitname','question'));
     // }
 
+    // 単位変換
+    public function math_unit_conversion(Request $request) {
+        $a = rand(2, 9);
+        $a10 = 10 * $a;
+        $a100 = 100 * $a;
+        $x = 10 * rand(101, 950);
+        $y = rand(11, 89);
+
+        // グラフ描画用
+        $width = 550;    //viewportの大きさ
+        $height = 30;
+        $w_margin = 50;
+
+        $graph_para = [
+            ['div' => 100, 'xunit' => ($width - $w_margin) / 100, 'n' => $a10, 'val' => $a10 . ' cm', 'max' => '1 m'],
+            ['div' => 100, 'xunit' => ($width - $w_margin) / 100, 'n' => $y, 'val' => 0.1 * $y . ' cm', 'max' => '10 cm'],
+            ['div' => 10, 'xunit' => ($width - $w_margin) / 10, 'n' => $a, 'val' => $a . ' dL', 'max' => '1 L'],
+        ];
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        for ($g_idx = 0; $g_idx < count($graph_para); $g_idx++) {
+            // 帯を作る
+            $plot_con_e_arr[$g_idx] = "<rect x=\"0\" y=\"0\" width=\"" . $width - $w_margin . "\" height=\"{$height}\" fill=\"transparent\" stroke=\"black\"/>
+                            <rect x=\"0\" y=\"0\" width=\"" . $graph_para[$g_idx]['n'] * $graph_para[$g_idx]['xunit'] . "\" height=\"{$height}\" fill=\"blue\" fill-opacity=\"0.2\"/>
+                            <text x=\"" . $graph_para[$g_idx]['n'] * $graph_para[$g_idx]['xunit'] . "\" y=\"" . $height / 2 . "\" font-weight=\"bold\" font-size=\"16\" >
+                                {$graph_para[$g_idx]['val']}
+                            </text>
+                            <text x=\"" . ($width - $w_margin) . "\" y=\"" . $height / 2 . "\" font-weight=\"bold\" font-size=\"16\" >
+                                {$graph_para[$g_idx]['max']}
+                            </text>";
+            // 区切り線を引く
+            for ($i = 0; $i <= $graph_para[$g_idx]['div']; $i++) {
+                $plot_con_e_arr[$g_idx] .= "<line x1=\"" . $i*$graph_para[$g_idx]['xunit'] . "\" y1=\"0\" x2 =\"" . $i*$graph_para[$g_idx]['xunit'] . "\" y2=\"{$height}\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            }
+            // 中央（５割）のラインを太く
+            $plot_con_e_arr[$g_idx] .= "<line x1=\"" . ($width - $w_margin) / 2 . "\" y1=\"0\" x2 =\"" . ($width - $w_margin) / 2 . "\" y2=\"{$height}\" stroke=\"black\" stroke-width=\"2\"/>";
+        }
+
+        /*** 接頭語の表（解説用）***/
+        $unit_table = "<p class=\"mt-4 font-bold\">倍率を表す記号（接頭語）の表</p>
+                    <table class=\"border-collapse border border-gray-400 mx-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">読み</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">ミリ</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">センチ</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">デシ</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\"></td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">デカ</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">ヘクト</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">キロ</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">表記</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">m</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">c</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">d</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\"></td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">da</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">h</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">k</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">倍率</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">× 0.001</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">× 0.01</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">× 0.1</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">× 1</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">× 10</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">× 100</td>
+                            <td class=\"border border-gray-400 bg-gray-200 px-0 py-0 w-24\">× 1000</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5 w-24\">長さ[m]</td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1mm</td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1cm</td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1m</td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1km</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5 w-24\">重さ[g]</td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1mg</td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1g</td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1kg</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5 w-24\">容積[L]</td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1mL</td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1dL</td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1L</td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\"></td>
+                            <td class=\"border border-gray-400 p-5 w-24\">1kL</td>
+                        </tr>
+                    </table>
+                    <p>その他の接頭語はこちら → <a href=\"https://unit.aist.go.jp/nmij/library/SI_prefixes/\" target=\"_blank\" class=\"font-bold text-blue-600\">計量標準総合センター</a></p>
+                    ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "{$a10} cm は何 m か。",
+                'a_type' => 3,
+                'a' => "0.{$a} m",
+                'e_type' => 7,
+                'e' => "<p>1 cm = 0.01 m なので、{$a10} cm = {$a10} × (1 cm) = {$a10} × (0.01 m) = 0.{$a} m。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => $y * 0.1 . " cm は何 mm か。",
+                'a_type' => 3,
+                'a' => "{$y} mm",
+                'e_type' => 7,
+                'e' => "<p>1 cm = 10 mm なので、" . $y * 0.1 . " cm = " . $y * 0.1 . " × (1 cm) = " . $y * 0.1 . " × (10 mm) = {$y} mm。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "{$a} dL は何 L か。",
+                'a_type' => 3,
+                'a' => "0.{$a} L",
+                'e_type' => 7,
+                'e' => "<p>1 dL = 0.1 L なので、{$a} dL = {$a} × (1 dL) = {$a} × (0.1 L) = 0.{$a} L。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "{$x} g は何 kg か。",
+                'a_type' => 3,
+                'a' => $x * 0.001 . " kg",
+                'e_type' => 3,
+                'e' => "<p>1 g = 0.001 kg なので、{$x} g = {$x} × (1 g) = {$x} × (0.001 kg) = " . $x * 0.001 . " kg。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "1 cm は何 m か。",
+                'a_type' => 3,
+                'a' => "0.01 m",
+                'e_type' => 3,
+                'e' => "<p>c（センチ）は 0.01倍を意味する。1 m = 100 cm から考えてもよい。</p>"
+                    . $unit_table,
+            ],
+            [
+                'q_type' => 3,
+                'q' => "1 mm は何 m か。",
+                'a_type' => 3,
+                'a' => "0.001 m",
+                'e_type' => 3,
+                'e' => "<p>m（ミリ）は 0.001倍を意味する。1 m = 1000 mm から考えてもよい。</p>"
+                    . $unit_table,
+            ],
+            [
+                'q_type' => 3,
+                'q' => "1 kg は何 g か。",
+                'a_type' => 3,
+                'a' => "1000 g",
+                'e_type' => 3,
+                'e' => "<p>k（キロ）は 1000倍を意味する。1 km = 1000 m も同様。</p>"
+                    . $unit_table,
+            ],
+            [
+                'q_type' => 3,
+                'q' => "1 dL は何 L か。",
+                'a_type' => 3,
+                'a' => "0.1 L",
+                'e_type' => 3,
+                'e' => "<p>d（デシ）は 0.1倍を意味する。容積の単位は cm\(^3\) も使うので、1 mL = 1 cm\(^3\) も覚えておくこと。</p>
+                        <p>200 mL（= 2 dL） の紙パックが 5 つで、1 L（= 10 dL）の牛乳パックの容量に等しくなる。</p>"
+                    . $unit_table,
+            ],
+        ];
+        // $q_index = rand(0,count($questions)-1);
+        // $question = $questions[$q_index];
+        $plot_con_e = "";
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 定義
+        $flag2 = $request->boolean('flag2');    // 単位変換
+        $flags = ['flag1' => '定義', 'flag2' => '換算'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(4, 7);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(0, 3);
+            if ($q_index <= 2) {
+                $plot_con_e = $plot_con_e_arr[$q_index];
+            }
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "単位変換";
+        return view('workbook.unit_template', compact('unitname','question','subject','flags','plot_par_e','plot_con_e'));
+    }
+
     // 割合
     public function ratio1() {
         $num = 10 * rand(1, 20);

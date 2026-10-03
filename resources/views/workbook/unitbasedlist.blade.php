@@ -67,6 +67,9 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.math_unit_conversion')}}">単位変換</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.unit.ratio1')}}">割合</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
