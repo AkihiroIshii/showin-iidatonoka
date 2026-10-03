@@ -21,10 +21,12 @@
                 </ul>
             </div>
         @endif
+        <p>月間目標を設定する場合：「月間目標 or 課題」と「目標日」を入力し、他は空欄で登録してください。</p>
+        <p>課題を設定する場合　　：「月間目標 or 課題」を入力し、「状況」は "2" を入力してください。「目標日」は適当な日付を選んでください。</p>
         <form method="post" action="{{ route('usualtarget.store') }}">
             @csrf
 
-            <div class="mt-8">
+            <div class="mt-4">
                 <div>
                     <label for="content" class="font-semibold mt-4">月間目標 or 課題</label>
                     <textarea name="content" class="w-full py-2 border border-gray-300 rounded-md h-48" id="content"></textarea>
