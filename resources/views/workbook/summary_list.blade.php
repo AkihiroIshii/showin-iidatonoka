@@ -92,7 +92,8 @@
                             <td></td>
                         @endif
                         <td class="border border-slate-300 px-4 py-4">
-                            <pre class="font-klee text-xl whitespace-normal">{!! $workbook->question !!}</pre>
+                            {{-- <pre class="font-klee text-xl whitespace-normal">{!! $workbook->question !!}</pre> --}}
+                            <pre class="font-klee text-xl whitespace-pre-wrap">{!! $workbook->question !!}</pre>
                         </td>
                         <td class="border border-slate-300 px-4">
                             <details>

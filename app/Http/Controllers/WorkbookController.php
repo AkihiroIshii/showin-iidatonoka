@@ -124,14 +124,22 @@ class WorkbookController extends Controller
             ->where('field','公民')
             ->whereIn('logical_name', $wb_units)
             ->get();
-        /***** 理科 *****/
-        $units['sci'] = Unit::query()
-            ->where('subject','理科')
+        // /***** 理科 *****/
+        // $units['sci'] = Unit::query()
+        //     ->where('subject','理科')
+        //     ->whereIn('logical_name', $wb_units)
+        //     ->get();
+        /***** 国語 *****/
+        $units['kanji'] = Unit::query()
+            ->where('field','漢字')
             ->whereIn('logical_name', $wb_units)
             ->get();
-        /***** 国語 *****/
-        $units['jap'] = Unit::query()
-            ->where('subject','国語')
+        $units['goi'] = Unit::query()
+            ->where('field','語彙')
+            ->whereIn('logical_name', $wb_units)
+            ->get();
+        $units['bunpou'] = Unit::query()
+            ->where('field','国文法')
             ->whereIn('logical_name', $wb_units)
             ->get();
 
@@ -389,49 +397,72 @@ class WorkbookController extends Controller
                     });
             }
 
-        /******** 理科 *********/
-        } elseif ($request->input('target') == 'sci_unit') {
+        /******** 漢字 *********/
+        } elseif ($request->input('target') == 'kanji_unit') {
             // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
-            $wb_unit_sets['sci'] = Unit::query()
-                ->where('subject','理科')
+            $wb_unit_sets['kanji'] = Unit::query()
+                ->where('field','漢字')
                 ->whereIn('logical_name', $wb_units)
                 ->get();
 
-            if ($request->input('target') == 'sci_unit') {
-                foreach ($wb_unit_sets['sci'] as $sci_unit) {
-                    if ($request->boolean($sci_unit->physical_name)) {
-                        $units[] = $sci_unit->logical_name;
+            if ($request->input('target') == 'kanji_unit') {
+                foreach ($wb_unit_sets['kanji'] as $kanji_unit) {
+                    if ($request->boolean($kanji_unit->physical_name)) {
+                        $units[] = $kanji_unit->logical_name;
                     }
                 }
                 $workbooks = $workbooks
-                    ->where('subject','理科')
-                    ->where('q_type', $request->input('sci_type'))
-                    ->when(count($units) > 0, function ($query) use ($units) {
-                        $query->whereIn('unit', $units);
-                    });
-            }
-
-        /******** 国語 *********/
-        } elseif ($request->input('target') == 'jap_unit') {
-            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
-            $wb_unit_sets['jap'] = Unit::query()
-                ->where('subject','国語')
-                ->whereIn('logical_name', $wb_units)
-                ->get();
-
-            if ($request->input('target') == 'jap_unit') {
-                foreach ($wb_unit_sets['jap'] as $jap_unit) {
-                    if ($request->boolean($jap_unit->physical_name)) {
-                        $units[] = $jap_unit->logical_name;
-                    }
-                }
-                $workbooks = $workbooks
-                    ->where('subject','国語')
+                    ->where('field','漢字')
                     ->where('q_type', $request->input('jap_type'))
                     ->when(count($units) > 0, function ($query) use ($units) {
                         $query->whereIn('unit', $units);
                     });
             }
+
+        /******** 語彙 *********/
+        } elseif ($request->input('target') == 'goi_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['goi'] = Unit::query()
+                ->where('field','語彙')
+                ->whereIn('logical_name', $wb_units)
+                ->get();
+
+            if ($request->input('target') == 'goi_unit') {
+                foreach ($wb_unit_sets['goi'] as $goi_unit) {
+                    if ($request->boolean($goi_unit->physical_name)) {
+                        $units[] = $goi_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('field','語彙')
+                    ->where('q_type', $request->input('jap_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
+
+        /******** 文法 *********/
+        } elseif ($request->input('target') == 'bunpou_unit') {
+            // 単元テーブル(units)から、問題集に存在する単元のみ、物理名＆論理名を取得
+            $wb_unit_sets['bunpou'] = Unit::query()
+                ->where('field','国文法')
+                ->whereIn('logical_name', $wb_units)
+                ->get();
+
+            if ($request->input('target') == 'bunpou_unit') {
+                foreach ($wb_unit_sets['bunpou'] as $bunpou_unit) {
+                    if ($request->boolean($bunpou_unit->physical_name)) {
+                        $units[] = $bunpou_unit->logical_name;
+                    }
+                }
+                $workbooks = $workbooks
+                    ->where('field','国文法')
+                    ->where('q_type', $request->input('jap_type'))
+                    ->when(count($units) > 0, function ($query) use ($units) {
+                        $query->whereIn('unit', $units);
+                    });
+            }
+
         }
 
         // ランダムに10問取得

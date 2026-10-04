@@ -20,7 +20,7 @@
                             <x-input-error :messages="$errors->get('subject')" class="mt-2" />
                             <label for="subject" class="font-semibold mt-4">科目</label>
                             @php
-                                $subjects = ['英語','社会'];
+                                $subjects = ['英語','社会','国語'];
                             @endphp
                             <select type="string" name="subject" class="w-auto py-2 border border-gray-300 rounded-md" id="subject">
                                 <option value="">選択してください。</option>
@@ -150,12 +150,14 @@
     const fields = {
         '英語': ['英単語', '英文法'],
         '社会': ['地理', '歴史', '公民'],
+        '国語': ['漢字', '語彙', '国文法'],
     };
 
     // 教科ごとの種別
     const qtypes = {
         '英語': ['並び替え', '空所補充', '和訳', '英作文'],
         '社会': ['用語', '説明'],
+        '国語': ['知識', '表現'],
     };
 
     // 分野の更新
@@ -304,6 +306,41 @@
         }
     }
 
+    // 単元の更新（国語）
+    function updateUnitsJapanese() {
+
+        const subject = subjectSelect.value;
+
+        if (subject === '国語') {
+            const field = fieldSelect.value;
+
+            // 一旦空にする
+            unitSelect.innerHTML = '';
+
+            // 選択した分野だけに絞る
+            const filteredUnits = units.filter(unit => {
+                return unit.field === field;
+            });
+
+            // 先頭の項目
+            const firstOption = document.createElement('option');
+            firstOption.value = '';
+            firstOption.textContent = '単元を選択してください';
+            unitSelect.appendChild(firstOption);
+
+            // 単元を追加
+            filteredUnits.forEach(unit => {
+
+                const option = document.createElement('option');
+
+                option.value = unit.logical_name;
+                option.textContent = unit.logical_name;
+
+                unitSelect.appendChild(option);
+            });
+        }
+    }
+
     // 教科が変更されたとき
     subjectSelect.addEventListener('change', updateFields);
     subjectSelect.addEventListener('change', updateQtypes);
@@ -311,6 +348,7 @@
 
     // 分野が変更されたとき
     fieldSelect.addEventListener('change', updateUnitsSociety);
+    fieldSelect.addEventListener('change', updateUnitsJapanese);
 
     // 初期表示
     updateFields();
