@@ -128,6 +128,15 @@
                                 {!! $plot_con_q !!}
                             </svg>
                         </div>
+                    @elseif ($question['q_type'] == 7)
+                        <p class="text-lg m-4">{!! $question['q'] !!}</p>
+                        <div class="flex justify-center">
+                            <svg width="{{ $plot_par_q['width'] }}" height="{{ $plot_par_q['height'] }}"
+                                viewBox="0 0 {{ $plot_par_q['width'] }} {{ $plot_par_q['height'] }}"
+                                class="border">
+                                {!! $plot_con_q !!}
+                            </svg>
+                        </div>
                     @endif
                 </div>
             </div>

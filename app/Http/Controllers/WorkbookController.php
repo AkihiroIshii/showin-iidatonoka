@@ -863,6 +863,81 @@ class WorkbookController extends Controller
     //     return view('workbook.unit_template', compact('unitname','question'));
     // }
 
+    // 九九
+    public function multiplication_table(Request $request) {
+        $dan = rand(2, 9);
+        $mul = rand(2, 9);
+
+        /*** 接頭語の表（解説用）***/
+        $mul_table = "
+                    <table class=\"border-collapse border border-gray-400 mx-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\"></td>";
+                            for($i = 1; $i <= 9; $i++) {
+                                $mul_table .= "<td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">× {$i}</td>";
+                            }
+                        $mul_table .= "
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">{$dan}</td>";
+                            for($i = 1; $i <= 9; $i++) {
+                                if ($i == $mul) {
+                                    $mul_table .= "<td class=\"border border-gray-400 bg-lime-200 px-5 py-0 w-24\"></td>";
+                                } else {
+                                    $mul_table .= "<td class=\"border border-gray-400 px-5 py-0 w-24\">" . $dan * $i . "</td>";
+                                }
+                            }
+                        $mul_table .= "
+                        </tr>
+                    </table>
+                    ";
+
+        // 解説文
+        $e_str = "{$dan} × {$mul} は、{$dan}";
+        for($i = 0; $i < $mul - 1; $i++) {
+            $e_str .= " + {$dan}";
+        }
+        $e_str .= " と同じ。";
+
+        // グラフ描画用
+        $width = 750;    //viewportの大きさ
+        $height = 60;
+        $w_margin = 50;
+        $w_unit = ($width - $w_margin) / 9;
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        // 帯を作る
+        $plot_con_e = "<rect x=\"0\" y=\"0\" width=\"" . $width - $w_margin . "\" height=\"" . $height / 2 . "\" fill=\"transparent\" stroke=\"black\"/>
+                        <rect x=\"0\" y=\"0\" width=\"" . $mul * $w_unit . "\" height=\"" . $height / 2 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+        // 区切り線を引く
+        for ($i = 0; $i <= $dan * 9; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*($w_unit / $dan). "\" y1=\"0\" x2 =\"" . $i*($w_unit / $dan) . "\" y2=\"" . $height / 2 . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+        // dan ごとの区切り線
+        for ($i = 1; $i <= 9; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"0\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $height / 2 . "\" stroke=\"black\" stroke-width=\"2\"/>
+                            <text x=\"" . $i * $w_unit - 5 . "\" y=\"" . $height * (3/4) . "\" font-weight=\"bold\" font-size=\"16\" >
+                                " . $i * $dan . "
+                            </text>";
+        }
+        $question = [
+            'q_type' => 3,
+            'q' => "<p class=\"text-2xl leading-[3]\">{$dan} × {$mul} はいくつですか。</p>"
+                    . $mul_table,
+            'a_type' => 3,
+            'a' => "<p class=\"text-2xl\"> " . $dan * $mul . " </p>",
+            'e_type' => 7,
+            'e' => "<p class=\"text-xl leading-[3]\">{$e_str}</p>",
+        ];
+
+        $unitname = "九九";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
     // 10倍、100倍
     public function mul100() {
         $a = rand(2, 9);

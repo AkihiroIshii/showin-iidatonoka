@@ -301,6 +301,8 @@ Route::get('workbook/mul5_10', [WorkbookController::class, 'mul5_10'])
 ->middleware(['auth', 'verified'])->name('workbook.mul5_10');
 Route::get('workbook/day_to_hour', [WorkbookController::class, 'day_to_hour'])
 ->middleware(['auth', 'verified'])->name('workbook.day_to_hour');
+Route::get('workbook/multiplication_table', [WorkbookController::class, 'multiplication_table'])
+->middleware(['auth', 'verified'])->name('workbook.multiplication_table');
 Route::get('workbook/mul100', [WorkbookController::class, 'mul100'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.mul100');
 Route::get('workbook/math_unit_conversion', [WorkbookController::class, 'math_unit_conversion'])
