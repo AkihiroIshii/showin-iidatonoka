@@ -301,6 +301,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.plot_quadratic_function')}}">二次関数（グラフ描画）</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

@@ -418,6 +418,8 @@ Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
 ->middleware(['auth', 'verified'])->name('workbook.expansion');
 Route::get('workbook/quadratic_equation', [WorkbookController::class, 'quadratic_equation'])
 ->middleware(['auth', 'verified'])->name('workbook.quadratic_equation');
+Route::get('workbook/plot_quadratic_function', [WorkbookController::class, 'plot_quadratic_function'])
+->middleware(['auth', 'verified'])->name('workbook.plot_quadratic_function');
 // 入試対策
 Route::get('workbook/math_entrance_exam_1', [WorkbookController::class, 'math_entrance_exam_1'])
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_1');
