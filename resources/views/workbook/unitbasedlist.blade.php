@@ -304,6 +304,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.plot_quadratic_function')}}">二次関数（グラフ描画）</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.read_quadratic_function')}}">二次関数（グラフ読取）</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

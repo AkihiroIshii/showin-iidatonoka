@@ -6044,7 +6044,7 @@ class WorkbookController extends Controller
 
         // グラフ描画用
         $size = 600;    //viewportの大きさ
-        $val_size = 20; //実際の座標の大きさ
+        $val_size = 30; //実際の座標の大きさ
         $scale = $size / $val_size; //縮尺
         $x_unit = $scale;
 
@@ -6101,7 +6101,7 @@ class WorkbookController extends Controller
                 'q' => "<p>次の関数のグラフを描画しなさい。</p>
                          $$ y = {$ax_str} $$",
                 'a_type' => 6,
-                'a' => "<p>下図の赤線</p>",
+                'a' => "<p>下図の放物線</p>",
                 'e_type' => 3,
                 'e' => "<div class=\"pl-5 text-left\">
                             <ul class='list-disc'>
@@ -6117,6 +6117,90 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "二次関数（グラフ描画）";
         return view('workbook.unit_template', compact('unitname','question','plot_par_a','plot_con_a'));
+    }
+
+    // 二次関数（グラフ読取）
+    public function read_quadratic_function() {
+        $a_numerator = (-1)**rand(1,2) * rand(1, 4);
+        $a_denominator = rand(1, 4);
+
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
+
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x^2", 1);
+        $zougen_str = $a > 0 ? "増える" : "減る";
+
+        // グラフ描画用
+        $size = 600;    //viewportの大きさ
+        $val_size = 30; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+        $x_unit = $scale;
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = -$size / 2;
+        $to_x = $size / 2;
+        $from_y = $to_y = ($a * ($val_size/2)**2) * $scale;
+
+        $plot_par_q = $plot_par_e = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        $plot_con_q = "";
+        // 座標軸を作成
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $stroke_width = ($i % 5 == 0) ? 0.6 : 0.2;
+            $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
+            $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
+        }
+
+        $plot_con_q .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"2\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <path d=\"M" . $from_x . "," . -$from_y . " Q0," . $from_y . " " . $to_x . "," . -$to_y . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $a_denominator * $scale ) . "\" r=\"5\" fill=\"black\" />
+            <text x=\"" . $a_denominator * $scale + 5 . "\" y=\"" . -$a_numerator * $a_denominator * $scale . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                ({$a_denominator}," . $a_numerator * $a_denominator . ")
+            </text>
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 6,
+                'q' => "<p>次の放物線を式で表しなさい。</p>",
+                'a_type' => 2,
+                'a' => "y = {$ax_str}",
+                'e_type' => 3,
+                'e' => "<p>放物線は \(y=ax^2\) の形で表せる。点 \(({$a_denominator},\," . $a_numerator * $a_denominator . ")\) を通っているので、</p>
+                        \(x={$a_denominator},\,y=" . $a_numerator * $a_denominator . "\) の値を代入すると、\(" . $a_numerator * $a_denominator . " = a \\times {$a_denominator}^2\)。</p>
+                        これを \(a\) について解けば、\(\displaystyle a = {$a_str}\)。よって、\(\displaystyle y = {$ax_str}\)。",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "二次関数（グラフ読取）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
     }
 
     // 入試　問１
