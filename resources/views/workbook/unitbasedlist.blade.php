@@ -49,10 +49,10 @@
                                     <a href="{{route('workbook.mul5_10')}}">⇗5倍、10倍</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
-                                    <a href="{{route('workbook.day_to_hour')}}">10日は何時間？</a>
+                                    <a href="{{route('workbook.multiplication_table')}}">九九</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
-                                    <a href="{{route('workbook.multiplication_table')}}">九九</a>
+                                    <a href="{{route('workbook.day_to_hour')}}">日⇒時間</a>
                                 </x-button-link>
                             </div>
                         </x-td>

@@ -710,59 +710,78 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 10日は何時間？
-    public function day_to_hour() {
-        $day = rand(2, 10);
-        $hour = 24 * $day;
+    // 九九
+    public function multiplication_table(Request $request) {
+        $dan = rand(2, 9);
+        $mul = rand(2, 9);
 
-        $exp = "<p>1 日は 24 時間です。◎ = 10、○ = 1 とすると、24 時間は ◎◎○○○○ とあらわせます。</p>
-                <p>よって、{$day} 日 = ";
-        for ($i = 0; $i < $day - 1; $i++) {
-            $exp .= "◎◎○○○○ + ";
-        }
-        $exp .= "◎◎○○○○</p>
-                <p>= ";
-        for ($i = 0; $i < $day; $i++) {
-            $exp .= "◎◎ ";
-        }
-        for ($i = 0; $i < $day; $i++) {
-            $exp .= "○○○○ ";
-        }
-        $exp .= "</p>
-                <p>= " . 20*$day . " + " . 4*$day . " = <span class=\"underline\">{$hour} 時間</span></p>";
-        if ($day > 5) {
-            $exp .= "<p>(※)5 日 = 120 時間 を おぼえておくと べんりです。</p>
-                    <p>5 日 = ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ </p>
-                    <p>= ◎◎ ◎◎ ◎◎ ◎◎ ◎◎ + ○○○○ ○○○○ ○○○○ ○○○○ ○○○○ </p>
-                    <p>= 100 + 20 = 120 時間</p>
-                    <p>すると、{$day} 日 = 5 日 + " . $day - 5 . " 日 = 120 時間 + ";
-            for ($i = 0; $i < $day - 5; $i++) {
-                $exp .= "◎◎ ";
-            }
-            for ($i = 0; $i < $day - 5; $i++) {
-                $exp .= "○○○○ ";
-            }
-            $exp .= "</p>
-                    <p>= 120 時間 + " . 20*($day - 5) . " 時間 + " . 4*($day - 5) . " 時間 = <span class=\"underline\">{$hour} 時間</span></p>";
-        }
+        $mul_table = "
+                    <table class=\"border-collapse border border-gray-400 mx-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\"></td>";
+                            for($i = 1; $i <= 9; $i++) {
+                                $mul_table .= "<td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">× {$i}</td>";
+                            }
+                        $mul_table .= "
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">{$dan}</td>";
+                            for($i = 1; $i <= 9; $i++) {
+                                if ($i == $mul) {
+                                    $mul_table .= "<td class=\"border border-gray-400 bg-lime-200 px-5 py-0 w-24\"></td>";
+                                } else {
+                                    $mul_table .= "<td class=\"border border-gray-400 px-5 py-0 w-24\">" . $dan * $i . "</td>";
+                                }
+                            }
+                        $mul_table .= "
+                        </tr>
+                    </table>
+                    ";
 
-        // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-        $questions = [
-            [
-                'q_type' => 3,
-                'q' => "<p>□ に あてはまる かずを こたえましょう。</p>
-                        <p class=\"text-xl\">{$day} 日 = □ 時間</p>",
-                'a_type' => 2,
-                'a' => "{$hour}",
-                'e_type' => 3,
-                'e' => "{$exp}",
-            ],
+        // 解説文
+        $e_str = "{$dan} × {$mul} は、{$dan}";
+        for($i = 0; $i < $mul - 1; $i++) {
+            $e_str .= " + {$dan}";
+        }
+        $e_str .= " と同じ。";
+
+        // グラフ描画用
+        $width = 750;    //viewportの大きさ
+        $height = 60;
+        $w_margin = 50;
+        $w_unit = ($width - $w_margin) / 9;
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
         ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
-        $unitname = "10日は何時間？";
-        return view('workbook.unit_template', compact('unitname','question'));
+
+        // 帯を作る
+        $plot_con_e = "<rect x=\"0\" y=\"0\" width=\"" . $width - $w_margin . "\" height=\"" . $height / 2 . "\" fill=\"transparent\" stroke=\"black\"/>
+                        <rect x=\"0\" y=\"0\" width=\"" . $mul * $w_unit . "\" height=\"" . $height / 2 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+        // 区切り線を引く
+        for ($i = 0; $i <= $dan * 9; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*($w_unit / $dan). "\" y1=\"0\" x2 =\"" . $i*($w_unit / $dan) . "\" y2=\"" . $height / 2 . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+        // dan ごとの区切り線
+        for ($i = 1; $i <= 9; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"0\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $height / 2 . "\" stroke=\"black\" stroke-width=\"2\"/>
+                            <text x=\"" . $i * $w_unit - 5 . "\" y=\"" . $height * (3/4) . "\" font-weight=\"bold\" font-size=\"16\" >
+                                " . $i * $dan . "
+                            </text>";
+        }
+        $question = [
+            'q_type' => 3,
+            'q' => "<p class=\"text-2xl leading-[3]\">{$dan} × {$mul} はいくつですか。</p>"
+                    . $mul_table,
+            'a_type' => 3,
+            'a' => "<p class=\"text-2xl\"> " . $dan * $mul . " </p>",
+            'e_type' => 7,
+            'e' => "<p class=\"text-xl leading-[3]\">{$e_str}</p>",
+        ];
+
+        $unitname = "九九";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
     // // 10日は何時間？（旧）
@@ -863,47 +882,84 @@ class WorkbookController extends Controller
     //     return view('workbook.unit_template', compact('unitname','question'));
     // }
 
-    // 九九
-    public function multiplication_table(Request $request) {
-        $dan = rand(2, 9);
-        $mul = rand(2, 9);
+    // // 10日は何時間？（旧ver２）
+    // public function day_to_hour() {
+    //     $day = rand(2, 10);
+    //     $hour = 24 * $day;
 
-        /*** 接頭語の表（解説用）***/
-        $mul_table = "
-                    <table class=\"border-collapse border border-gray-400 mx-auto table-fixed\" cellpadding=\"5\">
-                        <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\"></td>";
-                            for($i = 1; $i <= 9; $i++) {
-                                $mul_table .= "<td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">× {$i}</td>";
-                            }
-                        $mul_table .= "
-                        </tr>
-                        <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 bg-gray-200 px-5 py-0 w-24\">{$dan}</td>";
-                            for($i = 1; $i <= 9; $i++) {
-                                if ($i == $mul) {
-                                    $mul_table .= "<td class=\"border border-gray-400 bg-lime-200 px-5 py-0 w-24\"></td>";
-                                } else {
-                                    $mul_table .= "<td class=\"border border-gray-400 px-5 py-0 w-24\">" . $dan * $i . "</td>";
-                                }
-                            }
-                        $mul_table .= "
-                        </tr>
-                    </table>
-                    ";
+    //     $exp = "<p>1 日は 24 時間です。◎ = 10、○ = 1 とすると、24 時間は ◎◎○○○○ とあらわせます。</p>
+    //             <p>よって、{$day} 日 = ";
+    //     for ($i = 0; $i < $day - 1; $i++) {
+    //         $exp .= "◎◎○○○○ + ";
+    //     }
+    //     $exp .= "◎◎○○○○</p>
+    //             <p>= ";
+    //     for ($i = 0; $i < $day; $i++) {
+    //         $exp .= "◎◎ ";
+    //     }
+    //     for ($i = 0; $i < $day; $i++) {
+    //         $exp .= "○○○○ ";
+    //     }
+    //     $exp .= "</p>
+    //             <p>= " . 20*$day . " + " . 4*$day . " = <span class=\"underline\">{$hour} 時間</span></p>";
+    //     if ($day > 5) {
+    //         $exp .= "<p>(※)5 日 = 120 時間 を おぼえておくと べんりです。</p>
+    //                 <p>5 日 = ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ </p>
+    //                 <p>= ◎◎ ◎◎ ◎◎ ◎◎ ◎◎ + ○○○○ ○○○○ ○○○○ ○○○○ ○○○○ </p>
+    //                 <p>= 100 + 20 = 120 時間</p>
+    //                 <p>すると、{$day} 日 = 5 日 + " . $day - 5 . " 日 = 120 時間 + ";
+    //         for ($i = 0; $i < $day - 5; $i++) {
+    //             $exp .= "◎◎ ";
+    //         }
+    //         for ($i = 0; $i < $day - 5; $i++) {
+    //             $exp .= "○○○○ ";
+    //         }
+    //         $exp .= "</p>
+    //                 <p>= 120 時間 + " . 20*($day - 5) . " 時間 + " . 4*($day - 5) . " 時間 = <span class=\"underline\">{$hour} 時間</span></p>";
+    //     }
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "<p>□ に あてはまる かずを こたえましょう。</p>
+    //                     <p class=\"text-xl\">{$day} 日 = □ 時間</p>",
+    //             'a_type' => 2,
+    //             'a' => "{$hour}",
+    //             'e_type' => 3,
+    //             'e' => "{$exp}",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "10日は何時間？";
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
+
+    // 日⇒時間
+    public function day_to_hour(Request $request) {
+        $day = rand(2, 10);
+        $hour = 24 * $day;
 
         // 解説文
-        $e_str = "{$dan} × {$mul} は、{$dan}";
-        for($i = 0; $i < $mul - 1; $i++) {
-            $e_str .= " + {$dan}";
+        $e_str = "<p>1 日は 24 時間なので、{$day} 日は 24";
+        for($i = 0; $i < $day - 1; $i++) {
+            $e_str .= " + 24";
         }
-        $e_str .= " と同じ。";
+        $e_str .= " = {$hour} 時間。</p>
+            <p>(※)九九をならった人は、かけ算で考えましょう。</p>
+            <p>1 日を 20 時間と 4 時間にわけて考えると、{$day} 日は 20 時間と 4 時間が {$day} こずつです。</p>
+            <p class=\"text-red-500 leading-[2]\">20 × {$day} = " . 20 * $day . " 時間</p>
+            <p class=\"text-blue-600 leading-[2]\">4 × {$day} = " . 4 * $day . " 時間</p>
+            <p>よって、{$day} 日は <span class=\"text-red-500\">" . 20 * $day . " 時間</span> + <span class=\"text-red-500\">" . 4 * $day . " 時間</span> = {$hour} 時間です。</p>";
 
         // グラフ描画用
-        $width = 750;    //viewportの大きさ
-        $height = 60;
-        $w_margin = 50;
-        $w_unit = ($width - $w_margin) / 9;
+        $width = 700;    //viewportの大きさ
+        $h_unit = 60;
+        $height = $h_unit * $day;
+        $w_margin = 0;
+        $w_unit = ($width - $w_margin) / 24;
 
         $plot_par_e = [
             'width' => $width,
@@ -911,30 +967,35 @@ class WorkbookController extends Controller
         ];
 
         // 帯を作る
-        $plot_con_e = "<rect x=\"0\" y=\"0\" width=\"" . $width - $w_margin . "\" height=\"" . $height / 2 . "\" fill=\"transparent\" stroke=\"black\"/>
-                        <rect x=\"0\" y=\"0\" width=\"" . $mul * $w_unit . "\" height=\"" . $height / 2 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
-        // 区切り線を引く
-        for ($i = 0; $i <= $dan * 9; $i++) {
-            $plot_con_e .= "<line x1=\"" . $i*($w_unit / $dan). "\" y1=\"0\" x2 =\"" . $i*($w_unit / $dan) . "\" y2=\"" . $height / 2 . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        $plot_con_e = "";
+        for ($j = 0; $j < $day; $j++) {
+            $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * $j . "\" width=\"" . $width - $w_margin . "\" height=\"" . $h_unit / 2 . "\" fill=\"transparent\" stroke=\"black\"/>
+                            <rect x=\"0\" y=\"" . $h_unit * $j . "\" width=\"" . 20 * $w_unit . "\" height=\"" . $h_unit / 2 . "\" fill=\"red\" fill-opacity=\"0.2\"/>
+                            <rect x=\"" . 20 * $w_unit . "\" y=\"" . $h_unit * $j . "\" width=\"" . 4 * $w_unit . "\" height=\"" . $h_unit / 2 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+            // 区切り線を引く
+            for ($i = 0; $i <= 24; $i++) {
+                $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"" . $h_unit * $j . "\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $h_unit * ($j + 1/2) . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            }
+            // 10時間ごとの区切り線
+            for ($i = 1; $i <= 2; $i++) {
+                $plot_con_e .= "<line x1=\"" . $i*(10*$w_unit) . "\" y1=\"" . $h_unit * $j . "\" x2 =\"" . $i*(10*$w_unit) . "\" y2=\"" . $h_unit * ($j + 1/2) . "\" stroke=\"black\" stroke-width=\"2\"/>
+                                <text x=\"" . $i * (10*$w_unit) - 10 . "\" y=\"" . $h_unit * ($j + 3/4) . "\" font-weight=\"bold\" font-size=\"16\" >
+                                    " . $i * 10 . "
+                                </text>";
+            }
         }
-        // dan ごとの区切り線
-        for ($i = 1; $i <= 9; $i++) {
-            $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"0\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $height / 2 . "\" stroke=\"black\" stroke-width=\"2\"/>
-                            <text x=\"" . $i * $w_unit - 5 . "\" y=\"" . $height * (3/4) . "\" font-weight=\"bold\" font-size=\"16\" >
-                                " . $i * $dan . "
-                            </text>";
-        }
+
         $question = [
             'q_type' => 3,
-            'q' => "<p class=\"text-2xl leading-[3]\">{$dan} × {$mul} はいくつですか。</p>"
-                    . $mul_table,
+            'q' => "<p class=\"text-2xl leading-[3]\">{$day} 日は何時間ですか。</p>"
+                    ,
             'a_type' => 3,
-            'a' => "<p class=\"text-2xl\"> " . $dan * $mul . " </p>",
+            'a' => "<p class=\"text-2xl\">{$hour} 時間</p>",
             'e_type' => 7,
-            'e' => "<p class=\"text-xl leading-[3]\">{$e_str}</p>",
+            'e' => "<div class=\"text-xl leading-[3]\">{$e_str}</div>",
         ];
 
-        $unitname = "九九";
+        $unitname = "日⇒時間";
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
