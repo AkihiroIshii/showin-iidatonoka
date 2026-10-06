@@ -952,7 +952,7 @@ class WorkbookController extends Controller
             <p>1 日を 20 時間と 4 時間にわけて考えると、{$day} 日は 20 時間と 4 時間が {$day} こずつです。</p>
             <p class=\"text-red-500 leading-[2]\">20 × {$day} = " . 20 * $day . " 時間</p>
             <p class=\"text-blue-600 leading-[2]\">4 × {$day} = " . 4 * $day . " 時間</p>
-            <p>よって、{$day} 日は <span class=\"text-red-500\">" . 20 * $day . " 時間</span> + <span class=\"text-red-500\">" . 4 * $day . " 時間</span> = {$hour} 時間です。</p>";
+            <p>よって、{$day} 日は <span class=\"text-red-500\">" . 20 * $day . " 時間</span> + <span class=\"text-blue-500\">" . 4 * $day . " 時間</span> = {$hour} 時間です。</p>";
 
         // グラフ描画用
         $width = 700;    //viewportの大きさ
