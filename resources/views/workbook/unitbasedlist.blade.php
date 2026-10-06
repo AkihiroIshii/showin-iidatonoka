@@ -49,6 +49,9 @@
                                     <a href="{{route('workbook.mul5_10')}}">⇗5倍、10倍</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.cm_to_mm')}}">cm⇔mm</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.multiplication_table')}}">九九</a>
                                 </x-button-link>
                                 <x-button-link color="lime">

@@ -710,6 +710,75 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // cm⇔mm
+    public function cm_to_mm(Request $request) {
+        $max = 50;
+        $mm = rand(11, $max - 1);
+        if ($mm % 10 == 0) {
+            $mm = rand(11, $max - 1);
+        }
+        $cm = ($mm - $mm % 10) / 10;
+        
+        // グラフ描画用
+        $width = $max * 10;    //viewportの大きさ
+        $height = 120;
+        $w_margin = 0;
+        $w_unit = ($width - $w_margin) / $max;
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        // 帯を作る
+        // 外枠
+        $plot_con_e = "<rect x=\"0\" y=\"0\" width=\"" . $width - $w_margin . "\" height=\"" . $height / 2 . "\" fill=\"transparent\" stroke=\"black\"/>";
+        // 区切り線(1mmごと)
+        for ($i = 0; $i < $max; $i++ ) {
+            $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"0\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $height * (1/4) * (1/2) . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if ($i % 5 == 0) {
+                $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"0\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $height * (1/4) * (3/4) . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            }
+            if (($i % 10 == 0) && ($i != 0)) {
+                $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"0\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $height * (1/4) . "\" stroke=\"black\" stroke-width=\"0.4\"/>
+                                <text x=\"" . $i*$w_unit - 5 . "\" y=\"" . $height * (1/2) * (3/4) . "\" font-weight=\"bold\" font-size=\"16\" >
+                                    " . $i / 10 . "
+                                </text>";
+            }
+        }
+        // 問題に応じた長さに色付け
+        $plot_con_e .= "<rect x=\"0\" y=\"0\" width=\"" . $mm * $w_unit . "\" height=\"" . $height / 2 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-2xl leading-[3]\">つぎの □ と ○ にはいる数はいくつですか。</p>
+                        <p class=\"text-2xl leading-[3]\">{$mm} mm = □ cm ○ mm</p>"
+                        ,
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$cm} cm " . $mm % 10 . " mm</p>",
+                'e_type' => 7,
+                'e' => "<p class=\"text-xl leading-[2]\">1 cm（センチメートル） = 10 mm（ミリメートル）なので、</p>
+                        <p class=\"text-xl leading-[2] mb-4\">{$mm} mm = " . $cm * 10 . " mm + " . $mm % 10 . " mm = {$cm} cm " . $mm % 10 . " mm。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-2xl leading-[3]\">つぎの △ にはいる数はいくつですか。</p>
+                        <p class=\"text-2xl leading-[3] mb-4\">{$cm} cm " . $mm % 10 . " mm = △ mm</p>"
+                        ,
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">{$mm} mm</p>",
+                'e_type' => 7,
+                'e' => "<p class=\"text-xl leading-[2]\">1 cm（センチメートル） = 10 mm（ミリメートル）なので、</p>
+                        <p class=\"text-xl leading-[2] mb-4\">{$cm} cm " . $mm % 10 . " mm = " . $cm * 10 . " mm + " . $mm % 10 . " mm = {$mm} mm。</p>",
+            ],
+        ];
+        $q_idx = rand(0, count($questions)-1);
+        $question = $questions[$q_idx];
+        $unitname = "cm⇔mm";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
     // 九九
     public function multiplication_table(Request $request) {
         $dan = rand(2, 9);
