@@ -422,6 +422,8 @@ Route::get('workbook/plot_quadratic_function', [WorkbookController::class, 'plot
 ->middleware(['auth', 'verified'])->name('workbook.plot_quadratic_function');
 Route::get('workbook/read_quadratic_function', [WorkbookController::class, 'read_quadratic_function'])
 ->middleware(['auth', 'verified'])->name('workbook.read_quadratic_function');
+Route::get('workbook/domain_quadratic_function', [WorkbookController::class, 'domain_quadratic_function'])
+->middleware(['auth', 'verified'])->name('workbook.domain_quadratic_function');
 // 入試対策
 Route::get('workbook/math_entrance_exam_1', [WorkbookController::class, 'math_entrance_exam_1'])
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_1');

@@ -6203,6 +6203,141 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
     }
 
+    // 二次関数（変域）
+    public function domain_quadratic_function() {
+        $a_numerator = (-1)**rand(1,2) * rand(1, 4);
+        $a_denominator = rand(1, 4);
+
+        // 約分しておく
+        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac['numerator'];
+        $a_denominator = $sim_frac['denominator'];
+
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x^2", 1);
+
+        // 変域
+        $x1 = -rand(1, 3);
+        $x2 = rand(1, 3);
+        $y1 = $a * $x1**2;
+        $y2 = $a * $x2**2;
+        $y1_str = $this->fracnum_to_str($a_numerator * $x1**2, $a_denominator, "", 1);
+        $y2_str = $this->fracnum_to_str($a_numerator * $x2**2, $a_denominator, "", 1);
+
+        // グラフ描画用
+        $size = 600;    //viewportの大きさ
+        $val_size = ceil(max(abs($y1), abs($y2))/10) * 20; //実際の座標の大きさ
+        $scale = $size / $val_size; //縮尺
+        $x_unit = $scale;
+
+        // 解答用
+        $plot_con_e = "";
+        $e_str = "<p>まず、下図のようなグラフの概形をイメージすること。</p>
+                    <p>\(x\) の変域が原点を含む場合、その両端と原点の３カ所を比較する。</p>
+                    <p>\(\displaystyle y={$ax_str}\) に端点の \(x\) 座標を代入すると、
+                        <span class=\"text-red-500\">\(x = {$x1}\) では、\(\displaystyle y = {$y1_str}\)</span>、</p>
+                    <p><span class=\"text-blue-700\">\(x = {$x2}\) では、\(\displaystyle y = {$y2_str}\)</span> なので、";
+        // x1 < x <= x2
+        if ($a > 0) {
+            // 絶対値が大きい方で最大値をとる
+            if(abs($x1) <= abs($x2)) {
+                $domain01 = "0 \leqq y \leqq {$y2_str}";
+                $y_min = 0;
+                $y_max = $y2;
+                $e_str .= "最大値は <span class=\"text-blue-700\">\(\displaystyle y = {$y2_str}\)</span>。最小値は原点の \(y=0\)。</p>
+                            <p>\(x = 0,\,x = {$x2}\) はいずれも変域に含まれるので、\(y\) の変域は \(\displaystyle {$domain01}\)。";
+            } else {
+                $domain01 = "0 \leqq y < {$y1_str}";
+                $y_min = 0;
+                $y_max = $y1;
+                $e_str .= "最大値は <span class=\"text-red-500\">\(\displaystyle y = {$y1_str}\)</span>。最小値は原点の \(y=0\)。</p>
+                            <p>ただし、\(x = {$x1}\) は変域に含まれないので、\(\displaystyle y = {$y1_str}\) は変域に含まれない。</p>
+                            <p>よって \(y\) の変域は \(\displaystyle {$domain01}\)。";
+            }
+        } else {
+            // 絶対値が大きい方で最小値をとる
+            if(abs($x1) <= abs($x2)) {
+                $domain01 = "{$y2_str} \leqq y \leqq 0";
+                $y_min = $y2;
+                $y_max = 0;
+                $e_str .= "最小値は <span class=\"text-blue-700\">\(\displaystyle y = {$y2_str}\)</span>。最大値は原点の \(y=0\)。</p>
+                            <p>\(x = 0,\,x = {$x2}\) はいずれも変域に含まれるので、\(y\) の変域は \(\displaystyle {$domain01}\)。";
+            } else {
+                $domain01 = "{$y1_str} < y \leqq 0";
+                $y_min = $y1;
+                $y_max = 0;
+                $e_str .= "最小値は <span class=\"text-red-500\">\(\displaystyle y = {$y1_str}\)</span>。最大値は原点の \(y=0\)。</p>
+                            <p>ただし、\(x = {$x1}\) は変域に含まれないので、\(\displaystyle y = {$y1_str}\) は変域に含まれない。</p>
+                            <p>よって \(y\) の変域は \(\displaystyle {$domain01}\)。";
+            }
+        }
+
+        // プロット用パラメータ
+        $w_full = $size;
+        $w_half = $size / 2;
+        $from_x = -$size / 2;
+        $to_x = $size / 2;
+        $from_y = $to_y = ($a * ($val_size/2)**2) * $scale;
+
+        $plot_par_e = [
+            'w_full' => $size,
+            'w_half' => $size / 2,
+        ];
+
+        // 座標軸を作成
+        $plot_con_e = "";
+        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+            $stroke_width = ($i % 5 == 0) ? 0.6 : 0.2;
+            $plot_con_e .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
+            $plot_con_e .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
+        }
+
+        $plot_con_e .= "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"2\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <path d=\"M" . $from_x . "," . -$from_y . " Q0," . $from_y . " " . $to_x . "," . -$to_y . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <!-- 変域 -->
+            <rect x=\"" . $x1 * $scale . "\" y=\"" . -$y_max * $scale . "\" width=\"" . ($x2 - $x1) * $scale . "\" height=\"" . ($y_max - $y_min) * $scale . "\" fill=\"green\" fill-opacity=\"0.2\"/>
+            <circle cx=\"0\" cy=\"0\" r=\"5\" fill=\"black\"/>
+            <!-- 端点 -->
+            <circle cx=\"" . ( $x1 * $scale ) . "\" cy=\"" . ( -$y1 * $scale ) . "\" r=\"5\" fill=\"none\" stroke=\"red\" stroke-width=\"2\"/>
+            <circle cx=\"" . ( $x2 * $scale ) . "\" cy=\"" . ( -$y2 * $scale ) . "\" r=\"5\" fill=\"blue\"/>
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の関数について、\(y\) の変域を答えなさい。</p>
+                        $$ y={$ax_str} $$
+                        $$ ({$x1} < x \leqq {$x2}) $$",
+                'a_type' => 2,
+                'a' => $domain01,
+                'e_type' => 6,
+                'e' => $e_str,
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "二次関数（変域）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
