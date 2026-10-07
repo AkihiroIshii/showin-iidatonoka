@@ -5639,126 +5639,10 @@ class WorkbookController extends Controller
 
     // 確率（中２）
     public function probability_J2() {
-        $a_numerator = (-1)**rand(1,2) * rand(1, 4);
-        $a_denominator = rand(1, 4);
-
-        // 約分しておく
-        $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
-        $a_numerator = $sim_frac['numerator'];
-        $a_denominator = $sim_frac['denominator'];
-
-        $a = $a_numerator / $a_denominator;
-        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
-        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x^2", 1);
-
-        // 変域
-        $x1 = -rand(1, 3);
-        $x2 = rand(1, 3);
-        $y1 = $a * $x1**2;
-        $y2 = $a * $x2**2;
-        $y1_str = $this->fracnum_to_str($a_numerator * $x1**2, $a_denominator, "", 1);
-        $y2_str = $this->fracnum_to_str($a_numerator * $x2**2, $a_denominator, "", 1);
-
-        // グラフ描画用
-        $size = 600;    //viewportの大きさ
-        $val_size = ceil(max(abs($y1), abs($y2))/10) * 20; //実際の座標の大きさ
-        $scale = $size / $val_size; //縮尺
-        $x_unit = $scale;
-
-        // 解答用
-        $plot_con_e = "";
-        $e_str = "<p>まず、下図のようなグラフの概形をイメージすること。</p>
-                    <p>\(x\) の変域が原点を含む場合、その両端と原点の３カ所を比較する。</p>
-                    <p>\(\displaystyle y={$ax_str}\) に端点の \(x\) 座標を代入すると、
-                        <span class=\"text-red-500\">\(x = {$x1}\) では、\(\displaystyle y = {$y1_str}\)</span>、</p>
-                    <p><span class=\"text-blue-700\">\(x = {$x2}\) では、\(\displaystyle y = {$y2_str}\)</span> なので、";
-        // x1 < x <= x2
-        if ($a > 0) {
-            // 絶対値が大きい方で最大値をとる
-            if(abs($x1) <= abs($x2)) {
-                $domain01 = "0 \leqq y \leqq {$y2_str}";
-                $y_min = 0;
-                $y_max = $y2;
-                $e_str .= "最大値は <span class=\"text-blue-700\">\(\displaystyle y = {$y2_str}\)</span>。最小値は原点の \(y=0\)。</p>
-                            <p>\(x = 0,\,x = {$x2}\) はいずれも変域に含まれるので、\(y\) の変域は \(\displaystyle {$domain01}\)。";
-            } else {
-                $domain01 = "0 \leqq y < {$y1_str}";
-                $y_min = 0;
-                $y_max = $y1;
-                $e_str .= "最大値は <span class=\"text-red-500\">\(\displaystyle y = {$y1_str}\)</span>。最小値は原点の \(y=0\)。</p>
-                            <p>ただし、\(x = {$x1}\) は変域に含まれないので、\(\displaystyle y = {$y1_str}\) は変域に含まれない。</p>
-                            <p>よって \(y\) の変域は \(\displaystyle {$domain01}\)。";
-            }
-        } else {
-            // 絶対値が大きい方で最小値をとる
-            if(abs($x1) <= abs($x2)) {
-                $domain01 = "{$y2_str} \leqq y \leqq 0";
-                $y_min = $y2;
-                $y_max = 0;
-                $e_str .= "最小値は <span class=\"text-blue-700\">\(\displaystyle y = {$y2_str}\)</span>。最大値は原点の \(y=0\)。</p>
-                            <p>\(x = 0,\,x = {$x2}\) はいずれも変域に含まれるので、\(y\) の変域は \(\displaystyle {$domain01}\)。";
-            } else {
-                $domain01 = "{$y1_str} < y \leqq 0";
-                $y_min = $y1;
-                $y_max = 0;
-                $e_str .= "最小値は <span class=\"text-red-500\">\(\displaystyle y = {$y1_str}\)</span>。最大値は原点の \(y=0\)。</p>
-                            <p>ただし、\(x = {$x1}\) は変域に含まれないので、\(\displaystyle y = {$y1_str}\) は変域に含まれない。</p>
-                            <p>よって \(y\) の変域は \(\displaystyle {$domain01}\)。";
-            }
-        }
-
-        // プロット用パラメータ
-        $w_full = $size;
-        $w_half = $size / 2;
-        $from_x = -$size / 2;
-        $to_x = $size / 2;
-        $from_y = $to_y = ($a * ($val_size/2)**2) * $scale;
-
-        $plot_par_e = [
-            'w_full' => $size,
-            'w_half' => $size / 2,
-        ];
-
-        // 座標軸を作成
-        $plot_con_e = "";
-        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
-            $stroke_width = ($i % 5 == 0) ? 0.6 : 0.2;
-            $plot_con_e .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
-            $plot_con_e .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
-        }
-
-        $plot_con_e .= "
-            <!-- 座標軸先端の矢印を定義 -->
-            <defs>
-                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"2\" refY=\"5\"
-                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
-                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
-                </marker>
-                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
-                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
-                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
-                </marker>
-            </defs>
-            <!-- x軸とy軸を作成 -->
-            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
-            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
-            <!-- 関数 -->
-            <path d=\"M" . $from_x . "," . -$from_y . " Q0," . $from_y . " " . $to_x . "," . -$to_y . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
-            <!-- 変域 -->
-            <rect x=\"" . $x1 * $scale . "\" y=\"" . -$y_max * $scale . "\" width=\"" . ($x2 - $x1) * $scale . "\" height=\"" . ($y_max - $y_min) * $scale . "\" fill=\"green\" fill-opacity=\"0.2\"/>
-            <circle cx=\"0\" cy=\"0\" r=\"5\" fill=\"black\"/>
-            <!-- 端点 -->
-            <circle cx=\"" . ( $x1 * $scale ) . "\" cy=\"" . ( -$y1 * $scale ) . "\" r=\"5\" fill=\"none\" stroke=\"red\" stroke-width=\"2\"/>
-            <circle cx=\"" . ( $x2 * $scale ) . "\" cy=\"" . ( -$y2 * $scale ) . "\" r=\"5\" fill=\"blue\"/>
-        ";
-
-
-
-
+        // 問１
         $a = rand(2, 4);
         $b = rand(2, 4);
         $sum = $a + $b;
-        $k = rand(2, $sum - 2);
         $ans1_str = $this->fracnum_to_str($a * ($a - 1), $sum * ($sum - 1), "", 1);
 
         $e1_table = "
@@ -5798,6 +5682,113 @@ class WorkbookController extends Controller
                 }
         $e1_table .= "</table>";
 
+        // 問２
+        $e2_mul4s = "12";
+        $e2_mul4oks = "12";
+        $e2_mul4_count = 1;
+        $e2_mul4ok_count = 1;
+        for ($i = 13; $i <= 10 * $sum + ($sum - 1); $i++) {
+            if ($i % 4 == 0) {
+                $e2_mul4s .= ", {$i}";
+                $e2_mul4_count += 1;
+                // 11の倍数は同じカードを使っているため除外、下一桁がカードにない場合も除外
+                if (($i % 11 != 0) && ($i % 10 <= $sum ) && ($i % 10 != 0)) {
+                    $e2_mul4oks .= ", {$i}";
+                    $e2_mul4ok_count += 1;
+                }
+            }
+        }
+        $ans2_str = $this->fracnum_to_str($e2_mul4ok_count, $sum * ($sum - 1), "", 1);
+
+        $e2_table = "
+            <table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">";
+                for ($i = 1; $i <= $sum; $i++) {
+                    $e2_table .= "
+                        <tr class=\"bg-gray-100\">";
+                            for ($j = 2; $j <= $sum; $j+=2) {
+                                $td_class = "border border-gray-400 p-5 w-20";
+                                if ($i == $j) {
+                                    $e2_table .= "<td class=\"{$td_class}\"></td>";
+                                } else {
+                                    $e2_table .= "<td class=\"{$td_class}\">{$i}{$j}</td>";
+                                }
+                            }
+                    $e2_table .= "</tr>";
+                }
+        $e2_table .= "</table>";
+
+        $e2_table2 = "
+            <table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">";
+                for ($i = 1; $i <= $sum; $i++) {
+                    $e2_table2 .= "
+                        <tr class=\"bg-gray-100\">";
+                            for ($j = 2; $j <= $sum; $j+=2) {
+                                $num = $i * 10 + $j;
+                                if (($num % 4 == 0) && ($num % 11 != 0)) {
+                                    $bg_color = " bg-blue-200";
+                                } else {
+                                    $bg_color = "";
+                                }
+                                $td_class = "border border-gray-400 p-5 w-20 {$bg_color}";
+                                if ($i == $j) {
+                                    $e2_table2 .= "<td class=\"{$td_class}\"></td>";
+                                } else {
+                                    $e2_table2 .= "<td class=\"{$td_class}\">{$i}{$j}</td>";
+                                }
+                            }
+                    $e2_table2 .= "</tr>";
+                }
+        $e2_table2 .= "</table>";
+
+        // 問３
+        $dice_sum = rand(3, 12);
+        $n3s = [3 => 35, 4 => 33, 5 => 30, 6 => 26, 7 => 21, 8 => 15, 9 => 10, 10 => 6, 11 => 3, 12 => 1];
+        $n3 = $n3s[$dice_sum];
+        $comp = 36 - $n3;
+        $ans3_frac = $this->simplify_fraction($n3, 36);
+        $ans3_str = $this->fracnum_to_str($n3, 36, "", 1);
+        $e3_table = "
+            <table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                <tr class=\"bg-gray-100\">
+                    <td class=\"border border-gray-400 p-5 w-20 bg-gray-300\"></td>";
+                    for ($j = 1; $j <= 6; $j++) {
+                        $e3_table .= "<td class=\"border border-gray-400 p-5 w-20 bg-gray-300\">{$j}</td>";
+                    }
+                $e3_table .= "</tr>";
+                for ($i = 1; $i <= 6; $i++) {
+                    $e3_table .= "
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 p-5 w-20 bg-gray-300\">{$i}</td>";
+                            for ($j = 1; $j <= 6; $j++) {
+                                if (($i + $j) >= $dice_sum) {
+                                    $bg_color = " bg-blue-200";
+                                } else {
+                                    $bg_color = "";
+                                }
+                                $td_class = "border border-gray-400 p-5 w-20 {$bg_color}";
+                                $e3_table .= "
+                                    <td class=\"{$td_class}\">
+                                        <div class=\"p-0\">" . $i + $j . "</div>
+                                        <div class=\"p-0 text-sm\">({$i}, {$j})</div>
+                                    </td>";
+                            }
+                    $e3_table .= "</tr>";
+                }
+        $e3_table .= "</table>";
+
+        $e3_part = ($ans3_frac['denominator'] == 36) ? "" : " = {$ans3_str}"; 
+        if ($dice_sum >= 7) {
+            $e3_str = "<p>出た目の数の和が {$dice_sum} 以上になるのは、下表の青い欄の組み合わせ（{$n3} 通り）。よって、</p>
+                    $$ \\frac{\,{$n3}\,}{\,36\,} {$e3_part} $$";
+        } else {
+            $e3_str = "<p>出た目の数の和が {$dice_sum} 以上になるのは、下表の青い欄の組み合わせ（{$n3} 通り）。よって、</p>
+                    $$ \\frac{\,{$n3}\,}{\,36\,} {$e3_part}. $$
+                    <p>【別解】</p>
+                    <p>出た目の和が {$dice_sum} 以上にならない（{$dice_sum} 未満になる）のは、下表で青くない欄の組み合わせ</p>
+                    <p>（{$comp} 通り）。よって、1 からこの確率を引けば、出た目の数の和が {$dice_sum} 以上になる確率になる。</p>
+                    $$ 1 - \\frac{\,{$comp}\,}{\,36\,} = {$ans3_str}. $$
+                    ";
+        }
 
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
@@ -5826,15 +5817,60 @@ class WorkbookController extends Controller
                                 " . $a * ($a - 1) / 2 . " / " . $sum * ($sum - 1) / 2 . " である。</p>
                             <p>とはいえ、確率は一種の割合であるから、上述の解説のように<span class=\"underline\">分母も分子も同様に</p>
                             <p>２倍カウントするのは問題ないのである。下表のように三角状にならんだ場合の数を</p>
-                            <p>数えるよりも、先のように考えた方が立式しやすい。原理が理解できていれば OK だ。</p>
+                            <p>数えるよりも、先ほどのように考えた方が立式しやすい。原理が理解できていれば OK だ。</p>
                         </div>
                         {$e1_table}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[3] mt-4\">
+                            <p>1 ～ {$sum} のカードが 1 枚ずつある。これらから無作為に 2 枚選び、</p>
+                            <p>選んだ順に十の位、一の位となる 2 桁の整数を作る。</p>
+                            <p>このとき、2 桁の整数が 4 の倍数になる確率を求めなさい。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $ans2_str,
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>作られる 2 桁の数のうち、最小値は 12、最大値は " . $sum . $sum - 1 . " である。</p>
+                            <p>この範囲で 4 の倍数であるのは、次の {$e2_mul4_count} 通りである。</p>
+                            <p class=\"my-3\">{$e2_mul4s}</p>
+                            <p>ただし、カードにない 0 を含んだ数や、44 のように同じカードを</p>
+                            <p>使った数は作れないので除外する。すると、次の <span class=\"underline\">{$e2_mul4ok_count} 通り</span>に絞られる。</p>
+                            <p class=\"my-3\">{$e2_mul4oks}</p>
+                            <p>さて、すべての組み合わせを考えると、十の位が {$sum} 通り、一の位は残りの</p>
+                            <p>" . $sum - 1 . " 通りなので、<span class=\"underline\">{$sum} × " . $sum - 1 . " 通り</span>。よって、2 桁の整数が 4 の倍数になる確率は、</p>
+                            $$ \\frac{\,{$e2_mul4ok_count}\,}{\,{$sum} \\times " . $sum - 1 . "\,} = {$ans2_str} $$
+                            <p>【別解】</p>
+                            <p>先述の解法では、4 の約数を洗い出すのが大変だった。そこで、まずカードから</p>
+                            <p>作ることのできる数を考えて、そこから 4 の約数を絞り込む方法を考えてみる。</p>
+                            <p>4 の倍数なら一の位は偶数なので、一の位が奇数の数は初めから除外する。</p>
+                            <p>また、一の位も十の位も使えるのは 1 ～ {$sum} なので、候補は次の数に絞られる。</p>
+                            <p class=\"mt-4 mb-4\">{$e2_table}</p>
+                            <p>ここから 4 の倍数を抽出すると、</p>
+                            <p class=\"mt-4 mb-4\">{$e2_table2}</p>
+                            <p>の <span class=\"underline\">{$e2_mul4ok_count} 通り</span>に絞られる。あとは先述の解法と同様に、
+                                \(\displaystyle \\frac{\,{$e2_mul4ok_count}\,}{\,{$sum} \\times " . $sum - 1 . "\,} = {$ans2_str}.\)</p>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[3] mt-4\">
+                            <p>サイコロを２つ投げたとき、出た目の和が {$dice_sum} 以上になる確率はいくつか。 </p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $ans3_str,
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            {$e3_str}
+                            <p class=\"mt-4 mb-4\">{$e3_table}</p>
+                        </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "確率";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 動く点P
