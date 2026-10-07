@@ -10,7 +10,7 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        $informations = Information::latest()->take(3)->get();
+        $informations = Information::latest()->take(10)->get();
         return view('auth.login', compact('informations'));
     }
 }
