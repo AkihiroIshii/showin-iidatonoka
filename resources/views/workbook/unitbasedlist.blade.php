@@ -82,6 +82,9 @@
                                     <a href="{{route('workbook.reduction_of_fraction')}}">約分</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.fraction_add_sub')}}">分数の和差</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.select_eq_decimal')}}">式の選択（小数）</a>
                                 </x-button-link>
                                 <x-button-link color="lime">

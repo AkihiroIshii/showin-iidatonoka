@@ -315,6 +315,8 @@ Route::get('workbook/ratio2', [WorkbookController::class, 'ratio2'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.ratio2');
 Route::get('workbook/reduction_of_fraction', [WorkbookController::class, 'reduction_of_fraction'])
 ->middleware(['auth', 'verified'])->name('workbook.reduction_of_fraction');
+Route::get('workbook/fraction_add_sub', [WorkbookController::class, 'fraction_add_sub'])
+->middleware(['auth', 'verified'])->name('workbook.fraction_add_sub');
 Route::get('workbook/select_eq_decimal', [WorkbookController::class, 'select_eq_decimal'])
 ->middleware(['auth', 'verified'])->name('workbook.select_eq_decimal');
 Route::get('workbook/mul314plus', [WorkbookController::class, 'mul314plus'])

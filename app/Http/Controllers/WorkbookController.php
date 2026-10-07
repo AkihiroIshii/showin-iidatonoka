@@ -1507,6 +1507,149 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
+    // 分数の和差
+    public function fraction_add_sub(Request $request) {
+        // x1 の生成
+        $numerator_samples = [1, 2, 3, 5];
+        $denominator_samples = [2, 3, 4, 6];
+        $numerator1 = $numerator_samples[rand(0, count($numerator_samples)-1)];
+        $denominator1 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        // 約分して整数にならないようにする。
+        while ($numerator1 % $denominator1 == 0) {
+            $denominator1 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        }
+        // x2 の生成
+        $numerator2 = $numerator_samples[rand(0, count($numerator_samples)-1)];
+        $denominator2 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        // 約分して整数にならないようにする。
+        while ($numerator2 % $denominator2 == 0) {
+            $denominator2 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        }
+
+        // 既約分数にする
+        $x1 = $this->simplify_fraction($numerator1, $denominator1);
+        $x2 = $this->simplify_fraction($numerator2, $denominator2);
+
+        // 文字列（分数の形）
+        $x1_str = $this->fracnum_to_str($numerator1, $denominator1, "", 1);
+        $x2_str = $this->fracnum_to_str($numerator2, $denominator2, "", 1);
+
+        // 最小公倍数の取得
+        $lcm = $this->lcm($x1['denominator'], $x2['denominator']);
+
+        // 倍数
+        $mul_x1 = $lcm / $x1['denominator'];
+        $mul_x2 = $lcm / $x2['denominator'];
+
+        // 解
+        $ans_frac = $this->simplify_fraction($x1['numerator'] * $mul_x1 + $x2['numerator'] * $mul_x2, $lcm);
+        $ans_str = $this->fracnum_to_str($x1['numerator'] * $mul_x1 + $x2['numerator'] * $mul_x2, $lcm, "", 1);
+
+        // グラフの最大値取得
+        $plot_max = ceil($ans_frac['numerator'] / $ans_frac['denominator']);
+        $n_split = $plot_max * $lcm;    // グラフの分割数
+
+        // 解説文
+        $e_add_str1 = ($x1['denominator'] == $x2['denominator'])
+                        ? ""
+                        : "\(=\) <span class=\"text-red-500\">\(\displaystyle \\frac{\," . $x1['numerator'] * $mul_x1 . "\,}{\,{$lcm}\,} \)</span>
+                            \(+\) <span class=\"text-blue-700\">\(\displaystyle \\frac{\," . $x2['numerator'] * $mul_x2 . "\,}{\,{$lcm}\,} \)</span>";
+        $e_add_str2 = ($ans_frac['denominator'] != $lcm) ? " = {$ans_str}" : "";
+        $e_str = "<p>分母 {$x1['denominator']}、{$x2['denominator']} の最小公倍数は {$lcm} なので、</p>
+                <p><span class=\"text-red-500\">\(\displaystyle {$x1_str}\)</span>
+                    \(+\) <span class=\"text-blue-700\">\(\displaystyle {$x2_str}\)</span>
+                    " . $e_add_str1 . "
+                    \(\displaystyle = \\frac{\," . ($x1['numerator'] * $mul_x1) + ($x2['numerator'] * $mul_x2) . "\,}{\,{$lcm}\,}
+                    " . $e_add_str2 . "\)
+                </p>";
+
+        $day = rand(2, 10);
+        $hour = 24 * $day;
+
+        // グラフ描画用
+        $width = 700;    //viewportの大きさ
+        $h_unit = 30;   // 帯グラフ１段分の高さ
+        $height = $h_unit * 12;
+        // $height = $h_unit * 11; //３段＋２段（行間）＋３段＋２段（行間）＋１段
+        $w_margin = 50;
+
+        $w_unit = ($width - $w_margin) / $n_split;
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        // 帯を作る
+        $plot_con_e = "";
+        // x1とx2の分母が初めから同じなら、細分化するグラフは不要
+        if ($x1['denominator'] === $x2['denominator']) {
+            $steps_x1 = [1];  // x1のグラフを描く段
+            $steps_x2 = [3];  // x2のグラフを描く段
+            $steps_sum = [6];  // 合計のグラフを描く段
+        } else {
+            $steps_x1 = [1, 6];  // x1のグラフを描く段
+            $steps_x2 = [3, 8];  // x2のグラフを描く段
+            $steps_sum = [11];  // 合計のグラフを描く段
+        }
+        // dd($x1['denominator'] . "," . $x2['denominator'] . "," . $steps_sum[0]);
+        for ($j = 1; $j <= 12; $j++) {
+            // グラフを描く段
+            if(in_array($j, array_merge($steps_x1, $steps_x2, $steps_sum))) {
+                // 外枠
+                $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * ($j - 1) . "\" width=\"" . $width - $w_margin . "\" height=\"" . $h_unit . "\" fill=\"transparent\" stroke=\"black\"/>";
+                // 区切り線を引く
+                if ($j === 1) {
+                    $n_split_var = $plot_max * $x1['denominator'];
+                } elseif ($j === 3) {
+                    $n_split_var = $plot_max * $x2['denominator'];
+                } else {
+                    $n_split_var = $n_split;
+                }
+                $w_unit_var = ($width - $w_margin) / $n_split_var;
+                for ($i = 0; $i <= $n_split_var; $i++) {
+                    $plot_con_e .= "<line x1=\"" . $i*$w_unit_var . "\" y1=\"" . $h_unit * ($j - 1) . "\" x2 =\"" . $i*$w_unit_var . "\" y2=\"" . $h_unit * $j . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+                }
+                // 整数値の目盛り
+                for ($i = 1; $i <= $plot_max; $i++) {
+                    $plot_con_e .= "
+                        <line x1=\"" . (($width - $w_margin) / $plot_max) * $i . "\" y1=\"" . $h_unit * ($j - 1) . "\" x2 =\"" . (($width - $w_margin) / $plot_max) * $i . "\" y2=\"" . $h_unit * $j . "\" stroke=\"black\" stroke-width=\"2\"/>
+                        <text x=\"" . (($width - $w_margin) / $plot_max) * $i - 5 . "\" y=\"" . $h_unit * ($j + 1/2) . "\" font-weight=\"bold\" font-size=\"16\" >
+                            {$i}
+                        </text>
+                        ";
+                }
+            }
+            // x1のグラフを描く段には、x1の値の幅だけ赤くする。
+            if(in_array($j, $steps_x1)) {
+                $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * ($j - 1) . "\" width=\"" . $w_unit * ($x1['numerator'] * $mul_x1) . "\" height=\"" . $h_unit . "\" fill=\"red\" fill-opacity=\"0.2\"/>";
+            }
+            // x2のグラフを描く段には、x2の値の幅だけ青くする。
+            if(in_array($j, $steps_x2)) {
+                $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * ($j - 1) . "\" width=\"" . $w_unit * ($x2['numerator'] * $mul_x2) . "\" height=\"" . $h_unit . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+            }
+            // 合計のグラフを描く段
+            if(in_array($j, $steps_sum)) {
+                $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * ($j - 1) . "\" width=\"" . $w_unit * ($x1['numerator'] * $mul_x1) . "\" height=\"" . $h_unit . "\" fill=\"red\" fill-opacity=\"0.2\"/>";
+                $plot_con_e .= "<rect x=\"" . $w_unit * ($x1['numerator'] * $mul_x1) . "\" y=\"" . $h_unit * ($j - 1) . "\" width=\"" . $w_unit * ($x2['numerator'] * $mul_x2) . "\" height=\"" . $h_unit . "\" fill=\"blue\" fill-opacity=\"0.2\"/>";
+            }
+        }
+
+        $question = [
+            'q_type' => 3,
+            'q' => "<p class=\"text-2xl leading-[3]\">次の計算をしなさい。</p>
+                    $$ {$x1_str} + {$x2_str} $$"
+                    ,
+            'a_type' => 2,
+            'a' => $ans_str,
+            'e_type' => 7,
+            'e' => "<div class=\"text-xl leading-[3] mb-4\">{$e_str}</div>",
+        ];
+
+        $unitname = "分数の和差";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
     // 式の選択（小数）
     public function select_eq_decimal() {
         $a = 0.3 * rand(1, 9);
