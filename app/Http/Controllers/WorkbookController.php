@@ -1555,7 +1555,7 @@ class WorkbookController extends Controller
                         : "\(=\) <span class=\"text-red-500\">\(\displaystyle \\frac{\," . $x1['numerator'] * $mul_x1 . "\,}{\,{$lcm}\,} \)</span>
                             \(+\) <span class=\"text-blue-700\">\(\displaystyle \\frac{\," . $x2['numerator'] * $mul_x2 . "\,}{\,{$lcm}\,} \)</span>";
         $e_add_str2 = ($ans_frac['denominator'] != $lcm) ? " = {$ans_str}" : "";
-        $e_str = "<p>分母 {$x1['denominator']}、{$x2['denominator']} の最小公倍数は {$lcm} なので、</p>
+        $e_str = "<p>分母 {$x1['denominator']}、{$x2['denominator']} の最小公倍数は {$lcm} なので、{$lcm} で通分してから足す。</p>
                 <p><span class=\"text-red-500\">\(\displaystyle {$x1_str}\)</span>
                     \(+\) <span class=\"text-blue-700\">\(\displaystyle {$x2_str}\)</span>
                     " . $e_add_str1 . "
