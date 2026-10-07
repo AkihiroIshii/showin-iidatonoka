@@ -1507,7 +1507,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
-    // 分数の和差
+    // 分数の和
     public function fraction_add_sub(Request $request) {
         // x1 の生成
         $numerator_samples = [1, 2, 3, 5];
@@ -1646,7 +1646,7 @@ class WorkbookController extends Controller
             'e' => "<div class=\"text-xl leading-[3] mb-4\">{$e_str}</div>",
         ];
 
-        $unitname = "分数の和差";
+        $unitname = "分数の和";
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
