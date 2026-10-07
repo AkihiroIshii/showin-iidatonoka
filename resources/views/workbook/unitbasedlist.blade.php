@@ -369,6 +369,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.num_of_cases')}}">場合の数</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.probability_J2')}}">確率</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

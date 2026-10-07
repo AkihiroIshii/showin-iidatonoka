@@ -405,6 +405,8 @@ Route::get('workbook/proof_congruence1', [WorkbookController::class, 'proof_cong
 ->middleware(['auth', 'verified'])->name('workbook.proof_congruence1');
 Route::get('workbook/num_of_cases', [WorkbookController::class, 'num_of_cases'])
 ->middleware(['auth', 'verified'])->name('workbook.num_of_cases');
+Route::get('workbook/probability_J2', [WorkbookController::class, 'probability_J2'])
+->middleware(['auth', 'verified'])->name('workbook.probability_J2');
 Route::get('workbook/moving_p', [WorkbookController::class, 'moving_p'])
 ->middleware(['auth', 'verified'])->name('workbook.moving_p');
 // 数学（中3）
