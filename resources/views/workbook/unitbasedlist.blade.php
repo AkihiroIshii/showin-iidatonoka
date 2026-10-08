@@ -98,6 +98,9 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="lime">
+                                    <a href="{{route('workbook.fraction_multiple')}}">分数の積</a>
+                                </x-button-link>
+                                <x-button-link color="lime">
                                     <a href="{{route('workbook.unit.fraction_muldiv')}}">分数の乗除</a>
                                 </x-button-link>
                                 <x-button-link color="lime">

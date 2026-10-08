@@ -323,6 +323,8 @@ Route::get('workbook/mul314plus', [WorkbookController::class, 'mul314plus'])
 ->middleware(['auth', 'verified'])->name('workbook.mul314plus');
 Route::get('workbook/velocity', [WorkbookController::class, 'velocity'])
 ->middleware(['auth', 'verified'])->name('workbook.velocity');
+Route::get('workbook/fraction_multiple', [WorkbookController::class, 'fraction_multiple'])
+->middleware(['auth', 'verified'])->name('workbook.fraction_multiple');
 Route::get('workbook/fraction_muldiv', [WorkbookController::class, 'fraction_muldiv'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.fraction_muldiv');
 //数学

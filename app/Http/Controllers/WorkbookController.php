@@ -2042,6 +2042,153 @@ class WorkbookController extends Controller
     //     return view('workbook.unit.velocity2', compact('question'));
     // }
 
+    // 分数の積
+    public function fraction_multiple(Request $request) {
+        // x1 の生成
+        $numerator_samples = [1, 2, 3, 5];
+        $denominator_samples = [2, 3, 4, 6];
+        $numerator1 = $numerator_samples[rand(0, count($numerator_samples)-1)];
+        $denominator1 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        // 約分して整数にならないようにする。
+        while ($numerator1 % $denominator1 == 0) {
+            $denominator1 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        }
+        // x2 の生成
+        $numerator2 = $numerator_samples[rand(0, count($numerator_samples)-1)];
+        $denominator2 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        // 約分して整数にならないようにする。
+        while ($numerator2 % $denominator2 == 0) {
+            $denominator2 = $denominator_samples[rand(0, count($denominator_samples)-1)];
+        }
+// $numerator1 = 1;
+// $denominator1 = 2;
+// $numerator2 = 5;
+// $denominator2 = 3; 
+
+        // 値（比較用）
+        $x1_val = $numerator1 / $denominator1;
+        $x2_val = $numerator2 / $denominator2;        
+
+        // 既約分数にする
+        $x1 = $this->simplify_fraction($numerator1, $denominator1);
+        $x2 = $this->simplify_fraction($numerator2, $denominator2);
+
+        // 文字列（分数の形）
+        $x1_str = $this->fracnum_to_str($numerator1, $denominator1, "", 1);
+        $x2_str = $this->fracnum_to_str($numerator2, $denominator2, "", 1);
+
+        // 最小公倍数の取得
+        // $lcm = $this->lcm($x1['denominator'], $x2['denominator']);
+
+        // 倍数
+        // $mul_x1 = $lcm / $x1['denominator'];
+        // $mul_x2 = $lcm / $x2['denominator'];
+
+        // 解
+        $ans_frac = $this->simplify_fraction($x1['numerator'] * $x2['numerator'], $x1['denominator'] * $x2['denominator']);
+        $ans_str = $this->fracnum_to_str($x1['numerator'] * $x2['numerator'], $x1['denominator'] * $x2['denominator'], "", 1);
+
+        // 解説文
+        $e_str = "
+                $$ {$x1_str} \\times {$x2_str}  = \\frac{\,{$x1['numerator']} \\times {$x2['numerator']}\,}{\,{$x1['denominator']} \\times {$x2['denominator']}\,} = {$ans_str} $$
+                <p>【補足】</p>
+                <p>\(\displaystyle \\frac{{$x2['numerator']}}{\,{$x2['denominator']}\,}\) 倍とは、<span class=\"text-red-500\">もとの数</span>の
+                        \(\displaystyle \\frac{1}{\,{$x2['denominator']}\,} \)
+                        <span class=\"text-blue-700\">\(\displaystyle \\left( = \\frac{\,{$x1['numerator']}\,}{\," . $x1['denominator'] * $x2['denominator'] . "\,} \\right) \)</span>
+                        が \({$x2['numerator']}\) つある大きさのことである。</p>
+                <p class=\"mt-4\">
+                    <span class=\"text-red-500\">\(\displaystyle {$x1_str}\)</span> \(\displaystyle \\times\, {$x2_str} = \)
+                    <span class=\"text-red-500\">\(\displaystyle {$x1_str}\)</span> \(\displaystyle \\times\, \\frac{1}{\,{$x2['denominator']}\,} \\times {$x2['numerator']} =\)
+                    <span class=\"text-blue-700\">\(\displaystyle \\frac{\,{$x1['numerator']}\,}{\," . $x1['denominator'] * $x2['denominator'] . "\,}\)</span>
+                    \(\\times\, {$x2['numerator']} = \) <span class=\"text-green-600\">\(\displaystyle {$ans_str}\)</span>
+                </p>";
+
+        // グラフ描画用
+        $width = 700;    //viewportの大きさ
+        $h_unit = 30;   // 帯グラフ１段分の高さ
+        $height = $h_unit * 12;
+        $w_margin = 50;
+
+        // グラフの最大値取得
+        $plot_max = ceil(max($x1_val, $x1_val * $x2_val));
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        // 帯を作る
+        $plot_con_e = "";
+        $plot_steps = [2, 3, 5, 6];
+        for ($j = 1; $j <= 7; $j++) {
+            // グラフを描く段
+            if(in_array($j, $plot_steps)) {
+                if (in_array($j, [2, 5])) {
+                    $frame_width = ($width - $w_margin);
+                    $stroke_width = "1";
+                    $h_color = $h_unit;
+                    if ($j === 2) {
+                        $n_split = $x1['denominator'];
+                        $fill_color = "red";
+                        $color_width = ($width - $w_margin) * ($x1_val / $plot_max);
+                    } elseif ($j === 5) {
+                        $n_split = $x1['denominator'] * $x2['denominator'];
+                        $fill_color = "green";
+                        $color_width = ($width - $w_margin) * ($x1_val / $plot_max) * $x2_val;
+                    }
+                    $w_unit = $frame_width / $plot_max / $n_split;
+                } elseif (in_array($j, [3, 6])) {
+                    $fill_color = "blue";
+                    $stroke_width = "0.4";
+                    $h_color = $h_unit * (2 / 3);
+                    $color_width = ($width - $w_margin) * ($x1_val / $plot_max) / $x2['denominator'];
+                    if ($j === 3) {
+                        $n_split = $x2['denominator'];
+                        $frame_width = ($width - $w_margin) * ($x1_val / $plot_max);
+                    } elseif ($j === 6) {
+                        $n_split = $x2['numerator'];
+                        $frame_width = ($width - $w_margin) * ($x1_val / $plot_max) * $x2_val;
+                    }
+                    $w_unit = $frame_width / $n_split;
+                }
+                // 外枠
+                $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * ($j - 1) . "\" width=\"{$frame_width}\" height=\"{$h_color}\" fill=\"transparent\" stroke=\"black\" stroke-width=\"{$stroke_width}\" />";
+                // 区切り線を引く
+                for ($i = 0; $i <= $n_split * $plot_max; $i++) {
+                    $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"" . $h_unit * ($j - 1) . "\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $h_unit * ($j - 1) + $h_color . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+                }
+                // 整数値の目盛り
+                if (in_array($j, [2, 5])) {
+                    for ($i = 1; $i <= $plot_max; $i++) {
+                        $plot_con_e .= "
+                            <line x1=\"" . (($width - $w_margin) / $plot_max) * $i . "\" y1=\"" . $h_unit * ($j - 1) . "\" x2 =\"" . (($width - $w_margin) / $plot_max) * $i . "\" y2=\"" . $h_unit * $j . "\" stroke=\"black\" stroke-width=\"2\"/>
+                            <text x=\"" . (($width - $w_margin) / $plot_max) * $i - 5 . "\" y=\"" . $h_unit * ($j + 1/2) . "\" font-weight=\"bold\" font-size=\"16\" >
+                                {$i}
+                            </text>
+                            ";
+                    }
+                }
+                // 色塗りつぶし
+                $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * ($j - 1) . "\" width=\"{$color_width}\" height=\"{$h_color}\" fill=\"{$fill_color}\" fill-opacity=\"0.2\"/>";
+            }
+        }
+
+        $question = [
+            'q_type' => 3,
+            'q' => "<p class=\"text-2xl leading-[3]\">次の計算をしなさい。</p>
+                    $$ {$x1_str} \\times {$x2_str} $$"
+                    ,
+            'a_type' => 2,
+            'a' => $ans_str,
+            'e_type' => 7,
+            'e' => "<div class=\"text-xl leading-[3] mb-4\">{$e_str}</div>",
+        ];
+
+        $unitname = "分数の積";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
+
     // 分数の乗除
     public function fraction_muldiv() {
         $primes1 = $this->get_primes(4, 11);
