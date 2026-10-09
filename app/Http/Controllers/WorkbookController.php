@@ -3423,7 +3423,7 @@ class WorkbookController extends Controller
 
         $xy_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5 w-20\">\(x\)</td>
+                            <td class=\"border border-gray-400 w-20\">\(x\)</td>
                             <td class=\"border border-gray-400 w-20\">\({$x1}\)</td>
                             <td class=\"border border-gray-400 w-20\">\({$x2}\)</td>
                             <td class=\"border border-gray-400 w-20\">\({$x3}\)</td>
@@ -5312,7 +5312,7 @@ class WorkbookController extends Controller
 
         $xy_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5 w-20\">\(x\)</td>
+                            <td class=\"border border-gray-400 w-20\">\(x\)</td>
                             <td class=\"border border-gray-400 w-20\">\({$x1}\)</td>
                             <td class=\"border border-gray-400 w-20\">\({$x2}\)</td>
                             <td class=\"border border-gray-400 w-20\">\({$x3}\)</td>
@@ -5782,16 +5782,16 @@ class WorkbookController extends Controller
         $ans1_str = $this->fracnum_to_str($a * ($a - 1), $sum * ($sum - 1), "", 1);
 
         $e1_table = "
-            <table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+            <table class=\"text-base border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
                 <tr class=\"bg-gray-100\">
-                    <td class=\"border border-gray-400 p-5 w-20\"></td>";
+                    <td class=\"border border-gray-400 p-5 w-24\"></td>";
                     for ($j = 1; $j <= $sum; $j++) {
                         if ($j <= $a) {
                             $bg_color = " bg-blue-200";
                         } else {
                             $bg_color = " bg-pink-200";
                         }
-                        $e1_table .= "<td class=\"border border-gray-400 p-5 w-20 {$bg_color}\">{$j}</td>";
+                        $e1_table .= "<td class=\"border border-gray-400 p-5 w-24 {$bg_color}\">{$j}</td>";
                     }
                 $e1_table .= "</tr>";
                 for ($i = 1; $i <= $sum; $i++) {
@@ -5802,9 +5802,9 @@ class WorkbookController extends Controller
                     }
                     $e1_table .= "
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5 w-20 {$bg_color}\">{$i}</td>";
+                            <td class=\"border border-gray-400 p-5 w-24 {$bg_color}\">{$i}</td>";
                             for ($j = 1; $j <= $sum; $j++) {
-                                $td_class = "border border-gray-400 p-5 w-20";
+                                $td_class = "border border-gray-400 p-5 w-24";
                                 if ($i == $j) {
                                     $e1_table .= "<td class=\"{$td_class}\"></td>";
                                 } else {
@@ -5842,7 +5842,7 @@ class WorkbookController extends Controller
                     $e2_table .= "
                         <tr class=\"bg-gray-100\">";
                             for ($j = 2; $j <= $sum; $j+=2) {
-                                $td_class = "border border-gray-400 p-5 w-20";
+                                $td_class = "border border-gray-400 px-5 w-20";
                                 if ($i == $j) {
                                     $e2_table .= "<td class=\"{$td_class}\"></td>";
                                 } else {
@@ -5865,7 +5865,7 @@ class WorkbookController extends Controller
                                 } else {
                                     $bg_color = "";
                                 }
-                                $td_class = "border border-gray-400 p-5 w-20 {$bg_color}";
+                                $td_class = "border border-gray-400 px-5 w-20 {$bg_color}";
                                 if ($i == $j) {
                                     $e2_table2 .= "<td class=\"{$td_class}\"></td>";
                                 } else {
@@ -5886,22 +5886,22 @@ class WorkbookController extends Controller
         $e3_table = "
             <table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
                 <tr class=\"bg-gray-100\">
-                    <td class=\"border border-gray-400 p-5 w-20 bg-gray-300\"></td>";
+                    <td class=\"border border-gray-400 p-5 w-20 bg-gray-300\">\(+\)</td>";
                     for ($j = 1; $j <= 6; $j++) {
-                        $e3_table .= "<td class=\"border border-gray-400 p-5 w-20 bg-gray-300\">{$j}</td>";
+                        $e3_table .= "<td class=\"border border-gray-400 px-5 w-20 bg-gray-300\">{$j}</td>";
                     }
                 $e3_table .= "</tr>";
                 for ($i = 1; $i <= 6; $i++) {
                     $e3_table .= "
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5 w-20 bg-gray-300\">{$i}</td>";
+                            <td class=\"border border-gray-400 px-5 w-20 bg-gray-300\">{$i}</td>";
                             for ($j = 1; $j <= 6; $j++) {
                                 if (($i + $j) >= $dice_sum) {
                                     $bg_color = " bg-blue-200";
                                 } else {
                                     $bg_color = "";
                                 }
-                                $td_class = "border border-gray-400 p-5 w-20 {$bg_color}";
+                                $td_class = "border border-gray-400 px-5 w-20 {$bg_color}";
                                 $e3_table .= "
                                     <td class=\"{$td_class}\">
                                         <div class=\"p-0\">" . $i + $j . "</div>
@@ -10431,10 +10431,10 @@ class WorkbookController extends Controller
 
         $quake_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5\">地点</td>
-                            <td class=\"border border-gray-400\">震源からの距離</td>
-                            <td class=\"border border-gray-400\">P波到達時刻</td>
-                            <td class=\"border border-gray-400\">S波到達時刻</td>
+                            <td class=\"border border-gray-400 px-5\">地点</td>
+                            <td class=\"border border-gray-400 px-5\">震源からの距離</td>
+                            <td class=\"border border-gray-400 px-5\">P波到達時刻</td>
+                            <td class=\"border border-gray-400 px-5\">S波到達時刻</td>
                         </tr>
                         <tr class=\"bg-gray-100\">
                             <td class=\"border border-gray-400\">A</td>
@@ -10788,37 +10788,37 @@ class WorkbookController extends Controller
         $o2 = ($x / 4) * (1 + 0.2 * rand(1, 4));    //銅より過剰な酸素
         $y = 0.5 * rand(5, 12); //酸化銅
         $x3 = 0.3 * rand(10, 20);   //マグネシウム
-        $CuO_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+        $CuO_table = "<table class=\"border-collapse border border-gray-400 mx-auto my-4 table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5\">銅の質量[g]</td>
-                            <td class=\"border border-gray-400\">0.20</td>
-                            <td class=\"border border-gray-400\">0.40</td>
-                            <td class=\"border border-gray-400\">0.60</td>
-                            <td class=\"border border-gray-400\">0.80</td>
+                            <td class=\"border border-gray-400 px-5\">銅の質量[g]</td>
+                            <td class=\"border border-gray-400 px-5\">0.20</td>
+                            <td class=\"border border-gray-400 px-5\">0.40</td>
+                            <td class=\"border border-gray-400 px-5\">0.60</td>
+                            <td class=\"border border-gray-400 px-5\">0.80</td>
                         </tr>
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400\">酸化銅の質量[g]</td>
-                            <td class=\"border border-gray-400\">0.25</td>
-                            <td class=\"border border-gray-400\">0.50</td>
-                            <td class=\"border border-gray-400\">0.75</td>
-                            <td class=\"border border-gray-400\">1.00</td>
+                            <td class=\"border border-gray-400 px-5\">酸化銅の質量[g]</td>
+                            <td class=\"border border-gray-400 px-5\">0.25</td>
+                            <td class=\"border border-gray-400 px-5\">0.50</td>
+                            <td class=\"border border-gray-400 px-5\">0.75</td>
+                            <td class=\"border border-gray-400 px-5\">1.00</td>
                         </tr>
                     </table>
                     ";
-        $MgO_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+        $MgO_table = "<table class=\"border-collapse border border-gray-400 mx-auto my-4 table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5\">マグネシウムの質量[g]</td>
-                            <td class=\"border border-gray-400\">0.15</td>
-                            <td class=\"border border-gray-400\">0.30</td>
-                            <td class=\"border border-gray-400\">0.45</td>
-                            <td class=\"border border-gray-400\">0.60</td>
+                            <td class=\"border border-gray-400 px-5\">マグネシウムの質量[g]</td>
+                            <td class=\"border border-gray-400 px-5\">0.15</td>
+                            <td class=\"border border-gray-400 px-5\">0.30</td>
+                            <td class=\"border border-gray-400 px-5\">0.45</td>
+                            <td class=\"border border-gray-400 px-5\">0.60</td>
                         </tr>
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400\">酸化マグネシウムの質量[g]</td>
-                            <td class=\"border border-gray-400\">0.25</td>
-                            <td class=\"border border-gray-400\">0.50</td>
-                            <td class=\"border border-gray-400\">0.75</td>
-                            <td class=\"border border-gray-400\">1.00</td>
+                            <td class=\"border border-gray-400 px-5\">酸化マグネシウムの質量[g]</td>
+                            <td class=\"border border-gray-400 px-5\">0.25</td>
+                            <td class=\"border border-gray-400 px-5\">0.50</td>
+                            <td class=\"border border-gray-400 px-5\">0.75</td>
+                            <td class=\"border border-gray-400 px-5\">1.00</td>
                         </tr>
                     </table>
                     ";
@@ -10964,56 +10964,56 @@ class WorkbookController extends Controller
 
         $table_common = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
             <tr class=\"bg-gray-100\">
-                <td class=\"border border-gray-400 p-5\"></td>
-                <td class=\"border border-gray-400\">ビーカー</td>
-                <td class=\"border border-gray-400\">A</td>
-                <td class=\"border border-gray-400\">B</td>
-                <td class=\"border border-gray-400\">C</td>
-                <td class=\"border border-gray-400\">D</td>
+                <td class=\"border border-gray-400 px-5\"></td>
+                <td class=\"border border-gray-400 px-5\">ビーカー</td>
+                <td class=\"border border-gray-400 px-5\">A</td>
+                <td class=\"border border-gray-400 px-5\">B</td>
+                <td class=\"border border-gray-400 px-5\">C</td>
+                <td class=\"border border-gray-400 px-5\">D</td>
             </tr>
             <tr class=\"bg-gray-100\">
-                <td class=\"border border-gray-400\">反応前</td>
-                <td class=\"border border-gray-400 text-left\">①うすい塩酸[g]</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">反応前</td>
+                <td class=\"border border-gray-400 px-5 text-left\">①うすい塩酸[g]</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl, 1) . "</td>
             </tr>
             <tr class=\"bg-gray-100\">
-                <td class=\"border border-gray-400\">追加分</td>
-                <td class=\"border border-gray-400 text-left\">②炭酸水素ナトリウム[g]</td>
-                <td class=\"border border-gray-400\">1.0</td>
-                <td class=\"border border-gray-400\">2.0</td>
-                <td class=\"border border-gray-400\">3.0</td>
-                <td class=\"border border-gray-400\">4.0</td>
+                <td class=\"border border-gray-400 px-5\">追加分</td>
+                <td class=\"border border-gray-400 px-5 text-left\">②炭酸水素ナトリウム[g]</td>
+                <td class=\"border border-gray-400 px-5\">1.0</td>
+                <td class=\"border border-gray-400 px-5\">2.0</td>
+                <td class=\"border border-gray-400 px-5\">3.0</td>
+                <td class=\"border border-gray-400 px-5\">4.0</td>
             </tr>";
 
         $q_table = $table_common .
             "<tr class=\"bg-gray-100\">
-                <td class=\"border border-gray-400\">反応後</td>
-                <td class=\"border border-gray-400 text-left\">③溶液の質量[g]</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 1 - $ratio_CO2_per_NaHCO3, 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 2 - (2 * $ratio_CO2_per_NaHCO3), 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 3 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 4 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">反応後</td>
+                <td class=\"border border-gray-400 px-5 text-left\">③溶液の質量[g]</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 1 - $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 2 - (2 * $ratio_CO2_per_NaHCO3), 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 3 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 4 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
             </tr>
         </table>";
 
         $exp_table = $table_common .
             "<tr class=\"bg-gray-100\">
-                <td class=\"border border-gray-400\" rowspan=\"2\">反応後</td>
-                <td class=\"border border-gray-400 text-left\">③溶液の質量[g]</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 1 - $ratio_CO2_per_NaHCO3, 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 2 - (2 * $ratio_CO2_per_NaHCO3), 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 3 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
-                <td class=\"border border-gray-400\">" . number_format($mass_HCl + 4 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\" rowspan=\"2\">反応後</td>
+                <td class=\"border border-gray-400 px-5 text-left\">③溶液の質量[g]</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 1 - $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 2 - (2 * $ratio_CO2_per_NaHCO3), 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 3 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($mass_HCl + 4 - $max_NaHCO3 * $ratio_CO2_per_NaHCO3, 1) . "</td>
             </tr>
             <tr class=\"bg-gray-100 text-red-500 font-bold\">
-                <td class=\"border border-gray-400 text-left\">④生じた気体の質量[g]</td>
-                <td class=\"border border-gray-400\">{$ratio_CO2_per_NaHCO3}</td>
-                <td class=\"border border-gray-400\">" . number_format($ratio_CO2_per_NaHCO3 * 2, 1) . "</td>
-                <td class=\"border border-gray-400\">" . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . "</td>
-                <td class=\"border border-gray-400\">" . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . "</td>
+                <td class=\"border border-gray-400 px-5 text-left\">④生じた気体の質量[g]</td>
+                <td class=\"border border-gray-400 px-5\">{$ratio_CO2_per_NaHCO3}</td>
+                <td class=\"border border-gray-400 px-5\">" . number_format($ratio_CO2_per_NaHCO3 * 2, 1) . "</td>
+                <td class=\"border border-gray-400 px-5\">" . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . "</td>
+                <td class=\"border border-gray-400 px-5\">" . $max_NaHCO3 * $ratio_CO2_per_NaHCO3 . "</td>
             </tr>
         </table>
         ";
@@ -11354,17 +11354,17 @@ class WorkbookController extends Controller
 
         $v = 5 * rand(1, 10);   // 空間の体積
 
-        $q_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+        $q_table = "<table class=\"border-collapse border border-gray-400 mx-auto my-4 table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5 w-60\">気温[℃]</td>";
+                            <td class=\"border border-gray-400 px-5 w-60\">気温[℃]</td>";
                             for ($i = 1; $i <= 6; $i++) {
-                                $q_table .= "<td class=\"border border-gray-400 w-20\">{$T[$i]}</td>";
+                                $q_table .= "<td class=\"border border-gray-400 px-5 w-20\">{$T[$i]}</td>";
                             }
                         $q_table .= "</tr>
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 w-60\">飽和水蒸気量[g/m\(^3\)]</td>";
+                            <td class=\"border border-gray-400 px-5 w-60\">飽和水蒸気量[g/m\(^3\)]</td>";
                             for ($i = 1; $i <= 6; $i++) {
-                                $q_table .= "<td class=\"border border-gray-400 w-20\">{$M[$i]}</td>";
+                                $q_table .= "<td class=\"border border-gray-400 px-5 w-20\">{$M[$i]}</td>";
                             }
                         $q_table .= "</tr>
                     </table>
