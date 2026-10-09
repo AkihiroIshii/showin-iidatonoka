@@ -10368,35 +10368,144 @@ class WorkbookController extends Controller
     }
 
     // 水溶液１
-    public function aqueous1() {
-        // c = s/L * 100
-        $L = 10 * rand(5, 20);   //溶液の質量[g]
-        $c = 2 * rand(1, 5);   //濃度[%]
-        $s = $c * $L / 100;  //溶質の質量[g]
+    // public function aqueous1() {
+    //     // c = s/L * 100
+    //     $L = 10 * rand(5, 20);   //溶液の質量[g]
+    //     $c = 2 * rand(1, 5);   //濃度[%]
+    //     $s = $c * $L / 100;  //溶質の質量[g]
 
+    //     $questions = [
+    //         [
+    //             'q' => "食塩\,{$s}\,\mathrm{g}\,が溶けている、{$L}\,\mathrm{g}\,の食塩水がある。この水溶液の質量パーセント濃度を求めなさい。",
+    //             'a' => "{$c}\,\mathrm{\%}",
+    //             'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
+    //                     c=\\frac{s}{\,L\,}=\\frac{ \,{$s}\, }{ \,{$L}\, } \\times 100 = {$c}\,[\%]}。",
+    //         ],
+    //         [
+    //             'q' => "質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水\,{$L}\,\mathrm{g}\,には、何\,\mathrm{g}\,の食塩が溶けているか。",
+    //             'a' => "{$s}\,\mathrm{g}",
+    //             'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
+    //                     {$c}=\\frac{ \,s\, }{ \,{$L}\, } \\times 100。これを解いて、s={$s}\,g}。",
+    //         ],
+    //         [
+    //             'q' => "\,{$s}\,\mathrm{g}\,の食塩が溶けている、質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水の質量を求めなさい。",
+    //             'a' => "{$L}\,\mathrm{g}",
+    //             'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
+    //                     {$c}=\\frac{ \,{$s}\, }{ \,L\, } \\times 100。これを解いて、L={$L}\,g}。",
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.aqueous1', compact('question'));
+    // }
+
+    // 質量パーセント濃度
+    public function sci_mass_percent_concentration(Request $request) {
+        // 応用：水を加えた後
+        $c2 = 2 * rand(1, 3);
+
+        // c = m/M * 100
+        $M = 10 * rand(5, 20);   //溶液の質量[g]
+        $c = $c2 * rand(2, 4);   //濃度[%]
+        $m = $c * $M / 100;  //溶質の質量[g]
+
+        // 応用：水を加えた後
+        $w = ($m * 100) / $c2 - $M;
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
         $questions = [
             [
-                'q' => "食塩\,{$s}\,\mathrm{g}\,が溶けている、{$L}\,\mathrm{g}\,の食塩水がある。この水溶液の質量パーセント濃度を求めなさい。",
+                'q_type' => 3,
+                'q' => "<p>食塩 \(\,{$m}\,\mathrm{g}\) が溶けている、\({$M}\,\mathrm{g}\) の食塩水がある。</p>
+                        <p>この水溶液の質量パーセント濃度を求めなさい。</p>",
+                'a_type' => 2,
                 'a' => "{$c}\,\mathrm{\%}",
-                'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
-                        c=\\frac{s}{\,L\,}=\\frac{ \,{$s}\, }{ \,{$L}\, } \\times 100 = {$c}\,[\%]}。",
+                'e_type' => 3,
+                'e' => "$$ 質量パーセント濃度[\%] = \\frac{溶質の質量[\mathrm{g}]}{\,溶液の質量[\mathrm{g}]\,}\\times 100 $$
+                        <p>上述の定義式にわかっている値を代入すればよいので、</p>
+                        <p>質量パーセント濃度 \(\displaystyle =\\frac{ \,{$m}\, }{ \,{$M}\, } \\times 100 = {$c}\,[\%]. \)",
             ],
             [
-                'q' => "質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水\,{$L}\,\mathrm{g}\,には、何\,\mathrm{g}\,の食塩が溶けているか。",
-                'a' => "{$s}\,\mathrm{g}",
-                'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
-                        {$c}=\\frac{ \,s\, }{ \,{$L}\, } \\times 100。これを解いて、s={$s}\,g}。",
+                'q_type' => 3,
+                'q' => "<p>質量パーセント濃度 \({$c}\,\%\) の食塩水 \({$M}\,\mathrm{g}\) には、何 \(\mathrm{g}\) の食塩が溶けているか。</p>",
+                'a_type' => 2,
+                'a' => "{$m}\,\mathrm{g}",
+                'e_type' => 3,
+                'e' => "$$ 質量パーセント濃度[\%] = \\frac{溶質の質量[\mathrm{g}]}{\,溶液の質量[\mathrm{g}]\,}\\times 100 $$
+                        <p>上述の定義式に分かっている値を代入し、食塩の質量を \(x\) g とすれば、</p>
+                        \[
+                            \\begin{aligned}
+                                {$c} &= \\frac{ \,x\, }{ \,{$M}\, } \\times 100 \\\\
+                                \\frac{ \,x\, }{ \,{$M}\, } \\times 100 &= {$c} \\\\
+                                x &= {$c} \\times \\frac{\,{$M}\,}{\,100\,} = {$m}\,\mathrm{g}
+                            \\end{aligned}
+                        \]",
             ],
             [
-                'q' => "\,{$s}\,\mathrm{g}\,の食塩が溶けている、質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水の質量を求めなさい。",
-                'a' => "{$L}\,\mathrm{g}",
-                'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
-                        {$c}=\\frac{ \,{$s}\, }{ \,L\, } \\times 100。これを解いて、L={$L}\,g}。",
+                'q_type' => 3,
+                'q' => "<p>\({$m}\,\mathrm{g}\) の食塩が溶けている、質量パーセント濃度 \({$c}\,\%\) の食塩水の質量を求めなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$M}\,\mathrm{g}",
+                'e_type' => 3,
+                'e' => "$$ 質量パーセント濃度[\%] = \\frac{溶質の質量[\mathrm{g}]}{\,溶液の質量[\mathrm{g}]\,}\\times 100 $$
+                        <p>上述の定義式に分かっている値を代入し、食塩水の質量を \(x\) g とすれば、</p>
+                        \[
+                            \\begin{aligned}
+                                {$c} &= \\frac{ \,{$m}\, }{ \,x\, } \\times 100 \\\\
+                                x &= \\frac{ \,{$m}\, }{ \,{$c}\, } \\times 100 = {$M}\,\mathrm{g}
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>質量パーセント濃度 \({$c}\,\%\) の食塩水 \({$M}\,\mathrm{g}\) に水を加えると、</p>
+                        <p>濃度は \({$c2}\,\%\) になった。加えた水の質量を求めなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$w}\,\mathrm{g}",
+                'e_type' => 3,
+                'e' => "$$ 質量パーセント濃度[\%] = \\frac{溶質の質量[\mathrm{g}]}{\,溶液の質量[\mathrm{g}]\,}\\times 100 $$
+                        <p>まず、水を加える前の状態を考える。上の関係式より、食塩の質量を \(x\) g とすれば、</p>
+                        \[
+                            \\begin{aligned}
+                                {$c} &= \\frac{ \,x\, }{ \,{$M}\, } \\times 100 \\\\
+                                \\frac{ \,x\, }{ \,{$M}\, } \\times 100 &= {$c} \\\\
+                                x &= {$c} \\times \\frac{\,{$M}\,}{\,100\,} = {$m}\,\mathrm{g}
+                            \\end{aligned}
+                        \]
+                        <p>よって、溶けていた食塩は \({$m}\,\mathrm{g}\)。次に、水を加えた後の状態を考える。</p>
+                        <p>水を加えても食塩の量は変わらないので、加えた水の質量を \(w\,\mathrm{g}\) とすれば、</p>
+                        \[
+                            \\begin{aligned}
+                                {$c2} &= \\frac{ \,{$m}\, }{ \,{$M} + w\, } \\times 100 \\\\
+                                {$M} + w &= \\frac{ \,{$m}\, }{ \,{$c2}\, } \\times 100 \\\\
+                                w &= " . $m * 100 / $c2 . " - {$M} = {$w}\mathrm{g} \\\\
+                            \\end{aligned}
+                        \]
+
+                        ",
             ],
         ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.aqueous1', compact('question'));
+        // $q_index = rand(0,count($questions)-1);
+        // $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 基礎
+        $flag2 = $request->boolean('flag2');    // 応用
+        $flags = ['flag1' => '基礎', 'flag2' => '応用'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(0,2);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(3,count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "質量パーセント濃度";
+        return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
     // 地震

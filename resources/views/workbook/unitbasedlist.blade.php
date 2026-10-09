@@ -619,8 +619,11 @@
                                     <a href="{{route('workbook.unit.density')}}">密度</a>
                                 </x-button-link>
                                 <x-button-link color="green">
-                                    <a href="{{route('workbook.unit.aqueous1')}}">水溶液１</a>
+                                    <a href="{{route('workbook.sci_mass_percent_concentration')}}">質量パーセント濃度</a>
                                 </x-button-link>
+                                {{-- <x-button-link color="green">
+                                    <a href="{{route('workbook.unit.aqueous1')}}">水溶液１</a>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">

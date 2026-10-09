@@ -510,8 +510,10 @@ Route::get('workbook/sentence_structure1', [WorkbookController::class, 'sentence
 // 理科
 Route::get('workbook/density', [WorkbookController::class, 'density'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.density');
-Route::get('workbook/aqueous1', [WorkbookController::class, 'aqueous1'])
-->middleware(['auth', 'verified'])->name('workbook.unit.aqueous1');
+Route::get('workbook/sci_mass_percent_concentration', [WorkbookController::class, 'sci_mass_percent_concentration'])
+->middleware(['auth', 'verified'])->name('workbook.sci_mass_percent_concentration');
+// Route::get('workbook/aqueous1', [WorkbookController::class, 'aqueous1'])
+// ->middleware(['auth', 'verified'])->name('workbook.unit.aqueous1');
 Route::get('workbook/sci_earth', [WorkbookController::class, 'sci_earth'])
 ->middleware(['auth', 'verified'])->name('workbook.sci_earth');
 Route::get('workbook/sci_unit_dimension', [WorkbookController::class, 'sci_unit_dimension'])
