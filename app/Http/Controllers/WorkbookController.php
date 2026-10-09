@@ -2060,10 +2060,6 @@ class WorkbookController extends Controller
         while ($numerator2 % $denominator2 == 0) {
             $denominator2 = $denominator_samples[rand(0, count($denominator_samples)-1)];
         }
-// $numerator1 = 1;
-// $denominator1 = 2;
-// $numerator2 = 5;
-// $denominator2 = 3; 
 
         // 値（比較用）
         $x1_val = $numerator1 / $denominator1;
@@ -2076,13 +2072,6 @@ class WorkbookController extends Controller
         // 文字列（分数の形）
         $x1_str = $this->fracnum_to_str($numerator1, $denominator1, "", 1);
         $x2_str = $this->fracnum_to_str($numerator2, $denominator2, "", 1);
-
-        // 最小公倍数の取得
-        // $lcm = $this->lcm($x1['denominator'], $x2['denominator']);
-
-        // 倍数
-        // $mul_x1 = $lcm / $x1['denominator'];
-        // $mul_x2 = $lcm / $x2['denominator'];
 
         // 解
         $ans_frac = $this->simplify_fraction($x1['numerator'] * $x2['numerator'], $x1['denominator'] * $x2['denominator']);
@@ -2106,7 +2095,7 @@ class WorkbookController extends Controller
         // グラフ描画用
         $width = 700;    //viewportの大きさ
         $h_unit = 30;   // 帯グラフ１段分の高さ
-        $height = $h_unit * 12;
+        $height = $h_unit * 6;
         $w_margin = 50;
 
         // グラフの最大値取得
@@ -6861,6 +6850,441 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "二次関数（変域）";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
+    // // 二次関数（応用）
+    // public function quadratic_function_application() {
+    //     /***** 先に値を決める *****/
+    //     $xp = rand(3, 8);   // 曲線(y=ax^2)と直線(y=cx+d)の交点Pの x 座標
+
+    //     /***** y = ax^2 *****/
+    //     $a_numerator = rand(1, 4);
+    //     $a_denominator = rand(1, 4);
+    //         $a_numerator = 1;
+    //         $a_denominator = 1;
+
+    //     // 約分しておく
+    //     $sim_frac_a = $this->simplify_fraction($a_numerator, $a_denominator);
+    //     $a_numerator = $sim_frac_a['numerator'];
+    //     $a_denominator = $sim_frac_a['denominator'];
+
+    //     $a = $a_numerator / $a_denominator;
+    //     $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+    //     $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x^2", 1);
+
+    //     // 直線と曲線の交点の y 座標
+    //     $yp = $a_numerator * $xp**2 / $a_denominator;
+    //     $yp_frac = $this->simplify_fraction($a_numerator * $xp**2, $a_denominator, "", 1);
+    //     $yp_str = $this->fracnum_to_str($a_numerator * $xp**2, $a_denominator, "", 1);
+
+    //     /***** y = cx + d *****/
+    //     // 切片
+    //     // $d_numerator = $a_numerator * rand(1, 4);
+    //     // $d_denominator = $a_denominator;
+    //     $d_numerator = $a_denominator * rand(1, 4);
+    //     $d_denominator = 1;
+        
+    //     // 約分しておく
+    //     $sim_frac_d = $this->simplify_fraction($d_numerator, $d_denominator);
+    //     $d_numerator = $sim_frac_d['numerator'];
+    //     $d_denominator = $sim_frac_d['denominator'];
+
+    //     $d = $d_numerator / $d_denominator;
+    //     $d_str = $this->fracnum_to_str($d_numerator, $d_denominator, "", 1);
+
+    //     $c_numerator = ($d_denominator * $yp_frac['numerator'] - $d_numerator * $yp_frac['denominator']);
+    //     $c_denominator = $yp_frac['denominator'] * $d_denominator * $xp;
+
+    //     // 約分しておく
+    //     $sim_frac_c = $this->simplify_fraction($c_numerator, $c_denominator);
+    //     $c_numerator = $sim_frac_c['numerator'];
+    //     $c_denominator = $sim_frac_c['denominator'];
+
+    //     $c = $c_numerator / $c_denominator;
+    //     $c_str = $this->fracnum_to_str($c_numerator, $c_denominator, "", 1);
+    //     $cx_str = $this->fracnum_to_str($c_numerator, $c_denominator, "x", 1);
+
+    //     // 直線のx切片(xs = -d/c);
+    //     $xs_numerator = -$d * $c_denominator;
+    //     $xs_denominator = $c_numerator;
+
+    //     // 約分しておく
+    //     $sim_frac_xs = $this->simplify_fraction($xs_numerator, $xs_denominator);
+    //     $xs_numerator = $sim_frac_xs['numerator'];
+    //     $xs_denominator = $sim_frac_xs['denominator'];
+
+    //     $xs = $xs_numerator / $xs_denominator;
+    //     $xs_str = $this->fracnum_to_str($xs_numerator, $xs_denominator, "", 1);
+    //     $x1 = - $d / $c;
+
+
+
+
+
+
+
+
+
+
+
+
+    //     /***** 先に値を決める *****/
+    //     $xp = rand(3, 8);   // 曲線(y=ax^2)と直線(y=cx+d)の交点Pの x 座標
+    //     $xs = -rand(2, 5);  // 直線(y=cx+d)のx切片
+    //     $t = rand(2, 4);    // t = 1/c
+
+    //     $c_numerator = 1;
+    //     $c_denominator = $t;
+
+    //     $c = $c_numerator / $c_denominator;
+    //     $c_str = $this->fracnum_to_str($c_numerator, $c_denominator, "", 1);
+    //     $cx_str = $this->fracnum_to_str($c_numerator, $c_denominator, "x", 1);
+
+    //     /***** y = ax^2 *****/
+    //     $a_numerator = rand(1, 4);
+    //     $a_denominator = rand(1, 4);
+    //         // $a_numerator = 1;
+    //         $a_denominator = 1;
+
+    //     // 約分しておく
+    //     $sim_frac_a = $this->simplify_fraction($a_numerator, $a_denominator);
+    //     $a_numerator = $sim_frac_a['numerator'];
+    //     $a_denominator = $sim_frac_a['denominator'];
+
+    //     $a = $a_numerator / $a_denominator;
+    //     $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+    //     $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x^2", 1);
+
+    //     // 直線と曲線の交点の y 座標
+    //     $yp = $a_numerator * $xp**2 / $a_denominator;
+    //     $yp_frac = $this->simplify_fraction($a_numerator * $xp**2, $a_denominator, "", 1);
+    //     $yp_str = $this->fracnum_to_str($a_numerator * $xp**2, $a_denominator, "", 1);
+
+    //     // 直線のx切片(a,t,xp は整数とする)
+    //     $xs = $xp - ($t * $a * $xp);
+
+    //     /***** y = cx + d *****/
+    //     // 切片
+    //     // $d_numerator = $a_numerator * rand(1, 4);
+    //     // $d_denominator = $a_denominator;
+    //     $d_numerator = -$c_numerator * $xs;
+    //     $d_denominator = $c_denominator;
+        
+    //     // 約分しておく
+    //     $sim_frac_d = $this->simplify_fraction($d_numerator, $d_denominator);
+    //     $d_numerator = $sim_frac_d['numerator'];
+    //     $d_denominator = $sim_frac_d['denominator'];
+
+    //     $d = $d_numerator / $d_denominator;
+    //     $d_str = $this->fracnum_to_str($d_numerator, $d_denominator, "", 1);
+
+
+
+    //     // △AHPの面積S (1/2) × (xp - xs) × yp
+    //     $S_frac = $this->simplify_fraction(
+    //         ($xp - $xs) * $yp_frac['numerator'],
+    //         2 * $yp_frac['denominator'],
+    //     );
+    //     $S_str = $this->fracnum_to_str(
+    //         ($xp - $xs) * $yp_frac['numerator'],
+    //         2 * $yp_frac['denominator'],
+    //         "",
+    //         1
+    //     );
+
+    //     // グラフ描画用
+    //     $size = 600;    //viewportの大きさ
+    //     // $val_size = ceil(max(abs($y1), abs($y2))/10) * 20; //実際の座標の大きさ
+    //     $val_size = ceil(abs($yp)) * 3; //実際の座標の大きさ
+    //     $scale = $size / $val_size; //縮尺
+    //     $x_unit = $scale;
+
+    //     // 解答用
+    //     $plot_con_q = "";
+    //     // $e_str = "<p>まず、下図のようなグラフの概形をイメージすること。</p>
+    //     //             <p>\(x\) の変域が原点を含む場合、その両端と原点の３カ所を比較する。</p>
+    //     //             <p>\(\displaystyle y={$ax_str}\) に端点の \(x\) 座標を代入すると、
+    //     //                 <span class=\"text-red-500\">\(x = {$x1}\) では、\(\displaystyle y = {$y1_str}\)</span>、</p>
+    //     //             <p><span class=\"text-blue-700\">\(x = {$x2}\) では、\(\displaystyle y = {$y2_str}\)</span> なので、";
+
+
+    //     // プロット用パラメータ
+    //     $w_full = $size;
+    //     $w_half = $size / 2;
+    //     $from_x = -$size / 2;
+    //     $to_x = $size / 2;
+    //     $from_y1 = ($c * (-$val_size / 2) + $d) * $scale;
+    //     $to_y1 = ($c * ($val_size / 2) + $d) * $scale;
+    //     $from_y2 = $to_y2 = ($a * ($val_size/2)**2) * $scale;
+
+    //     $plot_par_q = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //     ];
+
+    //     // 座標軸を作成
+    //     $plot_con_q = "";
+    //     for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+    //         $stroke_width = ($i % 5 == 0) ? 0.6 : 0.2;
+    //         $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
+    //         $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"{$stroke_width}\"/>";
+    //     }
+
+    //     $plot_con_q .= "
+    //         <!-- 座標軸先端の矢印を定義 -->
+    //         <defs>
+    //             <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"2\" refY=\"5\"
+    //                 markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+    //             </marker>
+    //             <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+    //                 markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+    //             </marker>
+    //         </defs>
+    //         <!-- x軸とy軸を作成 -->
+    //         <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+    //         <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+    //         <!-- 関数 -->
+    //         <line x1=\"" . $from_x . "\" y1=" . -$from_y1 . " x2=\"" . $to_x . "\" y2=" . -$to_y1 . " stroke=\"black\" stroke-width=\"2\" />
+    //         <path d=\"M" . $from_x . "," . -$from_y2 . " Q0," . $from_y2 . " " . $to_x . "," . -$to_y2 . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+
+    //     ";
+    //         // <!-- 変域 -->
+    //         // <rect x=\"" . $x1 * $scale . "\" y=\"" . -$y_max * $scale . "\" width=\"" . ($x2 - $x1) * $scale . "\" height=\"" . ($y_max - $y_min) * $scale . "\" fill=\"green\" fill-opacity=\"0.2\"/>
+    //         // <circle cx=\"0\" cy=\"0\" r=\"5\" fill=\"black\"/>
+    //         // <!-- 端点 -->
+    //         // <circle cx=\"" . ( $x1 * $scale ) . "\" cy=\"" . ( -$y1 * $scale ) . "\" r=\"5\" fill=\"none\" stroke=\"red\" stroke-width=\"2\"/>
+    //         // <circle cx=\"" . ( $x2 * $scale ) . "\" cy=\"" . ( -$y2 * $scale ) . "\" r=\"5\" fill=\"blue\"/>
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+    //     $questions = [
+    //         [
+    //             'q_type' => 6,
+    //             'q' => "<p>曲線 \(\displaystyle C\,:\,y = {$ax_str}\) と、直線 \(\displaystyle m\,:\, y = {$cx_str} + {$d_str}\) を考える。</p>
+    //                     <p>\(C,\,m\) の交点 P から \(x\) 軸に垂線を下ろし、垂線と \(x\) 軸の交点を H とする。</p>
+    //                     <p>直線と \(x\) 軸の交点を A とするとき、\(\\triangle\)AHP の面積を求めよ。</p>",
+    //             'a_type' => 2,
+    //             'a' => "x_s = {$xs}, x_p = {$xp}, y_p = {$yp_str}, S = {$S_str}",
+    //             'e_type' => 3,
+    //             'e' => "",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "二次関数（応用）";
+    //     return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    // }
+
+    // 二次関数（応用：交点と三角形の面積）
+    public function quadratic_function_application01() {
+        /***** 先に値を決める *****/
+        // 曲線(y=ax^2)と直線(y=cx+d)の交点Pの x 座標を alpha, beta とする（alpha < 0, beta > 0）
+        // a(x - alpha)(x - beta) = 0
+        // ax^2 = a(alpha + beta)x - a*alpha*beta
+        // y = ax^2, y = a(alpha + beta)x - a*alpha*beta = cx + d
+        $alpha = -rand(2, 10);
+        $beta = rand(2, 10);
+        while (abs($alpha) == abs($beta)) {
+            $beta = rand(2, 10);
+        }
+
+        /***** y = ax^2 *****/
+        $a_numerator = rand(1, 3);
+        $a_denominator = 1;
+
+        // 約分しておく
+        $sim_frac_a = $this->simplify_fraction($a_numerator, $a_denominator);
+        $a_numerator = $sim_frac_a['numerator'];
+        $a_denominator = $sim_frac_a['denominator'];
+
+        $a = $a_numerator / $a_denominator;
+        $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+        $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x^2", 1);
+
+        /***** y = cx + d *****/
+        $c_numerator = $a_numerator * ($alpha + $beta);
+        $c_denominator = $a_denominator;
+
+        $c = $c_numerator / $c_denominator;
+        $c_str = $this->fracnum_to_str($c_numerator, $c_denominator, "", 1);
+        $cx_str = $this->fracnum_to_str($c_numerator, $c_denominator, "x", 1);
+
+        // 切片
+        $d_numerator = -$a_numerator * $alpha * $beta;
+        $d_denominator = $a_denominator;
+        
+        // 約分しておく
+        $sim_frac_d = $this->simplify_fraction($d_numerator, $d_denominator);
+        $d_numerator = $sim_frac_d['numerator'];
+        $d_denominator = $sim_frac_d['denominator'];
+
+        $d = $d_numerator / $d_denominator;
+        $d_str = $this->fracnum_to_str($d_numerator, $d_denominator, "", 1);
+
+        // 直線と曲線の交点の y 座標
+        $yp = $a_numerator * $beta**2 / $a_denominator;
+        $yp_frac = $this->simplify_fraction($a_numerator * $beta**2, $a_denominator, "", 1);
+        $yp_str = $this->fracnum_to_str($a_numerator * $beta**2, $a_denominator, "", 1);
+
+        // △AOBの面積S (1/2) × (xp - xs) × yp
+        $S_frac = $this->simplify_fraction(
+            $d_numerator * ($beta - $alpha),
+            2 * $d_denominator,
+        );
+        $S_str = $this->fracnum_to_str(
+            $d_numerator * ($beta - $alpha),
+            2 * $d_denominator,
+            "",
+            1
+        );
+
+        // グラフ描画用
+        $vb_width = 300;    //viewportの幅
+        $vb_height = 300;   //viewportの高さ
+        // 表示対象にする x, y の最小値と最大値（原点と交点は表示する）
+        $vx_max = max(abs($alpha), abs($beta))*1.2;
+        $vx_min = -$vx_max;
+        $vy_max = $a * max(abs($alpha), abs($beta))**2 * 1.2;
+        $vy_min = -$vy_max / 10;
+        $xscale = $vb_width / ($vx_max - $vx_min); //x縮尺
+        $yscale = $vb_height / ($vy_max - $vy_min); //y縮尺
+
+        // プロット用パラメータ
+        $from_x = ceil($vx_min * $xscale);
+        $from_y = -ceil($vy_min * $yscale);
+        $to_x = ceil($vx_max * $xscale);
+        $to_y = ceil($vy_max * $yscale);
+        $y0 = $vb_height + (2 * $vy_min * $yscale); // y の位置は　y0 - y で表現
+        
+        // 点A, B の座標(viewbox)
+        $Ax = $alpha * $xscale;
+        $Ay = $y0 - ($a * $alpha**2) * $yscale; 
+        $Bx = $beta * $xscale;
+        $By = $y0 - ($a * $beta**2) * $yscale; 
+        $Dx = 0;
+        $Dy = $y0 - $d * $yscale; 
+
+        // y = cx + d 
+        $from_y1 = ($c * $vx_min + $d) * $yscale;
+        $to_y1 = ($c * $vx_max + $d) * $yscale;
+        // y = ax^2
+        $from_y2 = ($a * $vx_min**2) * $yscale;
+        $to_y2 = ($a * $vx_max**2) * $yscale;
+
+        $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $from_x,
+            'vb_yfrom' => -$from_y,
+            'vb_xto' => $to_x,
+            'vb_yto' => -$to_y,
+        ];
+
+        $plot_con_e = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . $from_x . "\" y1=\"{$y0}\" x2 =\"" . $to_x . "\" y2=\"{$y0}\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . $y0 - $vy_min * $yscale . "\" x2=\"0\" y2=\"" . $y0 - $vy_max * $yscale . "\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=\"" . $y0 - $from_y1 . "\" x2=\"" . $to_x . "\" y2=\"" . $y0 - $to_y1 . "\" stroke=\"black\" stroke-width=\"2\" />
+            <path d=\"M" . $from_x . "," . $y0 - $from_y2 . " Q0," . $y0 + $from_y2 . " " . $to_x . "," . $y0 - $to_y2 . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <!-- △AOB -->
+            <path d=\"M 0 {$y0} L {$Ax} {$Ay} L {$Dx} {$Dy} Z\" fill=\"#00aeffa0\" stroke=\"black\" stroke-width=\"1\" />
+            <path d=\"M 0 {$y0} L {$Dx} {$Dy} L {$Bx} {$By} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 高さ -->
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"0\" y2=\"{$Ay}\" stroke=\"blue\" stroke-width=\"2\" />
+            <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"0\" y2=\"{$By}\" stroke=\"green\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$Ax}\" y2=\"{$y0}\" stroke=\"blue\" stroke-dasharray=\"4\" />
+            <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"{$Bx}\" y2=\"{$y0}\" stroke=\"green\" stroke-dasharray=\"4\" />
+            <!-- 文字の書き込み -->
+            <text x=\"5\" y=\"" . $y0 + 20 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                O
+            </text>
+            <text x=\"" . $Ax . "\" y=\"" . $Ay - 10 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                A
+            </text>
+            <text x=\"" . $Bx - 10 . "\" y=\"" . $By - 10 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                B
+            </text>
+            <text x=\"5\" y=\"" . $Dy - 10 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                {$d}
+            </text>
+            <text x=\"" . $Ax - 10 . "\" y=\"" . $y0 + 20 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                {$alpha}
+            </text>
+            <text x=\"" . $Bx - 10 . "\" y=\"" . $y0 + 20 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                {$beta}
+            </text>
+        ";
+
+        $c_div_a_abs = $this->fracnum_to_str(abs($c), $a, "x", 1);
+        $c_div_a_sign_not = ($c > 0) ? "-" : "+";
+        $d_div_a = $this->fracnum_to_str($d, $a, "", 1);
+        $e_add_str = "";
+        if($a != 1) {
+            $e_add_str = "x^2 {$c_div_a_sign_not} {$c_div_a_abs} - {$d_div_a} &= 0 \\\\";
+        }
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>曲線 \(\displaystyle y = {$ax_str}\) と、直線 \(\displaystyle y = {$cx_str} + {$d_str}\) の交点のうち、</p>
+                        <p>\(x < 0\) の点を \(\mathrm{A}\)、\(x > 0\) の点を \(\mathrm{B}\) とする。</p>
+                        <p>原点を \(\mathrm{O}\) とするとき、\(\\triangle \mathrm{AOB}\) の面積を求めよ。</p>
+                    </div>",
+                'a_type' => 2,
+                'a' => "{$S_str}",
+                'e_type' => 8,
+                'e' => "
+                    <div class=\"leading-[2] mt-4 mb-4\">
+                        <p>まず、下図のようにグラフの概形を描き、求める三角形のイメージを掴むこと。</p>
+                        <p>さて、交点では曲線と直線の \(y\) 座標が一致するので、\({$ax_str} = {$c}x + {$d}\) が成り立つ。</p>
+                        \[
+                            \\begin{aligned}
+                                {$ax_str} &= {$c}x + {$d} \\\\
+                                {$ax_str} " . $this->add_plus(-$c) . "x - {$d} &= 0 \\\\
+                                {$e_add_str}
+                                (x + " . abs($alpha) . ")(x - {$beta}) &= 0 \\\\
+                                \\therefore x &= {$alpha},\,{$beta}
+                            \\end{aligned}
+                        \]
+                        <p>\(x < 0\) の交点が \(\mathrm{A}\) なので、\(\mathrm{A}\) の \(x\) 座標が \({$alpha}\)、\(\mathrm{B}\) の \(x\) 座標が \({$beta}\) である。</p>
+                        <p>ところで、\(\\triangle \mathrm{AOB}\) は、下図のように青い部分と緑色の部分に分けられる。</p>
+                        <p>\(y\) 軸と重なる部分を底辺とすれば、青い部分は底辺が \({$d}\)、高さが \(" . -$alpha . "\) の三角形である。</p>
+                        <p>同様に、緑色の部分は底辺が \({$d}\)、高さが \({$beta}\) の三角形である。</p>
+                        <p>これらの面積を合計すれば \(\\triangle \mathrm{AOB}\) の面積になるので、その面積を \(S\) とすると、</p>
+                        \[
+                            \\begin{aligned}
+                                S &= \\left( \\frac{1}{\,2\,} \\times {$d} \\times " . -$alpha . " \\right)
+                                        + \\left( \\frac{1}{\,2\,} \\times {$d} \\times {$beta} \\right) \\\\
+                                    &= \\frac{1}{\,2\,} \\times {$d} \\times \\left(" . -$alpha . " + {$beta} \\right) \\\\
+                                    &= \\frac{1}{\,2\,} \\times {$d} \\times " . -$alpha + $beta . " \\\\
+                                    &= {$S_str}
+                            \\end{aligned}
+                        \]
+                    </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "☆交点と三角形の面積";
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 

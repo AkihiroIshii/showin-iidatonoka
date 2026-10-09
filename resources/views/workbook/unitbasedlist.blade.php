@@ -316,6 +316,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.domain_quadratic_function')}}">二次関数（変域）</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.quadratic_function_application01')}}">☆交点と三角形の面積</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

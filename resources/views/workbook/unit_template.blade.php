@@ -137,6 +137,15 @@
                                 {!! $plot_con_q !!}
                             </svg>
                         </div>
+                    @elseif ($question['q_type'] == 8)
+                        <p class="text-lg m-4">{!! $question['q'] !!}</p>
+                        <div class="flex justify-center">
+                            <svg width="{{ $plot_par_q['vb_width'] }}" height="{{ $plot_par_q['vb_height'] }}"
+                                viewBox="{{ $plot_par_q['vb_xfrom'] }} {{ $plot_par_q['vb_yfrom'] }} {{ $plot_par_q['vb_width'] }} {{ $plot_par_q['vb_height'] }}"
+                                class="border">
+                                {!! $plot_con_q !!}
+                            </svg>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -198,6 +207,15 @@
                             <div class="flex justify-center">
                                 <svg width="{{ $plot_par_e['width'] }}" height="{{ $plot_par_e['height'] }}"
                                     viewBox="0 0 {{ $plot_par_e['width'] }} {{ $plot_par_e['height'] }}"
+                                    class="border">
+                                    {!! $plot_con_e !!}
+                                </svg>
+                            </div>
+                        @elseif ($question['e_type'] == 8)
+                            <p class="text-lg m-4">{!! $question['e'] !!}</p>
+                            <div class="flex justify-center">
+                                <svg width="{{ $plot_par_e['vb_width'] }}" height="{{ $plot_par_e['vb_height'] }}"
+                                    viewBox="{{ $plot_par_e['vb_xfrom'] }} {{ $plot_par_e['vb_yfrom'] }} {{ $plot_par_e['vb_width'] }} {{ $plot_par_e['vb_height'] }}"
                                     class="border">
                                     {!! $plot_con_e !!}
                                 </svg>

@@ -23,20 +23,6 @@
                 </a>
             </div> --}}
 
-            <!-- お知らせセクション -->
-            @if($informations->isNotEmpty())
-                <div class="mb-4 text-center bg-yellow-100 text-yellow-800 px-4 py-2 rounded">
-                    <strong>お知らせ</strong>
-                    @foreach($informations as $information)
-                        <div class="mt-2 mb-2">
-                            <ul class="ml-4 text-left list-disc">
-                                <li>{{ $information->content }}</li>
-                            </ul>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-
             <!-- 書く蔵セクション -->
             @if(\Carbon\Carbon::now()->day <= 15)
                 <div class="mb-4 text-center bg-blue-100 text-blue-800 px-4 py-2 rounded">
@@ -47,6 +33,20 @@
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>
+
+            <!-- お知らせセクション -->
+            @if($informations->isNotEmpty())
+                <div class="mt-6 text-center bg-yellow-100 text-yellow-800 px-4 py-2 rounded">
+                    <strong>お知らせ</strong>
+                    @foreach($informations as $information)
+                        <div class="mt-2 mb-2">
+                            <ul class="ml-4 text-left list-disc">
+                                <li>{{ $information->content }}</li>
+                            </ul>
+                        </div>
+                    @endforeach
+                </div>
+            @endif            
         </div>
     </body>
 </html>
