@@ -10367,38 +10367,6 @@ class WorkbookController extends Controller
         return view('workbook.unit.density', compact('question'));
     }
 
-    // 水溶液１
-    // public function aqueous1() {
-    //     // c = s/L * 100
-    //     $L = 10 * rand(5, 20);   //溶液の質量[g]
-    //     $c = 2 * rand(1, 5);   //濃度[%]
-    //     $s = $c * $L / 100;  //溶質の質量[g]
-
-    //     $questions = [
-    //         [
-    //             'q' => "食塩\,{$s}\,\mathrm{g}\,が溶けている、{$L}\,\mathrm{g}\,の食塩水がある。この水溶液の質量パーセント濃度を求めなさい。",
-    //             'a' => "{$c}\,\mathrm{\%}",
-    //             'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
-    //                     c=\\frac{s}{\,L\,}=\\frac{ \,{$s}\, }{ \,{$L}\, } \\times 100 = {$c}\,[\%]}。",
-    //         ],
-    //         [
-    //             'q' => "質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水\,{$L}\,\mathrm{g}\,には、何\,\mathrm{g}\,の食塩が溶けているか。",
-    //             'a' => "{$s}\,\mathrm{g}",
-    //             'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
-    //                     {$c}=\\frac{ \,s\, }{ \,{$L}\, } \\times 100。これを解いて、s={$s}\,g}。",
-    //         ],
-    //         [
-    //             'q' => "\,{$s}\,\mathrm{g}\,の食塩が溶けている、質量パーセント濃度\,{$c}\,\mathrm{\%}\,の食塩水の質量を求めなさい。",
-    //             'a' => "{$L}\,\mathrm{g}",
-    //             'e' => "\mathrm{質量パーセント濃度\,c\,[\%] = \\frac{溶質の質量\,s\,[g]}{\,溶液の質量\,L\,[g]\,}\\times 100\,より、
-    //                     {$c}=\\frac{ \,{$s}\, }{ \,L\, } \\times 100。これを解いて、L={$L}\,g}。",
-    //         ],
-    //     ];
-    //     $index = rand(0,count($questions)-1);
-    //     $question = $questions[$index];
-    //     return view('workbook.unit.aqueous1', compact('question'));
-    // }
-
     // 質量パーセント濃度
     public function sci_mass_percent_concentration(Request $request) {
         // 応用：水を加えた後
@@ -11589,8 +11557,111 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // // 電磁気（旧）
+    // public function electromagnetism() {
+    //     $i1 = 0.2 * rand(1, 10);
+    //     $r1 = 0.5 * rand(1, 10);
+    //     if ( is_float($i1) && is_float($r1) ){
+    //         $r1 = rand(1, 5);   // I,R がともに小数だと V が細かくなるため、R だけ整数にする。
+    //     }
+    //     $v1 = $r1 * $i1;
+    //     $w1 = $v1 * $i1;
+
+    //     $i2 = 0.1 * rand(1, 10);
+    //     $r2 = 0.5 * rand(1, 10);
+    //     if ( is_float($i2) && is_float($r2) ){
+    //         $r2 = rand(1, 5);   // I,R がともに小数だと V が細かくなるため、R だけ整数にする。
+    //     }
+    //     $v2 = $r2 * $i2;
+
+    //     $w3 = 100 * rand(1, 6); //熱量計算用の電力
+    //     $t3 = rand(1, 5);   // 時間（分）
+    //     $q3 = $w3 * ($t3 * 60);
+
+    //     $V_series = $v1 + $v2;
+    //     $R_series = $r1 + $r2;
+    //     $I_series = $i1 + $i2;
+    //     // 並列回路の合成抵抗用（整数のみ） 1/R = 1/r3 + 1/r4
+    //     $r3 = rand(1,10);
+    //     $r4 = rand(1,10);
+    //     $R_para_numerator = $r3 + $r4;
+    //     $R_para_denominator = $r3 * $r4;
+    //     // 最大公約数を求める
+    //     $gcd = $this->gcd($R_para_numerator, $R_para_denominator);
+    //     // 約分
+    //     $R_para_numerator /= $gcd;
+    //     $R_para_denominator /= $gcd;
+    //     $R_para_answer = ($R_para_numerator == 1)
+    //         ? "{$R_para_denominator}\,\mathrm{\Omega}"
+    //         : "\\frac{{$R_para_denominator}}{\,{$R_para_numerator}\,}\,\mathrm{\Omega}";
+
+    //     $questions = [
+    //         [
+    //             'q' => "ある素子に、{$v1}\,\mathrm{V}\,の電圧がかかっており、{$i1}\,\mathrm{A}\,の電流が流れている。この素子の抵抗は何\,\Omega\,か。",
+    //             'a' => "{$r1}\,\mathrm{\Omega}",
+    //             'e' => "オームの法則より、V=RI。よって、R=\\frac{V}{\,I\,}=\\frac{ {$v1} }{ \,{$i1}\, } = {$r1}\,\mathrm{\Omega}。",
+    //         ],
+    //         [
+    //             'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$v1}\,\mathrm{V}\,の電圧がかかっているとき、何\,\mathrm{A}\,の電流が流れているか。",
+    //             'a' => "{$i1}\,\mathrm{A}",
+    //             'e' => "オームの法則より、V=RI。よって、I=\\frac{V}{\,R\,}=\\frac{ {$v1} }{ \,{$r1}\, } = {$i1} \,\mathrm{A}。",
+    //         ],
+    //         [
+    //             'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$i1}\,\mathrm{A}\,の電流が流れているとき、何\,\mathrm{V}\,の電圧がかかっているか。",
+    //             'a' => "{$v1}\,\mathrm{V}",
+    //             'e' => "オームの法則より、V=RI。よって、V=RI={$r1}\\times{$i1}  = {$v1} \,\mathrm{V}。",
+    //         ],
+    //         [
+    //             'q' => "{$r1}\,\mathrm{\Omega}\,の素子と、{$r2}\,\mathrm{\Omega}\,の素子が、直列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
+    //             'a' => "{$R_series}\,\Omega",
+    //             'e' => "直列回路の合成抵抗は、各素子の抵抗の和になるので、{$r1}+{$r2}={$R_series}\,\mathrm{\Omega}。",
+    //         ],
+    //         [
+    //             'q' => "{$r3}\,\mathrm{\Omega}\,の素子と、{$r4}\,\mathrm{\Omega}\,の素子が、並列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
+    //             'a' => "{$R_para_answer}",
+    //             'e' => "並列回路の合成抵抗\,R\,は、各素子の抵抗の逆数の和になるので、
+    //                     \\frac{1}{\,R\,} = \\frac{1}{\,{$r3}\,} + \\frac{1}{\,{$r4}\,} 
+    //                     = \\frac{ \,{$R_para_numerator}\, }{ {$R_para_denominator} }。
+    //                     よって、R={$R_para_answer}。",
+    //         ],
+    //         [
+    //             'q' => "２つの素子が直列に繋がれており、それぞれ\,{$v1}\,\mathrm{V}, \,{$v2}\,\mathrm{V}\,の電圧がかかっている。全体の電圧は何\,\mathrm{V}\,か。",
+    //             'a' => "{$V_series}\,\mathrm{V}",
+    //             'e' => "直列回路全体の電圧は、各素子にかかる電圧の和になるので、{$v1}+{$v2}={$V_series}\,\mathrm{V}。",
+    //         ],
+    //         [
+    //             'q' => "２つの素子が並列に繋がれており、それぞれ\,{$i1}\,\mathrm{A}, \,{$i2}\,\mathrm{A}\,の電流が流れている。全体の電流は何\,\mathrm{A}\,か。",
+    //             'a' => "{$I_series}\,\mathrm{A}",
+    //             'e' => "並列回路全体の電流は、各素子に流れる電流の和になるので、{$i1}+{$i2}={$I_series}\,\mathrm{A}。",
+    //         ],
+    //         [
+    //             'q' => "電熱線に\,{$v1}\,\mathrm{V}\,の電圧をかけると、\,{$i1}\,\mathrm{A}\,の電流が流れた。この電熱線に生じる電力は何\,\mathrm{W}\,か。",
+    //             'a' => "{$w1}\,\mathrm{W}",
+    //             'e' => "W=VI= {$v1}\\times{$i1} = {$w1}\,\mathrm{W}",
+    //         ],
+    //         [
+    //             'q' => "{$w3}\mathrm{W}\,の電化製品を\,{$t3}\,分使った時、生じる熱量は何\,\mathrm{J}\,か。",
+    //             'a' => "{$q3}\,\mathrm{J}",
+    //             'e' => "Q=Wt = {$w3}\\times ({$t3} \\times 60)  = {$q3} \,\mathrm{J}\,（t\,は秒であることに注意）。",
+    //         ],
+    //         [
+    //             'q' => "直線状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
+    //             'a' => "右手を「いいね」にしたときの親指の指す向きを電流の方向として、他の４本の指の向きが磁界の向きになる。",
+    //             'e' => "試験では図が載っていると思います。右手を「いいね」にして色々な向きで考えられるようにしましょう。",
+    //         ],
+    //         [
+    //             'q' => "コイル状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
+    //             'a' => "右手を「いいね」にしたときの親指以外の４本の指が指す向きを電流の方向として、親指の向きが磁界の向きになる。",
+    //             'e' => "コイルの外側では回り込むように磁界が生じます。教科書などで図のイメージを確認しておきましょう。",
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.electromagnetism', compact('v1','i1','r1','question'));
+    // }
+
     // 電磁気
-    public function electromagnetism() {
+    public function electromagnetism(Request $request) {
         $i1 = 0.2 * rand(1, 10);
         $r1 = 0.5 * rand(1, 10);
         if ( is_float($i1) && is_float($r1) ){
@@ -11623,73 +11694,308 @@ class WorkbookController extends Controller
         // 約分
         $R_para_numerator /= $gcd;
         $R_para_denominator /= $gcd;
-        $R_para_answer = ($R_para_numerator == 1)
-            ? "{$R_para_denominator}\,\mathrm{\Omega}"
-            : "\\frac{{$R_para_denominator}}{\,{$R_para_numerator}\,}\,\mathrm{\Omega}";
+        $R_para_answer_decimal = round($R_para_denominator / $R_para_numerator, 2);
+        // 四捨五入が必要な場合（割り切れないとき）は途中式を追加。
+        $R_para_sign_eq = ($R_para_answer_decimal * $R_para_numerator ==  $R_para_denominator)
+            ? "="
+            : "\\fallingdotseq";     
 
+        // 応用01
+        $app01_part_sign_eq = (round($v2/$i1, 1) * $i1 ==  $v2)
+            ? "="
+            : "\\fallingdotseq";
+        // 応用02
+        $app02_part_sign_eq = (round($v1/$i2, 1) * $i2 ==  $v1)
+            ? "="
+            : "\\fallingdotseq";
+
+        /***** 問題によって図を作成 *****/
+        // グラフ描画用
+        $vb_width = 400;    //viewportの大きさ
+        $vb_height = 300;
+        $margin = 50;
+        $plot_width = ($vb_width - 2 * $margin);
+        $plot_height = ($vb_height - 2 * $margin);
+
+        $plot_par_q = [
+            'width' => $vb_width,
+            'height' => $vb_height,
+        ];
+
+        // $plot_con_q .= "<rect x=\"0\" y=\"0\" width=\"{$xunit}\" height=\"" . $height / 3 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>
+        //                 <text x=\"" . $xunit . "\" y=\"" . $height * (1/6) . "\" font-weight=\"bold\" font-size=\"16\" >
+        //                     秒
+        //                 </text>";
+        // 座標軸先端の矢印を定義
+
+        // 回路図共通部品の定義
+        $plot_con_q_common = "
+            <defs>
+                <!-- 電流の矢印 -->
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <!-- 抵抗のパーツ w:60,h:30-->
+                <g id=\"resistor\"
+                fill=\"white\"
+                stroke=\"black\"
+                stroke-width=\"2\">
+                    <rect x=\"0\" y=\"5\" width=\"60\" height=\"20\"/>
+                </g>
+                <!-- 電源のパーツ w:10,h:30-->
+                <g id=\"power\" fill=\"white\">
+                    <rect x=\"0\" y=\"0\" width=\"10\" height=\"30\" fill=\"white\" />
+                    <line x1=\"0\" y1=\"5\" x2=\"0\" y2=\"25\" stroke=\"black\" stroke-width=\"2\"/>
+                    <line x1=\"10\" y1=\"0\" x2=\"10\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/>
+                </g>
+            </defs>
+            <!-- 電流（全体）の矢印 -->
+            <line x1=\"" . $vb_width * (3/5) . "\" y1=\"" . $margin - 10 . "\" x2 =\"" . $vb_width * (4/5) . "\" y2=\"" . $margin - 10 . "\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
+            <text x=\"" . $vb_width * (7/10) - 5 . "\" y=\"" . $margin - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                I
+            </text>
+            ";
+
+        // 単純な回路
+        $plot_con_q_01 = "
+            <!-- 回路図 -->
+            <rect x=\"{$margin}\" y=\"{$margin}\" width=\"{$plot_width}\" height=\"{$plot_height}\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <use href=\"#power\" x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin - 15 . "\"/>
+            <text x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin / 2 . "\" font-weight=\"bold\" font-size=\"20\" >
+                V
+            </text>
+            <use href=\"#resistor\" x=\"" . ($vb_width / 2) - 30 . "\" y=\"" . $vb_height - $margin - 15 . "\"/>
+            <text x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $vb_height - $margin - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R
+            </text>
+        ";
+
+        // 直列回路
+        $plot_con_q_02 = "
+            <!-- 回路図 -->
+            <rect x=\"{$margin}\" y=\"{$margin}\" width=\"{$plot_width}\" height=\"{$plot_height}\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <!-- 電源 -->
+            <use href=\"#power\" x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin - 15 . "\"/>
+            <text x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin / 2 . "\" font-weight=\"bold\" font-size=\"20\" >
+                V
+            </text>
+            <!-- 抵抗１ -->
+            <use href=\"#resistor\" x=\"" . $vb_width * (1/3) - 30 . "\" y=\"" . $vb_height - $margin - 15 . "\"/>
+            <text x=\"" . $vb_width * (1/3) - 10 . "\" y=\"" . $vb_height - $margin - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-8\">1</tspan>
+            </text>
+            <!-- 抵抗２ -->
+            <use href=\"#resistor\" x=\"" . $vb_width * (2/3) - 30 . "\" y=\"" . $vb_height - $margin - 15 . "\"/>
+            <text x=\"" . $vb_width * (2/3) - 10 . "\" y=\"" . $vb_height - $margin - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-8\">2</tspan>
+            </text>
+        ";
+
+        // 並列回路
+        $plot_con_q_03 = "
+            <!-- 回路図 -->
+            <rect x=\"{$margin}\" y=\"{$margin}\" width=\"{$plot_width}\" height=\"{$plot_height}\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <line x1=\"{$margin}\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $vb_height / 2 . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <!-- 電源 -->
+            <use href=\"#power\" x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin - 15 . "\"/>
+            <text x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin / 2 . "\" font-weight=\"bold\" font-size=\"20\" >
+                V
+            </text>
+            <!-- 抵抗１ -->
+            <use href=\"#resistor\" x=\"" . $vb_width / 2 - 30 . "\" y=\"" . $vb_height / 2 - 15 . "\"/>
+            <text x=\"" . $vb_width / 2 - 10 . "\" y=\"" . $vb_height / 2 - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-8\">1</tspan>
+            </text>
+            <!-- 抵抗２ -->
+            <use href=\"#resistor\" x=\"" . $vb_width / 2 - 30 . "\" y=\"" . $vb_height - $margin - 15 . "\"/>
+            <text x=\"" . $vb_width / 2 - 10 . "\" y=\"" . $vb_height - $margin - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-8\">2</tspan>
+            </text>
+        ";
+
+        // 直列＆並列回路
+        $plot_con_q_04 = "
+            <!-- 回路図 -->
+            <rect x=\"{$margin}\" y=\"{$margin}\" width=\"{$plot_width}\" height=\"{$plot_height}\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <line x1=\"{$margin}\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $vb_height / 2 . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <!-- 電源 -->
+            <use href=\"#power\" x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin - 15 . "\"/>
+            <text x=\"" . ($vb_width / 2) - 5 . "\" y=\"" . $margin / 2 . "\" font-weight=\"bold\" font-size=\"20\" >
+                V
+            </text>
+            <!-- 抵抗１ -->
+            <use href=\"#resistor\" x=\"" . $vb_width / 2 - 30 . "\" y=\"" . $vb_height / 2 - 15 . "\"/>
+            <text x=\"" . $vb_width / 2 - 10 . "\" y=\"" . $vb_height / 2 - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-8\">1</tspan>
+            </text>
+            <!-- 抵抗２ -->
+            <use href=\"#resistor\" x=\"" . $vb_width * (1/3) - 30 . "\" y=\"" . $vb_height - $margin - 15 . "\"/>
+            <text x=\"" . $vb_width * (1/3) - 10 . "\" y=\"" . $vb_height - $margin - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-8\">2</tspan>
+            </text>
+            <!-- 抵抗３ -->
+            <use href=\"#resistor\" x=\"" . $vb_width * (2/3) - 30 . "\" y=\"" . $vb_height - $margin - 15 . "\"/>
+            <text x=\"" . $vb_width * (2/3) - 10 . "\" y=\"" . $vb_height - $margin - 20 . "\" font-weight=\"bold\" font-size=\"20\" >
+                R<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-8\">3</tspan>
+            </text>
+        ";
+
+    //         [
+    //             'q' => "{$w3}\mathrm{W}\,の電化製品を\,{$t3}\,分使った時、生じる熱量は何\,\mathrm{J}\,か。",
+    //             'a' => "{$q3}\,\mathrm{J}",
+    //             'e' => "Q=Wt = {$w3}\\times ({$t3} \\times 60)  = {$q3} \,\mathrm{J}\,（t\,は秒であることに注意）。",
+    //         ],
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
         $questions = [
             [
-                'q' => "ある素子に、{$v1}\,\mathrm{V}\,の電圧がかかっており、{$i1}\,\mathrm{A}\,の電流が流れている。この素子の抵抗は何\,\Omega\,か。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(V = {$v1}\,\mathrm{V}\) 、\(I = {$i1}\,\mathrm{A}\) のとき、抵抗 \(R\) は何 \(\Omega\) か。</p>",
+                'a_type' => 2,
                 'a' => "{$r1}\,\mathrm{\Omega}",
-                'e' => "オームの法則より、V=RI。よって、R=\\frac{V}{\,I\,}=\\frac{ {$v1} }{ \,{$i1}\, } = {$r1}\,\mathrm{\Omega}。",
+                'e_type' => 3,
+                'e' => "<p>オームの法則より、\(V=RI\)。よって、\(\displaystyle R = \\frac{V}{\,I\,} = \\frac{\,{$v1}\,}{\,{$i1}\,} = {$r1}\,\Omega\)。",
+                'p' => $plot_con_q_common . $plot_con_q_01,
             ],
             [
-                'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$v1}\,\mathrm{V}\,の電圧がかかっているとき、何\,\mathrm{A}\,の電流が流れているか。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(V = {$v1}\,\mathrm{V}\) 、\(R = {$r1}\,\mathrm{\Omega}\) のとき、電流 \(I\) は何 \(\mathrm{A}\) か。</p>",
+                'a_type' => 2,
                 'a' => "{$i1}\,\mathrm{A}",
-                'e' => "オームの法則より、V=RI。よって、I=\\frac{V}{\,R\,}=\\frac{ {$v1} }{ \,{$r1}\, } = {$i1} \,\mathrm{A}。",
+                'e_type' => 3,
+                'e' => "<p>オームの法則より、\(V=RI\)。よって、\(\displaystyle I = \\frac{V}{\,R\,} = \\frac{\,{$v1}\,}{\,{$r1}\,} = {$i1}\,\mathrm{A}\)。",
+                'p' => $plot_con_q_common . $plot_con_q_01,
             ],
             [
-                'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$i1}\,\mathrm{A}\,の電流が流れているとき、何\,\mathrm{V}\,の電圧がかかっているか。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(I = {$i1}\,\mathrm{A}\) 、\(R = {$r1}\,\mathrm{\Omega}\) のとき、電圧 \(V\) は何 \(\mathrm{V}\) か。</p>",
+                'a_type' => 2,
                 'a' => "{$v1}\,\mathrm{V}",
-                'e' => "オームの法則より、V=RI。よって、V=RI={$r1}\\times{$i1}  = {$v1} \,\mathrm{V}。",
+                'e_type' => 3,
+                'e' => "<p>オームの法則より、\(V=RI\)。よって、\(V = {$r1} \\times {$i1} = {$v1}\,\mathrm{V}\)。",
+                'p' => $plot_con_q_common . $plot_con_q_01,
             ],
             [
-                'q' => "{$r1}\,\mathrm{\Omega}\,の素子と、{$r2}\,\mathrm{\Omega}\,の素子が、直列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
-                'a' => "{$R_series}\,\Omega",
-                'e' => "直列回路の合成抵抗は、各素子の抵抗の和になるので、{$r1}+{$r2}={$R_series}\,\mathrm{\Omega}。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(R_1 = {$r1}\,\mathrm{\Omega}\) 、\(R_2 = {$r2}\,\mathrm{\Omega}\) のとき、合成抵抗は何 \(\Omega\) か。</p>",
+                'a_type' => 2,
+                'a' => "{$R_series}\,\mathrm{\Omega}",
+                'e_type' => 3,
+                'e' => "<p>直列回路の合成抵抗 \(R\) は、各素子の抵抗の和になるので、\(R = {$r1}+{$r2}={$R_series}\,\mathrm{\Omega}\)。",
+                'p' => $plot_con_q_common . $plot_con_q_02,
             ],
             [
-                'q' => "{$r3}\,\mathrm{\Omega}\,の素子と、{$r4}\,\mathrm{\Omega}\,の素子が、並列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
-                'a' => "{$R_para_answer}",
-                'e' => "並列回路の合成抵抗\,R\,は、各素子の抵抗の逆数の和になるので、
-                        \\frac{1}{\,R\,} = \\frac{1}{\,{$r3}\,} + \\frac{1}{\,{$r4}\,} 
-                        = \\frac{ \,{$R_para_numerator}\, }{ {$R_para_denominator} }。
-                        よって、R={$R_para_answer}。",
-            ],
-            [
-                'q' => "２つの素子が直列に繋がれており、それぞれ\,{$v1}\,\mathrm{V}, \,{$v2}\,\mathrm{V}\,の電圧がかかっている。全体の電圧は何\,\mathrm{V}\,か。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(R_1\) に \({$v1}\,\mathrm{V}\) 、\(R_2\) に \({$v2}\,\mathrm{V}\) の電圧がかかっている。電源の電圧は何 \(\mathrm{V}\) か。</p>",
+                'a_type' => 2,
                 'a' => "{$V_series}\,\mathrm{V}",
-                'e' => "直列回路全体の電圧は、各素子にかかる電圧の和になるので、{$v1}+{$v2}={$V_series}\,\mathrm{V}。",
+                'e_type' => 3,
+                'e' => "<p>直列回路では、各素子にかかる電圧の和が全体の電圧に等しいので、\(V = {$v1}+{$v2}={$V_series}\,\mathrm{V}\)。",
+                'p' => $plot_con_q_common . $plot_con_q_02,
             ],
             [
-                'q' => "２つの素子が並列に繋がれており、それぞれ\,{$i1}\,\mathrm{A}, \,{$i2}\,\mathrm{A}\,の電流が流れている。全体の電流は何\,\mathrm{A}\,か。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(R_1\) に \({$i1}\,\mathrm{A}\) 、\(R_2\) に \({$i2}\,\mathrm{A}\) の電流が流れている。電源の電流 \(I\) は何 \(\mathrm{A}\) か。</p>",
+                'a_type' => 2,
                 'a' => "{$I_series}\,\mathrm{A}",
-                'e' => "並列回路全体の電流は、各素子に流れる電流の和になるので、{$i1}+{$i2}={$I_series}\,\mathrm{A}。",
+                'e_type' => 3,
+                'e' => "<p>直列回路では、各素子に流れる電流の和が全体の電流に等しいので、\(I = {$i1}+{$i2}={$I_series}\,\mathrm{A}\)。",
+                'p' => $plot_con_q_common . $plot_con_q_03,
             ],
             [
-                'q' => "電熱線に\,{$v1}\,\mathrm{V}\,の電圧をかけると、\,{$i1}\,\mathrm{A}\,の電流が流れた。この電熱線に生じる電力は何\,\mathrm{W}\,か。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(R_1 = {$r3}\,\mathrm{\Omega}\)、\(R_2 = {$r4}\,\mathrm{\Omega}\) のとき、合成抵抗は何 \(\Omega\) か。</p>
+                        <p>小数になる場合は、小数点以下第３位を四捨五入して答えなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$R_para_answer_decimal}\,\Omega",
+                'e_type' => 3,
+                'e' => "<p>並列回路の合成抵抗 \(R\) の逆数は、各素子の抵抗の逆数の和になるので、</p>
+                        $$ \\frac{1}{\,R\,} = \\frac{1}{\,{$r3}\,} + \\frac{1}{\,{$r4}\,} = \\frac{ \,{$R_para_numerator}\, }{ \,{$R_para_denominator}\, } $$
+                        $$ \\therefore R = \\frac{{$R_para_denominator}}{\,{$R_para_numerator}\,} {$R_para_sign_eq} {$R_para_answer_decimal}\,\Omega $$
+                        ",
+                'p' => $plot_con_q_common . $plot_con_q_03,
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>電熱線に \({$v1}\,\mathrm{V}\) の電圧をかけると、\({$i1}\,\mathrm{A}\) の電流が流れた。</p>
+                        <p>この電熱線に生じる電力は何 \(\mathrm{W}\) か。</p>",
+                'a_type' => 2,
                 'a' => "{$w1}\,\mathrm{W}",
-                'e' => "W=VI= {$v1}\\times{$i1} = {$w1}\,\mathrm{W}",
+                'e_type' => 3,
+                'e' => "<p>電力を \(W[\mathrm{W}]\) とすると、\(W = VI\) が成り立つ。よって、\(W = {$v1} \\times {$i1} = {$w1}\,[\mathrm{W}]\)。",
+                'p' => "",
             ],
             [
-                'q' => "{$w3}\mathrm{W}\,の電化製品を\,{$t3}\,分使った時、生じる熱量は何\,\mathrm{J}\,か。",
+                'q_type' => 3,
+                'q' => "<p>\({$w3}\,\mathrm{W}\) の電化製品を \({$t3}\) 分間使った時、生じる熱量は何 \(\mathrm{J}\) か。</p>",
+                'a_type' => 2,
                 'a' => "{$q3}\,\mathrm{J}",
-                'e' => "Q=Wt = {$w3}\\times ({$t3} \\times 60)  = {$q3} \,\mathrm{J}\,（t\,は秒であることに注意）。",
+                'e_type' => 3,
+                'e' => "<p>熱量を \(Q[\mathrm{J}]\) とすると、\(Q = Wt\) が成り立つ（\(t\) は秒数）。</p>
+                        <p>よって、\(Q = {$w3} \\times ({$t3} \\times 60) = {$q3} \,\mathrm{J}\)。</p>",
+                'p' => "",
+            ],
+
+
+
+
+            [
+                'q_type' => 7,
+                'q' => "<p>下図の回路で、抵抗 \(R_1\) は \({$r1}\,\Omega\) で \({$i1}\,\mathrm{A}\) の電流が流れている。</p>
+                        <p>電源 \(V\) にかかる電圧が \({$V_series}\,\mathrm{V}\) のとき、抵抗 \(R_2\) は何 \(\Omega\) か。</p>
+                        <p>小数になる場合は、小数点以下第２位を四捨五入して答えなさい。</p>",
+                'a_type' => 2,
+                'a' => round($v2 / $i1, 1) . "\,\mathrm{\Omega}",
+                'e_type' => 3,
+                'e' => "<p>抵抗 \(R_1,\,R_2\) のそれぞれにかかる電圧を \(V_1,\,V_2\)、それぞれに流れる電流を \(I_1,\,I_2\) とする。
+                        <p>オームの法則は各抵抗に対して成り立つので、\(V_1 = R_1 I_1 = {$r1} \\times {$i1} = {$v1}\,\mathrm{V}\)。</p>
+                        <p>直列回路では \(V = V_1 + V_2\) が成り立つので、\(V_2 = V - V_1 = {$V_series} - {$v1} = {$v2}\,\mathrm{V}\)。</p>
+                        <p>また、直列回路では各抵抗を流れる電流は等しいので、\(I_2 = I_1 = {$i1}\,\mathrm{A}\)。</p>
+                        <p>抵抗 \(R_2\) に対してオームの法則 \(V_2 = R_2 I_2\) が成り立つので、</p>
+                        $$ R_2 = \\frac{\,V_2\,}{\,I_2\,} = \\frac{\,{$v2}\,}{\,{$i1}\,} {$app01_part_sign_eq} " . round($v2 / $i1, 1) . "\,\Omega. $$
+                        ",
+                'p' => $plot_con_q_common . $plot_con_q_02,
             ],
             [
-                'q' => "直線状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
-                'a' => "右手を「いいね」にしたときの親指の指す向きを電流の方向として、他の４本の指の向きが磁界の向きになる。",
-                'e' => "試験では図が載っていると思います。右手を「いいね」にして色々な向きで考えられるようにしましょう。",
-            ],
-            [
-                'q' => "コイル状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
-                'a' => "右手を「いいね」にしたときの親指以外の４本の指が指す向きを電流の方向として、親指の向きが磁界の向きになる。",
-                'e' => "コイルの外側では回り込むように磁界が生じます。教科書などで図のイメージを確認しておきましょう。",
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(V = {$v1}\,\mathrm{V},\, I = {$I_series}\,\mathrm{A},\, R_1 = {$r1}\,\Omega\) のとき、抵抗 \(R_2\) は何 \(\Omega\) か。</p>
+                        <p>小数になる場合は、小数点以下第２位を四捨五入して答えなさい。</p>",
+                'a_type' => 2,
+                'a' => round($v1 / $i2, 1) . "\,\mathrm{\Omega}",
+                'e_type' => 3,
+                'e' => "<p>抵抗 \(R_1,\,R_2\) のそれぞれにかかる電圧を \(V_1,\,V_2\)、それぞれに流れる電流を \(I_1,\,I_2\) とする。
+                        <p>並列回路では各抵抗の電圧は全体の電圧に等しいので、\(V_1 = V_2 = {$v1}\,\mathrm{V}\)。</p>
+                        <p>オームの法則は各抵抗に対して成り立つので、\(\displaystyle I_1 = \\frac{\,V_1\,}{\,R_1\,} = \\frac{\,{$v1}\,}{\,{$r1}\,} = {$i1}\,\mathrm{A}\)。</p>
+                        <p>並列回路では \(I = I_1 + I_2\) が成り立つので、\(I_2 = I - I_1 = {$I_series} - {$i1} = {$i2}\,\mathrm{A}\)。</p>
+                        <p>抵抗 \(R_2\) に対してオームの法則 \(V_2 = R_2 I_2\) が成り立つので、</p>
+                        $$ R_2 = \\frac{\,V_2\,}{\,I_2\,} = \\frac{\,{$v1}\,}{\,{$i2}\,} {$app01_part_sign_eq} " . round($v1 / $i2, 1) . "\,\Omega. $$
+                        ",
+                'p' => $plot_con_q_common . $plot_con_q_03,
             ],
         ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.electromagnetism', compact('v1','i1','r1','question'));
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 基礎
+        $flag2 = $request->boolean('flag2');    // 応用
+        $flags = ['flag1' => '基礎', 'flag2' => '応用'];
+        if ($flag1 == true && $flag2 == false) {
+            $q_index = rand(0,8);
+            $question = $questions[$q_index];
+        } else if ($flag1 == false && $flag2 == true) {
+            $q_index = rand(9,count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $plot_con_q = $question['p'];
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "電磁気";
+        return view('workbook.unit_template', compact('unitname','question','subject','flags','plot_par_q','plot_con_q'));
     }
 
     // 比例する量（理科）
