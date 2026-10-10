@@ -38,13 +38,13 @@
             @if($informations->isNotEmpty())
                 <div class="mt-6 text-center bg-yellow-100 text-yellow-800 px-4 py-2 rounded">
                     <strong>お知らせ</strong>
-                    @foreach($informations as $information)
-                        <div class="mt-2 mb-2">
+                    <div class="mt-2 mb-2 overflow-auto h-24">
+                        @foreach($informations as $information)
                             <ul class="ml-4 text-left list-disc">
                                 <li>{{ $information->content }}</li>
                             </ul>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
             @endif            
         </div>

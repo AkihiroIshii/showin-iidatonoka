@@ -671,7 +671,7 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="green">
-                                    <a href="{{route('workbook.unit.electromagnetism')}}">電磁気</a>
+                                    <a href="{{route('workbook.electric_circuit')}}">電気回路</a>
                                 </x-button-link>
                             </div>
                         </x-td>

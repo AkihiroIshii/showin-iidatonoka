@@ -11660,8 +11660,8 @@ class WorkbookController extends Controller
     //     return view('workbook.unit.electromagnetism', compact('v1','i1','r1','question'));
     // }
 
-    // 電磁気
-    public function electromagnetism(Request $request) {
+    // 電気回路
+    public function electric_circuit(Request $request) {
         $i1 = 0.2 * rand(1, 10);
         $r1 = 0.5 * rand(1, 10);
         if ( is_float($i1) && is_float($r1) ){
@@ -11701,14 +11701,31 @@ class WorkbookController extends Controller
             : "\\fallingdotseq";     
 
         // 応用01
-        $app01_part_sign_eq = (round($v2/$i1, 1) * $i1 ==  $v2)
-            ? "="
-            : "\\fallingdotseq";
+        $isInteger01 = abs(($v2/$i1 * 10) - round($v2/$i1 * 10)) < 1e-9;
+        $app01_part_sign_eq = $isInteger01 ? "=" : "\\fallingdotseq";
         // 応用02
-        $app02_part_sign_eq = (round($v1/$i2, 1) * $i2 ==  $v1)
-            ? "="
-            : "\\fallingdotseq";
+        $isInteger02 = abs(($v1/$i2 * 10) - round($v1/$i2 * 10)) < 1e-9;
+        $app02_part_sign_eq = $isInteger02 ? "=" : "\\fallingdotseq";
+        // 応用03(i1,v1,r1はそのまま使う)
+        $ap3_i2 = 0.1 * rand(1, 10);
+        $isIntI2 = abs(($v1/$ap3_i2 * 10) - round($v1/$ap3_i2 * 10)) < 1e-9;
+        while (!$isIntI2) {
+            $ap3_i2 = 0.1 * rand(1, 10);
+            $isIntI2 = abs(($v1/$ap3_i2 * 10) - round($v1/$ap3_i2 * 10)) < 1e-9;
+        }
+        $ap3_i3 = $ap3_i2;
+        $ap3_r2 = ($v1 / $ap3_i2) * 0.1 * rand(1, 9);
+        $ap3_r3 = ($v1 / $ap3_i2) - $ap3_r2;
+        $ap3_v2 = $ap3_r2 * $ap3_i2;
+        $ap3_v3 = $ap3_r3 * $ap3_i3;
 
+        $ap3_I = $i1 + $ap3_i2;
+        $ap3_V = $v1;
+        $isInteger03 = abs(($ap3_v3/$ap3_i2 * 10) - round($ap3_v3/$ap3_i2 * 10)) < 1e-9;
+        $app03_part_sign_eq = $isInteger03 ? "=" : "\\fallingdotseq";
+        // 応用04
+        $ap4_rev_R_str = $this->fracnum_to_str(($ap3_r2 + $ap3_r3 + $r1)*100, ($r1 * ($ap3_r2 + $ap3_r3))*100, "", 1);
+        $ap4_R_str = $this->fracnum_to_str(($r1 * ($ap3_r2 + $ap3_r3))*100, ($ap3_r2 + $ap3_r3 + $r1)*100, "", 1);
         /***** 問題によって図を作成 *****/
         // グラフ描画用
         $vb_width = 400;    //viewportの大きさ
@@ -11841,12 +11858,6 @@ class WorkbookController extends Controller
             </text>
         ";
 
-    //         [
-    //             'q' => "{$w3}\mathrm{W}\,の電化製品を\,{$t3}\,分使った時、生じる熱量は何\,\mathrm{J}\,か。",
-    //             'a' => "{$q3}\,\mathrm{J}",
-    //             'e' => "Q=Wt = {$w3}\\times ({$t3} \\times 60)  = {$q3} \,\mathrm{J}\,（t\,は秒であることに注意）。",
-    //         ],
-
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
         $questions = [
@@ -11937,10 +11948,6 @@ class WorkbookController extends Controller
                         <p>よって、\(Q = {$w3} \\times ({$t3} \\times 60) = {$q3} \,\mathrm{J}\)。</p>",
                 'p' => "",
             ],
-
-
-
-
             [
                 'q_type' => 7,
                 'q' => "<p>下図の回路で、抵抗 \(R_1\) は \({$r1}\,\Omega\) で \({$i1}\,\mathrm{A}\) の電流が流れている。</p>
@@ -11970,9 +11977,55 @@ class WorkbookController extends Controller
                         <p>オームの法則は各抵抗に対して成り立つので、\(\displaystyle I_1 = \\frac{\,V_1\,}{\,R_1\,} = \\frac{\,{$v1}\,}{\,{$r1}\,} = {$i1}\,\mathrm{A}\)。</p>
                         <p>並列回路では \(I = I_1 + I_2\) が成り立つので、\(I_2 = I - I_1 = {$I_series} - {$i1} = {$i2}\,\mathrm{A}\)。</p>
                         <p>抵抗 \(R_2\) に対してオームの法則 \(V_2 = R_2 I_2\) が成り立つので、</p>
-                        $$ R_2 = \\frac{\,V_2\,}{\,I_2\,} = \\frac{\,{$v1}\,}{\,{$i2}\,} {$app01_part_sign_eq} " . round($v1 / $i2, 1) . "\,\Omega. $$
+                        $$ R_2 = \\frac{\,V_2\,}{\,I_2\,} = \\frac{\,{$v1}\,}{\,{$i2}\,} {$app02_part_sign_eq} " . round($v1 / $i2, 1) . "\,\Omega. $$
                         ",
                 'p' => $plot_con_q_common . $plot_con_q_03,
+            ],
+            [
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(V = {$ap3_V}\,\mathrm{V},\, I = {$ap3_I}\,\mathrm{A},\, R_1 = {$r1}\,\Omega,\, R_2 = {$ap3_r2}\,\Omega\) とする。</p>
+                        <p>抵抗 \(R_3\) は何 \(\Omega\) か。小数になる場合は、小数点以下第２位を四捨五入して答えなさい。</p>",
+                'a_type' => 2,
+                'a' => round($ap3_v3/$ap3_i2, 1) . "\,\mathrm{\Omega}",
+                'e_type' => 3,
+                'e' => "<p>抵抗 \(R_1,\,R_2,\,R_3\) のそれぞれにかかる電圧を \(V_1,\,V_2,\,V_3\)、流れる電流を \(I_1,\,I_2,\,I_3\) とする。</p>
+                        <p>並列回路では各抵抗の電圧は全体の電圧に等しいので、\(V_1 = V = {$ap3_V}\,\mathrm{V}\)。</p>
+                        <p>オームの法則は各抵抗に対して成り立つので、\(\displaystyle I_1 = \\frac{\,V_1\,}{\,R_1\,}
+                            = \\frac{\,{$ap3_V}\,}{\,{$r1}\,} = {$i1}\,\mathrm{A}\)。</p>
+                        <p>次に、直列に繋がる \(R_2,\,R_3\) を流れる電流は等しいので、\(I_2 = I_3\)。一方、並列回路では</p>
+                        <p>電流が分かれるので、\(I = I_1 + I_2\)。これより、\(I_2\,(=I_3) = I - I_1 = {$ap3_I} - {$i1} = {$ap3_i2}\,\mathrm{A}\)。</p>
+                        <p>抵抗 \(R_2\) に対してオームの法則 \(V_2 = R_2 I_2\) が成り立つので、\(V_2 = {$ap3_r2} \\times {$ap3_i2} = {$ap3_v2}\,\mathrm{V}\)。</p>
+                        <p>直列に繋がる \(R_2,\,R_3\) の電圧の和は全体の電圧に等しいので、\(V_2 + V_3 = V\)。</p>
+                        <p>よって、\(V_3 = V - V_2 = {$ap3_V} - {$ap3_v2} = {$ap3_v3}\,\mathrm{V}\)。抵抗 \(R_3\) に対してオームの法則 \(V_3 = R_3 I_3\) が成り立つので、</p>
+                        $$ R_3 = \\frac{\,V_3\,}{\,I_3\,} = \\frac{\,{$ap3_v3}\,}{\,{$ap3_i2}\,} {$app03_part_sign_eq} " . round($ap3_v3/$ap3_i2, 1) . "\,\Omega. $$
+                        ",
+                'p' => $plot_con_q_common . $plot_con_q_04,
+            ],
+            [
+                'q_type' => 7,
+                'q' => "<p>下図の回路で \(R_1 = {$r1}\,\Omega,\, R_2 = {$ap3_r2}\,\Omega,R_3 = {$ap3_r3}\,\Omega\)</p>
+                        <p>\(I = {$ap3_I}\,\mathrm{A}\) とする。電源の電圧 \(V\) は何 \(\mathrm{V}\) か。</p>",
+                'a_type' => 2,
+                'a' => "{$ap3_V}\,\mathrm{V}",
+                'e_type' => 3,
+                'e' => "<p>いずれの抵抗についても電流と電圧が特定できないため、</p>
+                        <p>合成抵抗を求めてから回路全体にオームの法則を適用する。</p>
+                        <p>直列に繋がる \(R_2,\,R_3\) の合成抵抗は \(R_2 + R_3\) である。</p>
+                        <p>\(R_1\) はこれと並列に繋がっているので、回路全体の合成抵抗を \(R\) とすれば、</p>
+                        \[
+                            \\begin{aligned}
+                                \\frac{1}{\,R\,}
+                                    &= \\frac{1}{\,R_1\,} + \\frac{1}{\,R_2 + R_3\,} \\\\
+                                    &= \\frac{1}{\,{$r1}\,} + \\frac{1}{\,{$ap3_r2} + {$ap3_r3}\,}
+                                        = \\frac{1}{\,{$r1}\,} + \\frac{1}{\," . $ap3_r2 + $ap3_r3 . "\,}
+                                        = {$ap4_rev_R_str} \\\\
+                                \\therefore R &= {$ap4_R_str}
+                            \\end{aligned}
+                        \]
+                        <p>よって、\(R_1,\,R_2,\,R_3\) はひとつの抵抗 \(R\) と見なせば、オームの法則より、</p>
+                        $$ V = RI = {$ap4_R_str} \\times {$ap3_I} = {$ap3_V}\,\mathrm{V} $$
+                        ",
+                'p' => $plot_con_q_common . $plot_con_q_04,
             ],
         ];
         $q_index = rand(0,count($questions)-1);
@@ -11994,7 +12047,7 @@ class WorkbookController extends Controller
         }
         $plot_con_q = $question['p'];
         $subject = "custom";    // カスタムの選択ができることを blade に伝える。
-        $unitname = "電磁気";
+        $unitname = "電気回路";
         return view('workbook.unit_template', compact('unitname','question','subject','flags','plot_par_q','plot_con_q'));
     }
 

@@ -526,8 +526,8 @@ Route::get('workbook/animal_function', [WorkbookController::class, 'animal_funct
 ->middleware(['auth', 'verified'])->name('workbook.animal_function');
 Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
-Route::get('workbook/electromagnetism', [WorkbookController::class, 'electromagnetism'])
-->middleware(['auth', 'verified'])->name('workbook.unit.electromagnetism');
+Route::get('workbook/electric_circuit', [WorkbookController::class, 'electric_circuit'])
+->middleware(['auth', 'verified'])->name('workbook.electric_circuit');
 Route::get('workbook/sci_proportional_quantity', [WorkbookController::class, 'sci_proportional_quantity'])
 ->middleware(['auth', 'verified'])->name('workbook.sci_proportional_quantity');
 Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_terms_all'])
