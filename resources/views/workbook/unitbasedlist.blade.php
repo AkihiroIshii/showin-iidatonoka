@@ -666,6 +666,9 @@
                         <x-td>物理</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.image_formed_lens')}}">凸レンズによる像</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

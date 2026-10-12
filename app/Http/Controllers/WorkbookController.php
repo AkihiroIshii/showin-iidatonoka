@@ -10629,6 +10629,156 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 凸レンズによる像
+    public function image_formed_lens(Request $request) {
+        /***** 問題によって図を作成 *****/
+        // グラフ描画用
+        $vb_width = 600;    //viewportの大きさ
+        $vb_height = 200;
+        $margin = 70;
+        $plot_width = ($vb_width - 2 * $margin);
+        $plot_height = ($vb_height - 2 * $margin);
+        $plot_forcal_length = $plot_width / 6;
+        $lens_x = $vb_width / 2;
+
+        // 焦点距離
+        $f = rand(8, 12);    // 焦点距離（cm）
+        $r_lfs = [0.55, 0.6, 1.5, 1.6, 2.0, 2.4, 3.0];  // 焦点距離に対する光源の位置の比率の候補
+        // $r_lfs = [0.55];  // 焦点距離に対する光源の位置の比率の候補
+        $r_idx = rand(0, count($r_lfs)-1);
+        $r_lf = $r_lfs[$r_idx];
+        $x_l = $lens_x - ($r_lf * $plot_forcal_length); // 光源の位置
+        $h_l = ($vb_height / 2) - $margin;  // 光源の高さ
+
+        // 解答
+        if ($r_lf > 2) {
+            $ans = "光源よりも小さい実像";
+        } elseif ($r_lf == 2) {
+            $ans = "光源と同じ大きさの実像";
+        } elseif ($r_lf > 1) {
+            $ans = "光源よりも大きい実像";
+        } else {
+            $ans = "光源よりも大きい虚像";
+        }
+
+        // 実像
+        if($r_lf > 1) {
+            $h_image = $h_l / ($r_lf - 1);  // 高さ
+            $x_image = $lens_x + ($h_l + $h_image) * $plot_forcal_length / $h_l;   // 位置
+            $y_image = $vb_height / 2 + $h_image;
+            $txt_msg = "実像";
+            $txt_y = $y_image + 20;
+            $plot_light_part = "
+                <!-- 光の進路（上） -->
+                <line x1=\"{$x_l}\" y1=\"" . $margin . "\" x2 =\"" . $vb_width / 2 . "\" y2=\"" . $margin . "\" stroke=\"orange\" stroke-width=\"2\"/>
+                <line x1=\"" . $vb_width / 2 . "\" y1=\"" . $margin . "\" x2 =\"" . $x_image . "\" y2=\"" . $y_image . "\" stroke=\"orange\" stroke-width=\"2\"/>
+                <text x=\"" . $vb_width / 2 - 40 . "\" y=\"" . $margin - 5 . "\" font-weight=\"bold\" font-size=\"15\" >④</text>
+                <!-- 光の進路（下） -->
+                <line x1=\"{$x_l}\" y1=\"" . $margin . "\" x2 =\"" . $vb_width / 2 . "\" y2=\"" . $vb_height / 2 + $h_image . "\" stroke=\"orange\" stroke-width=\"2\"/>
+                <line x1=\"" . $vb_width / 2 . "\" y1=\"" . $vb_height / 2 + $h_image . "\" x2 =\"" . $x_image . "\" y2=\"" . $y_image . "\" stroke=\"orange\" stroke-width=\"2\"/>
+                <text x=\"" . $vb_width / 2 + 30 . "\" y=\"" . $vb_height / 2 + $h_image + 20 . "\" font-weight=\"bold\" font-size=\"15\" >⑤(a)</text>
+            ";
+        // 虚像
+        } else {
+            $h_image = $h_l / (1 - $r_lf);  // 高さ
+            $x_image = $lens_x - ($r_lf * $plot_forcal_length / (1 - $r_lf));   // 位置
+            $x_image_sym_lens = $lens_x + ($r_lf * $plot_forcal_length / (1 - $r_lf));   // レンズに対して像と対称な位置
+            $x_image_sym_f = $x_image_sym_lens + 2 * $plot_forcal_length;   // 右の焦点に対して像と対称な位置
+            $y_image = $vb_height / 2 - $h_image;
+            $txt_msg = "虚像";
+            $txt_y = $y_image - 5;
+            $plot_light_part = "
+                <!-- 光の進路（平行） -->
+                <line x1=\"{$x_l}\" y1=\"" . $margin . "\" x2 =\"" . $vb_width / 2 . "\" y2=\"" . $margin . "\" stroke=\"orange\" stroke-width=\"2\"/>
+                <text x=\"" . $vb_width / 2 + 30 . "\" y=\"" . $margin + 10 . "\" font-weight=\"bold\" font-size=\"15\" >④</text>
+                <!-- 光の進路（右の焦点） -->
+                <line x1=\"" . $vb_width / 2 . "\" y1=\"" . $margin . "\" x2 =\"" . $x_image_sym_f . "\" y2=\"" . $vb_height / 2 + $h_image . "\" stroke=\"orange\" stroke-width=\"2\"/>
+                <!-- 光の進路（中） -->
+                <line x1=\"{$x_l}\" y1=\"" . $margin . "\" x2 =\"" . $x_image_sym_lens . "\" y2=\"" . $vb_height / 2 + $h_image . "\" stroke=\"orange\" stroke-width=\"2\"/>
+                <text x=\"" . $vb_width / 2 + 30 . "\" y=\"" . $vb_height / 2 + 45 . "\" font-weight=\"bold\" font-size=\"15\" >⑤(b)</text>
+                <!-- 光の進路（虚像をつくる点線） -->
+                <line x1=\"{$x_image}\" y1=\"" . $y_image . "\" x2 =\"" . $vb_width / 2 . "\" y2=\"" . $margin . "\" stroke=\"orange\" stroke-width=\"2\" stroke-dasharray=\"4\"/>
+                <line x1=\"{$x_image}\" y1=\"" . $y_image . "\" x2 =\"" . $x_image_sym_lens . "\" y2=\"" . $vb_height / 2 + $h_image . "\" stroke=\"orange\" stroke-width=\"2\" stroke-dasharray=\"4\"/>
+            ";
+        }
+
+        $plot_par_e = [
+            'width' => $vb_width,
+            'height' => $vb_height,
+        ];
+
+        // 解説図
+        $plot_con_e = "
+            <defs>
+                <!-- 光源、像を示す矢印 -->
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+            </defs>
+            <!-- 補助線 -->
+            <line x1=\"{$margin}\" y1=\"" . $margin . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $margin . "\" stroke=\"black\" stroke-width=\"0.5\"/>
+            <line x1=\"{$margin}\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $vb_height / 2 . "\" stroke=\"black\" stroke-width=\"1\"/>
+            <line x1=\"{$margin}\" y1=\"" . $vb_height - $margin . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $vb_height - $margin . "\" stroke=\"black\" stroke-width=\"0.5\"/>
+            <text x=\"" . $margin - 20 . "\" y=\"" . $vb_height / 2 + 5 . "\" font-weight=\"bold\" font-size=\"15\" >①</text>
+            <!-- 凸レンズ -->
+            <path d=\"M" . $lens_x . "," . $margin / 2 . " Q" . $lens_x - 20 . "," . $vb_height / 2 . " " . $lens_x . "," . $vb_height - ($margin / 2) . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <path d=\"M" . $lens_x . "," . $margin / 2 . " Q" . $lens_x + 20 . "," . $vb_height / 2 . " " . $lens_x . "," . $vb_height - ($margin / 2) . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+            <text x=\"" . $lens_x - 8 . "\" y=\"" . $margin / 2 - 5 . "\" font-weight=\"bold\" font-size=\"15\" >①</text>
+            <!-- 焦点 -->
+            <circle cx=\"" . $lens_x - $plot_forcal_length . "\" cy=\"" . $vb_height / 2 . "\" r=\"4\" fill=\"black\"/>
+            <text x=\"" . $lens_x - $plot_forcal_length - 20 . "\" y=\"" . $vb_height / 2 - 10 . "\" font-weight=\"bold\" font-size=\"16\" >焦点</text>
+            <text x=\"" . $lens_x - $plot_forcal_length - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >②</text>
+            <circle cx=\"" . $lens_x + $plot_forcal_length . "\" cy=\"" . $vb_height / 2 . "\" r=\"4\" fill=\"black\"/>
+            <text x=\"" . $lens_x + $plot_forcal_length - 20 . "\" y=\"" . $vb_height / 2 - 10 . "\" font-weight=\"bold\" font-size=\"16\" >焦点</text>
+            <text x=\"" . $lens_x + $plot_forcal_length - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >②</text>
+            <!-- 光源を示す矢印 -->
+            <line x1=\"" . $x_l . "\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $x_l . "\" y2=\"" . $margin . "\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
+            <text x=\"" . $x_l - 20 . "\" y=\"" . $margin - 10 . "\" font-weight=\"bold\" font-size=\"20\" >光源</text>
+            <text x=\"" . $x_l - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >③</text>
+            <!-- 像を示す矢印 -->
+            <line x1=\"" . $x_image . "\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $x_image . "\" y2=\"" . $y_image . "\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
+            <text x=\"" . $x_image - 20 . "\" y=\"" . $txt_y . "\" font-weight=\"bold\" font-size=\"20\" >{$txt_msg}</text>
+            <!-- 光の進路 -->
+            {$plot_light_part}
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>焦点距離が {$f} cm で、レンズから光源までの距離が " . $f * $r_lf . " cm のとき、</p>
+                            <p>実像と虚像のどちらが見えるか。光源に対する像の大きさの大小関係も答えよ。</p>
+                        </div>",
+                'a_type' => 3,
+                'a' => $ans,
+                'e_type' => 7,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>次の手順で図を描いて考える。</p>
+                            <ul class=\"list-none pl-5 text-left\">
+                                <li>① 中心線を書き、中央にレンズを描く。</li>
+                                <li>② レンズに対して対称になるように、焦点を２つ書き込む。</li>
+                                <li>③ 焦点距離との関係を踏まえて、光源の矢印を書き込む。</li>
+                                <li>④ 光源の上端から中心線に平行な線をレンズに伸ばし、そこから右の焦点を通る直線を引く。</li>
+                                <li>⑤ (a) 光源が焦点の外側にある場合</li>
+                                <li>　　　光源の上端から左の焦点を通る直線をレンズまで伸ばし、そこから中心線に平行な線を伸ばす。</li>
+                                <li>　　　⇒４の線との交点が、「実像」の先端になる。</li>
+                                <li>　　(b) 光源が焦点の内側にある場合</li>
+                                <li>　　　光源の上端からレンズの中心を通る直線を引く。</li>
+                                <li>　　　⇒この直線と、４で書いた右の焦点を通る直線を左に伸ばしたところにできる交点が、「虚像」の先端になる。</li>
+                            </ul>
+                        </div>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "凸レンズによる像";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
     // 単位の次元
     public function sci_unit_dimension() {
         // q：問、a：答、e：解説

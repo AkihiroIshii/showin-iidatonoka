@@ -514,6 +514,8 @@ Route::get('workbook/sci_mass_percent_concentration', [WorkbookController::class
 ->middleware(['auth', 'verified'])->name('workbook.sci_mass_percent_concentration');
 Route::get('workbook/sci_earth', [WorkbookController::class, 'sci_earth'])
 ->middleware(['auth', 'verified'])->name('workbook.sci_earth');
+Route::get('workbook/image_formed_lens', [WorkbookController::class, 'image_formed_lens'])
+->middleware(['auth', 'verified'])->name('workbook.image_formed_lens');
 Route::get('workbook/sci_unit_dimension', [WorkbookController::class, 'sci_unit_dimension'])
 ->middleware(['auth', 'verified'])->name('workbook.sci_unit_dimension');
 Route::get('workbook/chemical_reaction_equation', [WorkbookController::class, 'chemical_reaction_equation'])
