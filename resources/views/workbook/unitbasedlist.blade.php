@@ -354,8 +354,14 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.regular_polygon')}}">正多角形の角</a>
                                 </x-button-link>
-                                <x-button-link>
+                                {{-- <x-button-link>
                                     <a href="{{route('workbook.proof_congruence1')}}">合同の証明１</a>
+                                </x-button-link> --}}
+                                <x-button-link>
+                                    <a href="{{route('workbook.proof_of_congruence')}}">合同の証明</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.area_ratio_J2')}}">☆面積比</a>
                                 </x-button-link>
                             </div>
                         </x-td>

@@ -5497,108 +5497,108 @@ class WorkbookController extends Controller
         return view('workbook.unit.child', compact('unitname','question'));
     }
 
-    // 合同の証明１
-    public function proof_congruence1() {
-        // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
-        $questions = [
-            [
-                'q_type' => 2,
-                'q' => "正方形の特徴をできるだけ挙げなさい。",
-                'a_type' => 3,
-                'a' => "<div class=\"pl-5 text-left\">
-                            <ul class=\"list-disc\">
-                                <li>すべての辺の長さが等しい。</li>
-                                <li>すべての内角が\(\,90^{\circ}\)。</li>
-                                <li>向かい合う辺が平行。</li>
-                            </ul>
-                        </div>",
-                'e_type' => 1,
-                'e' => "\(AB=AC\,\)のように明記されていなくても、「正方形」であれば上記の仮定をすべて含んでいる。",
-            ],
-            [
-                'q_type' => 2,
-                'q' => "長方形の特徴をできるだけ挙げなさい。",
-                'a_type' => 3,
-                'a' => "<div class=\"pl-5 text-left\">
-                            <ul class=\"list-disc\">
-                                <li>すべての内角が\(\,90^{\circ}\)。</li>
-                                <li>向かい合う辺の長さが等しい。</li>
-                                <li>向かい合う辺が平行。</li>
-                            </ul>
-                        </div>",
-                'e_type' => 1,
-                'e' => "\(AB=AC\,\)のように明記されていなくても、「長方形」であれば上記の仮定をすべて含んでいる。",
-            ],
-            [
-                'q_type' => 2,
-                'q' => "平行四辺形の特徴をできるだけ挙げなさい。",
-                'a_type' => 3,
-                'a' => "<div class=\"pl-5 text-left\">
-                            <ul class=\"list-disc\">
-                                <li>向かい合う角の大きさが等しい。</li>
-                                <li>向かい合う辺の長さが等しい。</li>
-                                <li>向かい合う辺が平行。</li>
-                            </ul>
-                        </div>",
-                'e_type' => 1,
-                'e' => "\(AB=AC\,\)のように明記されていなくても、「平行四辺形」であれば上記の仮定をすべて含んでいる。",
-            ],
-            [
-                'q_type' => 2,
-                'q' => "正三角形の特徴をできるだけ挙げなさい。",
-                'a_type' => 3,
-                'a' => "<div class=\"pl-5 text-left\">
-                            <ul class=\"list-disc\">
-                                <li>すべての辺の長さが等しい。</li>
-                                <li>すべての内角が\(\,60^{\circ}\)。</li>
-                            </ul>
-                        </div>
-                        ",
-                'e_type' => 1,
-                'e' => "\(AB=AC\,\)のように明記されていなくても、「正三角形」であれば上記の仮定をすべて含んでいる。",
-            ],
-            [
-                'q_type' => 2,
-                'q' => "二等辺三角形の特徴をできるだけ挙げなさい。",
-                'a_type' => 3,
-                'a' => "<div class=\"pl-5 text-left\">
-                            <ul class=\"list-disc\">
-                                <li>頂角に接する二つの辺の長さが等しい。</li>
-                                <li>２つの底角が等しい。</li>
-                            </ul>
-                        </div>",
-                'e_type' => 1,
-                'e' => "\(AB=AC\,\)のように明記されていなくても、「二等辺三角形」であれば上記の仮定をすべて含んでいる。",
-            ],
-            [
-                'q_type' => 2,
-                'q' => "平行な２本の直線を、別の１本の直線が横切るとき、わかることをすべて挙げなさい。",
-                'a_type' => 3,
-                'a' => "<div class=\"pl-5 text-left\">
-                            <ul class=\"list-disc\">
-                                <li>等しい錯角が存在する。</li>
-                                <li>等しい同位角が存在する。</li>
-                                <li>交点では、対頂角が等しい。</li>
-                            </ul>
-                        </div>",
-                'e_type' => 1,
-                'e' => "平行線があれば、錯角や同位角がないか確認しよう。",
-            ],
-            [
-                'q_type' => 2,
-                'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC}\,であるとき、他に成り立つ関係式を挙げなさい。",
-                'a_type' => 2,
-                'a' => '\mathrm{\\angle ABC = \\angle ACB}',
-                'e_type' => 1,
-                'e' => "二等辺三角形の底角は等しい。",
-            ],
-        ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
-        $unitname = "合同の証明";
-        return view('workbook.unit_template', compact('unitname','question'));
-    }
+    // // 合同の証明１
+    // public function proof_congruence1() {
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+    //     $questions = [
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "正方形の特徴をできるだけ挙げなさい。",
+    //             'a_type' => 3,
+    //             'a' => "<div class=\"pl-5 text-left\">
+    //                         <ul class=\"list-disc\">
+    //                             <li>すべての辺の長さが等しい。</li>
+    //                             <li>すべての内角が\(\,90^{\circ}\)。</li>
+    //                             <li>向かい合う辺が平行。</li>
+    //                         </ul>
+    //                     </div>",
+    //             'e_type' => 1,
+    //             'e' => "\(AB=AC\,\)のように明記されていなくても、「正方形」であれば上記の仮定をすべて含んでいる。",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "長方形の特徴をできるだけ挙げなさい。",
+    //             'a_type' => 3,
+    //             'a' => "<div class=\"pl-5 text-left\">
+    //                         <ul class=\"list-disc\">
+    //                             <li>すべての内角が\(\,90^{\circ}\)。</li>
+    //                             <li>向かい合う辺の長さが等しい。</li>
+    //                             <li>向かい合う辺が平行。</li>
+    //                         </ul>
+    //                     </div>",
+    //             'e_type' => 1,
+    //             'e' => "\(AB=AC\,\)のように明記されていなくても、「長方形」であれば上記の仮定をすべて含んでいる。",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "平行四辺形の特徴をできるだけ挙げなさい。",
+    //             'a_type' => 3,
+    //             'a' => "<div class=\"pl-5 text-left\">
+    //                         <ul class=\"list-disc\">
+    //                             <li>向かい合う角の大きさが等しい。</li>
+    //                             <li>向かい合う辺の長さが等しい。</li>
+    //                             <li>向かい合う辺が平行。</li>
+    //                         </ul>
+    //                     </div>",
+    //             'e_type' => 1,
+    //             'e' => "\(AB=AC\,\)のように明記されていなくても、「平行四辺形」であれば上記の仮定をすべて含んでいる。",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "正三角形の特徴をできるだけ挙げなさい。",
+    //             'a_type' => 3,
+    //             'a' => "<div class=\"pl-5 text-left\">
+    //                         <ul class=\"list-disc\">
+    //                             <li>すべての辺の長さが等しい。</li>
+    //                             <li>すべての内角が\(\,60^{\circ}\)。</li>
+    //                         </ul>
+    //                     </div>
+    //                     ",
+    //             'e_type' => 1,
+    //             'e' => "\(AB=AC\,\)のように明記されていなくても、「正三角形」であれば上記の仮定をすべて含んでいる。",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "二等辺三角形の特徴をできるだけ挙げなさい。",
+    //             'a_type' => 3,
+    //             'a' => "<div class=\"pl-5 text-left\">
+    //                         <ul class=\"list-disc\">
+    //                             <li>頂角に接する二つの辺の長さが等しい。</li>
+    //                             <li>２つの底角が等しい。</li>
+    //                         </ul>
+    //                     </div>",
+    //             'e_type' => 1,
+    //             'e' => "\(AB=AC\,\)のように明記されていなくても、「二等辺三角形」であれば上記の仮定をすべて含んでいる。",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "平行な２本の直線を、別の１本の直線が横切るとき、わかることをすべて挙げなさい。",
+    //             'a_type' => 3,
+    //             'a' => "<div class=\"pl-5 text-left\">
+    //                         <ul class=\"list-disc\">
+    //                             <li>等しい錯角が存在する。</li>
+    //                             <li>等しい同位角が存在する。</li>
+    //                             <li>交点では、対頂角が等しい。</li>
+    //                         </ul>
+    //                     </div>",
+    //             'e_type' => 1,
+    //             'e' => "平行線があれば、錯角や同位角がないか確認しよう。",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC}\,であるとき、他に成り立つ関係式を挙げなさい。",
+    //             'a_type' => 2,
+    //             'a' => '\mathrm{\\angle ABC = \\angle ACB}',
+    //             'e_type' => 1,
+    //             'e' => "二等辺三角形の底角は等しい。",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "合同の証明";
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
 
     // 角度を求める
     public function find_angle() {
@@ -5666,6 +5666,274 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "角度を求める";
         return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 合同の証明（作成中）
+    public function proof_of_congruence(Request $request) {
+        // グラフ描画用
+        $size = 400;    //viewportの大きさ（仮）
+        $vb_width = $size;
+        $vb_height = $size;
+        // $val_size = 12; //実際の座標の大きさ
+        // $scale = $size / $val_size; //縮尺
+        
+        // 変数
+        $b = $size * 0.4;
+        $a = $b * 0.1 * rand(4, 8);    // 小さい正方形の一辺
+        // $b = $a + 0.2 * rand(1, 5); // 大きい正方形の一辺
+        $alpha = 2 * M_PI * (5 * rand(0, 6)) / 360;    // 小さい正方形を時計回りに何度回転させるか（点Oが軸）　0~30°をラジアンで取得
+        $beta = 2 * M_PI * (5 * rand(0, 3)) / 360;    // 大きい正方形を反時計回りに何度回転させるか（点Oが軸）　0~15°をラジアンで取得
+        $beta = 2 * M_PI * (5 * 3) / 360;    // 大きい正方形を反時計回りに何度回転させるか（点Oが軸）　0~15°をラジアンで取得
+
+        /****** 問１ *****/
+        // 各頂点の座標
+        $Ax = -$b * sin($beta);
+        $Ay = -$b * cos($beta);
+        $Bx = -sqrt(2)*$b * sin($beta + M_PI / 4);
+        $By = -sqrt(2)*$b * cos($beta + M_PI / 4);        
+        $Cx = -$b * cos($beta);
+        $Cy = $b * sin($beta);
+        $Dx = $a * cos($alpha);
+        $Dy = $a * sin($alpha);
+        $Ex = sqrt(2)*$a * cos(M_PI / 4 - $alpha);
+        $Ey = -sqrt(2)*$a * sin(M_PI / 4 - $alpha);
+        $Fx = $a * sin($alpha);
+        $Fy = -$a * cos($alpha);
+        $vb_xfrom = max(abs($Bx), abs($Ex)) * (-1.2);
+        $vb_width = -$vb_xfrom * 2;
+        $vb_xfrom = min($Bx, $Cx) - 20;
+        $vb_width = ($Ex - $vb_xfrom) + 20;
+        $vb_yfrom = $Ay - 20;
+        $vb_height = (max($Cy, $Dy) - $Ay) * 1.4;
+
+
+
+        // $a = 30 * rand(1, 6);  // 中心角：15～180°
+        // $r = rand(1, 9);
+        // $l = $this->simplify_fraction(2*$a*$r, 360);    //孤の長さ/pi
+        // $l_str = $this->fracnum_to_str($l['numerator'], $l['denominator'], "\,\pi", 1);
+        // $l_coeff_str = $this->fracnum_to_str($l['numerator'], $l['denominator'], "", 1);
+        // $theta = 2 * M_PI * $a / 360;   // 中心角（ラジアン）
+        // $ratio = $this->simplify_fraction($a, 360);
+        // $Sf = $this->simplify_fraction($a * $r**2, 360);
+        // $Sf_str = $this->fracnum_to_str($Sf['numerator'], $Sf['denominator'], "\,\pi", 1);
+        // $S_circ_str = $this->fracnum_to_str($r**2, 1, "\,\pi", 1);
+
+        // // プロット用
+        // $pr = 0.8 * $size / 2;
+        // $end_x = $pr * cos($theta);
+        // $end_y = $pr * sin($theta);
+
+        // // 角度表示用
+        // $ur = 0.2 * $size / 2;
+        // $ux = $ur * cos($theta);
+        // $uy = -$ur * sin($theta);   // svg の y 座標は下が正なので、-1 をかけておく。
+        // // $theta_unit = 2 * M_PI * $a / 360;
+        // $ur_end_x = $ur * cos($theta);
+        // $ur_end_y = $ur * sin($theta);
+
+        // プロット用パラメータ
+        // $w_full = $size;
+        // $w_half = $size / 2;
+        
+        $plot_par_q = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        $plot_con_q = "";
+        // 座標軸を作成
+        // for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+        //     $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        //     $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        // }
+
+        $plot_q1 = "
+            <!-- 正方形 -->
+            <path d=\"M 0 0 L {$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <path d=\"M 0 0 L {$Dx} {$Dy} L {$Ex} {$Ey} L {$Fx} {$Fy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$Dx}\" y2=\"{$Dy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Cx}\" y1=\"{$Cy}\" x2=\"{$Fx}\" y2=\"{$Fy}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 頂点 -->
+            <text x=\"-5\" y=\"20\" font-weight=\"bold\" font-size=\"18\">O</text>
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 5 . "\" y=\"" . $By - 5 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx - 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Dx - 5 . "\" y=\"" . $Dy + 20 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $Ex - 5 . "\" y=\"" . $Ey - 5 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $Fx - 5 . "\" y=\"" . $Fy - 5 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            ";
+
+
+            // <circle cx=\"0\" cy=\"0\" r=\"{$pr}\" fill-opacity=\"0.1\"/>
+            // <!-- M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
+            // <path d=\"M 0 0 L {$pr} 0 A {$pr} {$pr}, 0, 0, 0, {$end_x} -{$end_y} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"2\" />
+            // <path d=\"M 0 0 L {$ur} 0 A {$ur} {$ur}, 0, 0, 0, {$ur_end_x} -{$ur_end_y} Z\" fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "<p>下図の正方形 OABC と正方形 ODEF について、△AOD ≡ △COF を証明しなさい。",
+                'a_type' => 3,
+                'a' => "<div class=\"leading-[2] text-left pl-5\">
+                            <p>同じ正方形の辺は等しいので、</p>
+                            <p>　AO = CO ・・・①</p>
+                            <p>　OD = OF ・・・②</p>
+                            <p>また、正方形の内角はすべて 90° なので、</p>
+                            <p>　∠AOD = ∠COF = 90° ・・・③</p>
+                            <p>①、②、③ より、２つの辺とその間の角がそれぞれ等しいので、</p>
+                            <p>△AOD ≡ △COF</p>
+                        </div>",
+                'e_type' => 3,
+                'e' => "<p></p>
+                        ",
+                'p' => $plot_q1,
+            ],
+
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $plot_con_q = $question['p'];
+        $unitname = "合同の証明";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    }
+
+    // 面積比（中２）
+    public function area_ratio_J2(Request $request) {
+        // グラフ描画用
+        $size = 400;    //viewportの大きさ（仮）
+        $vb_width = $size;
+        $vb_height = $size;
+        
+        // 変数
+        $base = $size;
+
+        /****** 問１ *****/
+        // 各頂点の座標
+        $Ax = 0;
+        $Ay = 0;
+        $Bx = $base;
+        $By = 0;
+        $Cx = $base * rand(7, 9) / 10;
+        $Cy = $Bx * rand(4, 7) / 10;
+        $Dx = $base * rand(1, 3) / 10;
+        $Dy = $Cy;
+        $Ex = $Cx - $Dx;
+        $Ey = 0;
+        $Fx = $Dx + $Ex - ($Dx * $Ex / $Bx);
+        $Fy = ($Dy / $Dx) * ($Fx - $Ex);
+
+        $vb_xfrom = -$Bx * 0.1;
+        $vb_width = $Bx * 1.2;
+        $vb_yfrom = -$Dy * 0.2;
+        $vb_height = $Dy * 1.4;
+
+        $r_CD_AB = $this->simplify_fraction($Cx - $Dx, $Bx);
+        $m = $r_CD_AB['denominator'];   // AB:CD = m:n
+        $n = $r_CD_AB['numerator'];
+        $S_ABD_str = $this->fracnum_to_str($m, $m + $n, "S", 1);
+        $S_ADE_str = $this->fracnum_to_str($n, $m + $n, "S", 1);
+        $S_ADE_eff_str = $this->fracnum_to_str($n, $m + $n, "", 1);
+        $S_ABCD = 4 * rand(3, 10); // 台形の面積
+        $S_ans = $this->fracnum_to_str($n * $S_ABCD, $m + $n, "", 1);
+        
+        
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        $plot_q1_base = "
+            <!-- 台形 -->
+            <path d=\"M 0 0 L {$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} L {$Dx} {$Dy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$Fx}\" y2=\"{$Fy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Cx}\" y1=\"{$Cy}\" x2=\"{$Ex}\" y2=\"{$Ey}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Dx}\" y1=\"{$Dy}\" x2=\"{$Bx}\" y2=\"{$By}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 5 . "\" y=\"" . $By - 5 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx - 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Dx - 5 . "\" y=\"" . $Dy + 20 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $Ex - 5 . "\" y=\"" . $Ey - 5 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $Fx + 5 . "\" y=\"" . $Fy - 5 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            ";
+
+        $plot_q1 = $plot_q1_base;
+        $plot_e1 = $plot_q1_base .= "
+            <!-- 三角形 -->
+            <path d=\"M 0 0 L {$Ax} {$Ay} L {$Fx} {$Fy} L {$Dx} {$Dy} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
+            <path d=\"M 0 0 L {$Ax} {$Ay} L {$Ex} {$Ey} L {$Dx} {$Dy} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
+            <path d=\"M 0 0 L {$Ax} {$Ay} L {$Bx} {$By} L {$Dx} {$Dy} Z\" fill=\"none\" stroke=\"red\" stroke-width=\"2\" />
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[3]\">
+                            <p>下図にて、AB//DC、AD//EC であり、DB と CE の交点を F とする。</p>
+                            <p>AB : CD = {$m} : {$n} で、台形 ABCD の面積が {$S_ABCD} のとき、△ADF の面積を求めよ。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $S_ans,
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[3]\">
+                            <p>台形 ABCD の面積を \(S\) とおく。△CDB と <span class=\"text-red-500\">△ABD</span> は高さが同じなので、</p>
+                            <p>底辺の比と面積比は同じく {$m} : {$n} である。よって、
+                                <span class=\"text-red-500\">
+                                    \(\\triangle \mathrm{ABD}\)
+                                </span>
+                                \(\displaystyle = S \\times \\frac{{$m}}{\,{$m} + {$n}\,} = \)
+                                <span class=\"text-red-500\">
+                                    \(\displaystyle {$S_ABD_str}\)
+                                </span>.
+                            </p>
+                            <p>また、AD//ECより、AD を底辺とすれば <span class=\"text-blue-700\">△ADF</span> と
+                                 <span class=\"text-blue-700\">△ADE</span> も高さが等しいので、面積も等しい。</p>
+                            <p>そこで △ADF の代わりに <span class=\"text-blue-700\">△ADE</span> に着目する。
+                                <span class=\"text-blue-700\">△ADE</span> : △ADB = AE : AB = {$n} : {$m} なので、</p>
+                            <p>
+                                <span class=\"text-blue-700\">
+                                    \(\\triangle \mathrm{ADE}\)
+                                </span>
+                                \(\displaystyle = \\triangle \mathrm{ADB} \\times \\frac{\mathrm{AE}}{\,\mathrm{AB}\,} = \)
+                                <span class=\"text-red-500\">
+                                    \(\displaystyle {$S_ABD_str}\)
+                                </span>
+                                \(\displaystyle \\times \\frac{{$n}}{\,{$m}\,} =\)
+                                <span class=\"text-blue-700\">
+                                    \(\displaystyle {$S_ADE_str}\)
+                                </span>.
+                            </p>
+                            <p>よって、
+                                <span class=\"text-blue-700\">
+                                    \(\displaystyle \\triangle \mathrm{ADF} = \\triangle \mathrm{ADE}
+                                        = {$S_ADE_str} = {$S_ADE_eff_str} \\times {$S_ABCD} = {$S_ans}\)
+                                </span>.
+                            </p>
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => $plot_e1,
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        $unitname = "面積比";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
     // 場合の数
