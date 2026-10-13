@@ -5828,9 +5828,13 @@ class WorkbookController extends Controller
         $Ey = 0;
         $Fx = $Dx + $Ex - ($Dx * $Ex / $Bx);
         $Fy = ($Dy / $Dx) * ($Fx - $Ex);
+        $Hx = $Dx**2 * $Ex / ($Dx**2 + $Dy**2);
+        $Hy = $Dx * $Dy * $Ex / ($Dx**2 + $Dy**2);
+        $Ix = $Cx;
+        $Iy = 0;
 
-        $vb_xfrom = -$Bx * 0.1;
-        $vb_width = $Bx * 1.2;
+        $vb_xfrom = -$Bx * 0.2;
+        $vb_width = $Bx * 1.4;
         $vb_yfrom = -$Dy * 0.2;
         $vb_height = $Dy * 1.4;
 
@@ -5863,8 +5867,8 @@ class WorkbookController extends Controller
             <text x=\"" . $Bx - 5 . "\" y=\"" . $By - 5 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
             <text x=\"" . $Cx - 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
             <text x=\"" . $Dx - 5 . "\" y=\"" . $Dy + 20 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
-            <text x=\"" . $Ex - 5 . "\" y=\"" . $Ey - 5 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
-            <text x=\"" . $Fx + 5 . "\" y=\"" . $Fy - 5 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            <text x=\"" . $Ex - 15 . "\" y=\"" . $Ey + 20 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $Fx + 10 . "\" y=\"" . $Fy + 15 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
             ";
 
         $plot_q1 = $plot_q1_base;
@@ -5873,6 +5877,19 @@ class WorkbookController extends Controller
             <path d=\"M 0 0 L {$Ax} {$Ay} L {$Fx} {$Fy} L {$Dx} {$Dy} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
             <path d=\"M 0 0 L {$Ax} {$Ay} L {$Ex} {$Ey} L {$Dx} {$Dy} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
             <path d=\"M 0 0 L {$Ax} {$Ay} L {$Bx} {$By} L {$Dx} {$Dy} Z\" fill=\"none\" stroke=\"red\" stroke-width=\"2\" />
+            <!-- 補助線追加 -->
+            <line x1=\"{$Hx}\" y1=\"{$Hy}\" x2=\"{$Ex}\" y2=\"{$Ey}\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <line x1=\"{$Cx}\" y1=\"{$Cy}\" x2=\"{$Ix}\" y2=\"{$Iy}\" stroke=\"red\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <!-- 頂点追加 -->
+            <text x=\"" . $Hx - 15 . "\" y=\"" . $Hy + 20 . "\" font-weight=\"bold\" font-size=\"18\">H</text>
+            <text x=\"" . $Ix - 5 . "\" y=\"" . $Iy - 5 . "\" font-weight=\"bold\" font-size=\"18\">I</text>
+            <!-- 比率 -->
+            <path d=\"M{$Ax},{$Ay} Q" . ($Ax + $Bx) / 2 . ",-40 {$Bx},{$By}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <circle cx=\"" . ($Ax + $Bx) / 2 . "\" cy=\"-20\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . ($Ax + $Bx) / 2 - 7 . "\" y=\"" . -15 . "\" font-weight=\"bold\" font-size=\"18\">{$m}</text>
+            <path d=\"M{$Cx},{$Cy} Q" . ($Cx + $Dx) / 2 . "," . $Cy + 40 . " {$Dx},{$Dy}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <circle cx=\"" . ($Cx + $Dx) / 2 . "\" cy=\"" . $Cy + 20 . "\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . ($Cx + $Dx) / 2 - 7 . "\" y=\"" . $Cy + 24 . "\" font-weight=\"bold\" font-size=\"18\">{$n}</text>
         ";
 
         // q：問、a：答、e：解説
@@ -5888,7 +5905,7 @@ class WorkbookController extends Controller
                 'a' => $S_ans,
                 'e_type' => 8,
                 'e' => "<div class=\"leading-[3]\">
-                            <p>台形 ABCD の面積を \(S\) とおく。△CDB と <span class=\"text-red-500\">△ABD</span> は高さが同じなので、</p>
+                            <p>台形 ABCD の面積を \(S\) とおく。△CDB と <span class=\"text-red-500\">△ABD</span> は高さが CI で同じなので、</p>
                             <p>底辺の比と面積比は同じく {$m} : {$n} である。よって、
                                 <span class=\"text-red-500\">
                                     \(\\triangle \mathrm{ABD}\)
@@ -5898,8 +5915,9 @@ class WorkbookController extends Controller
                                     \(\displaystyle {$S_ABD_str}\)
                                 </span>.
                             </p>
-                            <p>また、AD//ECより、AD を底辺とすれば <span class=\"text-blue-700\">△ADF</span> と
-                                 <span class=\"text-blue-700\">△ADE</span> も高さが等しいので、面積も等しい。</p>
+                            <p>また、<span class=\"text-blue-700\">△ADF</span> と
+                                 <span class=\"text-blue-700\">△ADE</span> は
+                                 いずれも底辺が AD で、AD//ECより高さ EH も共通なので、その面積も等しい。</p>
                             <p>そこで △ADF の代わりに <span class=\"text-blue-700\">△ADE</span> に着目する。
                                 <span class=\"text-blue-700\">△ADE</span> : △ADB = AE : AB = {$n} : {$m} なので、</p>
                             <p>
@@ -5912,14 +5930,85 @@ class WorkbookController extends Controller
                                 </span>
                                 \(\displaystyle \\times \\frac{{$n}}{\,{$m}\,} =\)
                                 <span class=\"text-blue-700\">
-                                    \(\displaystyle {$S_ADE_str}\)
+                                    \(\displaystyle {$S_ADE_str} = {$S_ADE_eff_str} \\times {$S_ABCD} = {$S_ans}\)
                                 </span>.
                             </p>
                             <p>よって、
                                 <span class=\"text-blue-700\">
-                                    \(\displaystyle \\triangle \mathrm{ADF} = \\triangle \mathrm{ADE}
-                                        = {$S_ADE_str} = {$S_ADE_eff_str} \\times {$S_ABCD} = {$S_ans}\)
+                                    \(\displaystyle \\triangle \mathrm{ADF} = \\triangle \mathrm{ADE} = {$S_ans}\)
                                 </span>.
+                            </p>
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => $plot_e1,
+            ],
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[3]\">
+                            <p>下図にて、AB//DC、AD//EC であり、DB と CE の交点を F とする。</p>
+                            <p>AB : CD = {$m} : {$n} で、△ADF の面積が \(\displaystyle {$S_ans}\) のとき、台形 ABCD の面積を求めよ。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $S_ABCD,
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[3]\">
+                            <p>AD//ECより、<span class=\"text-blue-700\">△ADF</span> と
+                                    <span class=\"text-blue-700\">△ADE</span> は
+                                    いずれも底辺が AD、高さが EH の三角形なので、その面積は等しい。</p>
+                            <p>また、<span class=\"text-blue-700\">△ADE</span> と <span class=\"text-red-500\">△ABD</span> は
+                                いずれも底辺が AB 上にあり、高さは CI で共通の三角形なので、</p>
+                            <p>底辺の比 AE : AB = CD : AB = {$n} : {$m} は面積比に等しい。よって、
+                                <span class=\"text-red-500\">
+                                    \(\\triangle \mathrm{ABD}\)
+                                </span>
+                                \(\displaystyle = \\frac{{$m}}{\,{$n}\,} \\times\)
+                                <span class=\"text-blue-700\">
+                                    \(\displaystyle \\triangle \mathrm{ADE}\)
+                                </span>.
+                            </p>
+                            <p>次に、<span class=\"text-red-500\">△ABD</span> と △BCD は、いずれも高さを CI とすると、底辺はそれぞれ AB、CD である。</p>
+                            <p>高さが同じなので、その面積比は底辺の比と同じく {$m} : {$n} であるから、
+                                \(\\triangle \mathrm{BCD} = \)
+                                <span class=\"text-red-500\">
+                                    \(\\triangle \mathrm{ABD}\)
+                                </span>
+                                \(\displaystyle \\times \\frac{{$n}}{\,{$m}\,}\)。
+                            </p>
+                            <p>よって、台形 ABCD の面積を \(S\) とすると、</p>
+                            <p>
+                                \(\displaystyle S = \\triangle \mathrm{BCD} \,+ \)
+                                <span class=\"text-red-500\">
+                                    \(\\triangle \mathrm{ABD}\)
+                                </span>
+
+                                \(\displaystyle = \\left( \\frac{{$n}}{\,{$m}\,} + 1 \\right) \)
+                                <span class=\"text-red-500\">
+                                    \(\\triangle \mathrm{ABD}\)
+                                </span>
+
+                                \(\displaystyle = " . $this->fracnum_to_str($n + $m, $m, "", 1) . " \\times \)
+                                <span class=\"text-red-500\">
+                                    \(\\triangle \mathrm{ABD}\)
+                                </span>
+                            </p>
+                            <p>
+                                \(\displaystyle = " . $this->fracnum_to_str($n + $m, $m, "", 1) . " \\times \\frac{{$m}}{\,{$n}\,} \\times\)
+                                <span class=\"text-blue-700\">
+                                    \(\displaystyle \\triangle \mathrm{ADE}\)
+                                </span>
+
+                                \(\displaystyle = " . $this->fracnum_to_str($n + $m, $n, "", 1) . " \,\\times \)
+                                <span class=\"text-blue-700\">
+                                    \(\displaystyle \\triangle \mathrm{ADF}\)
+                                </span>
+
+                                \(\displaystyle = " . $this->fracnum_to_str($n + $m, $n, "", 1) . " \,\\times \)
+                                <span class=\"text-blue-700\">
+                                    \(\displaystyle {$S_ans} \)
+                                </span>
+                                
+                                \(\displaystyle = {$S_ABCD}.\)
                             </p>
                         </div>
                         ",
