@@ -5668,7 +5668,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 合同の証明（作成中）
+    // 合同の証明
     public function proof_of_congruence(Request $request) {
         // グラフ描画用
         $size = 400;    //viewportの大きさ（仮）
@@ -5677,15 +5677,15 @@ class WorkbookController extends Controller
         // $val_size = 12; //実際の座標の大きさ
         // $scale = $size / $val_size; //縮尺
         
+
+        /****** 問１ *****/
         // 変数
-        $b = $size * 0.4;
+        $b = $size * 0.4;  // 大きい正方形の一辺
         $a = $b * 0.1 * rand(4, 8);    // 小さい正方形の一辺
-        // $b = $a + 0.2 * rand(1, 5); // 大きい正方形の一辺
         $alpha = 2 * M_PI * (5 * rand(0, 6)) / 360;    // 小さい正方形を時計回りに何度回転させるか（点Oが軸）　0~30°をラジアンで取得
         $beta = 2 * M_PI * (5 * rand(0, 3)) / 360;    // 大きい正方形を反時計回りに何度回転させるか（点Oが軸）　0~15°をラジアンで取得
         $beta = 2 * M_PI * (5 * 3) / 360;    // 大きい正方形を反時計回りに何度回転させるか（点Oが軸）　0~15°をラジアンで取得
 
-        /****** 問１ *****/
         // 各頂点の座標
         $Ax = -$b * sin($beta);
         $Ay = -$b * cos($beta);
@@ -5699,57 +5699,7 @@ class WorkbookController extends Controller
         $Ey = -sqrt(2)*$a * sin(M_PI / 4 - $alpha);
         $Fx = $a * sin($alpha);
         $Fy = -$a * cos($alpha);
-        $vb_xfrom = max(abs($Bx), abs($Ex)) * (-1.2);
-        $vb_width = -$vb_xfrom * 2;
-        $vb_xfrom = min($Bx, $Cx) - 20;
-        $vb_width = ($Ex - $vb_xfrom) + 20;
-        $vb_yfrom = $Ay - 20;
-        $vb_height = (max($Cy, $Dy) - $Ay) * 1.4;
-
-
-
-        // $a = 30 * rand(1, 6);  // 中心角：15～180°
-        // $r = rand(1, 9);
-        // $l = $this->simplify_fraction(2*$a*$r, 360);    //孤の長さ/pi
-        // $l_str = $this->fracnum_to_str($l['numerator'], $l['denominator'], "\,\pi", 1);
-        // $l_coeff_str = $this->fracnum_to_str($l['numerator'], $l['denominator'], "", 1);
-        // $theta = 2 * M_PI * $a / 360;   // 中心角（ラジアン）
-        // $ratio = $this->simplify_fraction($a, 360);
-        // $Sf = $this->simplify_fraction($a * $r**2, 360);
-        // $Sf_str = $this->fracnum_to_str($Sf['numerator'], $Sf['denominator'], "\,\pi", 1);
-        // $S_circ_str = $this->fracnum_to_str($r**2, 1, "\,\pi", 1);
-
-        // // プロット用
-        // $pr = 0.8 * $size / 2;
-        // $end_x = $pr * cos($theta);
-        // $end_y = $pr * sin($theta);
-
-        // // 角度表示用
-        // $ur = 0.2 * $size / 2;
-        // $ux = $ur * cos($theta);
-        // $uy = -$ur * sin($theta);   // svg の y 座標は下が正なので、-1 をかけておく。
-        // // $theta_unit = 2 * M_PI * $a / 360;
-        // $ur_end_x = $ur * cos($theta);
-        // $ur_end_y = $ur * sin($theta);
-
-        // プロット用パラメータ
-        // $w_full = $size;
-        // $w_half = $size / 2;
         
-        $plot_par_q = [
-            'vb_width' => $vb_width,
-            'vb_height' => $vb_height,
-            'vb_xfrom' => $vb_xfrom,
-            'vb_yfrom' => $vb_yfrom,
-        ];
-
-        $plot_con_q = "";
-        // 座標軸を作成
-        // for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
-        //     $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-        //     $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-        // }
-
         $plot_q1 = "
             <!-- 正方形 -->
             <path d=\"M 0 0 L {$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
@@ -5767,16 +5717,74 @@ class WorkbookController extends Controller
             <text x=\"" . $Fx - 5 . "\" y=\"" . $Fy - 5 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
             ";
 
+        /****** 問２ *****/
+        $c = 200;   // 正方形の一辺
+        $m = rand(3, 5); // AE * $m = AB
+        // 各頂点の座標
+        $A2x = 0;
+        $A2y = 0;
+        $B2x = 0;
+        $B2y = $c;
+        $C2x = $c;
+        $C2y = $c;
+        $D2x = $c;
+        $D2y = 0;
+        $E2x = 0;
+        $E2y = $c / $m;
+        $F2x = $c;
+        $F2y = $c - $c / $m;
+        $G2x = $c / ($m + 1);
+        $G2y = $G2x;
+        $H2x = $c - $c / ($m + 1);
+        $H2y = $H2x;
 
-            // <circle cx=\"0\" cy=\"0\" r=\"{$pr}\" fill-opacity=\"0.1\"/>
-            // <!-- M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
-            // <path d=\"M 0 0 L {$pr} 0 A {$pr} {$pr}, 0, 0, 0, {$end_x} -{$end_y} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"2\" />
-            // <path d=\"M 0 0 L {$ur} 0 A {$ur} {$ur}, 0, 0, 0, {$ur_end_x} -{$ur_end_y} Z\" fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+        // // 角度表示用
+        // $ur = 0.1 * $c;
+        // $ux = $ur * cos();
+        // $uy = -$ur * sin($theta);   // svg の y 座標は下が正なので、-1 をかけておく。
+        // // $theta_unit = 2 * M_PI * $a / 360;
+        // $ur_end_x = $ur * cos($theta);
+        // $ur_end_y = $ur * sin($theta);
+
+        $plot_q2_common = "
+            <!-- 四角形 -->
+            <path d=\"M {$A2x} {$A2y} L {$B2x} {$B2y} L {$C2x} {$C2y} L {$D2x} {$D2y} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$A2x}\" y1=\"{$A2y}\" x2=\"{$C2x}\" y2=\"{$C2y}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$B2x}\" y1=\"{$B2y}\" x2=\"{$F2x}\" y2=\"{$F2y}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$D2x}\" y1=\"{$D2y}\" x2=\"{$E2x}\" y2=\"{$E2y}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 頂点 -->
+            <text x=\"" . $A2x - 5 . "\" y=\"" . $A2y - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $B2x - 5 . "\" y=\"" . $B2y + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $C2x - 5 . "\" y=\"" . $C2y + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $D2x - 5 . "\" y=\"" . $D2y - 5 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $E2x - 20 . "\" y=\"" . $E2y . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $F2x + 5 . "\" y=\"" . $F2y + 5 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            <text x=\"" . $G2x - 5 . "\" y=\"" . $G2y + 20 . "\" font-weight=\"bold\" font-size=\"18\">G</text>
+            <text x=\"" . $H2x - 5 . "\" y=\"" . $H2y - 5 . "\" font-weight=\"bold\" font-size=\"18\">H</text>
+            ";
+
+        $plot_q2 = $plot_q2_common;
+        $plot_e2 = $plot_q2_common .= "
+            <!-- 三角形 -->
+            <path d=\"M {$A2x} {$A2y} L {$E2x} {$E2y} L {$G2x} {$G2y} Z\" fill=\"yellow\" fill-opacity=\"0.2\" />
+            <path d=\"M {$C2x} {$C2y} L {$F2x} {$F2y} L {$H2x} {$H2y} Z\" fill=\"yellow\" fill-opacity=\"0.2\" />
+            <path d=\"M {$A2x} {$A2y} L {$E2x} {$E2y} L {$D2x} {$D2y} Z\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\" />
+            <path d=\"M {$B2x} {$B2y} L {$C2x} {$C2y} L {$F2x} {$F2y} Z\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\" />
+            <!-- 同じ角度の印 -->
+            <circle cx=\"" . $A2x + 7 . "\" cy=\"" . $A2x + 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $C2x - 7 . "\" cy=\"" . $C2x - 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $E2x + 7 . "\" cy=\"" . $E2y - 10 . "\" r=\"3\" fill=\"black\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $B2x + 7 . "\" cy=\"" . $B2y - 10 . "\" r=\"3\" fill=\"black\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $F2x - 7 . "\" cy=\"" . $F2y + 10 . "\" r=\"3\" fill=\"black\" stroke=\"black\" stroke-width=\"1.5\" />
+        ";
+
 
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
         $questions = [
             [
+                'q_no' => 1,
                 'q_type' => 8,
                 'q' => "<p>下図の正方形 OABC と正方形 ODEF について、△AOD ≡ △COF を証明しなさい。",
                 'a_type' => 3,
@@ -5786,22 +5794,116 @@ class WorkbookController extends Controller
                             <p>　OD = OF ・・・②</p>
                             <p>また、正方形の内角はすべて 90° なので、</p>
                             <p>　∠AOD = ∠COF = 90° ・・・③</p>
-                            <p>①、②、③ より、２つの辺とその間の角がそれぞれ等しいので、</p>
+                            <p>①、②、③ より、２組の辺とその間の角がそれぞれ等しいので、</p>
                             <p>△AOD ≡ △COF</p>
                         </div>",
                 'e_type' => 3,
                 'e' => "<p></p>
                         ",
-                'p' => $plot_q1,
+                'pq' => $plot_q1,
+                'pe' => "",
             ],
-
+            [
+                'q_no' => 2,
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>下図の四角形 ABCD は正方形で、AE = CF である。</p>
+                            <p>このとき、AG = CH であることを証明せよ。</p>
+                        </div>",
+                'a_type' => 3,
+                'a' => "<div class=\"leading-[2] text-left px-5\">
+                            <p>仮定より、AE = CF ・・・①</p>
+                            <p>正方形の向かい合う辺は平行で、その錯角は等しいので、∠EAG = ∠FCH ・・・②</p>
+                            <div class=\"bg-blue-200\">
+                                <p>さて、△AED と △CFB について、AE = CF、AD = CB、∠EAD = ∠FCB = 90° である。</p>
+                                <p>２組の辺とその間の角がそれぞれ等しいので、△AED ≡ △CFB。</p>
+                                <p>合同な図形の対応する角の大きさは等しいので、∠AEG = ∠CFH ・・・③</p>
+                            </div>
+                            <p>①、②、<span class=\"bg-blue-200\">③</span> より、１組の辺とその両端の角がそれぞれ等しいので、△AEG ≡ △CFH。</p>
+                            <p>合同な図形の対応する辺の長さは等しいので、AG = CH。</p>
+                        </div>",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] text-left px-5\">
+                            <p>直接示すのが難しい時は、先にその辺を含む三角形が合同であることを示す。下図も参照すること。</p>
+                            <p><span class=\"bg-blue-200\">青色の部分</span>は、次の別解<span class=\"bg-green-200\">（緑色の部分）</span>も示しておく。記述は長くなるが、結論だけが必要な時は</p>
+                            <p>こちらの方がわかりやすいかもしれない。</p>
+                            <p>　↓</p>
+                            <p>仮定より、AE = CF ・・・①</p>
+                            <p>正方形の向かい合う辺は平行で、その錯角は等しいので、∠EAG = ∠FCH ・・・②</p>
+                            <div class=\"bg-green-200\">
+                                <div class=\"text-red-500\">
+                                    <p>さて、図より次の関係が成り立つ。</p>
+                                    <p>　EB = AB - AE ・・・③</p>
+                                    <p>　DF = DC - CF ・・・④</p>
+                                    <p>また、正方形の向かい合う辺は等しいので、</p>
+                                    <p>　AB = DC ・・・⑤</p>
+                                    <p>①、⑤ より、③ と ④ の右辺は等しいから、左辺も等しく、EB = DF。</p>
+                                </div>
+                                <p>また、正方形の向かい合う辺は平行なので、EB//DF。</p>
+                                <p>すると、１組の向かい合う辺が等しくて平行であることから、四角形 EBFD は平行四辺形である。</p>
+                                <p>これより ED//BFで、平行線の同位角は等しいから、</p>
+                                <p>　∠AEG = ∠ABF ・・・⑥</p>
+                                <p>また、平行線の錯角は等しいから、</p>
+                                <p>　∠ABF = ∠CFH ・・・⑦</p>
+                                <p>⑥、⑦ より、∠AEG = ∠CFH ・・・⑧</p>
+                            </div>
+                            <p>①、②、<span class=\"bg-green-200\">⑧</span> より、１組の辺とその両端の角がそれぞれ等しいので、△AEG ≡ △CFH</p>
+                            <p>合同な図形の対応する辺の長さは等しいので、AG = CH。</p>
+                        </div>
+                        <p>【別解の補足】</p>
+                        <div class=\"leading-[2] text-left pl-5\">
+                            <p>EB = DF の示し方は詳細に書くと<span class=\"text-red-500\">赤字</span>のようになる。ただ、図から明らかにわかる場合は、</p>
+                            <p>次のように簡単に書いても構わない。</p>
+                            <p>　↓</p>
+                            <p>仮定より、AE = CF ・・・①</p>
+                            <p>正方形の向かい合う辺は平行で、その錯角は等しいので、∠EAG = ∠FCH ・・・②</p>
+                            <div class=\"bg-green-200\">
+                                <p class=\"text-red-500\">AB = DC、AE = CF なので、図より EB = DF。</p>
+                                <p>また、正方形の向かい合う辺は平行なので、EB//DF。</p>
+                                <p>すると、１組の向かい合う辺が等しくて平行であることから、四角形 EBFD は平行四辺形である。</p>
+                                <p>これより ED//BFで、平行線の同位角は等しいから、</p>
+                                <p>　∠AEG = ∠ABF ・・・③</p>
+                                <p>また、平行線の錯角は等しいから、</p>
+                                <p>　∠ABF = ∠CFH ・・・④</p>
+                                <p>③、④ より、∠AEG = ∠CFH ・・・⑤</p>
+                            </div>
+                            <p>①、②、<span class=\"bg-green-200\">⑤</span> より、１組の辺とその両端の角がそれぞれ等しいので、△AEG ≡ △CFH</p>
+                            <p>合同な図形の対応する辺の長さは等しいので、AG = CH。</p>
+                        </div>",
+                'pq' => $plot_q2,
+                'pe' => $plot_e2,
+            ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
 
-        $plot_con_q = $question['p'];
+        if ($question['q_no'] == 1) {
+            // $vb_xfrom = max(abs($Bx), abs($Ex)) * (-1.2);
+            // $vb_width = -$vb_xfrom * 2;
+            $vb_xfrom = min($Bx, $Cx) - 20;
+            $vb_width = ($Ex - $vb_xfrom) + 20;
+            $vb_yfrom = $Ay - 20;
+            $vb_height = (max($Cy, $Dy) - $Ay) * 1.4;
+        } else {
+            $margin = $c * 0.2;
+            $vb_xfrom = -$margin;
+            $vb_width = $c + 2 * $margin;
+            $vb_yfrom = $vb_xfrom;
+            $vb_height = $vb_width;
+        }
+
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
         $unitname = "合同の証明";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
     // 面積比（中２）
