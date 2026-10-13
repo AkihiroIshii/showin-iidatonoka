@@ -10970,13 +10970,13 @@ class WorkbookController extends Controller
             ";
         }
 
-        $plot_par_e = [
+        $plot_par_q = $plot_par_e = [
             'width' => $vb_width,
             'height' => $vb_height,
         ];
 
         // 解説図
-        $plot_con_e = "
+        $plot_con_common = "
             <defs>
                 <!-- 光源、像を示す矢印 -->
                 <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
@@ -10988,27 +10988,32 @@ class WorkbookController extends Controller
             <line x1=\"{$margin}\" y1=\"" . $margin . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $margin . "\" stroke=\"black\" stroke-width=\"0.5\"/>
             <line x1=\"{$margin}\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $vb_height / 2 . "\" stroke=\"black\" stroke-width=\"1\"/>
             <line x1=\"{$margin}\" y1=\"" . $vb_height - $margin . "\" x2 =\"" . $vb_width - $margin . "\" y2=\"" . $vb_height - $margin . "\" stroke=\"black\" stroke-width=\"0.5\"/>
-            <text x=\"" . $margin - 20 . "\" y=\"" . $vb_height / 2 + 5 . "\" font-weight=\"bold\" font-size=\"15\" >①</text>
             <!-- 凸レンズ -->
             <path d=\"M" . $lens_x . "," . $margin / 2 . " Q" . $lens_x - 20 . "," . $vb_height / 2 . " " . $lens_x . "," . $vb_height - ($margin / 2) . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
             <path d=\"M" . $lens_x . "," . $margin / 2 . " Q" . $lens_x + 20 . "," . $vb_height / 2 . " " . $lens_x . "," . $vb_height - ($margin / 2) . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
-            <text x=\"" . $lens_x - 8 . "\" y=\"" . $margin / 2 - 5 . "\" font-weight=\"bold\" font-size=\"15\" >①</text>
             <!-- 焦点 -->
             <circle cx=\"" . $lens_x - $plot_forcal_length . "\" cy=\"" . $vb_height / 2 . "\" r=\"4\" fill=\"black\"/>
             <text x=\"" . $lens_x - $plot_forcal_length - 20 . "\" y=\"" . $vb_height / 2 - 10 . "\" font-weight=\"bold\" font-size=\"16\" >焦点</text>
-            <text x=\"" . $lens_x - $plot_forcal_length - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >②</text>
             <circle cx=\"" . $lens_x + $plot_forcal_length . "\" cy=\"" . $vb_height / 2 . "\" r=\"4\" fill=\"black\"/>
             <text x=\"" . $lens_x + $plot_forcal_length - 20 . "\" y=\"" . $vb_height / 2 - 10 . "\" font-weight=\"bold\" font-size=\"16\" >焦点</text>
-            <text x=\"" . $lens_x + $plot_forcal_length - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >②</text>
             <!-- 光源を示す矢印 -->
             <line x1=\"" . $x_l . "\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $x_l . "\" y2=\"" . $margin . "\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
             <text x=\"" . $x_l - 20 . "\" y=\"" . $margin - 10 . "\" font-weight=\"bold\" font-size=\"20\" >光源</text>
-            <text x=\"" . $x_l - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >③</text>
+        ";
+
+        $plot_con_q = $plot_con_common;
+        $plot_con_e = $plot_con_common .= "
             <!-- 像を示す矢印 -->
             <line x1=\"" . $x_image . "\" y1=\"" . $vb_height / 2 . "\" x2 =\"" . $x_image . "\" y2=\"" . $y_image . "\" stroke=\"black\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>
             <text x=\"" . $x_image - 20 . "\" y=\"" . $txt_y . "\" font-weight=\"bold\" font-size=\"20\" >{$txt_msg}</text>
             <!-- 光の進路 -->
             {$plot_light_part}
+            <!-- 手順を示す番号 -->
+            <text x=\"" . $margin - 20 . "\" y=\"" . $vb_height / 2 + 5 . "\" font-weight=\"bold\" font-size=\"15\" >①</text>
+            <text x=\"" . $lens_x - 8 . "\" y=\"" . $margin / 2 - 5 . "\" font-weight=\"bold\" font-size=\"15\" >①</text>
+            <text x=\"" . $lens_x - $plot_forcal_length - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >②</text>
+            <text x=\"" . $lens_x + $plot_forcal_length - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >②</text>
+            <text x=\"" . $x_l - 8 . "\" y=\"" . $vb_height / 2 + 20 . "\" font-weight=\"bold\" font-size=\"15\" >③</text>
         ";
 
         // q：問、a：答、e：解説
@@ -11043,8 +11048,17 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 図有
+        $flag2 = $request->boolean('flag2');    // 図無
+        $flags = ['flag1' => '図有', 'flag2' => '図無'];
+        if ($flag1 == true && $flag2 == false) {
+            $question['q_type'] = 7;
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
         $unitname = "凸レンズによる像";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e','subject','flags'));
     }
 
     // 単位の次元
