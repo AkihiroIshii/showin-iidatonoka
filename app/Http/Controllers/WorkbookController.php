@@ -3837,60 +3837,222 @@ class WorkbookController extends Controller
         return view('workbook.unit.spacial_figure', compact('question'));
     }
 
+    // 円錐の表面積（旧）
+    // public function corn_surface() {
+    //     $r = rand(1, 6);
+    //     $R = $r * rand(2, 6);   //R:母線（大円の半径）> r:底面の半径
+    //     $a = 360 * $r / $R;   //展開した側面（おうぎ形）の中心角
+    //     $Sf_str = ($r * $R) . "\pi";
+    //     $r2 = $r**2;
+    //     $R2 = $R**2;
+    //     $S_str = (($r*$R) + $r2) . "\pi";
+        
+    //     $imageUrl_q = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_q.png']);
+    //     $imageUrl_e1 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e1.png']);
+    //     $imageUrl_e2 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e2.png']);
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、母線が\,{$R}\,\mathrm{cm}\,の円錐の表面積を求めよ。\)</p>
+    //                     <img src=\"{$imageUrl_q}\" class=\"mx-auto\" >",
+    //             'a_type' => 2,
+    //             'a' => "{$S_str}\,\mathrm{cm}^2",
+    //             'e_type' => 3,
+    //             'e' => "<img src=\"{$imageUrl_e1}\" class=\"mx-auto\" >
+    //                     <img src=\"{$imageUrl_e2}\" class=\"mx-auto\" >
+    //                     <p>円錐を展開すると、底面は半径 \(r\) = {$r} cm の円、側面は半径 \(R\) = {$R} cm の扇形になる。</p>
+    //                     <p>(※)必ず円錐の展開図を描いて考えること。</p>
+    //                     <p>底面の円周は、側面の扇形の孤の部分と重なっていたので、それらの長さは一致する。</p>
+    //                     <p class=\"text-center\">[底面の円周の長さ] = [扇形の孤の長さ]</p>
+    //                     <p>この扇形の孤の長さは、半径 \(R\) の大円の円周 \((=2\pi R)\) に、360\(^{\circ}\) に対する中心角の比率をかけた値になる。</p>
+    //                     <p>そこで、扇形の中心角の大きさを \(a^{\circ}\) とおけば、\(\displaystyle 2\pi r = 2\pi R \\times \\frac{a}{\,360\,}\, \)が成り立つ。</p>
+    //                     <p>両辺を \(2\pi\) で割ると、\(\displaystyle r = R \\times \\frac{a}{\,360\,}\)。これを \(a\) について解くと、</p>
+    //                     <p>\(\displaystyle a = \\frac{r}{\,R\,} \\times 360 = \\frac{{$r}}{\,{$R}\,} \\times 360 = {$a}^{\circ}\). よって、扇形の面積 \(S_f\) は、</p>
+    //                     <p>\(S_f =\) [大円の面積] \(\\times\) [中心角の比率]
+    //                         \(\displaystyle= \pi R^2 \\times \\frac{a}{\,360\,}
+    //                             = {$R2}\pi \\times \\frac{{$a}}{\,360\,} = {$Sf_str}\,\mathrm{cm}^2\)</p>
+    //                     <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi\, \mathrm{cm}^2\) である。</p>
+    //                     <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
+
+    //                     <p class=\"mt-8 text-center font-bold\"><別解（中心角を求めない解き方）></p>
+    //                     <p>半径（ \(R\) cm とする）が等しい円と扇形を比べると、孤の長さの比と面積比は等しい。</p>
+    //                     <p class=\"text-center\">\(円周の長さ:孤の長さ = 円の面積:扇形の面積\)</p>
+    //                     <p>孤の長さを \(l\) cm、扇形の面積を \(S_f\) cm\(^2\) とすると、\(2\pi R:l = \pi R^2:S_f\)。よって、\(\displaystyle S_f=\\frac{\,Rl\,}{2}\)。</p>
+    //                     <p>また、この扇形の孤の長さ \(l\) は、底面の円周の長さに一致するので、\(l=2\pi r\) と表せる。</p>
+    //                     <p>これを先ほどの式に代入すると、\(\displaystyle S=\\frac{\,Rl\,}{2}=\\frac{\,2\pi rR\,}{2}=\pi rR = \pi \\times {$r} \\times {$R} = {$Sf_str}\, \mathrm{cm}^2\)。</p>
+    //                     <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi \, \mathrm{cm}^2\) である。</p>
+    //                     <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
+    //                     ",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "円錐の表面積";
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
+
     // 円錐の表面積
-    public function corn_surface() {
+    public function corn_surface(Request $request) {
         $r = rand(1, 6);
-        $R = $r * rand(2, 6);   //R:母線（大円の半径）> r:底面の半径
+        $R = $r * rand(2, 5);   //R:母線（大円の半径）> r:底面の半径
         $a = 360 * $r / $R;   //展開した側面（おうぎ形）の中心角
         $Sf_str = ($r * $R) . "\pi";
         $r2 = $r**2;
         $R2 = $R**2;
         $S_str = (($r*$R) + $r2) . "\pi";
-        
-        $imageUrl_q = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_q.png']);
-        $imageUrl_e1 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e1.png']);
-        $imageUrl_e2 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e2.png']);
+        $r2_str = $this->fracnum_to_str($r2, 1, "\pi", 1);
+
+        // グラフ描画用
+        $p_size = 300;    //描画領域の大きさ（仮）
+        $margin = 40;       // 余白の幅
+        $vb_width = $p_size + 2 * $margin;
+        $val_size = 2 * ($r + $R); //実際の座標の大きさ
+        $scale = ($p_size + 2 * $margin) / $val_size; //縮尺
+
+        $plot_par_q = [
+            'vb_width' => ($r * $scale + $margin) * 2.2,
+            'vb_height' => $R * $scale + 2 * $margin,
+            'vb_xfrom' => -($margin + $r * $scale) * 1.1,
+            'vb_yfrom' => -($margin + $R * $scale),
+        ];
+
+        $plot_par_e = [
+            'vb_width' => ($margin + $R * $scale) * 2,
+            'vb_height' => 2 * ($r + $R) * $scale + 2 * $margin,
+            'vb_xfrom' => -($margin + $R * $scale),
+            'vb_yfrom' => -($margin + $R * $scale),
+        ];
+
+        // 各頂点の座標（立体図）
+        $q_R = 0.9 * $R * $scale;    // 問題用に上から見て縮めた母線R
+        $Aqx = -$r * $scale;
+        $Aqy = 0;
+        $Bqx = $r * $scale;
+        $Bqy = $Aqy;
+        $Tq_x = $Bqx / 2;   // 表示場所（x）
+        $Tq_y = -$q_R / 2;   // 表示場所（y）
+        $Qq_x = $Tq_x + 20;  // 変曲点x
+        $Qq_y = $Tq_y - 20;  // 変曲点y
+
+        // 各頂点の座標（展開図）
+        $Osx = 0;
+        $Osy = ($r + $R) * $scale;
+        $Ax = (-$R * sin(2 * M_PI * ($a/2) / 360)) * $scale;
+        $Ay = ($R * cos(2 * M_PI * ($a/2) / 360)) * $scale;
+        $Bx = ($R * sin(2 * M_PI * ($a/2) / 360)) * $scale;
+        $By = $Ay;
+
+        // 半径表示用（大円）
+        $d = 30;    // 半径の線分OBからの距離
+        $beta = 2 * M_PI * (90 - $a/2) / 360;   // (90 - a/2)°　のラジアン表示
+        $Tl_x = ($Bx/2 + $d * sin($beta));   // 表示場所（x）
+        $Tl_y = ($By/2 - $d * cos($beta));   // 表示場所（y）
+        $Ql_x = ($Bx/2 + 2 * $d * sin($beta));  // 変曲点x
+        $Ql_y = ($By/2 - 2 * $d * cos($beta));  // 変曲点y
+        // 半径表示用（底面）
+        $Ts_x = ($r/2) * $scale;   // 表示場所（x）
+        $Ts_y = ($R + $r/2) * $scale;   // 表示場所（y）
+        $Qs_x = $Ts_x;
+        $Qs_y = $Ts_y - $d/10;
+
+        // 描画用
+        $p_R = $R * $scale;
+        $p_r = $r * $scale;
+        $p_R_add_r = ($r + $R) * $scale;
+
+        $plot_con_q = "
+            <!-- おうぎ形 M 始点(x y) L 孤の描き始めの点(x y) A (x軸半径 y軸半径), x軸からの傾き, 0, 0, 孤の終点(x y) Z -->
+            <path d=\"M 0 " . -$q_R . " L {$Aqx} {$Aqy} A {$q_R} {$q_R}, 0, 0, 0, {$Bqx} {$Bqy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 半径の長さ（大円） -->
+            <path d=\"M0," . -$q_R . " Q" . $Qq_x . "," . $Qq_y . " " . $r * $scale . ",0\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <circle cx=\"" . $Tq_x + 20 . "\" cy=\"" . $Tq_y . "\" r=\"14\" fill=\"white\" />
+            <text x=\"" . $Tq_x + 10 . "\" y=\"" . $Tq_y + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$R} cm</text>
+            <!-- 半径の長さ（底面） -->
+            <line x1=\"0\" y1=\"0\" x2=\"" . $r * $scale . "\" y2=\"0\" stroke=\"black\" stroke-width=\"1\" />
+            <path d=\"M" . -$r * $scale . ",0 Q0," . -$q_R * ($r/$R) / 2 . " " . $r * $scale . ",0\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <text x=\"" . ($r / 2) * $scale - 5 . "\" y=\"20\" font-weight=\"bold\" font-size=\"18\">{$r} cm</text>
+        ";
+
+        $plot_con_e = "
+            <!-- 大円 -->
+            <circle cx=\"0\" cy=\"0\" r=\"{$p_R}\" fill=\"none\" stroke=\"red\" stroke-width=\"2\" stroke-dasharray=\"4\"/>
+            <!-- おうぎ形 M 始点(x y) L 孤の描き始めの点(x y) A (半径 半径), x軸回転度数, 0, 0, 孤の終点(x y) Z -->
+            <path d=\"M 0 0 L {$Ax} {$Ay} A {$p_R} {$p_R}, 0, 0, 0, {$Bx} {$By} Z\" fill=\"blue\" fill-opacity=\"0.3\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 円弧のみ -->
+            <path d=\"M {$Ax} {$Ay} A {$p_R} {$p_R}, 0, 0, 0, {$Bx} {$By}\" fill=\"none\" stroke=\"blue\" stroke-width=\"4\" />
+            <!-- 底面の円 -->
+            <circle cx=\"0\" cy=\"" . ($r + $R) * $scale . "\" r=\"" . $r * $scale . "\" fill=\"green\" fill-opacity=\"0.2\" stroke=\"blue\" stroke-width=\"4\"/>
+            <!-- 座標 -->
+            <text x=\"" . $Ax - 20 . "\" y=\"" . $Ay + 10 . "\" font-weight=\"bold\" font-size=\"20\" >
+                A
+            </text>
+            <text x=\"" . $Bx + 5 . "\" y=\"" . $By + 10 . "\" font-weight=\"bold\" font-size=\"20\" >
+                B
+            </text>
+            <!-- 半径の長さ（大円） -->
+            <path d=\"M0,0 Q" . $Ql_x . "," . $Ql_y . " {$Bx},{$By}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <circle cx=\"" . $Tl_x . "\" cy=\"" . $Tl_y . "\" r=\"14\" fill=\"white\" />
+            <text x=\"" . $Tl_x - 10 . "\" y=\"" . $Tl_y + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$R} cm</text>
+            <!-- 半径の長さ（底面） -->
+            <line x1=\"{$Osx}\" y1=\"{$Osy}\" x2=\"" . $r * $scale . "\" y2=\"" . ($r + $R) * $scale . "\" stroke=\"black\" stroke-width=\"1\" />
+            <path d=\"M{$Osx},{$Osy} Q" . $Qs_x . "," . $Qs_y . " " . $r * $scale . "," . ($r + $R) * $scale . "\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"2\"/>
+            <circle cx=\"" . $Ts_x . "\" cy=\"" . $Ts_y + 5 . "\" r=\"14\" fill=\"none\" />
+            <text x=\"" . $Ts_x - 5 . "\" y=\"" . $Ts_y + 12 . "\" font-weight=\"bold\" font-size=\"18\">{$r} cm</text>
+        ";
+
+
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
         $questions = [
             [
-                'q_type' => 3,
-                'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、母線が\,{$R}\,\mathrm{cm}\,の円錐の表面積を求めよ。\)</p>
-                        <img src=\"{$imageUrl_q}\" class=\"mx-auto\" >",
+                'q_no' => 1,
+                'q_type' => 8,
+                'q' => "<p>底面の半径が {$r} cm、母線が {$R} cm の円錐の表面積を求めなさい。",
                 'a_type' => 2,
                 'a' => "{$S_str}\,\mathrm{cm}^2",
-                'e_type' => 3,
-                'e' => "<img src=\"{$imageUrl_e1}\" class=\"mx-auto\" >
-                        <img src=\"{$imageUrl_e2}\" class=\"mx-auto\" >
-                        <p>円錐を展開すると、底面は半径 \(r\) = {$r} cm の円、側面は半径 \(R\) = {$R} cm の扇形になる。</p>
-                        <p>(※)必ず円錐の展開図を描いて考えること。</p>
-                        <p>底面の円周は、側面の扇形の孤の部分と重なっていたので、それらの長さは一致する。</p>
-                        <p class=\"text-center\">[底面の円周の長さ] = [扇形の孤の長さ]</p>
-                        <p>この扇形の孤の長さは、半径 \(R\) の大円の円周 \((=2\pi R)\) に、360\(^{\circ}\) に対する中心角の比率をかけた値になる。</p>
-                        <p>そこで、扇形の中心角の大きさを \(a^{\circ}\) とおけば、\(\displaystyle 2\pi r = 2\pi R \\times \\frac{a}{\,360\,}\, \)が成り立つ。</p>
-                        <p>両辺を \(2\pi\) で割ると、\(\displaystyle r = R \\times \\frac{a}{\,360\,}\)。これを \(a\) について解くと、</p>
-                        <p>\(\displaystyle a = \\frac{r}{\,R\,} \\times 360 = \\frac{{$r}}{\,{$R}\,} \\times 360 = {$a}^{\circ}\). よって、扇形の面積 \(S_f\) は、</p>
-                        <p>\(S_f =\) [大円の面積] \(\\times\) [中心角の比率]
-                            \(\displaystyle= \pi R^2 \\times \\frac{a}{\,360\,}
-                                = {$R2}\pi \\times \\frac{{$a}}{\,360\,} = {$Sf_str}\,\mathrm{cm}^2\)</p>
-                        <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi\, \mathrm{cm}^2\) である。</p>
-                        <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
-
-                        <p class=\"mt-8 text-center font-bold\"><別解（中心角を求めない解き方）></p>
-                        <p>半径（ \(R\) cm とする）が等しい円と扇形を比べると、孤の長さの比と面積比は等しい。</p>
-                        <p class=\"text-center\">\(円周の長さ:孤の長さ = 円の面積:扇形の面積\)</p>
-                        <p>孤の長さを \(l\) cm、扇形の面積を \(S_f\) cm\(^2\) とすると、\(2\pi R:l = \pi R^2:S_f\)。よって、\(\displaystyle S_f=\\frac{\,Rl\,}{2}\)。</p>
-                        <p>また、この扇形の孤の長さ \(l\) は、底面の円周の長さに一致するので、\(l=2\pi r\) と表せる。</p>
-                        <p>これを先ほどの式に代入すると、\(\displaystyle S=\\frac{\,Rl\,}{2}=\\frac{\,2\pi rR\,}{2}=\pi rR = \pi \\times {$r} \\times {$R} = {$Sf_str}\, \mathrm{cm}^2\)。</p>
-                        <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi \, \mathrm{cm}^2\) である。</p>
-                        <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
-                        ",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>円錐を展開すると、底面は半径 \({$r}\,\mathrm{cm}\) の円、側面は半径 \({$R}\,\mathrm{cm}\) のおうぎ形になる。</p>
+                            <p>
+                                <span class=\"text-blue-700 font-bold\">おうぎ形の孤の長さ</span>は、もともと重なっていた
+                                <span class=\"text-blue-700 font-bold\">底面の円周の長さ</span>と一致するので、
+                            </p>
+                            <p>
+                                その長さは \(2\pi \\times {$r} =\) <span class=\"text-blue-700\">\(" . 2 * $r . "\pi \,\mathrm{cm}\)</span>。
+                                ところで、おうぎ形と同じ半径の<span class=\"text-red-500 font-bold\">大円</span>を考えると、
+                            </p>
+                            <p>
+                                その<span class=\"text-red-500 font-bold\">円周の長さ</span>は \(2\pi \\times {$R} =\,\)
+                                <span class=\"text-red-500\">\(" . 2 * $R . "\pi \,\mathrm{cm}\)</span>
+                                で、<span class=\"text-red-500 font-bold\">面積</span>は 
+                                \(\pi \\times {$R}^2 =\) <span class=\"text-red-500\">\(" . $R**2 . "\pi \,\mathrm{cm}^2\)</span> である。
+                            </p>
+                            <p>同じ半径のおうぎ形と円を比べたとき、<span class=\"underline\">孤と円周の長さの比は、面積の比に等しい</span>ので、</p>
+                            <p>おうぎ形の面積を <span class=\"text-blue-700\">\(S\,\mathrm{cm}^2\)</span> とすると、 
+                                <span class=\"text-blue-700\">\(" . 2 * $r . "\pi \,\mathrm{cm}\)</span> \(:\) 
+                                <span class=\"text-red-500\">\(" . 2 * $R . "\pi \,\mathrm{cm}\)</span> \(=\)
+                                <span class=\"text-blue-700\">\(S\,\mathrm{cm}^2\)</span> \(:\)
+                                <span class=\"text-red-500\">\(" . $R**2 . "\pi \,\mathrm{cm}^2\)</span>
+                                 が成り立つ。
+                            </p>
+                            <p>
+                                これを解けば、<span class=\"text-blue-700\">\(S = {$Sf_str}\,\mathrm{cm}^2\)</span>。
+                                さて、底面の面積は \(\pi \\times {$r}^2 =\,\)<span class=\"text-green-700\">\({$r2_str} \,\mathrm{cm}^2\) なので、
+                            </p>
+                            <p>
+                                円錐の表面積は、
+                                <span class=\"text-blue-700\">\({$Sf_str}\,\mathrm{cm}^2\)</span> \(+\)
+                                <span class=\"text-green-700\">\({$r2_str}\,\mathrm{cm}^2\)</span>
+                                \(= {$S_str}\,\mathrm{cm}^2\)。</p>
+                        </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "円錐の表面積";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
     // 角度の計算テク（約分）
