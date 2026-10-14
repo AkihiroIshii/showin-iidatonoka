@@ -326,24 +326,27 @@
                         <x-td>図形</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
+                                {{-- <x-button-link>
                                     <a href="{{route('workbook.unit.plane_figure')}}">平面図形</a>
+                                </x-button-link> --}}
+                                <x-button-link>
+                                    <a href="{{route('workbook.formulas_basic_shapes')}}">基本図形の公式</a>
                                 </x-button-link>
                                 <x-button-link>
-                                    <a href="{{route('workbook.unit.fan_figure')}}">おうぎ形</a>
+                                    <a href="{{route('workbook.fan_figure')}}">おうぎ形</a>
                                 </x-button-link>
-                                <x-button-link>
+                                {{-- <x-button-link>
                                     <a href="{{route('workbook.unit.spacial_figure')}}">空間図形</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                                 <x-button-link>
                                     <a href="{{route('workbook.corn_surface')}}">☆円錐の表面積</a>
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.angle_calc_div')}}">⇗角度の計算テク</a>
                                 </x-button-link>
-                                <x-button-link>
+                                {{-- <x-button-link>
                                     <a href="{{route('workbook.spacial_figure_summary')}}">◎空間図形まとめ</a>
-                                </x-button-link>
+                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">

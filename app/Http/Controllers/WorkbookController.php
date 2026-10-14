@@ -3622,38 +3622,128 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
-    // 平面図形
-    public function plane_figure() {
+    // // 平面図形
+    // public function plane_figure() {
+    //     $questions = [
+    //         [
+    //             'q' => '半径\,r\,の円の円周の長さ\,l',
+    //             'a' => 'l=2\\pi r',
+    //             'e' => '公式として覚える（にぱいあーる）。',
+    //         ],
+    //         [
+    //             'q' => '半径\,r\,の円の面積\,S',
+    //             'a' => 'S=\\pi r^2',
+    //             'e' => '公式として覚える（ぱいあーる にじょう）。',
+    //         ],
+    //         [
+    //             'q' => '半径\,r\,、中心角\,a^{\\circ}\,のおうぎ形の孤の長さ\,l',
+    //             'a' => 'l=2\\pi r \\times \\frac{a}{360}',
+    //             'e' => '[半径\,r\,の円の円周の長さ] \\times [円に対する中心角の比率]。',
+    //         ],
+    //         [
+    //             'q' => '半径\,r\,、中心角\,a^{\\circ}\,のおうぎ形の面積\,S',
+    //             'a' => 'S=\\pi r^2 \\times \\frac{a}{360}',
+    //             'e' => '[半径\,r\,の円の面積] \\times [円に対する中心角の比率]。',
+    //         ],
+    //         [
+    //             'q' => '半径\,r\,、孤の長さ\,l\,のおうぎ形の面積\,S',
+    //             'a' => 'S=\\pi r^2 \\times \\frac{l}{2\\pi r}',
+    //             'e' => '2\\pi r\,は半径\,r\,の円の円周の長さ。',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.plane_figure', compact('question'));
+    // }
+
+    // 基本図形の公式
+    public function formulas_basic_shapes(Request $request) {
+        $r = rand(1, 6);    // 円の半径
+        $theta = 60 * rand(1, 5);   // おうぎ形の中心角
+        $h = rand(2, 5);
+        $r2_str = $this->fracnum_to_str($r**2, 1, "\,\pi", 1);
+        $V_sphere_str = $this->fracnum_to_str(4 * $r**3, 3, "\,\pi", 1);
+        $S_sphere_str = $this->fracnum_to_str(4 * $r**2, 1, "\,\pi", 1);
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
         $questions = [
             [
-                'q' => '半径\,r\,の円の円周の長さ\,l',
-                'a' => 'l=2\\pi r',
-                'e' => '公式として覚える（にぱいあーる）。',
+                'q_type' => 3,
+                'q' => "<p>半径が {$r} cm の円について、円周の長さを求めなさい。",
+                'a_type' => 2,
+                'a' => 2 * $r . "\,\pi\,\mathrm{cm}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>半径 \(r\) の円について、円周の長さは \(2 \,\pi r\) なので、\(2\,\pi \\times {$r} = " . 2 * $r . "\,\pi\,\mathrm{cm}\).</p>
+                            <p>【補足】</p>
+                            <p>そもそも<span class=\"underline\">円周率とは、直径に対する円周の長さの比率と定義される</span>。</p>
+                            <p>そのため、円周の長さを \(l\) とすると、\(\displaystyle \pi = \\frac{l}{\,2r\,}\) が円周率の定義式である。</p>
+                            <p>これを \(l\) について解けば、\(l = 2\,\pi r\) となる。</p>
+                        </div>",
             ],
             [
-                'q' => '半径\,r\,の円の面積\,S',
-                'a' => 'S=\\pi r^2',
-                'e' => '公式として覚える（ぱいあーる にじょう）。',
+                'q_type' => 3,
+                'q' => "<p>半径が {$r} cm の円について、面積を求めなさい。",
+                'a_type' => 2,
+                'a' => "{$r2_str}\,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>半径 \(r\) の円について、面積は \(\pi r^2\) なので、\(\pi \\times {$r}^2 = {$r2_str}\,\mathrm{cm}^2\).</p>
+                        </div>",
             ],
             [
-                'q' => '半径\,r\,、中心角\,a^{\\circ}\,のおうぎ形の孤の長さ\,l',
-                'a' => 'l=2\\pi r \\times \\frac{a}{360}',
-                'e' => '[半径\,r\,の円の円周の長さ] \\times [円に対する中心角の比率]。',
+                'q_type' => 3,
+                'q' => "<p>底面の半径が {$r} cm、高さが {$h} cm の円錐の体積を求めなさい。",
+                'a_type' => 2,
+                'a' => $this->fracnum_to_str($r**2 * $h, 3, "\,\pi", 1) . "\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>底面積 \(S\)、高さ \(h\) の円錐の体積は、\(\displaystyle \\frac{1}{\,3\,} Sh \) である。</p>
+                            <p>底面は半径 {$r} cm の円なので、\(S = \pi r^2 = \pi \\times {$r}^2 = {$r2_str}\,\mathrm{cm}^2\)。</p>
+                            <p>よって円錐の体積は、\(\displaystyle \\frac{1}{\,3\,} \\times {$r2_str}\,\mathrm{cm}^2 \\times {$h}\,\mathrm{cm} = "
+                                . $this->fracnum_to_str($r**2 * $h, 3, "\,\pi", 1) . "\,\mathrm{cm}^3\).</p>
+                        </div>",
             ],
             [
-                'q' => '半径\,r\,、中心角\,a^{\\circ}\,のおうぎ形の面積\,S',
-                'a' => 'S=\\pi r^2 \\times \\frac{a}{360}',
-                'e' => '[半径\,r\,の円の面積] \\times [円に対する中心角の比率]。',
+                'q_type' => 3,
+                'q' => "<p>底面の半径が {$r} cm、高さが {$h} cm の円柱の体積を求めなさい。",
+                'a_type' => 2,
+                'a' => $r**2 * $h . "\,\pi\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>底面積 \(S\)、高さ \(h\) の円柱の体積は、\( Sh \) である。</p>
+                            <p>底面は半径 {$r} cm の円なので、\(S = \pi r^2 = \pi \\times {$r}^2 = {$r2_str}\,\mathrm{cm}^2\)。</p>
+                            <p>よって円柱の体積は、\({$r2_str}\,\mathrm{cm}^2 \\times {$h}\,\mathrm{cm} = "
+                                . $r**2 * $h . "\,\pi\,\mathrm{cm}^3\).</p>
+                        </div>",
             ],
             [
-                'q' => '半径\,r\,、孤の長さ\,l\,のおうぎ形の面積\,S',
-                'a' => 'S=\\pi r^2 \\times \\frac{l}{2\\pi r}',
-                'e' => '2\\pi r\,は半径\,r\,の円の円周の長さ。',
+                'q_type' => 3,
+                'q' => "<p>半径が {$r} cm の球の体積を求めなさい。",
+                'a_type' => 2,
+                'a' => "{$V_sphere_str}\,\mathrm{cm}^3",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>半径 \(r\) の球の体積は \(\displaystyle \\frac{4}{\,3\,} \pi r^3 \) なので、</p>
+                            $$ \\frac{4}{\,3\,} \pi \\times {$r}^3 = {$V_sphere_str}\,\mathrm{cm}^3.$$
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>半径が {$r} cm の球の表面積を求めなさい。",
+                'a_type' => 2,
+                'a' => "{$S_sphere_str}\,\mathrm{cm}^2",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>半径 \(r\) の球の表面積は \(4 \pi r^2 \) なので、</p>
+                            $$ 4 \pi \\times {$r}^2 = {$S_sphere_str}\,\mathrm{cm}^2.$$
+                        </div>",
             ],
         ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.plane_figure', compact('question'));
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "基本図形の公式";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // おうぎ形
@@ -3808,34 +3898,34 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e','subject','flags'));
     }
 
-    // 空間図形
-    public function spacial_figure() {
-        $questions = [
-            [
-                'q' => '底面積\,S\,、高さ\,h\,の円柱・角柱の体積\,V',
-                'a' => 'V=Sh',
-                'e' => '公式として覚える。',
-            ],
-            [
-                'q' => '底面積\,S\,、高さ\,h\,の円すい・角すいの体積\,V',
-                'a' => 'V=\\frac{1}{\\,3\\,}Sh',
-                'e' => '公式として覚える。',
-            ],
-            [
-                'q' => '半径\,r\,の球の体積\,V',
-                'a' => 'V=\\frac{4}{\\,3\\,}\\pi r^3',
-                'e' => '公式として覚える。',
-            ],
-            [
-                'q' => '半径\,r\,の球の表面積\,S',
-                'a' => 'S=4\\pi r^2',
-                'e' => '公式として覚える。',
-            ],
-        ];
-        $index = rand(0,count($questions)-1);
-        $question = $questions[$index];
-        return view('workbook.unit.spacial_figure', compact('question'));
-    }
+    // // 空間図形
+    // public function spacial_figure() {
+    //     $questions = [
+    //         [
+    //             'q' => '底面積\,S\,、高さ\,h\,の円柱・角柱の体積\,V',
+    //             'a' => 'V=Sh',
+    //             'e' => '公式として覚える。',
+    //         ],
+    //         [
+    //             'q' => '底面積\,S\,、高さ\,h\,の円すい・角すいの体積\,V',
+    //             'a' => 'V=\\frac{1}{\\,3\\,}Sh',
+    //             'e' => '公式として覚える。',
+    //         ],
+    //         [
+    //             'q' => '半径\,r\,の球の体積\,V',
+    //             'a' => 'V=\\frac{4}{\\,3\\,}\\pi r^3',
+    //             'e' => '公式として覚える。',
+    //         ],
+    //         [
+    //             'q' => '半径\,r\,の球の表面積\,S',
+    //             'a' => 'S=4\\pi r^2',
+    //             'e' => '公式として覚える。',
+    //         ],
+    //     ];
+    //     $index = rand(0,count($questions)-1);
+    //     $question = $questions[$index];
+    //     return view('workbook.unit.spacial_figure', compact('question'));
+    // }
 
     // 円錐の表面積（旧）
     // public function corn_surface() {
@@ -3985,12 +4075,14 @@ class WorkbookController extends Controller
             <!-- 底面の円 -->
             <circle cx=\"0\" cy=\"" . ($r + $R) * $scale . "\" r=\"" . $r * $scale . "\" fill=\"green\" fill-opacity=\"0.2\" stroke=\"blue\" stroke-width=\"4\"/>
             <!-- 座標 -->
+            <!--
             <text x=\"" . $Ax - 20 . "\" y=\"" . $Ay + 10 . "\" font-weight=\"bold\" font-size=\"20\" >
                 A
             </text>
             <text x=\"" . $Bx + 5 . "\" y=\"" . $By + 10 . "\" font-weight=\"bold\" font-size=\"20\" >
                 B
             </text>
+            -->
             <!-- 半径の長さ（大円） -->
             <path d=\"M0,0 Q" . $Ql_x . "," . $Ql_y . " {$Bx},{$By}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
             <circle cx=\"" . $Tl_x . "\" cy=\"" . $Tl_y . "\" r=\"14\" fill=\"white\" />

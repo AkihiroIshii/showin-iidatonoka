@@ -362,12 +362,14 @@ Route::get('workbook/domain_proportional_function', [WorkbookController::class, 
 ->middleware(['auth', 'verified'])->name('workbook.domain_proportional_function');
 // Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
 // ->middleware(['auth', 'verified'])->name('workbook.unit.plot_proportional_function');
-Route::get('workbook/plane_figure', [WorkbookController::class, 'plane_figure'])
-->middleware(['auth', 'verified'])->name('workbook.unit.plane_figure');
+// Route::get('workbook/plane_figure', [WorkbookController::class, 'plane_figure'])
+// ->middleware(['auth', 'verified'])->name('workbook.unit.plane_figure');
+// Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figure'])
+// ->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
+Route::get('workbook/formulas_basic_shapes', [WorkbookController::class, 'formulas_basic_shapes'])
+->middleware(['auth', 'verified'])->name('workbook.formulas_basic_shapes');
 Route::get('workbook/fan_figure', [WorkbookController::class, 'fan_figure'])
-->middleware(['auth', 'verified'])->name('workbook.unit.fan_figure');
-Route::get('workbook/spacial_figure', [WorkbookController::class, 'spacial_figure'])
-->middleware(['auth', 'verified'])->name('workbook.unit.spacial_figure');
+->middleware(['auth', 'verified'])->name('workbook.fan_figure');
 Route::get('workbook/corn_surface', [WorkbookController::class, 'corn_surface'])
 ->middleware(['auth', 'verified'])->name('workbook.corn_surface');
 Route::get('workbook/angle_calc_div', [WorkbookController::class, 'angle_calc_div'])
