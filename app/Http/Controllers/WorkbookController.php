@@ -1079,6 +1079,123 @@ class WorkbookController extends Controller
         return view('workbook.unit.mul100', compact('a','b','m1','m2','ans'));
     }
 
+    // 帯分数
+    public function mixed_number(Request $request) {
+        // 帯分数の整数部分
+        $integer = rand(1, 9);
+
+        // 帯分数の分数部分
+        $deno_seed = rand(2, 9);
+        $nume_seed = rand(1, $deno_seed - 1);
+
+        // 帯分数の分数部分を既約分数にする
+        $fraction = $this->simplify_fraction($nume_seed, $deno_seed);
+        $numerator = $fraction['numerator'];
+        $denominator = $fraction['denominator'];
+
+        // 仮分数の分子
+        $imp_nume = $integer * $denominator + $numerator;
+
+        // 文字列
+        $improper_str = $this->fracnum_to_str($imp_nume, $denominator, "", 1);  // 仮分数
+        $mixed_str = $integer . $this->fracnum_to_str($numerator, $denominator, "", 1); // 帯分数
+
+        // グラフの最大値取得
+        $plot_max = $integer + 1;
+        // $plot_max = ceil($ans_frac['numerator'] / $ans_frac['denominator']);
+        $n_split = $plot_max * $denominator;    // グラフの分割数
+
+        // グラフ描画用
+        $width = 700;    //viewportの大きさ
+        $h_unit = 30;   // 帯グラフ１段分の高さ
+        $height = $h_unit * 2;
+        $w_margin = 50;
+
+        $w_unit = ($width - $w_margin) / $n_split;
+
+        $plot_par_e = [
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        // 帯を作る
+        $plot_con_e = "";
+        // 外枠
+        $plot_con_e .= "<rect x=\"0\" y=\"" . 0 . "\" width=\"" . $width - $w_margin . "\" height=\"" . $h_unit . "\" fill=\"transparent\" stroke=\"black\"/>";
+        // 区切り線を引く
+        for ($i = 0; $i <= $n_split; $i++) {
+            $plot_con_e .= "<line x1=\"" . $i*$w_unit . "\" y1=\"" . 0 . "\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        }
+        // 整数値の目盛り
+        for ($i = 1; $i <= $plot_max; $i++) {
+            $plot_con_e .= "
+                <line x1=\"" . (($width - $w_margin) / $plot_max) * $i . "\" y1=\"" . 0 . "\" x2 =\"" . (($width - $w_margin) / $plot_max) * $i . "\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                <text x=\"" . (($width - $w_margin) / $plot_max) * $i - 5 . "\" y=\"" . $h_unit * 3/2 . "\" font-weight=\"bold\" font-size=\"16\" >
+                    {$i}
+                </text>
+                ";
+        }
+        // 値の幅だけ赤くする。
+        $plot_con_e .= "<rect x=\"0\" y=\"" . 0 . "\" width=\"" . $w_unit * $imp_nume . "\" height=\"" . $h_unit . "\" fill=\"red\" fill-opacity=\"0.2\"/>";
+
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"leading-[3] mt-4\">
+                            \(\displaystyle {$improper_str}\) <span class=\"text-2xl\">を帯分数に直しなさい。
+                        </p>",
+                'a_type' => 2,
+                'a' => $mixed_str,
+                'e_type' => 7,
+                'e' => "<div class=\"text-xl leading-[3] mb-4\">
+                            $$
+                                {$improper_str}
+                                    = \\frac{\," . $integer * $denominator . " + {$numerator}\,}{{$denominator}}
+                                    = \\frac{\," . $integer * $denominator . "\,}{{$denominator}} + \\frac{{$numerator}}{\,{$denominator}\,}
+                                    = $integer + \\frac{{$numerator}}{\,{$denominator}\,}
+                                    = {$mixed_str}
+                            $$
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"leading-[3] mt-4\">
+                            \(\displaystyle {$mixed_str}\) <span class=\"text-2xl\">を仮分数に直しなさい。
+                        </p>",
+                'a_type' => 2,
+                'a' => $improper_str,
+                'e_type' => 7,
+                'e' => "<div class=\"text-xl leading-[3] mb-4\">
+                            $$
+                                {$mixed_str}
+                                    = $integer + \\frac{{$numerator}}{\,{$denominator}\,}
+                                    = \\frac{\," . $integer * $denominator . "\,}{{$denominator}} + \\frac{{$numerator}}{\,{$denominator}\,}
+                                    = \\frac{\," . $integer * $denominator . " + {$numerator}\,}{{$denominator}}
+                                    = {$improper_str}
+                            $$
+                        </div>",
+            ],
+        ];
+        // $q_idx = rand(0, count($questions)-1);
+        // $question = $questions[$q_idx];
+
+        // チェックボックスの値を取得。
+        $flag1 = $request->boolean('flag1');    // 基礎
+        $flag2 = $request->boolean('flag2');    // 単位変換
+        $flags = ['flag1' => '⇒帯', 'flag2' => '⇒仮'];
+        if ($flag1 == true && $flag2 == false) {
+            $question = $questions[0];
+        } else if ($flag1 == false && $flag2 == true) {
+            $question = $questions[1];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "帯分数⇔仮分数";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e','subject','flags'));
+    }
+
     // // 割合
     // public function ratio1() {
     //     $num = 10 * rand(1, 20);
