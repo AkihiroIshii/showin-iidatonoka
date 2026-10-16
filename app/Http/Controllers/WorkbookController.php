@@ -7915,10 +7915,10 @@ class WorkbookController extends Controller
         // a(x - alpha)(x - beta) = 0
         // ax^2 = a(alpha + beta)x - a*alpha*beta
         // y = ax^2, y = a(alpha + beta)x - a*alpha*beta = cx + d
-        $alpha = -rand(2, 10);
-        $beta = rand(2, 10);
+        $alpha = -rand(2, 5);
+        $beta = rand(2, 5);
         while (abs($alpha) == abs($beta)) {
-            $beta = rand(2, 10);
+            $beta = rand(2, 5);
         }
 
         /***** y = ax^2 *****/
@@ -7933,6 +7933,11 @@ class WorkbookController extends Controller
         $a = $a_numerator / $a_denominator;
         $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
         $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x^2", 1);
+        if ($a == 1) {
+            $a_str2 = "";
+        } else {
+            $a_str2 = $a_str;
+        }
 
         /***** y = cx + d *****/
         $c_numerator = $a_numerator * ($alpha + $beta);
@@ -7970,6 +7975,14 @@ class WorkbookController extends Controller
             "",
             1
         );
+        // 平行四辺形 OBPA の面積
+        $S_OBPA_str = $this->fracnum_to_str(
+            2 * $d_numerator * ($beta - $alpha),
+            2 * $d_denominator,
+            "",
+            1
+        );
+        $S_OBPA = $d_numerator * ($beta - $alpha) / $d_denominator;
 
         // グラフ描画用
         $vb_width = 300;    //viewportの幅
@@ -7977,7 +7990,8 @@ class WorkbookController extends Controller
         // 表示対象にする x, y の最小値と最大値（原点と交点は表示する）
         $vx_max = max(abs($alpha), abs($beta))*1.2;
         $vx_min = -$vx_max;
-        $vy_max = $a * max(abs($alpha), abs($beta))**2 * 1.2;
+        // $vy_max = $a * max(abs($alpha), abs($beta))**2 * 1.2;
+        $vy_max = $a * ($alpha**2 + $beta**2) * 1.2;
         $vy_min = -$vy_max / 10;
         $xscale = $vb_width / ($vx_max - $vx_min); //x縮尺
         $yscale = $vb_height / ($vy_max - $vy_min); //y縮尺
@@ -7989,12 +8003,13 @@ class WorkbookController extends Controller
         $to_y = ceil($vy_max * $yscale);
         $y0 = $vb_height + (2 * $vy_min * $yscale); // y の位置は　y0 - y で表現
         
-        // 点A, B の座標(viewbox)
+        /***** 点A, B の座標(viewbox) *****/
+        // 問１
         $Ax = $alpha * $xscale;
         $Ay = $y0 - ($a * $alpha**2) * $yscale; 
         $Bx = $beta * $xscale;
         $By = $y0 - ($a * $beta**2) * $yscale; 
-        $Dx = 0;
+        $Dx = 0;    // 切片
         $Dy = $y0 - $d * $yscale; 
 
         // y = cx + d 
@@ -8004,7 +8019,37 @@ class WorkbookController extends Controller
         $from_y2 = ($a * $vx_min**2) * $yscale;
         $to_y2 = ($a * $vx_max**2) * $yscale;
 
-        $plot_par_e = [
+        // 問２
+        $alpha2 = -min(abs($alpha), $beta);      //alpha の方が原点に近いようにする。
+        $beta2 = max(abs($alpha), $beta);
+        $A2x = $alpha2 * $xscale;
+        $A2y = $y0 - ($a * $alpha2**2) * $yscale; 
+        $B2x = $beta2 * $xscale;
+        $B2y = $y0 - ($a * $beta2**2) * $yscale; 
+        $C2x = $A2x;
+        $C2y = $y0;
+        $D2x = $B2x;
+        $D2y = $y0;
+        $P2x = ($beta2 + $alpha2) * $xscale;
+        $P2y = $y0 - $a * ($alpha2**2 + $beta2**2) * $yscale;
+        $Ox = 0;
+        $Oy = $y0;
+        if($a == 1) {
+            $a_alpha2 = "({$alpha2})^2";
+        } {
+            $a_alpha2 = "{$a} \\times ({$alpha2})^2";
+        }
+        if($a == 2) {
+            $rev_coef = "";
+        } else {
+            $rev_coef = "\\times " . $this->fracnum_to_str(2, $a, "", 1);
+        }
+
+        // 直線ABの傾き
+        // $slope_AB_str = ($a == 1) ? "t - " . abs($alpha2) : "{$a}(t - " . abs($alpha2) . ")";
+
+
+        $plot_par_q = $plot_par_e = [
             'vb_width' => $vb_width,
             'vb_height' => $vb_height,
             'vb_xfrom' => $from_x,
@@ -8012,8 +8057,9 @@ class WorkbookController extends Controller
             'vb_xto' => $to_x,
             'vb_yto' => -$to_y,
         ];
+// dd("vb_width:{$vb_width},A2x:{$A2x},A2y:{$A2y}");
 
-        $plot_con_e = "
+        $plot_con_common = "
             <!-- 座標軸先端の矢印を定義 -->
             <defs>
                 <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
@@ -8029,8 +8075,13 @@ class WorkbookController extends Controller
             <line x1=\"" . $from_x . "\" y1=\"{$y0}\" x2 =\"" . $to_x . "\" y2=\"{$y0}\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
             <line x1=\"0\" y1=\"" . $y0 - $vy_min * $yscale . "\" x2=\"0\" y2=\"" . $y0 - $vy_max * $yscale . "\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
             <!-- 関数 -->
-            <line x1=\"" . $from_x . "\" y1=\"" . $y0 - $from_y1 . "\" x2=\"" . $to_x . "\" y2=\"" . $y0 - $to_y1 . "\" stroke=\"black\" stroke-width=\"2\" />
             <path d=\"M" . $from_x . "," . $y0 - $from_y2 . " Q0," . $y0 + $from_y2 . " " . $to_x . "," . $y0 - $to_y2 . "\" stroke=\"black\" stroke-width=\"2\" fill=\"none\"/>
+        ";
+
+        $plot_con_e1 = $plot_con_common;
+        $plot_con_e1 .= "
+            <!-- 関数 -->
+            <line x1=\"" . $from_x . "\" y1=\"" . $y0 - $from_y1 . "\" x2=\"" . $to_x . "\" y2=\"" . $y0 - $to_y1 . "\" stroke=\"black\" stroke-width=\"2\" />
             <!-- △AOB -->
             <path d=\"M 0 {$y0} L {$Ax} {$Ay} L {$Dx} {$Dy} Z\" fill=\"#00aeffa0\" stroke=\"black\" stroke-width=\"1\" />
             <path d=\"M 0 {$y0} L {$Dx} {$Dy} L {$Bx} {$By} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />
@@ -8058,6 +8109,53 @@ class WorkbookController extends Controller
             </text>
             <text x=\"" . $Bx - 10 . "\" y=\"" . $y0 + 20 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
                 {$beta}
+            </text>
+        ";
+
+        $plot_con_q2 = $plot_con_common;
+        $plot_con_q2 .= "
+            <!-- 平行四辺形 -->
+            <path d=\"M 0 {$y0} L {$B2x} {$B2y} L {$P2x} {$P2y} L {$A2x} {$A2y} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 文字の書き込み -->
+            <text x=\"5\" y=\"" . $y0 + 20 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                O
+            </text>
+            <text x=\"" . $A2x - 10 . "\" y=\"" . $A2y - 15 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                A
+            </text>
+            <text x=\"" . $B2x - 10 . "\" y=\"" . $B2y - 10 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                B
+            </text>
+            <text x=\"" . $P2x . "\" y=\"" . $P2y - 10 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                P
+            </text>
+        ";
+
+        $plot_con_e2 = $plot_con_q2;
+        $plot_con_e2 .= "
+            <!-- 台形 -->
+            <path d=\"M {$A2x} {$A2y} L {$Ox} {$Oy} L {$B2x} {$B2y} Z\" fill=\"green\" fill-opacity=\"0.2\" />
+            <!-- 三角形 -->
+            <path d=\"M {$Ox} {$Oy} L {$A2x} {$A2y} L {$C2x} {$C2y} Z\" fill=\"red\" fill-opacity=\"0.2\" />
+            <path d=\"M {$Ox} {$Oy} L {$D2x} {$D2y} L {$B2x} {$B2y} Z\" fill=\"blue\" fill-opacity=\"0.2\" />
+
+            <!-- 関数 -->
+            <line x1=\"" . $A2x . "\" y1=\"" . $A2y . "\" x2=\"" . $B2x . "\" y2=\"" . $B2y . "\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$A2x}\" y1=\"{$A2y}\" x2=\"{$A2x}\" y2=\"{$y0}\" stroke=\"black\" stroke-dasharray=\"4\" />
+            <line x1=\"{$B2x}\" y1=\"{$B2y}\" x2=\"{$B2x}\" y2=\"{$y0}\" stroke=\"black\" stroke-dasharray=\"4\" />
+            <!-- 文字の書き込み -->
+            <text x=\"" . $C2x - 20 . "\" y=\"" . $C2y - 5 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                C
+            </text>
+            <text x=\"" . $B2x - 20 . "\" y=\"" . $y0 - 5 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                D
+            </text>
+            <text x=\"" . $A2x - 10 . "\" y=\"" . $y0 + 20 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                {$alpha2}
+            </text>
+            <text x=\"" . $B2x - 10 . "\" y=\"" . $y0 + 20 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                t
             </text>
         ";
 
@@ -8110,13 +8208,290 @@ class WorkbookController extends Controller
                             \\end{aligned}
                         \]
                     </div>",
+                'pq' => "",
+                'pe' => $plot_con_e1,
+            ],
+            [
+                'q_type' => 8,
+                'q' => "
+                    <div class=\"leading-[2] mt-4 mb-4\">
+                        <p>下図のように、曲線 \(\displaystyle y = {$ax_str}\) 上に点 A, B がある。点 A の \(x\) 座標は \({$alpha2}\) である。</p>
+                        <p>原点を O とし、平行四辺形 OBPA の面積が \({$S_OBPA_str}\) のとき、点 B の座標を求めよ。</p> 
+                    </div>",
+                'a_type' => 2,
+                'a' => "({$beta2}," . $a * $beta2**2 . ")",
+                'e_type' => 8,
+                'e' => "
+                    <div class=\"leading-[2] mt-4 mb-4\">
+                        <p>点 A, B から \(x\) 軸に垂線を下ろし、\(x\) 軸との交点をそれぞれ C, D とする。</p>
+                        <p>
+                            平行四辺形 OBPA の面積が \({$S_OBPA_str}\) のとき、
+                            <span class=\"bg-green-200\">△OAB</span> 
+                            の面積はその半分の \({$S_str}\) である。
+                        </p>
+                        <p>
+                            下図より、<span class=\"bg-green-200\">△OAB</span>
+                            = □ACDB － <span class=\"bg-red-200\">△OAC</span> 
+                            － <span class=\"bg-blue-200\">△ODB</span> なので、</p>
+                        \[
+                            \\begin{aligned}
+                                {$S_str} &= \\left\{ \\frac{1}{\,2\,} (\mathrm{AC} + \mathrm{DB}) \\times \mathrm{CD} \\right\}
+                                    - \\frac{1}{\,2\,} \mathrm{OC} \\times \mathrm{AC} - \\frac{1}{\,2\,} \mathrm{OD} \\times \mathrm{BD} \\\\
+                                {$S_str} &= \\frac{1}{\,2\,} \\left\{ {$a_alpha2} + {$a_str2}\,t^2 \\right\} (t + " .  abs($alpha2) . ")
+                                    - \\frac{1}{\,2\,} \\times " . abs($alpha2) . " \\times {$a_alpha2}
+                                    - \\frac{1}{\,2\,} \\times t \\times {$a_str2}\,t^2 \\\\
+                                {$S_str} &= \\frac{{$a}}{\,2\,} (" . $alpha2**2 . " + t^2)(t + " .  abs($alpha2) . ")
+                                    - \\frac{{$a}}{\,2\,} \\times " . abs($alpha2) . " \\times " . $alpha2**2 . "
+                                    - \\frac{{$a}}{\,2\,} \\times t^3 \\\\
+                                {$S_str} {$rev_coef} &= (" . $alpha2**2 . " + t^2)(t + " .  abs($alpha2) . ")
+                                    - " . abs($alpha2) . " \\times " . $alpha2**2 . " - t^3 \\\\
+                                " . $S_OBPA / $a . " &= (t^3 + " . abs($alpha2) . "\,t^2 + " . $alpha2**2 . "\,t + " .  abs($alpha2) . " \\times " . $alpha**2 . ")
+                                    - " . abs($alpha2) . " \\times " . $alpha2**2 . " - t^3 \\\\
+                                " . $S_OBPA / $a . " &= " . abs($alpha2) . "\,t^2 + " . $alpha2**2 . "\,t \\\\
+                                " . abs($alpha2) . "\,t^2 + " . $alpha2**2 . "\,t - " . $S_OBPA / $a . " &= 0\\\\
+                                t^2 + " . abs($alpha2) . "\,t - " . $S_OBPA / ($a * abs($alpha2)) . " &= 0 \\\\
+                                (t - {$beta2})(t + " . $S_OBPA / ($a * abs($alpha2) * $beta2) . ") &= 0 \\\\
+                            \\end{aligned}
+                        \]
+                        <p>よって、\(t > 0\) より、\(t = {$beta2}\) である。点 B の \(y\) 座標は、\({$a_str} \\times {$beta2}^2 = " . $a * $beta2**2 . "\)。</p> 
+                    </div>",
+                'pq' => $plot_con_q2,
+                'pe' => $plot_con_e2,
+            ],
+        ];
+                        // <p>点 B の \(x\) 座標を \(t\) とおくと、点 B の座標は \((t,\,{$a_str}\,t^2)\) と表せる。これより、直線 AB の傾きは、</p>
+                        // $$
+                        //     \\frac{\,{$a_str2}\,t^2 - \{ {$a_str2} \\times (-" . abs($alpha2) . ")^2\} \,}{\,t - (-" . abs($alpha2) . ")\,}
+                        //     = \\frac{\,{$a}(t^2 - " . abs($alpha2)**2 . ")\,}{\,t + " . abs($alpha2) . "\,}
+                        //     = \\frac{\,{$a}(t + " . abs($alpha2) . ")(t {$alpha2})\,}{\,t + " . abs($alpha2) . "\,}
+                        //     = {$slope_AB_str}.
+                        // $$
+                        // <p>よって、直線 AB は \(y = {$slope_AB_str}x + d\) とおける。点 A の座標 \(({$alpha2}," . $a * $alpha2**2 . ")\) を代入すると、</p>
+                        // <p>\(" . $a * $alpha2**2 . " = {$a_str2}(t - " . abs($alpha2) . ") \\times ({$alpha2}) + d\) となるので、これを解くと \(d = {$d}\).</p>
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        $unitname = "☆交点と三角形の面積";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+
+    // 相似
+    public function similarity(Request $request) {
+        // グラフ描画用
+        $size = 400;    //viewportの大きさ（仮）
+        $margin = 40;
+        $vb_width = $size;
+        $vb_height = $size;
+        
+        
+        // 変数
+        $base = $size * 3 / 4;  // 底辺BCの長さ
+
+        // DP:PC = m:n
+        $m_seed = rand(1, 5);
+        $n_seed = rand(1, 5);
+        $mn_frac = $this->simplify_fraction($m_seed, $n_seed);
+        $m = $mn_frac['numerator'];
+        $n = $mn_frac['denominator'];
+        $m_add_n = $m + $n;
+
+        // BA:AH = s:t
+        $s_seed = rand(3, 5);
+        $t_seed = rand(1, 3);
+        $st_frac = $this->simplify_fraction($s_seed, $t_seed);
+        $s = $st_frac['numerator'];
+        $t = $st_frac['denominator'];
+
+        /****** 問１ *****/
+        $theta = M_PI / 3;    // BAとBCのなす角（ラジアン）
+        // 各頂点の座標
+        $Ax = $base / 3;
+        $Ay = -$base * 1.5 * cos($theta);
+        // $Ay = -$base * 2 / 3;
+        $Bx = 0;
+        $By = 0;
+        $Cx = $base;
+        $Cy = 0;
+        $Dx = $Ax + $base;
+        $Dy = $Ay;
+        $Fx = $Cx * ($m + $n) / ($m + 2 * $n);
+        $Fy = 0;
+        $Ex = $Fx + $Ax;
+        $Ey = $Ay;
+        $Px = $Cx + $Ax * $n / ($m + $n);
+        $Py = $Cy + $Ay * $n / ($m + $n);
+        $Gx = $Px * $Ay * $Cx / ($Py * ($Cx - $Ax) + $Px * $Ay);
+        $Gy = $Py / $Px * $Gx;
+
+        $S_CGF = $this->fracnum_to_str($n**2, ($m_add_n + $n)**2 * 2, "", 1);
+        /***** 変曲点（比率を示す点線描画用） *****/
+        $d = 20;    // 線分からの距離
+        
+        $T_ABx = ($Ax/2 - $d * sin($theta));   // 表示場所（x）
+        $T_ABy = ($Ay/2 - $d * cos($theta));   // 表示場所（y）
+        $Q_ABx = ($Ax/2 - 2 * $d * sin($theta));  // 変曲点x
+        $Q_ABy = ($Ay/2 - 2 * $d * cos($theta));  // 変曲点y
+
+        $T_DPx = (($Dx+$Px)/2 + $d * sin($theta));   // 表示場所（x）
+        $T_DPy = (($Dy+$Py)/2 + $d * cos($theta));   // 表示場所（y）
+        $Q_DPx = (($Dx+$Px)/2 + 2 * $d * sin($theta));  // 変曲点x
+        $Q_DPy = (($Dy+$Py)/2 + 2 * $d * cos($theta));  // 変曲点y
+
+        $T_PCx = (($Px+$Cx)/2 + $d * sin($theta));   // 表示場所（x）
+        $T_PCy = ($Py/2 + $d * cos($theta));   // 表示場所（y）
+        $Q_PCx = (($Px+$Cx)/2 + 2 * $d * sin($theta));  // 変曲点x
+        $Q_PCy = ($Py/2 + 2 * $d * cos($theta));  // 変曲点y
+
+        // 角度の記号用
+        $ur = $base / 14;
+        $urx = $ur * cos($theta);
+        $ury = $ur * sin($theta);
+
+
+        $vb_xfrom = -$margin;
+        $vb_width = $Dx + 2 * $margin;
+        $vb_yfrom = $Ay - $margin;
+        $vb_height = abs($Ay) + 2 * $margin;
+        
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        $plot_q1_base = "
+            <!-- 平行四辺形 -->
+            <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} L {$Dx} {$Dy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$Cx}\" y2=\"{$Cy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ex}\" y1=\"{$Ey}\" x2=\"{$Fx}\" y2=\"{$Fy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"{$Px}\" y2=\"{$Py}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 5 . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx - 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Dx - 5 . "\" y=\"" . $Dy - 5 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $Ex - 5 . "\" y=\"" . $Ey - 5 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $Fx - 5 . "\" y=\"" . $Fy + 20 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            <text x=\"" . $Gx - 25 . "\" y=\"" . $Gy . "\" font-weight=\"bold\" font-size=\"18\">G</text>
+            <text x=\"" . $Px + 10 . "\" y=\"" . $Py + 10 . "\" font-weight=\"bold\" font-size=\"18\">P</text>
+            ";
+
+        $plot_q1 = $plot_q1_base;
+        $plot_e1 = $plot_q1_base .= "
+            <!-- 三角形 -->
+            <path d=\"M {$Gx} {$Gy} L {$Ax} {$Ay} L {$Bx} {$By} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
+            <path d=\"M {$Px} {$Py} L {$Gx} {$Gy} L {$Cx} {$Cy} Z\" fill=\"green\" fill-opacity=\"0.2\"/>
+            <path d=\"M {$Cx} {$Cy} L {$Gx} {$Gy} L {$Fx} {$Fy} Z\" fill=\"red\" fill-opacity=\"0.2\"/>
+            <path d=\"M {$Cx} {$Cy} L {$Ax} {$Ay} L {$Bx} {$By} Z\" fill=\"none\" stroke=\"red\" stroke-width=\"2\" />
+            <!-- 比率 -->
+            <path d=\"M{$Ax},{$Ay} Q{$Q_ABx},{$Q_ABy} {$Bx},{$By}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <circle cx=\"" . $T_ABx . "\" cy=\"" . $T_ABy . "\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $T_ABx - 7 . "\" y=\"" . $T_ABy + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$m_add_n}</text>
+            <path d=\"M{$Dx},{$Dy} Q{$Q_DPx},{$Q_DPy} {$Px},{$Py}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <circle cx=\"" . $T_DPx . "\" cy=\"" . $T_DPy . "\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $T_DPx - 7 . "\" y=\"" . $T_DPy + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$m}</text>
+            <path d=\"M{$Px},{$Py} Q{$Q_PCx},{$Q_PCy} {$Cx},{$Cy}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            <circle cx=\"" . $T_PCx . "\" cy=\"" . $T_PCy . "\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $T_PCx - 7 . "\" y=\"" . $T_PCy + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$n}</text>
+            <!-- 同じ角度の印 -->
+            <circle cx=\"" . $Ax + 4 . "\" cy=\"" . $Ay + 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $Gx + 4 . "\" cy=\"" . $Gy + 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $Cx . "\" cy=\"" . $Cy - 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $Bx + 20 . "\" cy=\"" . $By - 20 . "\" r=\"3\" fill=\"black\" stroke=\"black\" stroke-width=\"1.5\" />
+            <circle cx=\"" . $Px - 20 . "\" cy=\"" . $Py + 20 . "\" r=\"3\" fill=\"black\" stroke=\"black\" stroke-width=\"1.5\" />
+            <path d=\"M {$ur} 0 A {$ur} {$ur}, 0, 0, 0, {$urx} " . -$ury . "\" fill=\"transparent\" stroke=\"red\" stroke-width=\"2\" />   
+            <path d=\"M " . $Fx + $ur . " 0 A {$ur} {$ur}, 0, 0, 0, " . $Fx + $urx . " " . -$ury . "\" fill=\"transparent\" stroke=\"red\" stroke-width=\"2\" />   
+
+        ";
+            // <!-- 補助線追加 -->
+            // <line x1=\"{$Cx}\" y1=\"{$Cy}\" x2=\"{$Ax}\" y2=\"{$Ay}\" stroke=\"red\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            // <!-- 頂点追加 -->
+            // <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $q_common = "
+            <p>下図の平行四辺形 ABCD について、DP : PC = {$m} : {$n} とする。</p>
+            <p>AC と BP の交点を G とし、G を通り AB に平行な線分 EF を引く。</p>
+        ";
+                            // <p>
+                            //     それぞれ等しいので、△GAB ∽ △GCP。相似比は {$m_add_n} : {$n} なので、
+                            //     その面積比は {$m_add_n}\(^2\) : {$n}\(^2\) = " . $m_add_n**2 . " : " . $n**2 . "。
+                            // </p>
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            {$q_common}
+                            <p>△CGF の面積は、平行四辺形 ABCD の面積の何倍か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$S_CGF} 倍",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>
+                                平行四辺形 ABCD の面積を \(S\) とする。AB = DP + PC より、DP : PC = {$m} : {$n} なら 
+                                <span class=\"underline\">AB : PC = {$m_add_n} : {$n}</span>。
+                            </p>
+                            <p>AB//PC で平行線の錯角は等しいから、∠GAB = ∠GCP、∠GBA = ∠GPC。</p>
+                            <p>
+                                よって、２組の角がそれぞれ等しいので、
+                                <span class=\"bg-blue-200\">△GAB</span>
+                                 ∽ 
+                                <span class=\"bg-green-200\">△GCP</span>
+                                。相似比は {$m_add_n} : {$n} なので、
+                                <span class=\"underline\">AG : CG = {$m_add_n} : {$n}</span>。
+                            </p>
+                            <p>また、AB//GF より、平行線の同位角は等しいから、∠CAB = ∠CGF、∠CBA = ∠CFG。</p>
+                            <p>
+                                よって、２組の角がそれぞれ等しいので、
+                                <span class=\"text-red-500\">△CAB</span>
+                                 ∽ 
+                                <span class=\"bg-red-200\">△CGF</span>
+                                。相似比は 
+                                <span class=\"underline\">CA : CG</span>
+                                 = ({$m_add_n} + {$n}) : {$n}
+                                <span class=\"underline\"> = " . $m_add_n + $n . " : {$n}</span> なので、</p>
+                            <p>
+                                その面積比は " . ($m_add_n + $n) . "\(^2\) : {$n}\(^2\) = " . ($m_add_n + $n)**2 . " : " . $n**2 . "。つまり、
+                                <span class=\"bg-red-200\">
+                                    \(\displaystyle \\triangle \mathrm{CGF}\)
+                                </span>
+                                \(\displaystyle = \\frac{\," . $n**2 . "\,}{\," . ($m_add_n + $n)**2 . "\,} \\times \)
+                                <span class=\"text-red-500\">
+                                    \(\\triangle \mathrm{CAB}\)
+                                </span>。
+                                すると、△CAB は平行四辺形 ABCD の半分なので、
+                            </p>
+                            <p>
+                                <span class=\"bg-red-200\">
+                                    \(\displaystyle \\triangle \mathrm{CGF}\)
+                                </span>
+                                \(\displaystyle = \\frac{\," . $n**2 . "\,}{\," . ($m_add_n + $n)**2 . "\,} \\times \)
+                                <span class=\"text-red-500\">
+                                    \(\displaystyle \\frac{1}{\,2\,} S \)
+                                </span>
+                                \(\displaystyle = {$S_CGF}S\)。
+                                よって、△CGF は平行四辺形 ABCD の \(\displaystyle {$S_CGF}\) 倍である。
+                            </p>
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => $plot_e1,
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "☆交点と三角形の面積";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        $unitname = "相似と面積比";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
+
 
     // 入試　問１
     public function math_entrance_exam_1() {

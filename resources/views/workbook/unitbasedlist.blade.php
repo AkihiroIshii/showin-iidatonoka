@@ -13,7 +13,7 @@
             <p>◎：まとめの単元、☆：難しめの単元、⇗：スピードアップ</p>
             <!---------------------------------------- 小学生 ---------------------------------------->
             <x-h3 color="lime">小学生</x-h3>
-            <p class="text-center font-bold text-red-600">2026/9/5：漢字の「読み」「書き」を選べるようにしました。苦手な人はまず「読み」だけで練習しましょう。</p>
+            {{-- <p class="text-center font-bold text-red-600">2026/9/5：漢字の「読み」「書き」を選べるようにしました。苦手な人はまず「読み」だけで練習しましょう。</p> --}}
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -157,7 +157,7 @@
 
             <!---------------------------------------- 数学 ---------------------------------------->
             <x-h3>数学</x-h3>
-            <p class="text-center font-bold text-red-600">2026/9/13：中２、中３は、まず中１の「一次方程式まとめ」を目標時間内に解けるようにしましょう。</p>
+            {{-- <p class="text-center font-bold text-red-600">2026/9/13：中２、中３は、まず中１の「一次方程式まとめ」を目標時間内に解けるようにしましょう。</p> --}}
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -373,6 +373,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.similarity')}}">☆相似と面積比</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

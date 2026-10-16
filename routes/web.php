@@ -440,6 +440,8 @@ Route::get('workbook/domain_quadratic_function', [WorkbookController::class, 'do
 ->middleware(['auth', 'verified'])->name('workbook.domain_quadratic_function');
 Route::get('workbook/quadratic_function_application01', [WorkbookController::class, 'quadratic_function_application01'])
 ->middleware(['auth', 'verified'])->name('workbook.quadratic_function_application01');
+Route::get('workbook/similarity', [WorkbookController::class, 'similarity'])
+->middleware(['auth', 'verified'])->name('workbook.similarity');
 // 入試対策
 Route::get('workbook/math_entrance_exam_1', [WorkbookController::class, 'math_entrance_exam_1'])
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_1');
