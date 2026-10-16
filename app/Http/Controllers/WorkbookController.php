@@ -8083,8 +8083,8 @@ class WorkbookController extends Controller
             <!-- 関数 -->
             <line x1=\"" . $from_x . "\" y1=\"" . $y0 - $from_y1 . "\" x2=\"" . $to_x . "\" y2=\"" . $y0 - $to_y1 . "\" stroke=\"black\" stroke-width=\"2\" />
             <!-- △AOB -->
-            <path d=\"M 0 {$y0} L {$Ax} {$Ay} L {$Dx} {$Dy} Z\" fill=\"#00aeffa0\" stroke=\"black\" stroke-width=\"1\" />
-            <path d=\"M 0 {$y0} L {$Dx} {$Dy} L {$Bx} {$By} Z\" fill=\"#00FF00A0\" stroke=\"black\" stroke-width=\"1\" />
+            <path d=\"M 0 {$y0} L {$Ax} {$Ay} L {$Dx} {$Dy} Z\" fill=\"blue\" fill-opacity=\"0.2\" stroke=\"black\" stroke-width=\"1\" />
+            <path d=\"M 0 {$y0} L {$Dx} {$Dy} L {$Bx} {$By} Z\" fill=\"green\" fill-opacity=\"0.2\" stroke=\"black\" stroke-width=\"1\" />
             <!-- 高さ -->
             <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"0\" y2=\"{$Ay}\" stroke=\"blue\" stroke-width=\"2\" />
             <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"0\" y2=\"{$By}\" stroke=\"green\" stroke-width=\"2\" />
@@ -8194,9 +8194,16 @@ class WorkbookController extends Controller
                             \\end{aligned}
                         \]
                         <p>\(x < 0\) の交点が \(\mathrm{A}\) なので、\(\mathrm{A}\) の \(x\) 座標が \({$alpha}\)、\(\mathrm{B}\) の \(x\) 座標が \({$beta}\) である。</p>
-                        <p>ところで、\(\\triangle \mathrm{AOB}\) は、下図のように青い部分と緑色の部分に分けられる。</p>
-                        <p>\(y\) 軸と重なる部分を底辺とすれば、青い部分は底辺が \({$d}\)、高さが \(" . -$alpha . "\) の三角形である。</p>
-                        <p>同様に、緑色の部分は底辺が \({$d}\)、高さが \({$beta}\) の三角形である。</p>
+                        <p>
+                            ところで、\(\\triangle \mathrm{AOB}\) は、下図のように
+                            <span class=\"bg-blue-200\">青い部分</span>と
+                            <span class=\"bg-green-200\">緑色の部分</span>に分けられる。
+                        </p>
+                        <p>
+                            \(y\) 軸と重なる部分を底辺とすれば、
+                            <span class=\"bg-blue-200\">青い部分は底辺が \({$d}\)、高さが \(" . -$alpha . "\) の三角形</span>である。
+                        </p>
+                        <p>同様に、<span class=\"bg-green-200\">緑色の部分は底辺が \({$d}\)、高さが \({$beta}\) の三角形</span>である。</p>
                         <p>これらの面積を合計すれば \(\\triangle \mathrm{AOB}\) の面積になるので、その面積を \(S\) とすると、</p>
                         \[
                             \\begin{aligned}
@@ -8245,7 +8252,7 @@ class WorkbookController extends Controller
                                     - \\frac{{$a}}{\,2\,} \\times t^3 \\\\
                                 {$S_str} {$rev_coef} &= (" . $alpha2**2 . " + t^2)(t + " .  abs($alpha2) . ")
                                     - " . abs($alpha2) . " \\times " . $alpha2**2 . " - t^3 \\\\
-                                " . $S_OBPA / $a . " &= (t^3 + " . abs($alpha2) . "\,t^2 + " . $alpha2**2 . "\,t + " .  abs($alpha2) . " \\times " . $alpha**2 . ")
+                                " . $S_OBPA / $a . " &= (t^3 + " . abs($alpha2) . "\,t^2 + " . $alpha2**2 . "\,t + " .  abs($alpha2) . " \\times " . $alpha2**2 . ")
                                     - " . abs($alpha2) . " \\times " . $alpha2**2 . " - t^3 \\\\
                                 " . $S_OBPA / $a . " &= " . abs($alpha2) . "\,t^2 + " . $alpha2**2 . "\,t \\\\
                                 " . abs($alpha2) . "\,t^2 + " . $alpha2**2 . "\,t - " . $S_OBPA / $a . " &= 0\\\\
