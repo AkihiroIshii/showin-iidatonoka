@@ -2369,71 +2369,251 @@ class WorkbookController extends Controller
         return view('workbook.unit.child', compact('unitname','question'));
     }
 
+    // // 比（旧）
+    // public function ratio2() {
+    //     $primes1 = $this->get_primes(3, 13);
+    //     $multi = rand(2, 6);    //倍率
+    //     $mul10 = 10 ** rand(1,2);      //小数用
+    //     $div = $primes1[0];
+    //     $b = $primes1[1];
+    //     $a = $primes1[2];
+    //     $am = $a * $multi;
+    //     $bm = $b * $multi;
+    //     $c = $b * $div;
+    //     // $cm = $c * $multi;
+    //     $am_deci = $am / $mul10;
+    //     $bm_deci = $bm / $mul10;
+
+    //     // t/s = v/u, v=mt
+    //     $primes2 = $this->get_primes(4, 13);
+    //     $m = $primes2[0];
+    //     $s = $primes2[1];
+    //     $u = $primes2[2];
+    //     $t = $primes2[3];
+    //     $v = $m * $t;
+    //     $ms = $m * $s;
+
+    //     $questions = [
+    //         [
+    //             'q' => "\( {$am}:{$bm}\,を簡単な整数比で表しなさい。 \)",
+    //             'a' => "{$a}:{$b}",
+    //             'e' => "<div>
+    //                         \(いずれも\,{$multi}\,の倍数である。\)
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\(\displaystyle \\frac{{$a}}{{$div}}:{$b}\,を簡単な整数比で表しなさい。 \)",
+    //             'a' => "{$a}:{$c}",
+    //             'e' => "<div>
+    //                         <p>\(それぞれ\,{$div}\,倍する。\)</p>
+    //                         <p>\(\displaystyle \\frac{{$a}}{{$div}}:{$b} = \\left(\\frac{{$a}}{{$div}}\\times {$div}\\right):({$b}\\times {$div}) = {$a}:{$c}.\)</p>
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\(\displaystyle \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}\,を簡単な整数比で表しなさい。 \)",
+    //             'a' => "{$u}:{$ms}",
+    //             'e' => "<div>
+    //                         <p>\(\displaystyle 分子同士が簡単な整数比になるので、まずそれぞれを\,{$t}\,で割るとよい。 \)</p>
+    //                         <p>\(\displaystyle
+    //                             \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}
+    //                             = \\frac{\,1\,}{\,{$s}\,}:\\frac{\,{$m}\,}{\,{$u}\,}
+    //                             = {$u}:{$ms}
+    //                         \)</p>
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\( {$am_deci}:{$bm_deci}\,を簡単な整数比で表しなさい。 \)",
+    //             'a' => "{$a}:{$b}",
+    //             'e' => "<div>
+    //                         <p>\(まず整数比にするために\,{$mul10}\,倍すると扱いやすくなる。\)</p>
+    //                         <p>\({$am_deci}:{$bm_deci} = ({$am_deci}\\times{$mul10}):({$bm_deci}\\times{$mul10}) = {$am}:{$bm} = {$a}:{$b} \)</p>
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "比";
+    //     return view('workbook.unit.child', compact('unitname','question'));
+    // }
+
     // 比
     public function ratio2() {
-        $primes1 = $this->get_primes(3, 13);
+        // 互いに素な３つの整数をつくる。
+        do {
+            $a = rand(2, 9);
+            $b = rand(2, 9);
+            $c = rand(2, 9);
+        } while (!$this->arePairwiseCoprime($a, $b, $c));
+
+        /***** 小数計算 *****/
         $multi = rand(2, 6);    //倍率
-        $mul10 = 10 ** rand(1,2);      //小数用
-        $div = $primes1[0];
-        $b = $primes1[1];
-        $a = $primes1[2];
+        $mul10 = 10 ** rand(1, 2);      //小数用
         $am = $a * $multi;
         $bm = $b * $multi;
-        $c = $b * $div;
-        // $cm = $c * $multi;
         $am_deci = $am / $mul10;
         $bm_deci = $bm / $mul10;
-
-        // t/s = v/u, v=mt
-        $primes2 = $this->get_primes(4, 13);
-        $m = $primes2[0];
-        $s = $primes2[1];
-        $u = $primes2[2];
-        $t = $primes2[3];
-        $v = $m * $t;
-        $ms = $m * $s;
+        do {
+            $m = rand(2, 9);
+        } while (!$this->arePairwiseCoprime($b, $c, $m * $a));
 
         $questions = [
             [
-                'q' => "\( {$am}:{$bm}\,を簡単な整数比で表しなさい。 \)",
+                'q_no' => 1,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">\({$am}:{$bm}\) を簡単な整数比で表しなさい。</p>",
+                'a_type' => 2,
                 'a' => "{$a}:{$b}",
-                'e' => "<div>
-                            \(いずれも\,{$multi}\,の倍数である。\)
+                'e_type' => 8,
+                'e' => "<p class=\"text-xl mb-4\">いずれも {$multi} の倍数である。</p>",
+            ],
+            [
+                'q_no' => 2,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">\(\displaystyle \\frac{{$b}}{\,{$a}\,}:{$c}\) を簡単な整数比で表しなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$b}:" . $a * $c,
+                'e_type' => 8,
+                'e' => "<div class=\"mb-4\">
+                            <p>分母を {$a} にそろえると理解しやすい。</p>
+                            <p>\(\displaystyle \\frac{{$b}}{\,{$a}\,}:{$c} = \\frac{{$b}}{\,{$a}\,}:\\frac{\," . $a * $c . "\,}{\,{$a}\,} = {$b}:" . $a * $c . "\)</p>
                         </div>",
             ],
             [
-                'q' => "\(\displaystyle \\frac{{$a}}{{$div}}:{$b}\,を簡単な整数比で表しなさい。 \)",
-                'a' => "{$a}:{$c}",
-                'e' => "<div>
-                            <p>\(それぞれ\,{$div}\,倍する。\)</p>
-                            <p>\(\displaystyle \\frac{{$a}}{{$div}}:{$b} = \\left(\\frac{{$a}}{{$div}}\\times {$div}\\right):({$b}\\times {$div}) = {$a}:{$c}.\)</p>
-                        </div>",
-            ],
-            [
-                'q' => "\(\displaystyle \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}\,を簡単な整数比で表しなさい。 \)",
-                'a' => "{$u}:{$ms}",
-                'e' => "<div>
-                            <p>\(\displaystyle 分子同士が簡単な整数比になるので、まずそれぞれを\,{$t}\,で割るとよい。 \)</p>
+                'q_no' => 3,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}:\\frac{\," . $m * $b . "\,}{\,{$c}\,}\) を簡単な整数比で表しなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$c}:" . $m * $a,
+                'e_type' => 8,
+                'e' => "<div class=\"mb-4\">
+                            <p>まず分子同士を簡単な整数比にすると計算しやすい。</p>
                             <p>\(\displaystyle
-                                \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}
-                                = \\frac{\,1\,}{\,{$s}\,}:\\frac{\,{$m}\,}{\,{$u}\,}
-                                = {$u}:{$ms}
+                                \\frac{\,{$b}\,}{\,{$a}\,}:\\frac{\," . $m * $b . "\,}{\,{$c}\,}
+                                = \\frac{\,1\,}{\,{$a}\,}:\\frac{\,{$m}\,}{\,{$c}\,}
+                                = \\frac{\,{$c}\,}{\," . $a * $c . "\,}:\\frac{\," . $m * $a . "\,}{\," . $a * $c . "\,}
+                                = {$c}:" . $m * $a . "
                             \)</p>
+                            <p>【補足】複雑になるが、先に分母をそろえると意味を理解しやすい。</p>
+                            \[
+                                \\begin{aligned}
+                                    \\frac{\,{$b}\,}{\,{$a}\,}:\\frac{\," . $m * $b . "\,}{\,{$c}\,}
+                                        &= \\frac{\,{$b} \\times {$c}\,}{\," . $a * $c . "\,}:\\frac{\," . $m * $b ."\\times {$a}\,}{\," . $a * $c . "\,}
+                                            = \\frac{\,{$b} \\times {$c}\,}{\," . $a * $c . "\,}:\\frac{\,({$b} \\times {$m})\\times {$a}\,}{\," . $a * $c . "\,} \\\\
+                                        &= \\left(\\frac{\,{$b}\,}{\," . $a * $c . "\,}\\times {$c}\\right)
+                                                :\\left(\\frac{\,{$b}\,}{\," . $a * $c . "\,} \\times " . $m * $a . " \\right)
+                                            = {$c}:" . $m * $a . "
+                                \\end{aligned}
+                            \]
+                            <p>下図では、\(\displaystyle \\frac{{$b}}{\," . $a * $c . "\,}\) ごとに<span class=\"text-red-500\">赤線</span>で区切っている。</p>
                         </div>",
             ],
             [
-                'q' => "\( {$am_deci}:{$bm_deci}\,を簡単な整数比で表しなさい。 \)",
+                'q_no' => 4,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">\({$am_deci}:{$bm_deci}\) を簡単な整数比で表しなさい。</p>",
+                'a_type' => 2,
                 'a' => "{$a}:{$b}",
-                'e' => "<div>
-                            <p>\(まず整数比にするために\,{$mul10}\,倍すると扱いやすくなる。\)</p>
+                'e_type' => 8,
+                'e' => "<div class=\"mb-4\">
+                            <p>まず {$mul10} 倍して整数比にすると扱いやすい。</p>
                             <p>\({$am_deci}:{$bm_deci} = ({$am_deci}\\times{$mul10}):({$bm_deci}\\times{$mul10}) = {$am}:{$bm} = {$a}:{$b} \)</p>
                         </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
+
+        /***** グラフ描画用 *****/
+        $width = 700;    //viewportの大きさ
+        $h_unit = 30;
+        $height = $h_unit * 4;
+        $margin = 40;
+        
+        // グラフの最大値取得
+        $q_no = $question['q_no'];
+        if($q_no == 1) {
+            $plot_max = max($am, $bm);  // 帯グラフの最大値（右端）
+            $n_split = $plot_max;           // 分割数（目盛りの数）
+            $num_of_set = $multi;   // 太線で区切る１セット分の数
+            $n_first = $am; // 左側の比に相当する数
+            $n_second = $bm;    // 右側の比に相当する数
+        } elseif($q_no == 2) {
+            $plot_max = ceil(max($b/$a, $c));  // 帯グラフの最大値（右端）
+            $n_split = $plot_max * $a;           // 分割数（目盛りの数）
+            $num_of_set = $a;   // 太線で区切る１セット分の数
+            $n_first = $b; // 左側の比に相当する数
+            $n_second = $a * $c;    // 右側の比に相当する数
+        } elseif($q_no == 3) {
+            $plot_max = ceil(max($b/$a, $m*$b/$c));  // 帯グラフの最大値（右端）
+            $n_split = $plot_max * $this->lcm($a, $c);           // 分割数（目盛りの数）
+            $num_of_set = $this->lcm($a, $c);   // 太線で区切る１セット分の数
+            $n_first = $b * $c; // 左側の比に相当する数
+            $n_second = $m*$b * $a;    // 右側の比に相当する数
+        } elseif($q_no == 4) {
+            $plot_max = max($am_deci, $bm_deci);  // 帯グラフの最大値（右端）
+            $n_split = $plot_max * $mul10;           // 分割数（目盛りの数）
+            $num_of_set = $multi;   // 太線で区切る１セット分の数
+            $n_first = $am; // 左側の比に相当する数
+            $n_second = $bm;    // 右側の比に相当する数
+        } else {
+            $plot_max = max($am, $bm);  // 帯グラフの最大値（右端）
+            $n_split = $plot_max;           // 分割数（目盛りの数）
+            $num_of_set = $multi;   // 太線で区切る１セット分の数
+            $n_first = $am; // 左側の比に相当する数
+            $n_second = $bm;    // 右側の比に相当する数
+        }
+
+        $xunit = ($width - 2 * $margin) / $n_split; // １目盛りの幅
+        $xunit_val = $plot_max / $n_split;  // １目盛りあたりの数
+
+        $plot_par_e = [
+            'vb_width' => $width,
+            'vb_height' => $height,
+            'vb_xfrom' => -$margin,
+            'vb_yfrom' => 0,
+        ];
+
+        $plot_con_e = "";
+        // 帯１
+        for ($i = 0; $i <= $n_split; $i++) {
+            // 問３は区切り線が多すぎるので省略
+            if ($q_no != 3) {
+                $plot_con_e .= "<line x1=\"" . $i*$xunit . "\" y1=\"0\" x2 =\"" . $i*$xunit . "\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            }
+            if ($i % $num_of_set == 0) {
+                $plot_con_e .= "
+                        <line x1=\"" . $i*$xunit . "\" y1=\"0\" x2 =\"" . $i*$xunit . "\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                        <text x=\"" . $i*$xunit - 5 . "\" y=\"" . $h_unit * (1 + 1/2) . "\" font-weight=\"bold\" font-size=\"16\" >
+                            " . $i * $xunit_val . "
+                        </text>";
+            }
+        }
+        $plot_con_e .= "<rect x=\"0\" y=\"0\" width=\"" . $width - 2 * $margin . "\" height=\"" . $h_unit . "\" fill=\"none\" stroke=\"black\" stroke-width\"2\"/>
+                        <rect x=\"0\" y=\"0\" width=\"" . $n_first * $xunit . "\" height=\"" . $h_unit . "\" fill=\"blue\" fill-opacity=\"0.2\"/>
+                        ";
+        // 帯２
+        for ($i = 0; $i <= $n_split; $i++) {
+            // 問３は区切り線が多すぎるので省略
+            if ($q_no != 3) {
+                $plot_con_e .= "<line x1=\"" . $i*$xunit . "\" y1=\"" . $h_unit * 2 . "\" x2 =\"" . $i*$xunit . "\" y2=\"" . $h_unit * 3 . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            }
+            if ($i % $num_of_set == 0) {
+                $plot_con_e .= "
+                        <line x1=\"" . $i*$xunit . "\" y1=\"" . $h_unit * 2 . "\" x2 =\"" . $i*$xunit . "\" y2=\"" . $h_unit * 3 . "\" stroke=\"black\" stroke-width=\"2\"/>
+                        <text x=\"" . $i*$xunit - 5 . "\" y=\"" . $h_unit * (3 + 1/2) . "\" font-weight=\"bold\" font-size=\"16\" >
+                            " . $i * $xunit_val . "
+                        </text>";
+            }
+            // 問３のみ
+            if (($q_no == 3) && ($i % $b == 0)) {
+                $plot_con_e .= "<line x1=\"" . $i*$xunit . "\" y1=\"" . 0 . "\" x2 =\"" . $i*$xunit . "\" y2=\"" . $h_unit * 3 . "\" stroke=\"red\" stroke-width=\"1\"/>";
+            }
+        }
+        $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * 2 . "\" width=\"" . $width - 2 * $margin . "\" height=\"" . $h_unit . "\" fill=\"none\" stroke=\"black\" stroke-width\"2\"/>";
+        $plot_con_e .= "<rect x=\"0\" y=\"" . $h_unit * 2 . "\" width=\"" . $n_second * $xunit . "\" height=\"" . $h_unit . "\" fill=\"green\" fill-opacity=\"0.2\"/>";
+
         $unitname = "比";
-        return view('workbook.unit.child', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
     // 分配法則１（旧）
@@ -8057,7 +8237,6 @@ class WorkbookController extends Controller
             'vb_xto' => $to_x,
             'vb_yto' => -$to_y,
         ];
-// dd("vb_width:{$vb_width},A2x:{$A2x},A2y:{$A2y}");
 
         $plot_con_common = "
             <!-- 座標軸先端の矢印を定義 -->
@@ -8560,6 +8739,14 @@ class WorkbookController extends Controller
             'numerator' => $numerator,
             'denominator' => $denominator,
         ];
+    }
+
+    // ３つの整数が互いに素か判定する
+    function arePairwiseCoprime($a, $b, $c)
+    {
+        return $this->gcd($a, $b) === 1
+            && $this->gcd($a, $c) === 1
+            && $this->gcd($b, $c) === 1;
     }
 
     // 数字を文字に変換（分数対応版）

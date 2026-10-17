@@ -107,7 +107,7 @@
                                     <a href="{{route('workbook.unit.fraction_muldiv')}}">分数の乗除</a>
                                 </x-button-link>
                                 <x-button-link color="lime">
-                                    <a href="{{route('workbook.unit.ratio2')}}">比</a>
+                                    <a href="{{route('workbook.ratio2')}}">比</a>
                                 </x-button-link>
                             </div>
                         </x-td>

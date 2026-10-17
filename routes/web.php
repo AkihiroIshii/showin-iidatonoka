@@ -314,7 +314,7 @@ Route::get('workbook/math_unit_conversion', [WorkbookController::class, 'math_un
 Route::get('workbook/ratio1', [WorkbookController::class, 'ratio1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.ratio1');
 Route::get('workbook/ratio2', [WorkbookController::class, 'ratio2'])
-->middleware(['auth', 'verified'])->name('workbook.unit.ratio2');
+->middleware(['auth', 'verified'])->name('workbook.ratio2');
 Route::get('workbook/reduction_of_fraction', [WorkbookController::class, 'reduction_of_fraction'])
 ->middleware(['auth', 'verified'])->name('workbook.reduction_of_fraction');
 Route::get('workbook/fraction_add_sub', [WorkbookController::class, 'fraction_add_sub'])
