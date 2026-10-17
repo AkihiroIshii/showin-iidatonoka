@@ -2398,7 +2398,7 @@ class WorkbookController extends Controller
                 'q_no' => 1,
                 'q_type' => 3,
                 'q' => "<div class=\"text-xl mt-4\">
-                            <p>次の計算をしなさい。</p>
+                            <p>次の計算をしなさい。（目標解答時間：10秒）</p>
                             $$ \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,} $$
                         </div>",
                 'a_type' => 2,
@@ -2416,7 +2416,7 @@ class WorkbookController extends Controller
                 'q_no' => 2,
                 'q_type' => 3,
                 'q' => "<div class=\"text-xl mt-4\">
-                            <p>次の計算をしなさい。</p>
+                            <p>次の計算をしなさい。（目標解答時間：30秒）</p>
                             $$ \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,} $$
                         </div>",
                 'a_type' => 2,
@@ -2445,7 +2445,7 @@ class WorkbookController extends Controller
                 'q_no' => 3,
                 'q_type' => 3,
                 'q' => "<div class=\"text-xl mt-4\">
-                            <p>次の計算をしなさい。</p>
+                            <p>次の計算をしなさい。（目標解答時間：10秒）</p>
                             $$ \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,} $$
                         </div>",
                 'a_type' => 2,
@@ -2464,7 +2464,7 @@ class WorkbookController extends Controller
                 'q_no' => 4,
                 'q_type' => 3,
                 'q' => "<div class=\"text-xl mt-4\">
-                            <p>次の計算をしなさい。</p>
+                            <p>次の計算をしなさい。（目標解答時間：30秒）</p>
                             $$ \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,} $$
                         </div>",
                 'a_type' => 2,
