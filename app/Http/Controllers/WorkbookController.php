@@ -2295,28 +2295,115 @@ class WorkbookController extends Controller
     }
 
 
+    // // 分数の乗除
+    // public function fraction_muldiv() {
+    //     $primes1 = $this->get_primes(4, 11);
+    //     $a = $primes1[0];
+    //     $b = $primes1[1];
+    //     $c = $primes1[2];
+    //     $d = $primes1[3];
+    //     $numerator = $b * $d;
+    //     $denominator = $a * $c;
+
+    //     $primes2 = $this->get_primes(2, 11);
+    //     $m = $primes2[0];
+    //     $n = $primes2[1];
+    //     $ma = $m * $a;
+    //     $md = $m * $d;
+    //     $nb = $n * $b;
+    //     $nc = $n * $c;
+
+    //     $questions = [
+    //         [
+    //             'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,を計算しなさい。 \)",
+    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+    //             'e' => "<div>
+    //                         \(\displaystyle
+    //                             \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
+    //                             = \\frac{\,{$b}\\times{$d}\,}{\,{$a}\\times{$c}\,}
+    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
+    //                         \)
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}\,を計算しなさい。 \)",
+    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+    //             'e' => "<div>
+    //                         <p>\( まず\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分してから計算する。 \)</p>
+    //                         \(\displaystyle
+    //                             \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
+    //                             = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
+    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
+    //                         \)
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,を計算しなさい。 \)",
+    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+    //             'e' => "<div>
+    //                         \(\displaystyle
+    //                             \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,
+    //                             =\\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
+    //                             = \\frac{\,{$b}\\times{$d}\,}{\,{$a}\\times{$c}\,}
+    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
+    //                         \)
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}\,を計算しなさい。 \)",
+    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+    //             'e' => "<div>
+    //                         <p>\( わり算をかけ算に直したら、次に\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分する。 \)</p>
+    //                         \(\displaystyle
+    //                             \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}
+    //                             = \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
+    //                             = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
+    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
+    //                         \)
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "分数の乗除";
+    //     return view('workbook.unit.child', compact('unitname','question'));
+    // }
+
     // 分数の乗除
     public function fraction_muldiv() {
-        $primes1 = $this->get_primes(4, 11);
-        $a = $primes1[0];
-        $b = $primes1[1];
-        $c = $primes1[2];
-        $d = $primes1[3];
+        // 互いに素な４つの整数をつくる。
+        do {
+            $a = rand(2, 10);
+            $b = rand(1, 10);
+            $c = rand(2, 10);
+            $d = rand(2, 10);
+        } while (!$this->arePairwiseCoprime4($a, $b, $c, $d));
+
         $numerator = $b * $d;
         $denominator = $a * $c;
 
-        $primes2 = $this->get_primes(2, 11);
-        $m = $primes2[0];
-        $n = $primes2[1];
-        $ma = $m * $a;
-        $md = $m * $d;
-        $nb = $n * $b;
-        $nc = $n * $c;
+        do {
+            $primes = $this->get_primes(2, 11);
+            $m = $primes[0];
+            $n = $primes[1];
+            
+            $ma = $m * $a;
+            $nb = $n * $b;
+            $md = $m * $d;
+            $nc = $n * $c;
+        } while ($ma == $nb || $md == $nc);
 
         $questions = [
             [
-                'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,を計算しなさい。 \)",
+                'q_no' => 1,
+                'q_type' => 3,
+                'q' => "<div class=\"text-xl mt-4\">
+                            <p>次の計算をしなさい。</p>
+                            $$ \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,} $$
+                        </div>",
+                'a_type' => 2,
                 'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
+                'e_type' => 3,
                 'e' => "<div>
                             \(\displaystyle
                                 \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
@@ -2326,22 +2413,46 @@ class WorkbookController extends Controller
                         </div>",
             ],
             [
-                'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}\,を計算しなさい。 \)",
+                'q_no' => 2,
+                'q_type' => 3,
+                'q' => "<div class=\"text-xl mt-4\">
+                            <p>次の計算をしなさい。</p>
+                            $$ \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,} $$
+                        </div>",
+                'a_type' => 2,
                 'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
-                'e' => "<div>
-                            <p>\( まず\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分してから計算する。 \)</p>
-                            \(\displaystyle
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>分母同士、分子同士をかける前に、約分ができればした方が計算しやすい。</p>
+                            $$
                                 \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
-                                = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
+                                = \\frac{\,\cancel{{$nb}}\,}{\,{$ma}\,}^{{$b}}\\times\\frac{\,{$md}\,}{\,\cancel{{$nc}}\,}_{{$c}}
+                                = \\frac{\,{$b}\,}{\,\cancel{{$ma}}\,}_{{$a}}\\times\\frac{\,\cancel{{$md}}\,}{\,{$c}\,}^{{$d}}
                                 = \\frac{\,{$numerator}\,}{{$denominator}}
-                            \)
+                            $$
+                            <p>【補足】約分せずに分母同士、分子同士をかけると、次のような計算になる。</p>
+                            <p>九九の範囲を超えるため、かなり面倒な計算になることがわかると思う。</p>
+                            $$
+                                \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
+                                = \\frac{\," . $nb * $md . "\,}{\," . $ma * $nc . "\,}
+                                = \\frac{\,\cancel{" . $nb * $md . "}\,}{\,\cancel{" . $ma * $nc . "}\,}_{" . $ma * $c . "}^{" . $b * $md . "}
+                                = \\frac{\,\cancel{" . $b * $md . "}\,}{\,\cancel{" . $ma * $c . "}\,}_{" . $a * $c . "}^{" . $b * $d . "}
+                                = \\frac{\,{$numerator}\,}{{$denominator}}
+                            $$
                         </div>",
             ],
             [
-                'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,を計算しなさい。 \)",
+                'q_no' => 3,
+                'q_type' => 3,
+                'q' => "<div class=\"text-xl mt-4\">
+                            <p>次の計算をしなさい。</p>
+                            $$ \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,} $$
+                        </div>",
+                'a_type' => 2,
                 'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
-                'e' => "<div>
-                            \(\displaystyle
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mt-4\">
+                           \(\displaystyle
                                 \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,
                                 =\\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
                                 = \\frac{\,{$b}\\times{$d}\,}{\,{$a}\\times{$c}\,}
@@ -2350,23 +2461,41 @@ class WorkbookController extends Controller
                         </div>",
             ],
             [
-                'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}\,を計算しなさい。 \)",
+                'q_no' => 4,
+                'q_type' => 3,
+                'q' => "<div class=\"text-xl mt-4\">
+                            <p>次の計算をしなさい。</p>
+                            $$ \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,} $$
+                        </div>",
+                'a_type' => 2,
                 'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
-                'e' => "<div>
-                            <p>\( わり算をかけ算に直したら、次に\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分する。 \)</p>
-                            \(\displaystyle
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mt-4\">
+                            <p>まずわり算をかけ算に直し、そのあと約分ができればした方が計算しやすい。</p>
+                            $$
                                 \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}
                                 = \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
-                                = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
+                                = \\frac{\,\cancel{{$nb}}\,}{\,{$ma}\,}^{{$b}}\\times\\frac{\,{$md}\,}{\,\cancel{{$nc}}\,}_{{$c}}
+                                = \\frac{\,{$b}\,}{\,\cancel{{$ma}}\,}_{{$a}}\\times\\frac{\,\cancel{{$md}}\,}{\,{$c}\,}^{{$d}}
                                 = \\frac{\,{$numerator}\,}{{$denominator}}
-                            \)
+                            $$
+                            <p>【補足】約分せずに分母同士、分子同士をかけると、次のような計算になる。</p>
+                            <p>九九の範囲を超えるため、かなり面倒な計算になることがわかると思う。</p>
+                            $$
+                                \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}
+                                = \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
+                                = \\frac{\," . $nb * $md . "\,}{\," . $ma * $nc . "\,}
+                                = \\frac{\,\cancel{" . $nb * $md . "}\,}{\,\cancel{" . $ma * $nc . "}\,}_{" . $ma * $c . "}^{" . $b * $md . "}
+                                = \\frac{\,\cancel{" . $b * $md . "}\,}{\,\cancel{" . $ma * $c . "}\,}_{" . $a * $c . "}^{" . $b * $d . "}
+                                = \\frac{\,{$numerator}\,}{{$denominator}}
+                            $$
                         </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "分数の乗除";
-        return view('workbook.unit.child', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // // 比（旧）
@@ -2452,8 +2581,9 @@ class WorkbookController extends Controller
         $bm = $b * $multi;
         $am_deci = $am / $mul10;
         $bm_deci = $bm / $mul10;
+        /***** 問３用 *****/
         do {
-            $m = rand(2, 9);
+            $m = rand(2, 5);
         } while (!$this->arePairwiseCoprime($b, $c, $m * $a));
 
         $questions = [
@@ -8747,6 +8877,17 @@ class WorkbookController extends Controller
         return $this->gcd($a, $b) === 1
             && $this->gcd($a, $c) === 1
             && $this->gcd($b, $c) === 1;
+    }
+
+    // ４つの整数が互いに素か判定する
+    function arePairwiseCoprime4($a, $b, $c, $d)
+    {
+        return $this->gcd($a, $b) === 1
+            && $this->gcd($a, $c) === 1
+            && $this->gcd($a, $d) === 1
+            && $this->gcd($b, $c) === 1
+            && $this->gcd($b, $d) === 1
+            && $this->gcd($c, $d) === 1;
     }
 
     // 数字を文字に変換（分数対応版）
