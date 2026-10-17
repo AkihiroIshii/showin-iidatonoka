@@ -5045,7 +5045,7 @@ class WorkbookController extends Controller
                             </p>
                             <p>
                                 <span class=\"text-blue-700 font-bold\">四面体 Q－DFG</span> は
-                                底面積と高さが同じなので、体積も変わらない。すると、
+                                底面積と高さが同じなので、体積も変わらない。さらに、この
                                 <span class=\"text-blue-700 font-bold\">四面体 Q－DFG</span> は
                             </p>
                             <p>
