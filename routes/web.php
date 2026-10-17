@@ -376,6 +376,8 @@ Route::get('workbook/corn_surface', [WorkbookController::class, 'corn_surface'])
 ->middleware(['auth', 'verified'])->name('workbook.corn_surface');
 Route::get('workbook/angle_calc_div', [WorkbookController::class, 'angle_calc_div'])
 ->middleware(['auth', 'verified'])->name('workbook.angle_calc_div');
+Route::get('workbook/part_volume', [WorkbookController::class, 'part_volume'])
+->middleware(['auth', 'verified'])->name('workbook.part_volume');
 Route::get('workbook/spacial_figure_summary', [WorkbookController::class, 'spacial_figure_summary'])
 ->middleware(['auth', 'verified'])->name('workbook.spacial_figure_summary');
 Route::get('workbook/coordinates_triangle', [WorkbookController::class, 'coordinates_triangle'])

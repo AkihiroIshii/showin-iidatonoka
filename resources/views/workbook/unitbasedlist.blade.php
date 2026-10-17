@@ -347,6 +347,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.angle_calc_div')}}">⇗角度の計算テク</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.part_volume')}}">☆部分の体積</a>
+                                </x-button-link>                                
                                 {{-- <x-button-link>
                                     <a href="{{route('workbook.spacial_figure_summary')}}">◎空間図形まとめ</a>
                                 </x-button-link> --}}

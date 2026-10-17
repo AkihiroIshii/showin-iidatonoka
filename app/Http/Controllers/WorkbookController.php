@@ -4832,6 +4832,260 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 部分の体積
+    public function part_volume(Request $request) {
+        // 変数
+        $l = rand(3, 10);   // 一辺の長さ（cm）
+        $base = 200;  // 辺ABの長さ
+
+        // AP:PD = m:n
+        $m_seed = rand(1, 2);
+        $n_seed = rand(1, 3);
+        $mn_frac = $this->simplify_fraction($m_seed, $n_seed);
+        $m = $mn_frac['numerator'];
+        $n = $mn_frac['denominator'];
+        $m_add_n = $m + $n;
+
+        // DQ:QC = s:t
+        $s_seed = rand(1, 3);
+        $t_seed = rand(1, 3);
+        $st_frac = $this->simplify_fraction($s_seed, $t_seed);
+        $s = $st_frac['numerator'];
+        $t = $st_frac['denominator'];
+        $DQ_frac = $this->fracnum_to_str($s, $s + $t, "", 1);
+        $S_DGQ = $this->fracnum_to_str($s * $l**2, 2 * ($s + $t), "", 1);
+        $V_frac = $this->fracnum_to_str($s * pow($l, 3), 6 * ($s + $t), "", 1);
+
+        /****** 問１ *****/
+        $alpha = 2 * M_PI * (15/360);    // 水平線とBAがなす角（ラジアン）
+        $gamma = 2 * M_PI * (30/360);    // 水平線とBCがなす角（ラジアン）
+        // 各頂点の座標
+        $Bx = 0;    // B を原点にとる
+        $By = 0;
+        $Cx = $base * (3/4) * cos($gamma);
+        $Cy = -$base * (3/4) * sin($gamma);
+        $Ax = -$base * cos($alpha);
+        $Ay = -$base * sin($alpha);
+        $Dx = $Ax + $base * (3/4) * cos($gamma);
+        $Dy = $Ay - $base * (3/4) * sin($gamma);
+        $Ex = $Ax;
+        $Ey = $Ay + $base;
+        $Fx = $Bx;
+        $Fy = $By + $base;
+        $Gx = $Cx;
+        $Gy = $Cy + $base;
+        $Hx = $Dx;
+        $Hy = $Dy + $base;
+        $Px = $Ax + $Cx * $m / ($m + $n);
+        $Py = $Ay + $Cy * $m / ($m + $n);
+        $Qx = $Cx + $Ax * $t / ($s + $t);
+        $Qy = $Cy + $Ay * $t / ($s + $t);
+
+        /***** 描画用 *****/
+        $margin = 40;
+        $vb_xfrom = $Ax - $margin;
+        $vb_width = ($Cx - $Ax) + 2 * $margin;
+        $vb_yfrom = $Dy - $margin;
+        $vb_height = ($Fy - $Dy) + 2 * $margin;
+
+        /***** 解説　右図 （すべて x 方向に vb_width だけ移動）*****/
+        $B2x = $Bx + $vb_width;
+        $B2y = $By;
+        $C2x = $Cx + $vb_width;
+        $C2y = $Cy;
+        $A2x = $Ax + $vb_width;
+        $A2y = $Ay;
+        $D2x = $Dx + $vb_width;
+        $D2y = $Dy;
+        $E2x = $Ex + $vb_width;
+        $E2y = $Ey;
+        $F2x = $Fx + $vb_width;
+        $F2y = $Fy;
+        $G2x = $Gx + $vb_width;
+        $G2y = $Gy;
+        $H2x = $Hx + $vb_width;
+        $H2y = $Hy;
+        $P2x = $Px + $vb_width;
+        $P2y = $Py;
+        $Q2x = $Qx + $vb_width;
+        $Q2y = $Qy;
+        
+        $plot_par_q = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+        $plot_par_e = [
+            'vb_width' => $vb_width * 2,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        $plot_q1_base = "
+            <!-- 手前から見える辺 -->
+            <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} L {$Dx} {$Dy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <path d=\"M{$Ax} {$Ay} L {$Ex} {$Ey} L {$Fx} {$Fy} L {$Gx} {$Gy} L {$Cx} {$Cy} \" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"{$Fx}\" y2=\"{$Fy}\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 手前から見えない辺 -->
+            <path d=\"M{$Ex} {$Ey} L {$Hx} {$Hy} L {$Gx} {$Gy}\" fill=\"none\" stroke-dasharray=\"4\" stroke=\"black\" stroke-width=\"2\" />
+            <line x1=\"{$Dx}\" y1=\"{$Dy}\" x2=\"{$Hx}\" y2=\"{$Hy}\" stroke-dasharray=\"4\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$Px}\" y1=\"{$Py}\" x2=\"{$Fx}\" y2=\"{$Fy}\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <line x1=\"{$Qx}\" y1=\"{$Qy}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <line x1=\"{$Qx}\" y1=\"{$Qy}\" x2=\"{$Fx}\" y2=\"{$Fy}\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 15 . "\" y=\"" . $Ay + 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 15 . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx + 5 . "\" y=\"" . $Cy + 5 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Dx - 5 . "\" y=\"" . $Dy - 5 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $Ex - 15 . "\" y=\"" . $Ey + 5 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $Fx - 5 . "\" y=\"" . $Fy + 20 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            <text x=\"" . $Gx + 5 . "\" y=\"" . $Gy + 5 . "\" font-weight=\"bold\" font-size=\"18\">G</text>
+            <text x=\"" . $Hx + 5 . "\" y=\"" . $Hy - 5 . "\" font-weight=\"bold\" font-size=\"18\">H</text>
+            <text x=\"" . $Px - 5 . "\" y=\"" . $Py - 5 . "\" font-weight=\"bold\" font-size=\"18\">P</text>
+            <text x=\"" . $Qx - 5 . "\" y=\"" . $Qy - 5 . "\" font-weight=\"bold\" font-size=\"18\">Q</text>
+            ";
+
+        $plot_q1 = $plot_q1_base;
+        $plot_q1 .= "
+            <!-- 四面体の辺 -->
+            <path d=\"M{$Qx} {$Qy} L {$Px} {$Py} L {$Fx} {$Fy} Z\" fill=\"none\" stroke=\"blue\" stroke-width=\"1.5\" />
+            <line x1=\"{$Qx}\" y1=\"{$Qy}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"blue\" stroke-width=\"1.5\" />
+            <line x1=\"{$Fx}\" y1=\"{$Fy}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"blue\" stroke-width=\"1.5\" />
+            <line x1=\"{$Dx}\" y1=\"{$Dy}\" x2=\"{$Hx}\" y2=\"{$Hy}\" stroke-dasharray=\"4\" stroke=\"black\" stroke-width=\"2\" />
+            <line x1=\"{$Px}\" y1=\"{$Py}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"4\"/>        
+            <!-- 三角形 -->
+            <path d=\"M {$Px} {$Py} L {$Fx} {$Fy} L {$Gx} {$Gy} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
+        ";
+
+        $plot_e1 = $plot_q1_base .= "
+            <!-- ******************** 左図補完 ******************** -->
+            <!-- 四面体の辺 -->
+            <path d=\"M{$Qx} {$Qy} L {$Dx} {$Dy} L {$Fx} {$Fy} Z\" fill=\"none\" stroke=\"blue\" stroke-width=\"1.5\" />
+            <line x1=\"{$Qx}\" y1=\"{$Qy}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"blue\" stroke-width=\"1.5\" />
+            <line x1=\"{$Fx}\" y1=\"{$Fy}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"blue\" stroke-width=\"1.5\" />
+            <line x1=\"{$Dx}\" y1=\"{$Dy}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"4\"/>       
+            <line x1=\"{$Px}\" y1=\"{$Py}\" x2=\"{$Gx}\" y2=\"{$Gy}\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <!-- 三角形 -->
+            <path d=\"M {$Dx} {$Dy} L {$Fx} {$Fy} L {$Gx} {$Gy} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
+
+            <!-- ******************** 右図 ******************** -->
+            <!-- 手前から見える辺 -->
+            <path d=\"M{$A2x} {$A2y} L {$B2x} {$B2y} L {$C2x} {$C2y} L {$D2x} {$D2y} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <path d=\"M{$A2x} {$A2y} L {$E2x} {$E2y} L {$F2x} {$F2y} L {$G2x} {$G2y} L {$C2x} {$C2y} \" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <line x1=\"{$B2x}\" y1=\"{$B2y}\" x2=\"{$F2x}\" y2=\"{$F2y}\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 手前から見えない辺 -->
+            <path d=\"M{$E2x} {$E2y} L {$H2x} {$H2y} L {$G2x} {$G2y}\" fill=\"none\" stroke-dasharray=\"4\" stroke=\"black\" stroke-width=\"2\" />
+            <line x1=\"{$D2x}\" y1=\"{$D2y}\" x2=\"{$H2x}\" y2=\"{$H2y}\" stroke-dasharray=\"4\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 補助線 -->
+            <line x1=\"{$D2x}\" y1=\"{$D2y}\" x2=\"{$F2x}\" y2=\"{$F2y}\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <line x1=\"{$Q2x}\" y1=\"{$Q2y}\" x2=\"{$G2x}\" y2=\"{$G2y}\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <line x1=\"{$Q2x}\" y1=\"{$Q2y}\" x2=\"{$F2x}\" y2=\"{$F2y}\" stroke=\"black\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <!-- 頂点 -->
+            <text x=\"" . $A2x - 15 . "\" y=\"" . $A2y + 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $B2x - 15 . "\" y=\"" . $B2y + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $C2x + 5 . "\" y=\"" . $C2y + 5 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $D2x - 5 . "\" y=\"" . $D2y - 5 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $E2x - 15 . "\" y=\"" . $E2y + 5 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $F2x - 5 . "\" y=\"" . $F2y + 20 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            <text x=\"" . $G2x + 5 . "\" y=\"" . $G2y + 5 . "\" font-weight=\"bold\" font-size=\"18\">G</text>
+            <text x=\"" . $H2x + 5 . "\" y=\"" . $H2y - 5 . "\" font-weight=\"bold\" font-size=\"18\">H</text>
+            <text x=\"" . $Q2x - 5 . "\" y=\"" . $Q2y - 5 . "\" font-weight=\"bold\" font-size=\"18\">Q</text>
+            <!-- 四面体の辺 -->
+            <path d=\"M{$Q2x} {$Q2y} L {$D2x} {$D2y} L {$F2x} {$F2y} Z\" fill=\"none\" stroke=\"red\" stroke-width=\"1.5\" />
+            <line x1=\"{$Q2x}\" y1=\"{$Q2y}\" x2=\"{$G2x}\" y2=\"{$G2y}\" stroke=\"red\" stroke-width=\"1.5\" />
+            <line x1=\"{$F2x}\" y1=\"{$F2y}\" x2=\"{$G2x}\" y2=\"{$G2y}\" stroke=\"red\" stroke-width=\"4\" />
+            <line x1=\"{$D2x}\" y1=\"{$D2y}\" x2=\"{$G2x}\" y2=\"{$G2y}\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"4\"/>       
+            <!-- 三角形 -->
+            <path d=\"M {$D2x} {$D2y} L {$Q2x} {$Q2y} L {$G2x} {$G2y} Z\" fill=\"red\" fill-opacity=\"0.2\"/>
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $q_common = "
+            <p>一辺の長さが {$l} cm の立方体 ABCD－EFGH がある。AD 上と DC 上にそれぞれ点 P、Q があり、</p>
+            <p>AP : PD = {$m} : {$n}、DQ : QC = {$s} : {$t} とする。
+        ";
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2] mb-4\">
+                            {$q_common}
+                            四面体 Q－PFG の体積を求めよ。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$V_frac} \,\mathrm{cm}^3",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>
+                                <span class=\"bg-blue-200\">△PFG</span> を
+                                <span class=\"text-blue-700 font-bold\">四面体 Q－PFG</span> の
+                                底面とすると、高さがわからない。他の面を底面にしても同様である。
+                            </p>
+                            <p>
+                                そこで、点 P を点 D に移した
+                                <span class=\"text-blue-700 font-bold\">四面体 Q－DFG</span> 
+                                を考える（下図左）。
+                                <span class=\"bg-blue-200\">△PFG</span> も <span class=\"bg-blue-200\">△DFG</span> 
+                                も同じ平面
+                            </p>
+                            <p>
+                                （断面 ADGF）上にあるので、
+                                <span class=\"underline\">それらの面から点 Q までの高さは同じ</span>
+                                である。また、底辺を FG とすれば、
+                            </p>
+                            <p>
+                                <span class=\"bg-blue-200\">△PFG</span> と <span class=\"bg-blue-200\">△DFG</span> 
+                                は高さも等しいので、
+                                <span class=\"underline\">その面積も変わらない</span>。
+                                よって、
+                                <span class=\"text-blue-700 font-bold\">四面体 Q－PFG</span> と 
+                            </p>
+                            <p>
+                                <span class=\"text-blue-700 font-bold\">四面体 Q－DFG</span> は
+                                底面積と高さが同じなので、体積も変わらない。すると、
+                                <span class=\"text-blue-700 font-bold\">四面体 Q－DFG</span> は
+                            </p>
+                            <p>
+                                頂点を F、底面を 
+                                <span class=\"bg-red-200\">△DGQ</span> とする
+                                <span class=\"text-red-500 font-bold\">四面体 F－DGQ</span> 
+                                とみることができる。このとき
+                                <span class=\"bg-red-200\">△DGQ</span> に垂直な 
+                                <span class=\"text-red-500\">FG</span> は
+                            </p>
+                            <p>
+                                高さとして考えられる。よって、
+                                <span class=\"text-blue-700 font-bold\">四面体 Q－PFG</span> の代わりに
+                                <span class=\"text-red-500 font-bold\">四面体 F－DGQ</span> の体積を \(V\) として考えれば、
+                            </p>
+                            \[
+                                \\begin{aligned}
+                                    V 
+                                    &= \\frac{1}{\,3\,} \\triangle \mathrm{DGQ} \\times \mathrm{FG}
+                                        = \\frac{1}{\,3\,} \\times \\left( \\frac{1}{\,2\,} \mathrm{DQ} \\times \mathrm{CG} \\right) \\times {$l} \\\\
+                                    &= \\frac{1}{\,3\,} \\times \\left( \\frac{1}{\,2\,} \\times {$DQ_frac}\mathrm{DC} \\times {$l} \\right) \\times {$l} \\\\
+                                    &= \\frac{1}{\,3\,} \\times \\left( \\frac{1}{\,2\,} \\times {$DQ_frac} \\times {$l}^2 \\right) \\times {$l} \\\\
+                                    &= \\frac{1}{\,3\,} \\times {$S_DGQ} \\times {$l} = {$V_frac}\,\mathrm{cm}^3
+                                \\end{aligned}
+                            \]
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => $plot_e1,
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        $unitname = "部分の体積";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+
     // 座標と三角形の面積
     public function coordinates_triangle() {
         // ３点を定義（P1はy>0, P2はx2=x1でy<0）
