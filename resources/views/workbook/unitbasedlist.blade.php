@@ -206,7 +206,7 @@
                                     <a href="{{route('workbook.factorization')}}">因数分解</a>
                                 </x-button-link>
                                 <x-button-link>
-                                    <a href="{{route('workbook.unit.sqrt_calc')}}">平方根の和差</a>
+                                    <a href="{{route('workbook.sqrt_calc')}}">平方根の和差</a>
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.sqrt_natural')}}">自然数になる\(\sqrt{an}\)</a>

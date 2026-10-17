@@ -7467,6 +7467,54 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // // 平方根（旧）
+    // public function sqrt_calc() {
+    //     // √a = p√b
+    //     $b_arr = [2, 3, 5, 7, 11];
+    //     $b_idx = array_rand($b_arr);
+    //     $b = $b_arr[$b_idx];
+
+    //     $p1 = rand(2, 6);
+    //     $a1 = pow($p1, 2) * $b;
+    //     $p2 = rand(2, 6);
+    //     while($p1 == $p2) {
+    //         $p2 = rand(2, 6);
+    //     }
+    //     $a2 = pow($p2, 2) * $b;
+    //     $add_p1p2 = $p1 + $p2;
+    //     // $sub_p1p2 = ($p1 - $p2 == -1 ? "-" : $p1 - $p2);
+    //     $sub_p1p2 = $this->sign($p1 - $p2);
+
+    //     $questions = [
+    //         [
+    //             'q' => "<div>
+    //                         <p>\(次の計算をしなさい。\)</p>
+    //                         <p>\( \sqrt{{$a1}} + \sqrt{{$a2}} \)</p>
+    //                     </div>",
+    //             'a' => "{$add_p1p2}\sqrt{$b}",
+    //             'e' => "<div>
+    //                         \( \sqrt{{$a1}} + \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} + \sqrt{{$p2}^2 \\times {$b}}
+    //                         = {$p1}\sqrt{{$b}} + {$p2}\sqrt{{$b}} = {$add_p1p2}\sqrt{$b} \)
+    //                     </div>",
+    //         ],
+    //         [
+    //             'q' => "<div>
+    //                         <p>\(次の計算をしなさい。\)</p>
+    //                         <p>\( \sqrt{{$a1}} - \sqrt{{$a2}} \)</p>
+    //                     </div>",
+    //             'a' => "{$sub_p1p2}\sqrt{$b}",
+    //             'e' => "<div>
+    //                         \( \sqrt{{$a1}} - \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} - \sqrt{{$p2}^2 \\times {$b}}
+    //                         = {$p1}\sqrt{{$b}} - {$p2}\sqrt{{$b}} = {$sub_p1p2}\sqrt{$b} \)
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "平方根の和差";
+    //     return view('workbook.unit.child', compact('unitname','question'));
+    // }
+
     // 平方根
     public function sqrt_calc() {
         // √a = p√b
@@ -7487,32 +7535,34 @@ class WorkbookController extends Controller
 
         $questions = [
             [
-                'q' => "<div>
-                            <p>\(次の計算をしなさい。\)</p>
-                            <p>\( \sqrt{{$a1}} + \sqrt{{$a2}} \)</p>
-                        </div>",
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        <p>\(\sqrt{{$a1}} + \sqrt{{$a2}}\)",
+                'a_type' => 2,
                 'a' => "{$add_p1p2}\sqrt{$b}",
-                'e' => "<div>
-                            \( \sqrt{{$a1}} + \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} + \sqrt{{$p2}^2 \\times {$b}}
-                            = {$p1}\sqrt{{$b}} + {$p2}\sqrt{{$b}} = {$add_p1p2}\sqrt{$b} \)
-                        </div>",
+                'e_type' => 3,
+                'e' => "$$
+                            \sqrt{{$a1}} + \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} + \sqrt{{$p2}^2 \\times {$b}}
+                            = {$p1}\sqrt{{$b}} + {$p2}\sqrt{{$b}} = {$add_p1p2}\sqrt{$b}
+                        $$",
             ],
             [
-                'q' => "<div>
-                            <p>\(次の計算をしなさい。\)</p>
-                            <p>\( \sqrt{{$a1}} - \sqrt{{$a2}} \)</p>
-                        </div>",
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        <p>\(\sqrt{{$a1}} - \sqrt{{$a2}}\)",
+                'a_type' => 2,
                 'a' => "{$sub_p1p2}\sqrt{$b}",
-                'e' => "<div>
-                            \( \sqrt{{$a1}} - \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} - \sqrt{{$p2}^2 \\times {$b}}
-                            = {$p1}\sqrt{{$b}} - {$p2}\sqrt{{$b}} = {$sub_p1p2}\sqrt{$b} \)
-                        </div>",
+                'e_type' => 3,
+                'e' => "$$
+                            \sqrt{{$a1}} - \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} - \sqrt{{$p2}^2 \\times {$b}}
+                            = {$p1}\sqrt{{$b}} - {$p2}\sqrt{{$b}} = {$sub_p1p2}\sqrt{$b}
+                        $$",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         $unitname = "平方根の和差";
-        return view('workbook.unit.child', compact('unitname','question'));
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
     // 二次方程式
@@ -7673,14 +7723,42 @@ class WorkbookController extends Controller
         $p = $ps[$p_index];
         $a = pow($p, 2) * $q;
 
-        $question = [
-            'q' => "n\,を自然数とする。\\sqrt{ {{ $a }} n}\,が自然数となるような\,n\,のうち、最小の値を求めなさい。",
-            'a' => "{$n}",
-            'e' => "\\sqrt{ {$a}n } = {$p}\\sqrt{ {$q}n }\,なので、\\sqrt{ {$q}n }\,が自然数になればよい。",
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"mt-4\">\(n\) を自然数とする。\(\\sqrt{ {{ $a }} n}\) が自然数となるような \(n\) のうち、最小の値を求めなさい。",
+                'a_type' => 2,
+                'a' => "{$n}",
+                'e_type' => 3,
+                'e' => "\(\\sqrt{ {$a}n } = {$p}\\sqrt{ {$q}n }\) なので、\(\\sqrt{ {$q}n }\) が自然数になればよい。",
+            ],
         ];
-
-        return view('workbook.unit.sqrt_natural', compact('n','p','a','question'));
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "自然数になるような \(\sqrt{an}\)";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
+
+    // // 自然数になるような √(an)（旧）
+    // public function sqrt_natural() {
+    //     $ns = [2, 3, 5, 7, 11, 13];
+    //     $n_index = rand(0, count($ns)-1);
+    //     $n = $ns[$n_index];   //自然数 n
+    //     // √(an) = p√(qn)
+    //     $q = $n;
+    //     $ps = [2, 3, 5];
+    //     $p_index = rand(0, count($ps)-1);
+    //     $p = $ps[$p_index];
+    //     $a = pow($p, 2) * $q;
+
+    //     $question = [
+    //         'q' => "n\,を自然数とする。\\sqrt{ {{ $a }} n}\,が自然数となるような\,n\,のうち、最小の値を求めなさい。",
+    //         'a' => "{$n}",
+    //         'e' => "\\sqrt{ {$a}n } = {$p}\\sqrt{ {$q}n }\,なので、\\sqrt{ {$q}n }\,が自然数になればよい。",
+    //     ];
+
+    //     return view('workbook.unit.sqrt_natural', compact('n','p','a','question'));
+    // }
 
     // 二次関数（グラフ描画）
     public function plot_quadratic_function() {
