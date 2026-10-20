@@ -5086,6 +5086,246 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
+    // 度数分布と代表値
+    public function data_analysisJ1() {
+        /***** 読書冊数データ *****/
+        $data1_num = rand(6, 9);  // データ数６～９の数値群を作る
+        for ($i = 0; $i < $data1_num; $i++) {
+            $data1[$i] = rand(1, 10);
+        }
+        sort($data1);   // 小さい順に並び替え
+        $data1_str = "";
+        for ($i = 0; $i < $data1_num; $i++) {
+            $data1_str .= $data1[$i] . ", ";
+        }
+        $data1_str = substr($data1_str, 0, mb_strlen($data1_str) - 2);
+        
+        // 中央値
+        if ($data1_num % 2 == 0) {
+            $median = ($data1[$data1_num / 2 - 1] + $data1[$data1_num / 2]) / 2;
+            $e1 = "<p>小さい順に並べたとき、真ん中にある値が中央値である。ただし、</p>
+                    <p>データが偶数個の場合は中央の２つの値（ここでは " . $data1[$data1_num / 2 - 1] . " と " . $data1[$data1_num / 2] . "）の平均値をとる。</p>
+                    $$\\frac{\," . $data1[$data1_num / 2 - 1] . " + " . $data1[$data1_num / 2] . "\,}{2} = {$median} $$";
+        } else {
+            $median = $data1[floor($data1_num / 2)];
+            $e1 = "<p>小さい順に並べたとき、真ん中にある値が中央値である。</p>
+                    <p>ここでは {$data1_num} 人分のデータのうち、" . ($data1_num + 1) / 2 . " 番目が中央値である。</p>";
+        }
+
+        // 最頻値
+        $counts = array_count_values($data1);
+        $maxCount = max($counts);
+        $modes = array_keys(
+            array_filter($counts, fn($count) => $count === $maxCount)
+        );
+        if (count($counts) == count($data1)) {
+            $a2 = "なし";
+            $e2 = "<p>すべての要素が１回ずつしかでてこないため、最頻値は存在しない。</p>";
+        } elseif (count($modes) == 1) {
+            $a2 = "{$modes[0]}";
+            $e2 = "<p>もっとも多く含まれる値が最頻値である。</p>";
+        } else {
+            $a2 = "{$modes[0]}";
+            for ($i = 1; $i < count($modes); $i++) {
+                $a2 .= ", " . $modes[$i];
+            }
+            $e2 = "<p>もっとも多く含まれる値が最頻値である。複数存在する場合もあり、</p>
+                    <p>ここでは冊数が {$a2} の生徒がそれぞれ {$maxCount} 人ずついる。</p>";
+        }
+        // // 確認用
+        // $e2 .= "<p>count(data1) = " . count($data1) . ", count(counts) = " . count($counts) . ", count(modes) = " . count($modes) . "</p>";
+        // foreach ($counts as $key => $value) {
+        //     $e2 .= "<p>counts[" . $key . "] = " . $value . "</p>";
+        // }
+
+        /***** 通学時間データ *****/
+        $w_rank = 5 * rand(1, 4);   // １階級あたりの幅
+        $data2_num = rand(3, 5);
+        $data2[0] = rand(1, 3);
+        for ($i = 1; $i < $data2_num; $i++) {
+            $data2[$i] = $data2[$i-1] + rand(1, 3);
+        }
+        shuffle($data2);
+        $sum_d2 = array_sum($data2);
+
+
+        // テスト用データ
+        // $w_rank = 20;   // １階級あたりの幅
+        // $data2_num = 3;
+        // $data2 = [1, 3, 4];
+        // $sum_d2 = array_sum($data2);
+
+
+
+        // $cumulative = [];
+        $d2_median_flg = 0;
+        $d2_mode_num = max($data2); //　最頻値の階級の度数
+        $k = rand(1, $data2_num - 2); // 累積度数などの問題用にする階級を決める
+        for ($i = 0; $i < $data2_num; $i++) {
+            $cumulative[$i] = ($i==0) ? $data2[$i] : $cumulative[$i-1] + $data2[$i]; // 累積度数
+            /***** 中央値 *****/
+            // データ数が偶数かつ中央の二つの値が別の階級にある場合
+            if ($sum_d2 / 2 == $cumulative[$i]) {
+                // $d2_median_val = $w_rank * ($i + 1);
+                $d2_median_rank = $w_rank * $i . " 分以上 " . $w_rank * ($i + 1) . " 分未満の階級 または " . $w_rank * ($i + 1) . " 分以上 " . $w_rank * ($i + 2) . " 分未満の階級";
+                $d2_median_exp = "<p class=\"leading-[2]\">生徒数が {$sum_d2} 人なので、通学時間が短い順で " . $sum_d2 / 2 . " 番目と " . $sum_d2 / 2 + 1 . " 番目の生徒の二人が</p>
+                                    <p class=\"leading-[2]\">中央に位置する。それぞれ別の階級にいるため、そのいずれかということになる。</p>
+                                    <p class=\"leading-[2]\">(※)このような状況はおそらく出題されないが、一般的には起こりうる。</p>";
+                $d2_median_flg = 1;
+            } elseif ($sum_d2 / 2 < $cumulative[$i] && $d2_median_flg == 0) {
+                // データ数が偶数（同階級）
+                if ($sum_d2 % 2 == 0) {
+                    $temp = "hey<, i=" . $i . ", data2=" . $data2[$i] . ", sum_d2=" . $sum_d2 . ", cumulative=" . $cumulative[$i];
+                    $d2_median_rank = $w_rank * $i . " 分以上 " . $w_rank * ($i + 1) . " 分未満の階級";
+                    $d2_median_exp = "<p class=\"leading-[2]\">生徒数が {$sum_d2} 人なので、通学時間が短い順で " . $sum_d2 / 2 . " 番目と " . $sum_d2 / 2 + 1 . " 番目の生徒に着目する。</p>
+                                        <p class=\"leading-[2]\">いずれも、" . $w_rank * $i . " 分以上 " . $w_rank * ($i + 1) . " 分未満の階級にいる。</p>";
+                    $d2_median_flg = 1;
+                // データ数が奇数
+                } else {
+                    $d2_median_rank = $w_rank * $i . " 分以上 " . $w_rank * ($i + 1) . " 分未満の階級";
+                    $d2_median_exp = "<p class=\"leading-[2]\">生徒数が {$sum_d2} 人なので、通学時間が短い順で " . ($sum_d2 + 1) / 2 . " 番目の生徒の通学時間が中央値である。</p>
+                                        <p class=\"leading-[2]\">この生徒は " . $w_rank * $i . " 分以上 " . $w_rank * ($i + 1) . " 分未満の階級にいる。</p>";
+                    $d2_median_flg = 1;
+                }
+            }
+            /***** 最頻値 *****/
+            if ($data2[$i] == $d2_mode_num) {
+                $d2_mode_rank = $w_rank * $i . " 分以上 " . $w_rank * ($i + 1) . " 分未満の階級";
+                $d2_mode_val = $w_rank * ($i + 1/2);
+                $d2_mode_exp = "<p>もっとも度数が多いのは、生徒 {$d2_mode_num} 人を含む <span class=\"underline\">{$d2_mode_rank}</span>である。</p>
+                                <p>最頻値はこの階級の階級値なので、\(\displaystyle \\frac{\," . $w_rank * $i . " + " . $w_rank * ($i + 1) . "\,}{2} = {$d2_mode_val}\)</p>";
+            }
+            /***** 相対度数、累積度数 *****/
+            if ($i == $k) {
+                $target_rank = $w_rank * $i . " 分以上 " . $w_rank * ($i + 1) . " 分未満の階級";
+                $freq = $data2[$i]; // 度数
+                $cumu = $cumulative[$i];    // 累積度数
+                $rel = round($freq / $sum_d2, 2);   // 相対度数
+                // 相対度数が四捨五入した値なら≒で解説に示す。
+                if (abs($freq / $sum_d2 - $rel) < 1e-9) {
+                    $rel_eq = "=";
+                } else {
+                    $rel_eq = "\\fallingdotseq";
+                }
+            }
+        }
+
+        $d2_table = "<table class=\"border-collapse border border-gray-400 mx-auto my-4 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 px-5 py-0 w-40\">階級（分）</td>
+                            <td class=\"border border-gray-400 px-5 py-0 w-30\">度数（人）</td>
+                        </tr>
+                        <tr>
+                            <td class=\"border border-gray-400 px-5 py-0 w-40 text-sm\">以上　　未満</td>
+                            <td class=\"border border-gray-400 px-5 py-0 w-30\"></td>
+                        </tr>";
+                        for ($i = 0; $i < $data2_num; $i++) {
+                            $d2_table .= "
+                                <tr class=\"bg-gray-100\">
+                                    <td class=\"border border-gray-400 px-5 py-0 w-40\">" . $w_rank * $i . " ～ " . $w_rank * ($i + 1) . "</td>
+                                    <td class=\"border border-gray-400 px-5 py-0 w-30\">" . $data2[$i] . "</td>
+                                </tr>";
+                        }
+                    $d2_table .= "</table>
+                    ";
+
+        $d2_table_exp = "<table class=\"border-collapse border border-gray-400 mx-auto my-4 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 px-5 py-0 w-40\">階級(分)</td>
+                            <td class=\"border border-gray-400 px-5 py-0 w-30\">度数(人)</td>
+                            <td class=\"border border-gray-400 px-5 py-0 w-30\">累積度数(人)</td>
+                        </tr>
+                        <tr>
+                            <td class=\"border border-gray-400 px-5 py-0 w-40 text-sm\">以上　　未満</td>
+                            <td class=\"border border-gray-400 px-5 py-0 w-30\"></td>
+                            <td class=\"border border-gray-400 px-5 py-0 w-30\"></td>
+                        </tr>";
+                        for ($i = 0; $i < $data2_num; $i++) {
+                            $d2_table_exp .= "
+                                <tr class=\"bg-gray-100\">
+                                    <td class=\"border border-gray-400 px-5 py-0 w-40\">" . $w_rank * $i . " ～ " . $w_rank * ($i + 1) . "</td>
+                                    <td class=\"border border-gray-400 px-5 py-0 w-30\">" . $data2[$i] . "</td>
+                                    <td class=\"border border-gray-400 px-5 py-0 w-30\">" . $cumulative[$i] . "</td>
+                                </tr>";
+                        }
+                    $d2_table_exp .= "</table>
+                    ";
+
+        $questions = [
+            [
+                'q_no' => 1,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">以下のデータは、{$data1_num} 人の生徒が先月読んだ本の冊数である。中央値を答えなさい。</p>
+                        <p class=\"text-2xl mt-4\">{$data1_str}</p>",
+                'a_type' => 2,
+                'a' => "{$median}",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[2]\">{$e1}</div>",
+            ],
+            [
+                'q_no' => 2,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">以下のデータは、{$data1_num} 人の生徒が先月読んだ本の冊数である。最頻値があれば答えなさい。</p>
+                        <p class=\"text-2xl mt-4\">{$data1_str}</p>",
+                'a_type' => 2,
+                'a' => "{$a2}",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[2]\">{$e2}</div>",
+            ],
+            [
+                'q_no' => 3,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">下表は、生徒 {$sum_d2} 人の通学時間を階級ごとにまとめたものである。</p>
+                        {$d2_table}
+                        <p class=\"text-xl mt-4\">最頻値を答えなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$d2_mode_val}\,分",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[3]\">{$d2_mode_exp}</div>",
+            ],
+            [
+                'q_no' => 4,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">下表は、生徒 {$sum_d2} 人の通学時間を階級ごとにまとめたものである。</p>
+                        {$d2_table}
+                        <p class=\"text-xl mt-4\">中央値を含む階級を答えなさい。</p>",
+                'a_type' => 3,
+                'a' => "{$d2_median_rank}",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[3]\">{$d2_median_exp}</div>
+                        {$d2_table_exp}",
+            ],
+            [
+                'q_no' => 5,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">下表は、生徒 {$sum_d2} 人の通学時間を階級ごとにまとめたものである。</p>
+                        {$d2_table}
+                        <p class=\"text-xl mt-4\">{$target_rank} の累積度数を答えなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$cumu}",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[3]\">その階級までの度数をすべて足したものが累積度数である。</div>
+                        {$d2_table_exp}",
+            ],
+            [
+                'q_no' => 6,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">下表は、生徒 {$sum_d2} 人の通学時間を階級ごとにまとめたものである。</p>
+                        {$d2_table}
+                        <p class=\"text-xl mt-4\">{$target_rank} の相対度数を、小数点以下第２位まで答えなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$rel}",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[3]\">データ総数に対する、その階級の度数の割合が、相対度数である。</div>
+                        $$ \\frac{\,{$freq}\,}{\,{$sum_d2}\,} {$rel_eq} {$rel} $$",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "度数分布と代表値";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 座標と三角形の面積
     public function coordinates_triangle() {
         // ３点を定義（P1はy>0, P2はx2=x1でy<0）

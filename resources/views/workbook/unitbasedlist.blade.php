@@ -386,6 +386,9 @@
                         <x-td>データの活用</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.data_analysisJ1')}}">度数分布と代表値</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
