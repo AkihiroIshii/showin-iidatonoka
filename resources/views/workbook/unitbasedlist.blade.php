@@ -399,6 +399,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.probability_J2')}}">確率</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.data_analysisJ2')}}">四分位数と箱ひげ図</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">

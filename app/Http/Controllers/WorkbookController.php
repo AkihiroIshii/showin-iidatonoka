@@ -7781,6 +7781,477 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
+    // 四分位数と箱ひげ図
+    public function data_analysisJ2() {
+        /***** 理科の点数データ *****/
+        $data1_num = rand(6, 9);  // データ数６～９の数値群を作る
+        // $data1_num = 8;
+        for ($i = 0; $i < $data1_num; $i++) {
+            $data1[$i] = rand(10, 99);
+        }
+        sort($data1);   // 小さい順に並び替え
+        $data1_str = "";
+        for ($i = 0; $i < $data1_num; $i++) {
+            $data1_str .= $data1[$i] . ", ";
+        }
+        $data1_str = substr($data1_str, 0, mb_strlen($data1_str) - 2);
+        $d1_min = min($data1);
+        $d1_max = max($data1);
+
+        /***** 中央値と四分位数 *****/
+        $data1_str_e = "";
+        // データ数が偶数
+        if ($data1_num % 2 == 0) {
+            $num_half = $data1_num / 2;   // 中央値を除いたデータの半数
+            $median = ($data1[$num_half - 1] + $data1[$num_half]) / 2;    // 中央値
+            // 中央値を除いた半数のデータ数が偶数
+            if($num_half % 2 == 0) {
+                $q1_fst_idx = $data1_num * (1/4) - 1;
+                $q3_fst_idx = $data1_num * (3/4) - 1;
+                $q1 = ($data1[$q1_fst_idx] + $data1[$q1_fst_idx + 1]) / 2;    // 第１四分位数
+                $q3 = ($data1[$q3_fst_idx] + $data1[$q3_fst_idx + 1]) / 2;    // 第３四分位数
+                // 解説用文字列
+                $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+                for($i = 0; $i < $data1_num; $i++) {
+                    $data1_str_e .= $data1[$i];
+                    if (($i == $num_half - 1) || ($i == $q1_fst_idx) || ($i == $q3_fst_idx)) {
+                        $data1_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+                    } else {
+                        $data1_str_e .= ", ";
+                    }
+                }
+                $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+                $e1 = "<p class=\"mb-4\">第１四分位数は、前半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q1_fst_idx] . " + " . $data1[$q1_fst_idx + 1] . "\,}{2} = {$q1}\)</p>";
+                $e3 = "<p class=\"mb-4\">第３四分位数は、後半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q3_fst_idx] . " + " . $data1[$q3_fst_idx + 1] . "\,}{2} = {$q3}\)</p>";
+            // 中央値を除いた半数のデータ数が奇数
+            } else {
+                $q1_idx = ($data1_num * (1/2) - 1) / 2;
+                $q3_idx = ($data1_num * (3/2) - 1) / 2;
+                $q1 = $data1[$q1_idx];
+                $q3 = $data1[$q3_idx];
+                // 解説用文字列
+                $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+                for($i = 0; $i < $data1_num; $i++) {
+                    // 第１，第３四分位数は○で囲む
+                    if (($i == $q1_idx) || ($i == $q3_idx)) {
+                        $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
+                    // 中央値のところに縦線を引く
+                    } elseif ($i == ($num_half - 1)) {
+                        $data1_str_e .= $data1[$i] . "<span class=\"h-8 border-l-2 border-black\"></span>";
+                    } else {
+                        $data1_str_e .= $data1[$i] . ", ";
+                    }
+                }
+                $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+                $e1 = "<p>第１四分位数は、前半部分の中央値である {$q1} である。</p>";
+                $e3 = "<p>第３四分位数は、後半部分の中央値である {$q3} である。</p>";
+            }
+        // データ数が奇数
+        } else {
+            $num_half = ($data1_num - 1) / 2;   // 中央値を除いたデータの半数
+            $median = $data1[$num_half];    // 中央値
+            // 中央値を除いた半数のデータ数が偶数
+            if(($num_half) % 2 == 0) {
+                $q1_fst_idx = ($data1_num - 1) * (1/4) - 1;
+                $q3_fst_idx = ($data1_num - 1) * (3/4);
+                $q1 = ($data1[$q1_fst_idx] + $data1[$q1_fst_idx + 1]) / 2;    // 第１四分位数
+                $q3 = ($data1[$q3_fst_idx] + $data1[$q3_fst_idx + 1]) / 2;    // 第３四分位数
+                // 解説用文字列
+                $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+                for($i = 0; $i < $data1_num; $i++) {
+                    // 中央値は○で囲む
+                    if ($i == ($data1_num - 1) / 2) {
+                        $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
+                    // 第１，第３四分位数は縦線を引く
+                    } elseif (($i == $q1_fst_idx) || ($i == $q3_fst_idx)) {
+                        $data1_str_e .= $data1[$i] . "<span class=\"h-8 border-l-2 border-black\"></span>";
+                    } else {
+                        $data1_str_e .= $data1[$i] . ", ";
+                    }
+                }
+                $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+                $e1 = "<p class=\"mb-4\">第１四分位数は、前半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q1_fst_idx] . " + " . $data1[$q1_fst_idx + 1] . "\,}{2} = {$q1}\)</p>";
+                $e3 = "<p class=\"mb-4\">第３四分位数は、後半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q3_fst_idx] . " + " . $data1[$q3_fst_idx + 1] . "\,}{2} = {$q3}\)</p>";
+            // 中央値を除いた半数のデータ数が奇数
+            } else {
+                $q1_idx = ($num_half - 1) / 2;
+                $q1 = $data1[$q1_idx];
+                $q3_idx = $num_half + ($num_half + 1) / 2;
+                $q3 = $data1[$q3_idx];
+                // 解説用文字列
+                $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+                for($i = 0; $i < $data1_num; $i++) {
+                    // 中央値、第１，第３四分位数は○で囲む
+                    if (($i == $num_half) || ($i == $q1_idx) || ($i == $q3_idx)) {
+                        $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
+                    } else {
+                        $data1_str_e .= $data1[$i] . ", ";
+                    }
+                }
+                $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+                $e1 = "<p>第１四分位数は、前半部分の中央値である {$q1} である。</p>";
+                $e3 = "<p>第３四分位数は、後半部分の中央値である {$q3} である。</p>";
+            }
+        }
+
+        // 問６．点数が中央値の生徒の存在について
+        $e6 = "<p>箱ひげ図より、{$median} 点は中央値である。データ数が奇数の場合は、ちょうど真ん中の生徒の点数が中央値になる。</p>";
+        if ($data1_num % 2 == 0) {
+            $e6 .= "<p>しかし、ここではデータ数が偶数なので、{$num_half} 番目と " . $num_half + 1 . " 番目の生徒の点数の平均値が中央値になる。</p>
+                    <p>この平均値が {$median} になる場合も考えられるが、この箱ひげ図からでは必ず存在するとは言えない。</p>";
+            $a6 = "いえない";
+        } else {
+            $e6 .= "<p>ここではデータ数が奇数であり、" . $num_half + 1 . " 番目の生徒の点数が中央値（{$median} 点）になる。</p>";
+            $a6 = "いえる";
+        }
+
+
+        /***** 箱ひげ図 *****/
+        // グラフの最大値取得
+        $plot_max = 100;
+        $n_split = $plot_max;    // グラフの分割数
+
+        // グラフ描画用
+        $width = 700;    //viewportの大きさ
+        $h_unit = 30;   // 帯グラフ１段分の高さ
+        $height = $h_unit * 4;
+        $w_margin = 50;
+
+        $w_unit = ($width - 2 * $w_margin) / $n_split;
+
+        $plot_par_q = [
+            'vb_width' => $width,
+            'vb_height' => $height,
+            'vb_xfrom' => -$w_margin,
+            'vb_yfrom' => -$h_unit,
+        ];
+
+        // 帯を作る
+        $plot_con_q = "";
+        // 外枠
+        $plot_con_q .= "<rect x=\"0\" y=\"" . 0 . "\" width=\"" . $width - 2 * $w_margin . "\" height=\"" . $h_unit * 2 . "\" fill=\"transparent\" stroke=\"black\" stroke-width=\"0.2\"/>";
+        // 区切り線を引く（背景）
+        for ($i = 0; $i <= $n_split; $i++) {
+            $plot_con_q .= "<line x1=\"" . $i*$w_unit . "\" y1=\"" . 0 . "\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $h_unit * 2 . "\" stroke=\"black\" stroke-width=\"0.2\"/>";
+        }
+        // 箱ひげ図
+        $px_min = $w_unit * $d1_min;
+        $px_q1 = $w_unit * $q1;
+        $px_median = $w_unit * $median;
+        $px_q3 = $w_unit * $q3;
+        $px_max = $w_unit * $d1_max;
+        $plot_con_q .= "
+            <!-- ひげ -->
+            <line x1=\"{$px_min}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_min}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <text x=\"" . $px_min - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_min}</text>
+            <line x1=\"{$px_max}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <text x=\"" . $px_max - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_max}</text>
+            <line x1=\"{$px_min}\" y1=\"" . $h_unit . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+
+            <!-- 箱 -->
+            <rect x=\"{$px_q1}\" y=\"" . $h_unit * (1/2) . "\" width=\"" . $px_q3 - $px_q1 . "\" height=\"" . $h_unit . "\" fill=\"white\" stroke=\"black\" stroke-width=\"2\"/>
+            <line x1=\"{$px_median}\" y1=\"" . $h_unit * (1/2) . "\" x2 =\"{$px_median}\" y2=\"" . $h_unit * (3/2) . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <text x=\"" . $px_q1 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q1}</text>
+            <text x=\"" . $px_median - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$median}</text>
+            <text x=\"" . $px_q3 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q3}</text>
+        ";
+
+        $questions = [
+            [
+                'q_no' => 1,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">以下のデータは、{$data1_num} 人の生徒が受けた理科のテストの点数である。</p>
+                        <p class=\"text-2xl mt-4\">{$data1_str}</p>
+                        <p class=\"text-xl mt-4\">第１四分位数を答えなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$q1}",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[2]\">{$data1_str_e}{$e1}</div>",
+            ],
+            [
+                'q_no' => 2,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">以下のデータは、{$data1_num} 人の生徒が受けた理科のテストの点数である。</p>
+                        <p class=\"text-2xl mt-4\">{$data1_str}</p>
+                        <p class=\"text-xl mt-4\">第３四分位数を答えなさい。</p>",
+                'a_type' => 2,
+                'a' => "{$q3}",
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[2]\">{$data1_str_e}{$e3}</div>",
+            ],
+            [
+                'q_no' => 3,
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">以下のデータは、{$data1_num} 人の生徒が受けた理科のテストの点数である。</p>
+                        <p class=\"text-2xl mt-4\">{$data1_str}</p>
+                        <p class=\"text-xl mt-4\">四分位範囲を求めなさい。</p>",
+                'a_type' => 2,
+                'a' => $q3 - $q1,
+                'e_type' => 3,
+                'e' => "<div class=\"text-xl leading-[2]\">
+                        {$data1_str_e}{$e1}{$e3}
+                        <p>よって四分位範囲は、\({$q3} - {$q1} = " . $q3 - $q1 . "\)</p>
+                    </div>",
+            ],
+            [
+                'q_no' => 4,
+                'q_type' => 8,
+                'q' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>以下の箱ひげ図は、{$data1_num} 人の生徒が受けた理科のテストの</p>
+                        <p>点数をまとめたものです。四分位範囲を求めなさい。</p>",
+                'a_type' => 2,
+                'a' => $q3 - $q1,
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>図より、第１四分位数は {$q1}、第３四分位数は {$q3} である。
+                        <p>よって四分位範囲は、\({$q3} - {$q1} = " . $q3 - $q1 . "\)</p>
+                    </div>",
+            ],
+            [
+                'q_no' => 5,
+                'q_type' => 8,
+                'q' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>以下の箱ひげ図は、{$data1_num} 人の生徒が受けた理科のテストの</p>
+                        <p>点数をまとめたものです。これらの点数の範囲を求めなさい。</p>",
+                'a_type' => 2,
+                'a' => $d1_max - $d1_min,
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>箱ひげ図より、最大値は {$d1_max}、最小値は {$d1_min} である。</p>
+                        <p>よって範囲は、\({$d1_max} - {$d1_min} = " . $d1_max - $d1_min . "\)</p>
+                    </div>",
+            ],
+            [
+                'q_no' => 6,
+                'q_type' => 8,
+                'q' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>以下の箱ひげ図は、{$data1_num} 人の生徒が受けた理科のテストの</p>
+                        <p>点数をまとめたものです。{$median} 点の生徒は必ず存在すると言えるか。</p>
+                        <p>なお、点数は整数値とは限らないものとする。</p>",
+                'a_type' => 2,
+                'a' => $a6,
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"text-xl leading-[2]\">
+                        {$e6}
+                    </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "四分位数と箱ひげ図";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    }
+
+    // // 箱ひげ図（応用）
+    // public function hakohige() {
+    //     /***** 理科の点数データ *****/
+    //     $data1_num = rand(6, 9);  // データ数６～９の数値群を作る
+    //     // $data1_num = 8;
+    //     for ($i = 0; $i < $data1_num; $i++) {
+    //         $data1[$i] = rand(10, 99);
+    //     }
+    //     sort($data1);   // 小さい順に並び替え
+    //     $data1_str = "";
+    //     for ($i = 0; $i < $data1_num; $i++) {
+    //         $data1_str .= $data1[$i] . ", ";
+    //     }
+    //     $data1_str = substr($data1_str, 0, mb_strlen($data1_str) - 2);
+    //     $d1_min = min($data1);
+    //     $d1_max = max($data1);
+
+    //     /***** 中央値と四分位数 *****/
+    //     $data1_str_e = "";
+    //     // データ数が偶数
+    //     if ($data1_num % 2 == 0) {
+    //         $num_half = $data1_num / 2;   // 中央値を除いたデータの半数
+    //         $median = ($data1[$num_half - 1] + $data1[$num_half]) / 2;    // 中央値
+    //         // 中央値を除いた半数のデータ数が偶数
+    //         if($num_half % 2 == 0) {
+    //             $q1_fst_idx = $data1_num * (1/4) - 1;
+    //             $q3_fst_idx = $data1_num * (3/4) - 1;
+    //             $q1 = ($data1[$q1_fst_idx] + $data1[$q1_fst_idx + 1]) / 2;    // 第１四分位数
+    //             $q3 = ($data1[$q3_fst_idx] + $data1[$q3_fst_idx + 1]) / 2;    // 第３四分位数
+    //             // 解説用文字列
+    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+    //             $hige_str_e = $data1_str_e; // 箱ひげ図からの読み取り問題
+    //             for($i = 0; $i < $data1_num; $i++) {
+    //                 $data1_str_e .= $data1[$i];
+    //                 $hige_str_e .= "\(x_{" . $i + 1 . "}\)";
+    //                 if (($i == $num_half - 1) || ($i == $q1_fst_idx) || ($i == $q3_fst_idx)) {
+    //                     $data1_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+    //                     $hige_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+    //                 } else {
+    //                     $data1_str_e .= ", ";
+    //                     $hige_str_e .= " ";
+    //                 }
+    //             }
+    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+    //             $e1 = "<p class=\"mb-4\">第１四分位数は、前半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q1_fst_idx] . " + " . $data1[$q1_fst_idx + 1] . "\,}{2} = {$q1}\)</p>";
+    //             $e3 = "<p class=\"mb-4\">第３四分位数は、後半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q3_fst_idx] . " + " . $data1[$q3_fst_idx + 1] . "\,}{2} = {$q3}\)</p>";
+    //             $a5 = $data1_num - ($q3_fst_idx - 1);
+    //             $hige_exp1 = "<p>第３四分位数は " . $q3_fst_idx + 1 . " 番目の生徒と " . $q3_fst_idx + 2 . " 番目の生徒の点数の平均値である。</p>
+    //                         <p>すると、二人とも {$q3} 点を取った可能性が考えられる（\(x_{" . $q3_fst_idx + 1 . "} = x_{" . $q3_fst_idx + 2 . "} = {$q3}\)）。</p>
+    //                         <p>また、中央値は、{$num_half} 番目の生徒と " . $num_half + 1 . " 番目の生徒の点数の平均値であるから、</p>
+    //                         <p class=\"my-4\">中央値を \(m\) とすると \(\displaystyle m = \\frac{\,x_{" . $num_half . "} + x_{" . $num_half + 1 . "}\,}{2}\) が成り立つ。仮に \(x_{" . $num_half + 1 . "} = {$q3}\) とすると、</p>
+    //                         <p class=\"my-4\">箱ひげ図より、\(m = {$median}\) なので、\(\displaystyle {$median} = \\frac{\,x_{" . $num_half . "} + {$q3}\,}{2}\)。これを解くと、\(x_{{$num_half}} = " . 2 * $median - $q3 . "\)。</p>
+    //                         <p>すると、{$num_half} 番目の生徒の点数が " . 2 * $median - $q3 . " 点で、" . $num_half + 1 . " 番目の生徒の点数が {$q3} だった場合、</p>
+    //                         <p class=\"my-4\">中央値 = \(\displaystyle \\frac{\," . 2 * $median - $q3 . " + {$q3}\,}{2} = {$median}\) が成り立つ。よって、 " . $num_half + 1 . " 番目の生徒も</p>
+    //                         <p>{$q3} 点を取っていた場合、{$q3} 点以上の生徒は {$a5} 人いることになる。</p>";
+    //         // 中央値を除いた半数のデータ数が奇数
+    //         } else {
+    //             $q1_idx = ($data1_num * (1/2) - 1) / 2;
+    //             $q3_idx = ($data1_num * (3/2) - 1) / 2;
+    //             $q1 = $data1[$q1_idx];
+    //             $q3 = $data1[$q3_idx];
+    //             // 解説用文字列
+    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+    //             for($i = 0; $i < $data1_num; $i++) {
+    //                 // 第１，第３四分位数は○で囲む
+    //                 if (($i == $q1_idx) || ($i == $q3_idx)) {
+    //                     $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
+    //                 // 中央値のところに縦線を引く
+    //                 } elseif ($i == ($num_half - 1)) {
+    //                     $data1_str_e .= $data1[$i] . "<span class=\"h-8 border-l-2 border-black\"></span>";
+    //                 } else {
+    //                     $data1_str_e .= $data1[$i] . ", ";
+    //                 }
+    //             }
+    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+    //             $e1 = "<p>第１四分位数は、前半部分の中央値である {$q1} である。</p>";
+    //             $e3 = "<p>第３四分位数は、後半部分の中央値である {$q3} である。</p>";
+    //         }
+    //     // データ数が奇数
+    //     } else {
+    //         $num_half = ($data1_num - 1) / 2;   // 中央値を除いたデータの半数
+    //         $median = $data1[$num_half];    // 中央値
+    //         // 中央値を除いた半数のデータ数が偶数
+    //         if(($num_half) % 2 == 0) {
+    //             $q1_fst_idx = ($data1_num - 1) * (1/4) - 1;
+    //             $q3_fst_idx = ($data1_num - 1) * (3/4);
+    //             $q1 = ($data1[$q1_fst_idx] + $data1[$q1_fst_idx + 1]) / 2;    // 第１四分位数
+    //             $q3 = ($data1[$q3_fst_idx] + $data1[$q3_fst_idx + 1]) / 2;    // 第３四分位数
+    //             // 解説用文字列
+    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+    //             for($i = 0; $i < $data1_num; $i++) {
+    //                 // 中央値は○で囲む
+    //                 if ($i == ($data1_num - 1) / 2) {
+    //                     $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
+    //                 // 第１，第３四分位数は縦線を引く
+    //                 } elseif (($i == $q1_fst_idx) || ($i == $q3_fst_idx)) {
+    //                     $data1_str_e .= $data1[$i] . "<span class=\"h-8 border-l-2 border-black\"></span>";
+    //                 } else {
+    //                     $data1_str_e .= $data1[$i] . ", ";
+    //                 }
+    //             }
+    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+    //             $e1 = "<p class=\"mb-4\">第１四分位数は、前半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q1_fst_idx] . " + " . $data1[$q1_fst_idx + 1] . "\,}{2} = {$q1}\)</p>";
+    //             $e3 = "<p class=\"mb-4\">第３四分位数は、後半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q3_fst_idx] . " + " . $data1[$q3_fst_idx + 1] . "\,}{2} = {$q3}\)</p>";
+    //         // 中央値を除いた半数のデータ数が奇数
+    //         } else {
+    //             $q1_idx = ($num_half - 1) / 2;
+    //             $q1 = $data1[$q1_idx];
+    //             $q3_idx = $num_half + ($num_half + 1) / 2;
+    //             $q3 = $data1[$q3_idx];
+    //             // 解説用文字列
+    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
+    //             for($i = 0; $i < $data1_num; $i++) {
+    //                 // 中央値、第１，第３四分位数は○で囲む
+    //                 if (($i == $num_half) || ($i == $q1_idx) || ($i == $q3_idx)) {
+    //                     $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
+    //                 } else {
+    //                     $data1_str_e .= $data1[$i] . ", ";
+    //                 }
+    //             }
+    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
+    //             $e1 = "<p>第１四分位数は、前半部分の中央値である {$q1} である。</p>";
+    //             $e3 = "<p>第３四分位数は、後半部分の中央値である {$q3} である。</p>";
+    //         }
+    //     }
+
+    //     /***** 箱ひげ図 *****/
+    //     // グラフの最大値取得
+    //     $plot_max = 100;
+    //     $n_split = $plot_max;    // グラフの分割数
+
+    //     // グラフ描画用
+    //     $width = 700;    //viewportの大きさ
+    //     $h_unit = 30;   // 帯グラフ１段分の高さ
+    //     $height = $h_unit * 4;
+    //     $w_margin = 50;
+
+    //     $w_unit = ($width - 2 * $w_margin) / $n_split;
+
+    //     $plot_par_q = [
+    //         'vb_width' => $width,
+    //         'vb_height' => $height,
+    //         'vb_xfrom' => -$w_margin,
+    //         'vb_yfrom' => -$h_unit,
+    //     ];
+
+    //     // 帯を作る
+    //     $plot_con_q = "";
+    //     // 外枠
+    //     $plot_con_q .= "<rect x=\"0\" y=\"" . 0 . "\" width=\"" . $width - 2 * $w_margin . "\" height=\"" . $h_unit * 2 . "\" fill=\"transparent\" stroke=\"black\" stroke-width=\"0.2\"/>";
+    //     // 区切り線を引く（背景）
+    //     for ($i = 0; $i <= $n_split; $i++) {
+    //         $plot_con_q .= "<line x1=\"" . $i*$w_unit . "\" y1=\"" . 0 . "\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $h_unit * 2 . "\" stroke=\"black\" stroke-width=\"0.2\"/>";
+    //     }
+    //     // 箱ひげ図
+    //     $px_min = $w_unit * $d1_min;
+    //     $px_q1 = $w_unit * $q1;
+    //     $px_median = $w_unit * $median;
+    //     $px_q3 = $w_unit * $q3;
+    //     $px_max = $w_unit * $d1_max;
+    //     $plot_con_q .= "
+    //         <!-- ひげ -->
+    //         <line x1=\"{$px_min}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_min}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
+    //         <text x=\"" . $px_min - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_min}</text>
+    //         <line x1=\"{$px_max}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
+    //         <text x=\"" . $px_max - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_max}</text>
+    //         <line x1=\"{$px_min}\" y1=\"" . $h_unit . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+
+    //         <!-- 箱 -->
+    //         <rect x=\"{$px_q1}\" y=\"" . $h_unit * (1/2) . "\" width=\"" . $px_q3 - $px_q1 . "\" height=\"" . $h_unit . "\" fill=\"white\" stroke=\"black\" stroke-width=\"2\"/>
+    //         <line x1=\"{$px_median}\" y1=\"" . $h_unit * (1/2) . "\" x2 =\"{$px_median}\" y2=\"" . $h_unit * (3/2) . "\" stroke=\"black\" stroke-width=\"2\"/>
+    //         <text x=\"" . $px_q1 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q1}</text>
+    //         <text x=\"" . $px_median - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$median}</text>
+    //         <text x=\"" . $px_q3 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q3}</text>
+    //     ";
+    //     // 値の幅だけ赤くする。
+    //     // $plot_con_e .= "<rect x=\"{$w_margin}\" y=\"" . 0 . "\" width=\"" . $w_unit * $imp_nume . "\" height=\"" . $h_unit . "\" fill=\"red\" fill-opacity=\"0.2\"/>";
+
+    //     $questions = [
+    //         [
+    //             'q_type' => 8,
+    //             'q' => "
+    //                 <div class=\"text-xl leading-[2]\">
+    //                     <p>以下の箱ひげ図は、{$data1_num} 人の生徒が受けた理科のテストの</p>
+    //                     <p>点数をまとめたものです。{$q3} 点以上の生徒は最大で</p>
+    //                     <p>何人いるか。なお、点数は整数値とは限らないものとする。</p>",
+    //             'a_type' => 2,
+    //             'a' => "{$a5}\,人",
+    //             'e_type' => 3,
+    //             'e' => "
+    //                 <div class=\"text-xl leading-[2]\">
+    //                     <p>箱ひげ図より、{$q3} 点は第３四分位数である。</p>
+    //                     <p>生徒 {$data1_num} 人の点数を、低い順に \(x_1, x_2,..., x_{$data1_num}\) とする。</p>
+    //                     {$hige_str_e}
+    //                     {$hige_exp1}
+    //                 </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "箱ひげ図（応用）";
+    //     return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    // }
+
     // 式の展開
     public function expansion() {
         $a = (-1)**rand(1, 2) * rand(1, 13);
