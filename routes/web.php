@@ -423,6 +423,8 @@ Route::get('workbook/probability_J2', [WorkbookController::class, 'probability_J
 ->middleware(['auth', 'verified'])->name('workbook.probability_J2');
 Route::get('workbook/data_analysisJ2', [WorkbookController::class, 'data_analysisJ2'])
 ->middleware(['auth', 'verified'])->name('workbook.data_analysisJ2');
+Route::get('workbook/box_plot', [WorkbookController::class, 'box_plot'])
+->middleware(['auth', 'verified'])->name('workbook.box_plot');
 Route::get('workbook/moving_p', [WorkbookController::class, 'moving_p'])
 ->middleware(['auth', 'verified'])->name('workbook.moving_p');
 // 数学（中3）
@@ -451,6 +453,10 @@ Route::get('workbook/similarity', [WorkbookController::class, 'similarity'])
 // 入試対策
 Route::get('workbook/math_entrance_exam_1', [WorkbookController::class, 'math_entrance_exam_1'])
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_1');
+Route::get('workbook/math_entrance_exam_2', [WorkbookController::class, 'math_entrance_exam_2'])
+->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_2');
+Route::get('workbook/math_entrance_exam_4', [WorkbookController::class, 'math_entrance_exam_4'])
+->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_4');
 // 英語
 Route::get('workbook/be_verb', [WorkbookController::class, 'be_verb'])
 ->middleware(['auth', 'verified'])->name('workbook.be_verb');

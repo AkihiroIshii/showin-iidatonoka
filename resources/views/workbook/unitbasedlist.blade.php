@@ -402,6 +402,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.data_analysisJ2')}}">四分位数と箱ひげ図</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.box_plot')}}">☆箱ひげ図の解釈</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -426,10 +429,16 @@
                             </div>
                         </x-td>
                         <x-td class="font-bold">
-                            <p>長野県公立高校入試対策（β版）</p>
+                            <p>長野県公立高校入試対策</p>
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
                                     <a href="{{route('workbook.math_entrance_exam_1')}}">問１</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.math_entrance_exam_2')}}">問２</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.math_entrance_exam_4')}}">問４</a>
                                 </x-button-link>
                             </div>
                         </x-td>

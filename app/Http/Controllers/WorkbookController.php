@@ -2763,7 +2763,6 @@ class WorkbookController extends Controller
         $question['q'] = $question['q'] . "<p class=\"leading-[2]\">（目標解答時間：５秒）</p>";
         return view('workbook.unit_template', compact('unitname','question'));
     }
-
     public function get_positive_negative() {
         $a = (-1)**rand(1,2) * rand(2, 9);
         $b = (-1)**rand(1,2) * rand(2, 9);
@@ -2781,7 +2780,7 @@ class WorkbookController extends Controller
         $questions = [
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                'q' => "<p class=\"text-xl mt-4\">次の計算をしなさい。</p>
                         <p>\({$str_a_plus_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_plus_b}",
@@ -2797,7 +2796,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                'q' => "<p class=\"text-xl mt-4\">次の計算をしなさい。</p>
                         <p>\({$str_a_minus_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_minus_b}",
@@ -2813,7 +2812,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p class=\"text-xl\">次の計算をしなさい。</p>
+                'q' => "<p class=\"text-xl mt-4\">次の計算をしなさい。</p>
                         <p>\({$str_a_mul_b}\)</p>",
                 'a_type' => 2,
                 'a' => "{$a_mul_b}",
@@ -4833,7 +4832,17 @@ class WorkbookController extends Controller
     }
 
     // 部分の体積
-    public function part_volume(Request $request) {
+    public function part_volume() {
+        $unitname = "☆部分の体積";
+        $result = $this->get_part_volume();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_part_volume() {
         // 変数
         $l = rand(3, 10);   // 一辺の長さ（cm）
         $base = 200;  // 辺ABの長さ
@@ -5082,12 +5091,17 @@ class WorkbookController extends Controller
 
         $plot_con_q = $question['pq'];
         $plot_con_e = $question['pe'];
-        $unitname = "部分の体積";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 度数分布と代表値
     public function data_analysisJ1() {
+        $unitname = "度数分布と代表値";
+        $result = $this->get_data_analysisJ1();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_data_analysisJ1() {
         /***** 読書冊数データ *****/
         $data1_num = rand(6, 9);  // データ数６～９の数値群を作る
         for ($i = 0; $i < $data1_num; $i++) {
@@ -5322,8 +5336,7 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "度数分布と代表値";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return compact('question');
     }
 
     // 座標と三角形の面積
@@ -5660,6 +5673,12 @@ class WorkbookController extends Controller
 
     // 連立方程式
     public function simultaneous_equation() {
+        $unitname = "連立方程式";
+        $result = $this->get_simultaneous_equation();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_simultaneous_equation() {
         // ax + by = p, cx + dy = q
         $a = rand(1, 5);
         $b = (-1)**rand(1,2)*rand(1, 5);
@@ -5778,12 +5797,17 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "連立方程式";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return compact('question');
     }
 
     // 連立方程式（文章題）
     public function simultaneous_equation2() {
+        $unitname = "☆連立方程式（文章題）";
+        $result = $this->get_simultaneous_equation2();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_simultaneous_equation2() {
         // a:大人人数、b:子供人数、da:大人割引率（割）、db:子供割引率、x:大人料金、y:子供料金
         $a = rand(1, 5);
         $b = rand(1, 8);
@@ -5830,8 +5854,7 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "連立方程式";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return compact('question');
     }
 
     // 一次関数（グラフ描画）
@@ -6603,6 +6626,12 @@ class WorkbookController extends Controller
 
     // 正多角形の角
     public function regular_polygon() {
+        $unitname = "正多角形の角";
+        $result = $this->get_regular_polygon();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_regular_polygon() {
         $ns = [
             5 => "五",
             6 => "六",
@@ -6620,56 +6649,70 @@ class WorkbookController extends Controller
 
         $questions = [
             [
-                'q' => "\(正\,{$n_str}\,角形の内角の和は何度か。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">正{$n_str}角形の内角の和は何度か。</p>",
+                'a_type' => 2,
                 'a' => "{$angle_in_total}^{\circ}",
-                'e' => "<div>
-                            <p>\(正\,n\,角形は\,(n-2)\,個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。\)</p>
-                            <p>\(三角形の内角の和は180^{\circ}なので、それが\,(n-2)\,個ある正\,n\,角形の内角の和は、180(n-2).\)</p>
-                            <p>\(\displaystyle よって、正\,{$n_str}\,角形（n={$n}）の内角の和は、180({$n}-2) = {$angle_in_total}^{\circ}.\)</p>
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>正 \(n\) 角形は \((n-2)\) 個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。</p>
+                            <p>三角形の内角の和は \(180^{\circ}\) なので、それが \((n-2)\) 個ある正 \(n\) 角形の内角の和は \(180(n-2).\)</p>
+                            <p>よって、正{$n_str}角形（\(n={$n}\)）の内角の和は、\(180({$n}-2) = {$angle_in_total}^{\circ}.\)</p>
                         </div>",
             ],
             [
-                'q' => "\(正\,{$n_str}\,角形の内角ひとつは何度か。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">正{$n_str}角形の内角ひとつは何度か。</p>",
+                'a_type' => 2,
                 'a' => "{$angle_in}^{\circ}",
-                'e' => "<div>
-                            <p>\(正\,n\,角形は\,(n-2)\,個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。\)</p>
-                            <p>\(三角形の内角の和は180^{\circ}なので、それが\,(n-2)\,個ある正\,n\,角形の内角の和は、180(n-2).\)</p>
-                            <p>\(\displaystyle これより、これを\,n\,等分すれば内角ひとつの角度\,\\frac{ \,180(n-2)\, }{ n }\,が求まる。\)</p>
-                            <p>\(\displaystyle よって、正\,{$n_str}\,角形（n={$n}）の内角ひとつの角度は、\\frac{ \,180({$n}-2)\, }{ {$n} } = {$angle_in}^{\circ}.\)</p>
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[3]\">
+                            <p>正 \(n\) 角形は \((n-2)\) 個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。</p>
+                            <p>三角形の内角の和は \(180^{\circ}\) なので、それが \((n-2)\) 個ある正 \(n\) 角形の内角の和は \(180(n-2).\)</p>
+                            <p>これより、これを \(n\) 等分すれば、内角ひとつの角度 \(\displaystyle \\frac{ \,180(n-2)\, }{ n } \) が求まる。</p>
+                            <p>よって、正{$n_str}角形（\(n={$n}\)）の内角ひとつの角度は、\(\displaystyle \\frac{ \,180({$n}-2)\, }{ {$n} } = {$angle_in}^{\circ}.\)</p>
                         </div>",
             ],
             [
-                'q' => "\(内角の和が\,{$angle_in_total}^{\circ}\,の正多角形がある。角の数を答えなさい。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">内角の和が \({$angle_in_total}^{\circ}\) の正多角形がある。角の数を答えなさい。</p>",
+                'a_type' => 2,
                 'a' => "{$n}",
-                'e' => "<div>
-                            <p>\(正\,n\,角形は\,(n-2)\,個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。\)</p>
-                            <p>\(三角形の内角の和は180^{\circ}なので、それが\,(n-2)\,個ある正\,n\,角形の内角の和は、180(n-2).\)</p>
-                            <p>\(\displaystyle よって、180(n-2) = {$angle_in_total}\,を解いて、n={$n}.\)</p>
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>正 \(n\) 角形は \((n-2)\) 個の三角形に分割できる（四角形や五角形で確かめてみるとよい）。</p>
+                            <p>三角形の内角の和は \(180^{\circ}\) なので、それが \((n-2)\) 個ある正 \(n\) 角形の内角の和は \(180(n-2).\)</p>
+                            <p>よって、\(\displaystyle 180(n-2) = {$angle_in_total}\) を解いて、\(n={$n}.\)</p>
                         </div>",
             ],
             [
-                'q' => "\(ひとつの外角が\,{$angle_out}^{\circ}\,の正多角形がある。角の数を答えなさい。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">ひとつの外角が \({$angle_out}^{\circ}\) の正多角形がある。角の数を答えなさい。</p>",
+                'a_type' => 2,
                 'a' => "{$n}",
-                'e' => "<div>
-                            <p>\(多角形の外角の和は\,360^{\circ}\,である。\)</p>
-                            <p>\(\displaystyle 正\,n\,角形の外角はこれを\,n\,等分した値になるので、\\frac{\,360\,}{n}. \)</p>
-                            <p>\(\displaystyle よって、\\frac{\,360\,}{ {$n} } = {$angle_out}\,を解いて、n={$n}.\)</p>
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[3]\">
+                            <p>多角形の外角の和は \(360^{\circ}\) である。</p>
+                            <p>正 \(n\) 角形の外角はこれを \(n\) 等分した値になるので、\(\displaystyle \\frac{\,360\,}{n}.\)</p>
+                            <p>よって、\(\displaystyle \\frac{\,360\,}{n} = {$angle_out}\) を解いて、\(n={$n}.\)</p>
                         </div>",
             ],
             [
-                'q' => "\(正{$n_str}角形の外角ひとつの角度を求めなさい。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">正{$n_str}角形の外角ひとつの角度を求めなさい。</p>",
+                'a_type' => 2,
                 'a' => "{$angle_out}^{\circ}",
-                'e' => "<div>
-                            <p>\(多角形の外角の和は\,360^{\circ}\,である。\)</p>
-                            <p>\(\displaystyle 正\,n\,角形の外角はこれを\,n\,等分した値になるので、\\frac{\,360\,}{n}. \)</p>
-                            <p>\(\displaystyle よって、正{$n_str}角形（n={$n}）の外角は、\\frac{\,360\,}{ {$n} } = {$angle_out}^{\circ}.\)</p>
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[3]\">
+                            <p>多角形の外角の和は \(360^{\circ}\) である。</p>
+                            <p>正 \(n\) 角形の外角はこれを \(n\) 等分した値になるので、\(\displaystyle \\frac{\,360\,}{n}.\)</p>
+                            <p>よって、正{$n_str}角形（\(n={$n}\)）の外角は、\(\displaystyle \\frac{\,360\,}{ {$n} } = {$angle_out}^{\circ}.\)</p>
                         </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "正多角形の角";
-        return view('workbook.unit.child', compact('unitname','question'));
+        return compact('question');
     }
 
     // // 合同の証明１
@@ -6844,7 +6887,17 @@ class WorkbookController extends Controller
     }
 
     // 合同の証明
-    public function proof_of_congruence(Request $request) {
+    public function proof_of_congruence() {
+        $unitname = "合同の証明";
+        $result = $this->get_proof_of_congruence();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_proof_of_congruence() {
         // グラフ描画用
         $size = 400;    //viewportの大きさ（仮）
         $vb_width = $size;
@@ -7077,12 +7130,21 @@ class WorkbookController extends Controller
 
         $plot_con_q = $question['pq'];
         $plot_con_e = $question['pe'];
-        $unitname = "合同の証明";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 面積比（中２）
-    public function area_ratio_J2(Request $request) {
+    public function area_ratio_J2() {
+        $unitname = "面積比";
+        $result = $this->get_area_ratio_J2();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_area_ratio_J2() {
         // グラフ描画用
         $size = 400;    //viewportの大きさ（仮）
         $vb_width = $size;
@@ -7298,8 +7360,7 @@ class WorkbookController extends Controller
 
         $plot_con_q = $question['pq'];
         $plot_con_e = $question['pe'];
-        $unitname = "面積比";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 場合の数
@@ -7409,6 +7470,12 @@ class WorkbookController extends Controller
 
     // 確率（中２）
     public function probability_J2() {
+        $unitname = "確率";
+        $result = $this->get_probability_J2();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_probability_J2() {
         // 問１
         $a = rand(2, 4);
         $b = rand(2, 4);
@@ -7639,8 +7706,7 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "確率";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return compact('question');
     }
 
     // 動く点P
@@ -7783,6 +7849,14 @@ class WorkbookController extends Controller
 
     // 四分位数と箱ひげ図
     public function data_analysisJ2() {
+        $unitname = "四分位数と箱ひげ図";
+        $result = $this->get_data_analysisJ2();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    }
+    public function get_data_analysisJ2() {
         /***** 理科の点数データ *****/
         $data1_num = rand(6, 9);  // データ数６～９の数値群を作る
         // $data1_num = 8;
@@ -8044,213 +8118,261 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "四分位数と箱ひげ図";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+        return compact('question','plot_par_q','plot_con_q');
     }
 
-    // // 箱ひげ図（応用）
-    // public function hakohige() {
-    //     /***** 理科の点数データ *****/
-    //     $data1_num = rand(6, 9);  // データ数６～９の数値群を作る
-    //     // $data1_num = 8;
-    //     for ($i = 0; $i < $data1_num; $i++) {
-    //         $data1[$i] = rand(10, 99);
-    //     }
-    //     sort($data1);   // 小さい順に並び替え
-    //     $data1_str = "";
-    //     for ($i = 0; $i < $data1_num; $i++) {
-    //         $data1_str .= $data1[$i] . ", ";
-    //     }
-    //     $data1_str = substr($data1_str, 0, mb_strlen($data1_str) - 2);
-    //     $d1_min = min($data1);
-    //     $d1_max = max($data1);
+    // 箱ひげ図の解釈
+    public function box_plot() {
+        $unitname = "☆箱ひげ図の解釈";
+        $result = $this->get_box_plot();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    }
+    public function get_box_plot() {
+        /***** 理科の点数データ *****/
+        $data1_num = 8 + 2 * rand(0, 1);  // データ数8または10の数値群を作る
+        for ($i = 0; $i < $data1_num; $i++) {
+            $data1[$i] = rand(10, 99);
+        }
+        sort($data1);   // 小さい順に並び替え
+        $d1_min = min($data1);
+        $d1_max = max($data1);
 
-    //     /***** 中央値と四分位数 *****/
-    //     $data1_str_e = "";
-    //     // データ数が偶数
-    //     if ($data1_num % 2 == 0) {
-    //         $num_half = $data1_num / 2;   // 中央値を除いたデータの半数
-    //         $median = ($data1[$num_half - 1] + $data1[$num_half]) / 2;    // 中央値
-    //         // 中央値を除いた半数のデータ数が偶数
-    //         if($num_half % 2 == 0) {
-    //             $q1_fst_idx = $data1_num * (1/4) - 1;
-    //             $q3_fst_idx = $data1_num * (3/4) - 1;
-    //             $q1 = ($data1[$q1_fst_idx] + $data1[$q1_fst_idx + 1]) / 2;    // 第１四分位数
-    //             $q3 = ($data1[$q3_fst_idx] + $data1[$q3_fst_idx + 1]) / 2;    // 第３四分位数
-    //             // 解説用文字列
-    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
-    //             $hige_str_e = $data1_str_e; // 箱ひげ図からの読み取り問題
-    //             for($i = 0; $i < $data1_num; $i++) {
-    //                 $data1_str_e .= $data1[$i];
-    //                 $hige_str_e .= "\(x_{" . $i + 1 . "}\)";
-    //                 if (($i == $num_half - 1) || ($i == $q1_fst_idx) || ($i == $q3_fst_idx)) {
-    //                     $data1_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
-    //                     $hige_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
-    //                 } else {
-    //                     $data1_str_e .= ", ";
-    //                     $hige_str_e .= " ";
-    //                 }
-    //             }
-    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
-    //             $e1 = "<p class=\"mb-4\">第１四分位数は、前半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q1_fst_idx] . " + " . $data1[$q1_fst_idx + 1] . "\,}{2} = {$q1}\)</p>";
-    //             $e3 = "<p class=\"mb-4\">第３四分位数は、後半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q3_fst_idx] . " + " . $data1[$q3_fst_idx + 1] . "\,}{2} = {$q3}\)</p>";
-    //             $a5 = $data1_num - ($q3_fst_idx - 1);
-    //             $hige_exp1 = "<p>第３四分位数は " . $q3_fst_idx + 1 . " 番目の生徒と " . $q3_fst_idx + 2 . " 番目の生徒の点数の平均値である。</p>
-    //                         <p>すると、二人とも {$q3} 点を取った可能性が考えられる（\(x_{" . $q3_fst_idx + 1 . "} = x_{" . $q3_fst_idx + 2 . "} = {$q3}\)）。</p>
-    //                         <p>また、中央値は、{$num_half} 番目の生徒と " . $num_half + 1 . " 番目の生徒の点数の平均値であるから、</p>
-    //                         <p class=\"my-4\">中央値を \(m\) とすると \(\displaystyle m = \\frac{\,x_{" . $num_half . "} + x_{" . $num_half + 1 . "}\,}{2}\) が成り立つ。仮に \(x_{" . $num_half + 1 . "} = {$q3}\) とすると、</p>
-    //                         <p class=\"my-4\">箱ひげ図より、\(m = {$median}\) なので、\(\displaystyle {$median} = \\frac{\,x_{" . $num_half . "} + {$q3}\,}{2}\)。これを解くと、\(x_{{$num_half}} = " . 2 * $median - $q3 . "\)。</p>
-    //                         <p>すると、{$num_half} 番目の生徒の点数が " . 2 * $median - $q3 . " 点で、" . $num_half + 1 . " 番目の生徒の点数が {$q3} だった場合、</p>
-    //                         <p class=\"my-4\">中央値 = \(\displaystyle \\frac{\," . 2 * $median - $q3 . " + {$q3}\,}{2} = {$median}\) が成り立つ。よって、 " . $num_half + 1 . " 番目の生徒も</p>
-    //                         <p>{$q3} 点を取っていた場合、{$q3} 点以上の生徒は {$a5} 人いることになる。</p>";
-    //         // 中央値を除いた半数のデータ数が奇数
-    //         } else {
-    //             $q1_idx = ($data1_num * (1/2) - 1) / 2;
-    //             $q3_idx = ($data1_num * (3/2) - 1) / 2;
-    //             $q1 = $data1[$q1_idx];
-    //             $q3 = $data1[$q3_idx];
-    //             // 解説用文字列
-    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
-    //             for($i = 0; $i < $data1_num; $i++) {
-    //                 // 第１，第３四分位数は○で囲む
-    //                 if (($i == $q1_idx) || ($i == $q3_idx)) {
-    //                     $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
-    //                 // 中央値のところに縦線を引く
-    //                 } elseif ($i == ($num_half - 1)) {
-    //                     $data1_str_e .= $data1[$i] . "<span class=\"h-8 border-l-2 border-black\"></span>";
-    //                 } else {
-    //                     $data1_str_e .= $data1[$i] . ", ";
-    //                 }
-    //             }
-    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
-    //             $e1 = "<p>第１四分位数は、前半部分の中央値である {$q1} である。</p>";
-    //             $e3 = "<p>第３四分位数は、後半部分の中央値である {$q3} である。</p>";
-    //         }
-    //     // データ数が奇数
-    //     } else {
-    //         $num_half = ($data1_num - 1) / 2;   // 中央値を除いたデータの半数
-    //         $median = $data1[$num_half];    // 中央値
-    //         // 中央値を除いた半数のデータ数が偶数
-    //         if(($num_half) % 2 == 0) {
-    //             $q1_fst_idx = ($data1_num - 1) * (1/4) - 1;
-    //             $q3_fst_idx = ($data1_num - 1) * (3/4);
-    //             $q1 = ($data1[$q1_fst_idx] + $data1[$q1_fst_idx + 1]) / 2;    // 第１四分位数
-    //             $q3 = ($data1[$q3_fst_idx] + $data1[$q3_fst_idx + 1]) / 2;    // 第３四分位数
-    //             // 解説用文字列
-    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
-    //             for($i = 0; $i < $data1_num; $i++) {
-    //                 // 中央値は○で囲む
-    //                 if ($i == ($data1_num - 1) / 2) {
-    //                     $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
-    //                 // 第１，第３四分位数は縦線を引く
-    //                 } elseif (($i == $q1_fst_idx) || ($i == $q3_fst_idx)) {
-    //                     $data1_str_e .= $data1[$i] . "<span class=\"h-8 border-l-2 border-black\"></span>";
-    //                 } else {
-    //                     $data1_str_e .= $data1[$i] . ", ";
-    //                 }
-    //             }
-    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
-    //             $e1 = "<p class=\"mb-4\">第１四分位数は、前半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q1_fst_idx] . " + " . $data1[$q1_fst_idx + 1] . "\,}{2} = {$q1}\)</p>";
-    //             $e3 = "<p class=\"mb-4\">第３四分位数は、後半部分の中央値なので、\(\displaystyle \\frac{\," . $data1[$q3_fst_idx] . " + " . $data1[$q3_fst_idx + 1] . "\,}{2} = {$q3}\)</p>";
-    //         // 中央値を除いた半数のデータ数が奇数
-    //         } else {
-    //             $q1_idx = ($num_half - 1) / 2;
-    //             $q1 = $data1[$q1_idx];
-    //             $q3_idx = $num_half + ($num_half + 1) / 2;
-    //             $q3 = $data1[$q3_idx];
-    //             // 解説用文字列
-    //             $data1_str_e .= "<p class=\"flex items-center justify-center gap-2 text-2xl my-4\">";
-    //             for($i = 0; $i < $data1_num; $i++) {
-    //                 // 中央値、第１，第３四分位数は○で囲む
-    //                 if (($i == $num_half) || ($i == $q1_idx) || ($i == $q3_idx)) {
-    //                     $data1_str_e .= "<span class=\"inline-flex items-center justify-center w-8 h-8 rounded-full border border-black\">" . $data1[$i] . ",</span>";
-    //                 } else {
-    //                     $data1_str_e .= $data1[$i] . ", ";
-    //                 }
-    //             }
-    //             $data1_str_e = substr($data1_str_e, 0, mb_strlen($data1_str_e) - 2) . "</p>";
-    //             $e1 = "<p>第１四分位数は、前半部分の中央値である {$q1} である。</p>";
-    //             $e3 = "<p>第３四分位数は、後半部分の中央値である {$q3} である。</p>";
-    //         }
-    //     }
+        /***** 中央値と四分位数 *****/
+        // $data1_str_e = $data1_str_e_m_to_q3 = $x_str_e = "";
+        // 列挙する数値や文字列の準備
+        $data1_str_e = $x_str_e
+            = $data1_str_e2
+            = "<p class=\"flex items-center justify-center gap-6 text-2xl my-4\">";
 
-    //     /***** 箱ひげ図 *****/
-    //     // グラフの最大値取得
-    //     $plot_max = 100;
-    //     $n_split = $plot_max;    // グラフの分割数
+        $num_half = $data1_num / 2;   // 中央値を除いたデータの半数
+        $median = ($data1[$num_half - 1] + $data1[$num_half]) / 2;    // 中央値
 
-    //     // グラフ描画用
-    //     $width = 700;    //viewportの大きさ
-    //     $h_unit = 30;   // 帯グラフ１段分の高さ
-    //     $height = $h_unit * 4;
-    //     $w_margin = 50;
+        // データ数が8
+        if ($data1_num == 8) {
+            $separate_idx = [1, 3, 5];  // 区切り線を入れる直前の位置
+            $q1_fst_idx = $data1_num * (1/4) - 1;
+            $q3_fst_idx = $data1_num * (3/4) - 1;
+            $q1 = ($data1[$q1_fst_idx] + $data1[$q1_fst_idx + 1]) / 2;    // 第１四分位数
+            $q3 = ($data1[$q3_fst_idx] + $data1[$q3_fst_idx + 1]) / 2;    // 第３四分位数
 
-    //     $w_unit = ($width - 2 * $w_margin) / $n_split;
+            /***** 列挙する数値や文字列の設定 *****/
+            $val_idx = [0, 7];  // 値をそのまま表示する位置
+            // x5～x7 = q3 としたとき、q1 <= x4 を満たすかで分岐
+            $flg_q1x4 = $q1 <= (2 * $median - $q3);
+            if ($flg_q1x4) {
+                $q3_idx = [4, 5, 6];    // q3 の値を表示する位置
+            } else {
+                $q3_idx = [5, 6];
+            }
 
-    //     $plot_par_q = [
-    //         'vb_width' => $width,
-    //         'vb_height' => $height,
-    //         'vb_xfrom' => -$w_margin,
-    //         'vb_yfrom' => -$h_unit,
-    //     ];
+            // 列挙する数値や文字列を付け足す
+            for($i = 0; $i < $data1_num; $i++) {
+                $x_str_e .= "\(x_{" . $i + 1 . "}\)";
+                /***** 箱ひげ図から読み取れる値は具体的に表示 *****/
+                // 値をそのまま表示
+                if (in_array($i, $val_idx)) {
+                    $data1_str_e .= $data1[$i];
+                    $data1_str_e2 .= $data1[$i];
+                } elseif (in_array($i, $q3_idx)) {
+                    $data1_str_e .= "\(x_{" . $i + 1 . "}\)";
+                    $data1_str_e2 .= $q3;
+                } elseif ($flg_q1x4 && $i == 3) {
+                    $data1_str_e .= "\(x_{{" . $i + 1 . "}}\)";
+                    $data1_str_e2 .= 2 * $median - $q3;
+                } else {
+                    $data1_str_e .= "\(x_{" . $i + 1 . "}\)";
+                    $data1_str_e2 .= "\(x_{" . $i + 1 . "}\)";
+                }
+                /***** 区切り線 *****/
+                if (in_array($i, $separate_idx)) {
+                    $x_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+                    $data1_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+                    $data1_str_e2 .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+                } else {
+                    $x_str_e .= " ";
+                    $data1_str_e .= " ";
+                    $data1_str_e2 .= " ";
+                }
+            }
+            $each_exp = "
+                <p>中央値は {$num_half} 番目の生徒と " . $num_half + 1 . " 番目の生徒の点数の平均値であり、</p>
+                <p>第３四分位数は " . $q3_fst_idx + 1 . " 番目の生徒と " . $q3_fst_idx + 2 . " 番目の生徒の点数の平均値であるから、</p>
+                $$
+                    \\frac{\,x_{" . $num_half . "} + x_{" . $num_half + 1 . "}\,}{2} = {$median},\,\,\,
+                    \\frac{\,x_{" . $q3_fst_idx + 1 . "} + x_{" . $q3_fst_idx + 2 . "}\,}{2} = {$q3}
+                $$
+                <p>が成り立つ。２つ目の式を満たす例として、\(x_{" . $q3_fst_idx + 1 . "} = x_{" . $q3_fst_idx + 2 . "} = {$q3}\) が考えられる。</p>
+                <p>また、１つ目の式に \(x_{" . $num_half + 1 . "} = {$q3}\) を代入すると \(x_{{$num_half}} = " . 2 * $median - $q3 . "\) が求まるが、これは</p>
+                <p>つまり \(x_{{$num_half}} = " . 2 * $median - $q3 . "\) ならば、\(x_{" . $num_half + 1 . "}\) も第３四分位数と同値になることを意味する。</p>
+            ";
+            if ($flg_q1x4) {
+                $a5 = $data1_num - ($q3_fst_idx - 1);
+                $each_exp .= "
+                    <p>箱ひげ図より、第１四分位数は \({$q1}\) であり、\({$q1} \leqq x_{{$num_half}}\) という前提とも矛盾しない。</p>
+                    <p>よって、\(x_{" . $num_half + 1 . "}\,～\,x_{" . $q3_fst_idx + 2 . "}\) がすべて {$q3} 点である可能性があり、次のようになる。</p>
+                    {$data1_str_e2}
+                    <p>この場合は {$q3} 点以上の生徒が {$a5} 人いる。</p>
+                ";
+            } else {
+                $a5 = $data1_num - $q3_fst_idx;
+                $each_exp .= "
+                    <p>しかし、箱ひげ図より第１四分位数は \({$q1}\) であり、\({$q1} \leqq x_{{$num_half}}\) という前提と矛盾する。</p>
+                    <p>よって、\(x_{" . $num_half + 1 . "} \\neq {$q3} \)。ただし、次のように \(x_{" . $q3_fst_idx + 1 . "} = x_{" . $q3_fst_idx + 2 . "} = {$q3}\) は考えられる。</p>
+                    {$data1_str_e2}
+                    <p>この場合は {$q3} 点以上の生徒が {$a5} 人いる。</p>
+                ";
+            }
+        // データ数が10
+        } elseif ($data1_num == 10) {
+            $separate_idx = [4];  // 区切り線を入れる直前の位置
+            $q1_idx = ($data1_num * (1/2) - 1) / 2;
+            $q3_idx = ($data1_num * (3/2) - 1) / 2;
+            $q1 = $data1[$q1_idx];
+            $q3 = $data1[$q3_idx];
+            $q1_fst_idx = $data1_num * (1/4) - 1;
+            $q3_fst_idx = $data1_num * (3/4) - 1;
 
-    //     // 帯を作る
-    //     $plot_con_q = "";
-    //     // 外枠
-    //     $plot_con_q .= "<rect x=\"0\" y=\"" . 0 . "\" width=\"" . $width - 2 * $w_margin . "\" height=\"" . $h_unit * 2 . "\" fill=\"transparent\" stroke=\"black\" stroke-width=\"0.2\"/>";
-    //     // 区切り線を引く（背景）
-    //     for ($i = 0; $i <= $n_split; $i++) {
-    //         $plot_con_q .= "<line x1=\"" . $i*$w_unit . "\" y1=\"" . 0 . "\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $h_unit * 2 . "\" stroke=\"black\" stroke-width=\"0.2\"/>";
-    //     }
-    //     // 箱ひげ図
-    //     $px_min = $w_unit * $d1_min;
-    //     $px_q1 = $w_unit * $q1;
-    //     $px_median = $w_unit * $median;
-    //     $px_q3 = $w_unit * $q3;
-    //     $px_max = $w_unit * $d1_max;
-    //     $plot_con_q .= "
-    //         <!-- ひげ -->
-    //         <line x1=\"{$px_min}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_min}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
-    //         <text x=\"" . $px_min - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_min}</text>
-    //         <line x1=\"{$px_max}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
-    //         <text x=\"" . $px_max - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_max}</text>
-    //         <line x1=\"{$px_min}\" y1=\"" . $h_unit . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+            /***** 列挙する数値や文字列の設定 *****/
+            $val_idx = [0, 2, 7, 9];  // 値をそのまま表示する位置
+            // x6～x9 = q3 としたとき、q1 < x5 を満たすかで分岐
+            $flg_x6x9 = $q1 <= (2 * $median - $q3);
+            if ($flg_x6x9) {
+                $q3_idx = [5, 6, 7];    // q3 の値を表示する位置
+            } else {
+                $q3_idx = [6, 7];
+            }
 
-    //         <!-- 箱 -->
-    //         <rect x=\"{$px_q1}\" y=\"" . $h_unit * (1/2) . "\" width=\"" . $px_q3 - $px_q1 . "\" height=\"" . $h_unit . "\" fill=\"white\" stroke=\"black\" stroke-width=\"2\"/>
-    //         <line x1=\"{$px_median}\" y1=\"" . $h_unit * (1/2) . "\" x2 =\"{$px_median}\" y2=\"" . $h_unit * (3/2) . "\" stroke=\"black\" stroke-width=\"2\"/>
-    //         <text x=\"" . $px_q1 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q1}</text>
-    //         <text x=\"" . $px_median - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$median}</text>
-    //         <text x=\"" . $px_q3 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q3}</text>
-    //     ";
-    //     // 値の幅だけ赤くする。
-    //     // $plot_con_e .= "<rect x=\"{$w_margin}\" y=\"" . 0 . "\" width=\"" . $w_unit * $imp_nume . "\" height=\"" . $h_unit . "\" fill=\"red\" fill-opacity=\"0.2\"/>";
+            // 列挙する数値や文字列を付け足す
+            for($i = 0; $i < $data1_num; $i++) {
+                $x_str_e .= "\(x_{{" . $i + 1 . "}}\)";
+                /***** 箱ひげ図から読み取れる値は具体的に表示 *****/
+                // 値をそのまま表示
+                if (in_array($i, $val_idx)) {
+                    $data1_str_e .= $data1[$i];
+                    $data1_str_e2 .= $data1[$i];
+                } elseif (in_array($i, $q3_idx)) {
+                    $data1_str_e .= "\(x_{{" . $i + 1 . "}}\)";
+                    $data1_str_e2 .= $q3;
+                } elseif ($flg_x6x9 && $i == 4) {
+                    $data1_str_e .= "\(x_{{" . $i + 1 . "}}\)";
+                    $data1_str_e2 .= 2 * $median - $q3;
+                } else {
+                    $data1_str_e .= "\(x_{{" . $i + 1 . "}}\)";
+                    $data1_str_e2 .= "\(x_{{" . $i + 1 . "}}\)";
+                }
+                /***** 区切り線 *****/
+                if (in_array($i, $separate_idx)) {
+                    $x_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+                    $data1_str_e .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+                    $data1_str_e2 .= "<span class=\"h-8 border-l-2 border-black\"></span>";
+                } else {
+                    $x_str_e .= " ";
+                    $data1_str_e .= " ";
+                    $data1_str_e2 .= " ";
+                }
+            }
+            $each_exp = "
+                <p>中央値は {$num_half} 番目の生徒と " . $num_half + 1 . " 番目の生徒の点数の平均値であるから、</p>
+                $$
+                    \\frac{\,x_{" . $num_half . "} + x_{" . $num_half + 1 . "}\,}{2} = {$median}
+                $$
+                <p>さて、この式に \(x_{" . $num_half + 1 . "} = {$q3}\) を代入すると \(x_{{$num_half}} = " . 2 * $median - $q3 . "\) が求まるが、これは</p>
+                <p>つまり \(x_{{$num_half}} = " . 2 * $median - $q3 . "\) ならば、\(x_{" . $num_half + 1 . "}\) も第３四分位数と同値になることを意味する。</p>
+            ";
+            if ($flg_x6x9) {
+                $a5 = $data1_num - ($num_half + 1) + 1;
+                $each_exp .= "
+                    <p>箱ひげ図より、第１四分位数は \({$q1}\) であり、\({$q1} \leqq x_{{$num_half}}\) という前提とも矛盾しない。</p>
+                    <p>よって、\(x_{" . $num_half + 1 . "}\,～\,x_{" . $data1_num - 2 . "}\) がすべて {$q3} 点である可能性があり、次のようになる。</p>
+                    {$data1_str_e2}
+                    <p>\({$q3} \leqq x_9\) なので、この場合は {$q3} 点以上の生徒が {$a5} 人いる。</p>
+                ";
+            } else {
+                $a5 = $data1_num - ($num_half + 1);
+                $each_exp .= "
+                    <p>しかし、箱ひげ図より第１四分位数は \({$q1}\) であり、\({$q1} \leqq x_{{$num_half}}\) という前提と矛盾する。</p>
+                    <p>よって、\(x_{" . $num_half + 1 . "} \\neq {$q3} \)。ただし、次のように \(x_{" . $num_half + 2 . "} = {$q3}\) は考えられる。</p>
+                    {$data1_str_e2}
+                    <p>\({$q3} \leqq x_9\) なので、この場合は {$q3} 点以上の生徒が {$a5} 人いる。</p>
+                ";
+            }
+        }
+        /***** 箱ひげ図 *****/
+        // グラフの最大値取得
+        $plot_max = 100;
+        $n_split = $plot_max;    // グラフの分割数
 
-    //     $questions = [
-    //         [
-    //             'q_type' => 8,
-    //             'q' => "
-    //                 <div class=\"text-xl leading-[2]\">
-    //                     <p>以下の箱ひげ図は、{$data1_num} 人の生徒が受けた理科のテストの</p>
-    //                     <p>点数をまとめたものです。{$q3} 点以上の生徒は最大で</p>
-    //                     <p>何人いるか。なお、点数は整数値とは限らないものとする。</p>",
-    //             'a_type' => 2,
-    //             'a' => "{$a5}\,人",
-    //             'e_type' => 3,
-    //             'e' => "
-    //                 <div class=\"text-xl leading-[2]\">
-    //                     <p>箱ひげ図より、{$q3} 点は第３四分位数である。</p>
-    //                     <p>生徒 {$data1_num} 人の点数を、低い順に \(x_1, x_2,..., x_{$data1_num}\) とする。</p>
-    //                     {$hige_str_e}
-    //                     {$hige_exp1}
-    //                 </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "箱ひげ図（応用）";
-    //     return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
-    // }
+        // グラフ描画用
+        $width = 700;    //viewportの大きさ
+        $h_unit = 30;   // 帯グラフ１段分の高さ
+        $height = $h_unit * 4;
+        $w_margin = 50;
+
+        $w_unit = ($width - 2 * $w_margin) / $n_split;
+
+        $plot_par_q = [
+            'vb_width' => $width,
+            'vb_height' => $height,
+            'vb_xfrom' => -$w_margin,
+            'vb_yfrom' => -$h_unit,
+        ];
+
+        // 帯を作る
+        $plot_con_q = "";
+        // 外枠
+        $plot_con_q .= "<rect x=\"0\" y=\"" . 0 . "\" width=\"" . $width - 2 * $w_margin . "\" height=\"" . $h_unit * 2 . "\" fill=\"transparent\" stroke=\"black\" stroke-width=\"0.2\"/>";
+        // 区切り線を引く（背景）
+        for ($i = 0; $i <= $n_split; $i++) {
+            $plot_con_q .= "<line x1=\"" . $i*$w_unit . "\" y1=\"" . 0 . "\" x2 =\"" . $i*$w_unit . "\" y2=\"" . $h_unit * 2 . "\" stroke=\"black\" stroke-width=\"0.2\"/>";
+        }
+        // 箱ひげ図
+        $px_min = $w_unit * $d1_min;
+        $px_q1 = $w_unit * $q1;
+        $px_median = $w_unit * $median;
+        $px_q3 = $w_unit * $q3;
+        $px_max = $w_unit * $d1_max;
+        $plot_con_q .= "
+            <!-- ひげ -->
+            <line x1=\"{$px_min}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_min}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <text x=\"" . $px_min - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_min}</text>
+            <line x1=\"{$px_max}\" y1=\"" . $h_unit * (3/4) . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit * (5/4) . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <text x=\"" . $px_max - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$d1_max}</text>
+            <line x1=\"{$px_min}\" y1=\"" . $h_unit . "\" x2 =\"{$px_max}\" y2=\"" . $h_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+
+            <!-- 箱 -->
+            <rect x=\"{$px_q1}\" y=\"" . $h_unit * (1/2) . "\" width=\"" . $px_q3 - $px_q1 . "\" height=\"" . $h_unit . "\" fill=\"white\" stroke=\"black\" stroke-width=\"2\"/>
+            <line x1=\"{$px_median}\" y1=\"" . $h_unit * (1/2) . "\" x2 =\"{$px_median}\" y2=\"" . $h_unit * (3/2) . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <text x=\"" . $px_q1 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q1}</text>
+            <text x=\"" . $px_median - 10 . "\" y=\"" . $h_unit * (4/2) . "\" font-weight=\"bold\" font-size=\"16\" >{$median}</text>
+            <text x=\"" . $px_q3 - 10 . "\" y=\"" . $h_unit * (1/4) . "\" font-weight=\"bold\" font-size=\"16\" >{$q3}</text>
+        ";
+
+        $question = [
+                'q_type' => 8,
+                'q' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>以下の箱ひげ図は、{$data1_num} 人の生徒が受けた理科のテストの</p>
+                        <p>点数をまとめたものです。{$q3} 点以上の生徒は最大で何人いる</p>
+                        <p>可能性があるか。なお、点数は整数値とは限らないものとする。</p>",
+                'a_type' => 2,
+                'a' => "{$a5}\,人",
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>箱ひげ図より、{$q3} 点は第３四分位数である。生徒 {$data1_num} 人の点数を</p>
+                        <p>低い順に \(x_1, x_2,..., x_{{$data1_num}}\) として並べると次のようになる。</p>
+                        {$x_str_e}
+                        <p>さらに、箱ひげ図から読み取れる値を代入すると次のようになる。</p>
+                        {$data1_str_e}
+                        {$each_exp}
+                    </div>",
+        ];
+        return compact('question','plot_par_q','plot_con_q');
+        // return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q'));
+    }
 
     // 式の展開
     public function expansion() {
@@ -8678,6 +8800,12 @@ class WorkbookController extends Controller
 
     // 自然数になるような √(an)
     public function sqrt_natural() {
+        $unitname = "自然数になるような \(\sqrt{an}\)";
+        $result = $this->get_sqrt_natural();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_sqrt_natural() {
         $ns = [2, 3, 5, 7, 11, 13];
         $n_index = rand(0, count($ns)-1);
         $n = $ns[$n_index];   //自然数 n
@@ -8700,8 +8828,7 @@ class WorkbookController extends Controller
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "自然数になるような \(\sqrt{an}\)";
-        return view('workbook.unit_template', compact('unitname','question'));
+        return compact('question');
     }
 
     // // 自然数になるような √(an)（旧）
@@ -9635,8 +9762,18 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
-    // 相似
-    public function similarity(Request $request) {
+    // 相似と面積比
+    public function similarity() {
+        $unitname = "相似と面積比";
+        $result = $this->get_similarity();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_similarity() {
         // グラフ描画用
         $size = 400;    //viewportの大きさ（仮）
         $margin = 40;
@@ -9847,27 +9984,97 @@ class WorkbookController extends Controller
 
         $plot_con_q = $question['pq'];
         $plot_con_e = $question['pe'];
-        $unitname = "相似と面積比";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
 
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 3);
+        $idx = rand(0, 8);
         switch ($idx) {
             case 0:
-                $result = $this->get_positive_negative();
+                $result = $this->get_positive_negative();   // 正負の数
                 break;
             case 1:
-                $result = $this->get_mul_div_monomials();
+                $result = $this->get_mul_div_monomials();   // 単項式の乗除
                 break;
             case 2:
-                $result = $this->get_linear_equation2();
+                $result = $this->get_linear_equation2();    // 一次方程式
                 break;
             case 3:
-                $result = $this->get_quadratic_equation();
+                $result = $this->get_quadratic_equation();  // 二次方程式
+                break;
+            case 4:
+                $result = $this->get_data_analysisJ1(); // 度数分布と代表値
+                break;
+            case 5:
+                $result = $this->get_data_analysisJ2(); // 四分位数と箱ひげ図
+                break;
+            case 6:
+                $result = $this->get_regular_polygon(); // 正多角形の角
+                break;
+            case 7:
+                $result = $this->get_simultaneous_equation();   // 連立方程式
+                break;
+            case 8:
+                $result = $this->get_sqrt_natural();   // 自然数になるような√(an)
+                break;
+        }
+        $question = $result['question'];
+        $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";
+        $plot_con_q = isset($result['plot_con_q']) ? $result['plot_con_q'] : "";
+        $plot_par_a = isset($result['plot_par_a']) ? $result['plot_par_a'] : "";
+        $plot_con_a = isset($result['plot_con_a']) ? $result['plot_con_a'] : "";
+        $plot_par_e = isset($result['plot_par_e']) ? $result['plot_par_e'] : "";
+        $plot_con_e = isset($result['plot_con_e']) ? $result['plot_con_e'] : "";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_a','plot_con_a','plot_par_e','plot_con_e'));
+    }
+
+    // 入試　問２
+    public function math_entrance_exam_2() {
+        $unitname = "問２";
+        $idx = rand(0, 4);
+        switch ($idx) {
+            case 0:
+                $result = $this->get_part_volume(); // 部分の体積
+                break;
+            case 1:
+                $result = $this->get_regularity();  // 規則性（nで表す）
+                break;
+            case 2:
+                $result = $this->get_simultaneous_equation2();  // 連立方程式（文章題）
+                break;
+            case 3:
+                $result = $this->get_probability_J2();  // 確率
+                break;
+            case 4:
+                $result = $this->get_box_plot();    // 箱ひげ図の解釈
+                break;
+        }
+        $question = $result['question'];
+        $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";
+        $plot_con_q = isset($result['plot_con_q']) ? $result['plot_con_q'] : "";
+        $plot_par_a = isset($result['plot_par_a']) ? $result['plot_par_a'] : "";
+        $plot_con_a = isset($result['plot_con_a']) ? $result['plot_con_a'] : "";
+        $plot_par_e = isset($result['plot_par_e']) ? $result['plot_par_e'] : "";
+        $plot_con_e = isset($result['plot_con_e']) ? $result['plot_con_e'] : "";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_a','plot_con_a','plot_par_e','plot_con_e'));
+    }
+
+    // 入試　問４
+    public function math_entrance_exam_4() {
+        $unitname = "問４";
+        $idx = rand(0, 2);
+        switch ($idx) {
+            case 0:
+                $result = $this->get_proof_of_congruence(); // 合同の証明
+                break;
+            case 1:
+                $result = $this->get_area_ratio_J2();   // 面積比（中２）
+                break;
+            case 2:
+                $result = $this->get_similarity();  // 相似と面積比
                 break;
         }
         $question = $result['question'];
