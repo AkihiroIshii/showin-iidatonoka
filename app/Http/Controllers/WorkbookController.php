@@ -8355,7 +8355,7 @@ class WorkbookController extends Controller
                 'q' => "
                     <div class=\"text-xl leading-[2]\">
                         <p>以下の箱ひげ図は、{$data1_num} 人の生徒が受けた理科のテストの</p>
-                        <p>点数をまとめたものです。{$q3} 点以上の生徒は最大で何人いる</p>
+                        <p>点数をまとめたものである。{$q3} 点以上の生徒は最大で何人いる</p>
                         <p>可能性があるか。なお、点数は整数値とは限らないものとする。</p>",
                 'a_type' => 2,
                 'a' => "{$a5}\,人",
@@ -10159,8 +10159,8 @@ class WorkbookController extends Controller
         $val = $numerator / $denominator;
 
         // 整数フラグ
-        $int_flg = is_int($val) ? 1 : 0;
-
+        // $int_flg = is_int($val) ? 1 : 0;
+        $int_flg = $denominator == 1 ? 1 : 0;
         // 整数ならそのまま使う（ただし絶対値）
         if ($int_flg == 1) {
             //係数($mojiあり)で絶対値が 1 なら、係数 1 は出力しない。
@@ -17328,6 +17328,402 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
+    // 三角形の五心
+    public function h_math_triangle_centers() {
+        $unitname = "三角形の五心";
+        $result = $this->get_h_math_triangle_centers();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_h_math_triangle_centers() {
+        // グラフ描画用
+        $size = 400;    //viewportの大きさ（仮）
+        $margin = 40;
+        $vb_width = $size;
+        $vb_height = $size;
+        
+        // 変数
+        $R = rand(1, 10);   // 外接円の半径
+        $a1 = 10 + 2 * rand(0, 20);    // BOとBCのなす角（10～40°⇒ラジアン）
+        $a2 = $a1 + 2 * rand(10, 40);    // x軸とOAのなす角（$a1 + 20～80°⇒ラジアン）
+        $theta1 = 2 * M_PI * $a1/360;    // BOとBCのなす角（20～60°⇒ラジアン）
+        $theta2 = 2 * M_PI * $a2/360;    // x軸とOAのなす角（20～60°⇒ラジアン）
+        $scale = ($size - 2 * $margin) / (2 * $R); // x=1 に相当する描画エリアでの単位長
+        $S_ABC = 2 * rand(1, 10);   // △ABCの面積
+
+        // 導出される値
+        $S_BGM_str = $this->fracnum_to_str($S_ABC, 6, "", 1);
+        $angle_ACB = 90 - ($a2 - $a1) / 2;
+
+        /****** 各頂点の座標 *****/
+        $Ox = $R * cos($theta1) * $scale;   // 外接円の中心
+        $Oy = -$R * sin($theta1) * $scale;
+        $Ax = $Ox + $R * cos($theta2) * $scale;
+        $Ay = $Oy -$R * sin($theta2) * $scale;
+        $Bx = 0;
+        $By = 0;
+        $Cx = $Ox * 2;
+        $Cy = 0;
+
+        $Lx = $Ax / 2;  // ABの中点
+        $Ly = $Ay / 2;
+        $Mx = $Cx / 2;  // BCの中点
+        $My = 0;
+        $Nx = ($Ax + $Cx) / 2;  // ACの中点
+        $Ny = $Ay / 2;
+
+        $Gx = $Nx * (2/3);  // 重心
+        $Gy = $Ay * (1/3);
+
+        $HAx = $Ax; // Aからの垂線とBCの交点
+        $HAy = 0;
+        $HGx = $Gx; // Gからの垂線とBCの交点
+        $HGy = 0;
+
+        // 各辺の長さ
+        $a = $Cx;   // プロット用
+        $b = sqrt(pow($Cx - $Ax, 2) + pow($Ay, 2));
+        $c = sqrt($Ax**2 + $Ay**2);
+
+        // 内心
+        $Ix = ($a * $Ax + $b * $Bx + $c * $Cx)/($a + $b + $c);
+        $Iy = ($a * $Ay + $b * $By + $c * $Cy)/($a + $b + $c);
+        $r = abs($Iy);   // 内接円の半径
+        $Dx = ($Ay**2 * $Cx + $Iy * $Ay * ($Ax - $Cx) + ($Ax - $Cx)**2 * $Ix) / ($Ay**2 + ($Ax - $Cx)**2);    // 内心から各辺への垂線との交点
+        $Dy = $Dx * $Ay /($Ax - $Cx) - $Ay * $Cx / ($Ax - $Cx);
+        $Ex = $Ax * ($Ay * $Iy + $Ax * $Ix) / ($Ax**2 + $Ay**2);
+        $Ey = ($Ay/$Ax) * $Ex;
+        $Fx = $Ix;
+        $Fy = 0;
+
+        // 内心の計算用（近似値）
+        // $a_val = round($a / $scale);
+        // $b_val = round($b / $scale);
+        // $c_val = round($c / $scale);
+        // $r_val = round($r / $scale);
+            $a_val = round(2 * $a / $scale);
+            $b_val = round(2 * $b / $scale);
+            $c_val = round(2 * $c / $scale);
+            $r_val = round(2 * $r / $scale);
+            $gcd = $this->gcd($this->gcd($this->gcd($a_val, $b_val), $c_val), $r_val);
+            $a_val /= $gcd;
+            $b_val /= $gcd;
+            $c_val /= $gcd;
+            $r_val /= $gcd;
+            $perimeter_val = round(($a_val + $b_val + $c_val));
+        $r_eff_str = $this->fracnum_to_str($perimeter_val, 2, "\,r", 1);
+        // $r_val = $this->fracnum_to_str(2 * $S_ABC_I, $a_val + $b_val + $c_val, "", 1);
+        $S_ABC_I = $this->fracnum_to_str($r_val * ($perimeter_val), 2, "", 1);
+        
+
+        // 角度の記号用
+        $ur = $Cx / 14; // 記号の半径
+        // $ur = $R * 10;
+        // $uAy = $Ay / $scale;
+        // $urx = $ur * cos($theta);
+        // $ury = $ur * sin($theta);
+
+
+        $vb_xfrom = $Ox - $R * $scale - $margin;
+        $vb_width = 2 * ($R * $scale + $margin);
+        $vb_yfrom = ($Oy - $R * $scale) - $margin;
+        $vb_height = 2 * ($R * $scale + $margin);
+        
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        // 共通の三角形
+        $plot_base = "
+            <!-- 三角形 -->
+            <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 5 . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx - 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            ";
+
+        // 重心を加えた図
+        $plot_G = $plot_base;
+        $plot_G .= "
+            <!-- 頂点 -->
+            <text x=\"" . $Mx - 5 . "\" y=\"" . $My + 20 . "\" font-weight=\"bold\" font-size=\"18\">M</text>
+            <text x=\"" . $Nx + 5 . "\" y=\"" . $Ny . "\" font-weight=\"bold\" font-size=\"18\">N</text>
+            <text x=\"" . $Gx - 15 . "\" y=\"" . $Gy - 5 . "\" font-weight=\"bold\" font-size=\"18\">G</text>
+            <!-- 補助線 -->
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$Mx}\" y2=\"{$My}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"{$Nx}\" y2=\"{$Ny}\" stroke=\"black\" stroke-width=\"1\" />
+        ";
+        $plot_e1 = $plot_G . "
+            <!-- 頂点 -->
+            <text x=\"" . $HAx - 5 . "\" y=\"" . $HAy + 20 . "\" font-weight=\"bold\" font-size=\"18\" class=\"fill-blue-500\">
+                H<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-3\">A</tspan>
+            </text>
+            <text x=\"" . $HGx - 5 . "\" y=\"" . $HGy + 20 . "\" font-weight=\"bold\" font-size=\"18\" class=\"fill-blue-500\">
+                H<tspan baseline-shift=\"sub\" font-size=\"70%\" dy=\"-3\">G</tspan>
+            </text>
+            <!-- 補助線 -->
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$HAx}\" y2=\"{$HAy}\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <line x1=\"{$Gx}\" y1=\"{$Gy}\" x2=\"{$HGx}\" y2=\"{$HGy}\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            <line x1=\"{$Cx}\" y1=\"{$Cy}\" x2=\"{$HAx}\" y2=\"{$HAy}\" stroke=\"blue\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+        ";
+
+        // 外心を加えた図
+        $plot_O = $plot_base;
+        $plot_O .= "
+            <!-- 頂点 -->
+            <text x=\"" . $Ox + 5 . "\" y=\"" . $Oy + 10 . "\" font-weight=\"bold\" font-size=\"18\">O</text>
+            <!-- 補助線 -->
+            <line x1=\"{$Ox}\" y1=\"{$Oy}\" x2=\"{$Ax}\" y2=\"{$Ay}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ox}\" y1=\"{$Oy}\" x2=\"{$Bx}\" y2=\"{$By}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 角度 -->
+            <path d=\"M " . $Cx -$ur * cos(2 * M_PI * $angle_ACB / 360) . " " . -$ur * sin(2 * M_PI * $angle_ACB / 360) . " A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " 0\" fill=\"transparent\" stroke=\"black\" stroke-width=\"2\" />   
+            <text x=\"" . $Cx - 2.5 * $ur . "\" y=\"" . -$ur / 2 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ACB}°</text>
+            <path d=\"M {$Bx} {$By} L " . $ur * cos($theta1) . " " . -$ur * sin($theta1) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $ur * cos(($theta1 + $theta2)/ 2) . " " . $ur * -sin(($theta1 + $theta2)/ 2) . " Z\" 
+                fill=\"blue\" fill-opacity=\"0.4\"/>   
+        ";
+        $plot_e2 = $plot_O . "
+            <!-- 外接円 -->
+            <circle cx=\"{$Ox}\" cy=\"{$Oy}\" r=\"" . $R * $scale . "\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />                
+            <!-- 角度 -->
+            <path d=\"M " . $Ox + $ur * cos($theta2) . " " . $Oy - $ur * sin($theta2) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Ox - $ur * cos($theta1) . " " . $Oy + $ur * sin($theta1) . "\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"2\" />   
+            <text x=\"" . $Ox - 2.5 * $ur . "\" y=\"" . $Oy - $ur / 2 . "\" font-weight=\"bold\" font-size=\"18\">" . $angle_ACB * 2 . "°</text>
+        ";
+
+        // 内心を加えた図
+        $plot_I = $plot_base;
+        $plot_I .= "
+            <!-- 内接円 -->
+            <circle cx=\"{$Ix}\" cy=\"{$Iy}\" r=\"" . $r . "\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />                
+            <circle cx=\"{$Ix}\" cy=\"{$Iy}\" r=\"2\" fill=\"black\" stroke=\"black\" stroke-width=\"1\" />                
+        ";
+        $plot_e3 = $plot_I . "
+            <!-- 頂点 -->
+            <text x=\"" . $Ix + 5 . "\" y=\"" . $Iy + 10 . "\" font-weight=\"bold\" font-size=\"18\">I</text>
+            <text x=\"" . $Dx + 10 . "\" y=\"" . $Dy + 5 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $Ex - 15 . "\" y=\"" . $Ey - 10 . "\" font-weight=\"bold\" font-size=\"18\">E</text>
+            <text x=\"" . $Fx - 5 . "\" y=\"" . $Fy + 20 . "\" font-weight=\"bold\" font-size=\"18\">F</text>
+            <!-- 補助線 -->
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$Ax}\" y2=\"{$Ay}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$Bx}\" y2=\"{$By}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$Cx}\" y2=\"{$Cy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$Cx}\" y2=\"{$Cy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$Dx}\" y2=\"{$Dy}\" stroke=\"blue\" stroke-width=\"2\" />
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$Ex}\" y2=\"{$Ey}\" stroke=\"red\" stroke-width=\"2\" />
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$Fx}\" y2=\"{$Fy}\" stroke=\"green\" stroke-width=\"2\" />
+            <!-- 三角形 -->
+            <path d=\"M{$Ax} {$Ay} L {$Ix} {$Iy} L {$Cx} {$Cy} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
+            <path d=\"M{$Ax} {$Ay} L {$Ix} {$Iy} L {$Bx} {$By} Z\" fill=\"red\" fill-opacity=\"0.2\"/>
+            <path d=\"M{$Bx} {$By} L {$Ix} {$Iy} L {$Cx} {$Cy} Z\" fill=\"green\" fill-opacity=\"0.2\"/>
+        ";
+        // $plot_e = $plot_base .= "
+        //     <!-- 頂点 -->
+            // <text x=\"" . $Lx - 10 . "\" y=\"" . $Ly - 5 . "\" font-weight=\"bold\" font-size=\"18\">L</text>
+        //     <!-- 補助線 -->
+        //     <line x1=\"{$Ox}\" y1=\"{$Oy}\" x2=\"{$Cx}\" y2=\"{$Cy}\" stroke=\"black\" stroke-width=\"1\" />
+        // ";
+            // <!-- 三角形 -->
+            // <path d=\"M {$Ox} {$Oy} L {$Ax} {$Ay} L {$Bx} {$By} Z\" fill=\"blue\" fill-opacity=\"0.2\"/>
+            // <path d=\"M {$Cx} {$Cy} L {$Ax} {$Ay} L {$Bx} {$By} Z\" fill=\"none\" stroke=\"red\" stroke-width=\"2\" />
+            // <!-- 比率 -->
+            // <path d=\"M{$Ax},{$Ay} Q{$Q_ABx},{$Q_ABy} {$Bx},{$By}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            // <circle cx=\"" . $T_ABx . "\" cy=\"" . $T_ABy . "\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            // <text x=\"" . $T_ABx - 7 . "\" y=\"" . $T_ABy + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$m_add_n}</text>
+            // <path d=\"M{$Dx},{$Dy} Q{$Q_DPx},{$Q_DPy} {$Px},{$Py}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            // <circle cx=\"" . $T_DPx . "\" cy=\"" . $T_DPy . "\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            // <text x=\"" . $T_DPx - 7 . "\" y=\"" . $T_DPy + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$m}</text>
+            // <path d=\"M{$Px},{$Py} Q{$Q_PCx},{$Q_PCy} {$Cx},{$Cy}\" stroke=\"black\" stroke-width=\"1\" fill=\"none\" stroke-dasharray=\"4\"/>
+            // <circle cx=\"" . $T_PCx . "\" cy=\"" . $T_PCy . "\" r=\"14\" fill=\"white\" stroke=\"black\" stroke-width=\"1\" />
+            // <text x=\"" . $T_PCx - 7 . "\" y=\"" . $T_PCy + 5 . "\" font-weight=\"bold\" font-size=\"18\">{$n}</text>
+            // <!-- 同じ角度の印 -->
+            // <circle cx=\"" . $Ax + 4 . "\" cy=\"" . $Ay + 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            // <circle cx=\"" . $Gx + 4 . "\" cy=\"" . $Gy + 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            // <circle cx=\"" . $Cx . "\" cy=\"" . $Cy - 16 . "\" r=\"3\" fill=\"none\" stroke=\"black\" stroke-width=\"1.5\" />
+            // <circle cx=\"" . $Bx + 20 . "\" cy=\"" . $By - 20 . "\" r=\"3\" fill=\"black\" stroke=\"black\" stroke-width=\"1.5\" />
+            // <circle cx=\"" . $Px - 20 . "\" cy=\"" . $Py + 20 . "\" r=\"3\" fill=\"black\" stroke=\"black\" stroke-width=\"1.5\" />
+            // <path d=\"M {$ur} 0 A {$ur} {$ur}, 0, 0, 0, {$urx} " . -$ury . "\" fill=\"transparent\" stroke=\"red\" stroke-width=\"2\" />   
+            // <path d=\"M " . $Fx + $ur . " 0 A {$ur} {$ur}, 0, 0, 0, " . $Fx + $urx . " " . -$ury . "\" fill=\"transparent\" stroke=\"red\" stroke-width=\"2\" />   
+
+            // <!-- 補助線追加 -->
+            // <line x1=\"{$Cx}\" y1=\"{$Cy}\" x2=\"{$Ax}\" y2=\"{$Ay}\" stroke=\"red\" stroke-width=\"1\" stroke-dasharray=\"4\"/>
+            // <!-- 頂点追加 -->
+            // <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>下図の △ABC の面積が {$S_ABC} cm\(^2\) のとき、△BGM の面積を求めよ。</p>
+                            <p>ただし、点 G は △ABC の重心、点 M は直線 AG と BC の交点である。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $S_BGM_str . "\,\mathrm{cm}^2",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>各頂点から重心を通るように伸ばした直線は、対辺を２等分する。よって、BM : MC = 1 : 1。</p>
+                            <p>また、重心の性質より、AG : GM = 2 : 1 である。すると、△ABC と △BGM を比べたときに</p>
+                            <p>底辺の比は BC : BM = 2 : 1、高さの比は AM : GM = 3 : 1(※)。よって、</p>
+                            $$ \\triangle \mathrm{BGM}
+                                = \\triangle \mathrm{ABC} \\times \\frac{1}{\,2\,} \\times \\frac{1}{\,3\,}
+                                = \\frac{\,{$S_ABC}\,}{6} = {$S_BGM_str}\,\mathrm{cm}^2
+                            $$
+                            <p>【(※)補足】点 A、G から直線 BC に垂線を下ろし、交点をそれぞれ H<sub>A</sub>, H<sub>G</sub> とする（下図参照）。</p>
+                            <p>すると △AMH<sub>A</sub> ∽ △GMH<sub>G</sub> で、相似比は AM : GM = 3 : 1。よって、AH<sub>A</sub> : GH<sub>G</sub> = 3 : 1。</p>
+                        </div>
+                        ",
+                'pq' => $plot_G,
+                'pe' => $plot_e1,
+            ],
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>下図にて、点 O は △ABC の外心である。∠ACB = {$angle_ACB}° のとき、<span class=\"bg-blue-200\">∠OBA </span>は何度か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => ($a2 - $a1) / 2 . "^{\circ}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>外心は外接円の中心である。中心角は円周角の２倍なので、∠AOB = 2 × ∠ACB = " . 2 * $angle_ACB . "°.</p>
+                            <p>△AOB について、外接円の半径は等しいから OA = OB。よって △AOB は二等辺三角形であり、</p>
+                            <p>∠OAB = ∠OBA。内角の和は 180° なので、2 × ∠OBA + " . 2 * $angle_ACB . "° = 180°. よって、∠OBA = " . ($a2 - $a1) / 2 . "°.</p>
+                        </div>
+                        ",
+                'pq' => $plot_O,
+                'pe' => $plot_e2,
+            ],
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>下図の △ABC の面積が \(\displaystyle {$S_ABC_I} \,\mathrm{cm}^2\) で、AB = {$c_val} cm、</p>
+                            <p>BC = {$a_val} cm、CA = {$b_val} cm とする。内接円の半径を求めよ。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$r_val}\,\mathrm{cm}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>内接円の中心（内心）を I とする。下図のように、内心 I から各辺に下ろした垂線との交点を、</p>
+                            <p>それぞれ D、E、F とする。これらの垂線は内接円の半径（\(r\) とする）に等しい。よって、</p>
+                            <p>
+                                下図のように △ABC を分割して考えると、△ABC 
+                                = <span class=\"bg-blue-200\">△CIA</span>
+                                + <span class=\"bg-red-200\">△AIB</span>
+                                + <span class=\"bg-green-200\">△BIC</span>
+                                 であるから、
+                            </p>
+                            \[
+                                \\begin{aligned}
+                                    \\triangle \mathrm{ABC}
+                                        &=  \\left(\\frac{1}{\,2\,} \mathrm{AC} \\times \mathrm{DI} \\right)
+                                            + \\left(\\frac{1}{\,2\,} \mathrm{AB} \\times \mathrm{EI} \\right)
+                                            + \\left(\\frac{1}{\,2\,} \mathrm{BC} \\times \mathrm{FI} \\right) \\\\
+                                        &=  \\left(\\frac{1}{\,2\,} \mathrm{AC} \\times r \\right)
+                                            + \\left(\\frac{1}{\,2\,} \mathrm{AB} \\times r \\right)
+                                            + \\left(\\frac{1}{\,2\,} \mathrm{BC} \\times r \\right) \\\\
+                                        &= \\frac{1}{\,2\,} (\mathrm{AC} + \mathrm{AB} + \mathrm{BC})\,r \\\\
+                                        &= \\frac{r}{\,2\,} \\times ({$b_val} + {$c_val} + {$a_val}) 
+                                            = \\frac{r}{\,2\,} \\times {$perimeter_val} 
+                                            = {$r_eff_str}
+                                \\end{aligned}
+                            \]
+                        </div>
+                        <p>
+                            問題文より \(\displaystyle \\triangle \mathrm{ABC} = {$S_ABC_I} \,\mathrm{cm}^2\) なので、\(\displaystyle {$r_eff_str} = {$S_ABC_I}\).
+                            よって、\(\displaystyle r = {$r_val} \,\mathrm{cm}\).
+                        </p>
+                        ",
+                'pq' => $plot_I,
+                'pe' => $plot_e3,
+            ],
+        ];
+                            // <p>gcd:{$gcd},aval:{$a_val},bval:{$b_val},cval:{$c_val},perimeter:{$perimeter_val}</p>
+                // 'e' => "<div class=\"leading-[2] mb-4\">
+                        //     <p>内接円の中心（内心）を I とする。下図のように、内心 I から各辺に下ろした垂線との交点を、</p>
+                        //     <p>それぞれ D、E、F とする。これらの垂線は内接円の半径（\(r\) とする）に等しい。よって、</p>
+                        //     <p>
+                        //         下図のように △ABC を分割して考えると、△ABC 
+                        //         = <span class=\"bg-blue-200\">△CIA</span>
+                        //         + <span class=\"bg-red-200\">△AIB</span>
+                        //         + <span class=\"bg-green-200\">△BIC</span>
+                        //          であるから、
+                        //     </p>
+                        //     \[
+                        //         \\begin{aligned}
+                        //             \\triangle \mathrm{ABC}
+                        //                 &=  \\left(\\frac{1}{\,2\,} \mathrm{AC} \\times \mathrm{DI} \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{AB} \\times \mathrm{EI} \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{BC} \\times \mathrm{FI} \\right) \\\\
+                        //                 &=  \\left(\\frac{1}{\,2\,} \mathrm{AC} \\times r \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{AB} \\times r \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{BC} \\times r \\right) \\\\
+                        //                 &= \\frac{1}{\,2\,} (\mathrm{AC} + \mathrm{AB} + \mathrm{BC})\,r 
+                        //                     = \\frac{r}{\,2\,} \\times {$perimeter_val} 
+                        //                     = {$r_eff_str}
+                        //         \\end{aligned}
+                        //     \]
+                        // </div>
+                        // <p>
+                        //     問題文より \(\displaystyle \\triangle \mathrm{ABC} = {$S_ABC_I} \,\mathrm{cm}^2\) なので、\(\displaystyle {$r_eff_str} = {$S_ABC_I}\).
+                        //     よって、\(\displaystyle r = {$r_val} \,\mathrm{cm}\).
+                        // </p>
+                        // ",
+                            // <p>下図の △ABC の面積が \(\displaystyle {$S_ABC_I} \,\mathrm{cm}^2\) で、周りの長さが</p>
+                            // <p>\({$perimeter_val} \,\mathrm{cm}\) とする。このとき、内接円の半径を求めよ。</p>
+                // 'e' => "<div class=\"leading-[2] mb-4\">
+                        //     <p>内接円の中心（内心）を I とする。下図のように、内心 I から各辺に下ろした垂線との交点を、</p>
+                        //     <p>それぞれ D、E、F とする。これらの垂線は内接円の半径（\(r\) とする）に等しい。よって、</p>
+                        //     <p>
+                        //         下図のように △ABC を分割して考えると、△ABC 
+                        //         = <span class=\"bg-blue-200\">△CIA</span>
+                        //         + <span class=\"bg-red-200\">△AIB</span>
+                        //         + <span class=\"bg-green-200\">△BIC</span>
+                        //          であるから、
+                        //     </p>
+                        //     \[
+                        //         \\begin{aligned}
+                        //             \\triangle \mathrm{ABC}
+                        //                 &=  \\left(\\frac{1}{\,2\,} \mathrm{AC} \\times \mathrm{DI} \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{AB} \\times \mathrm{EI} \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{BC} \\times \mathrm{FI} \\right) \\\\
+                        //                 &=  \\left(\\frac{1}{\,2\,} \mathrm{AC} \\times r \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{AB} \\times r \\right)
+                        //                     + \\left(\\frac{1}{\,2\,} \mathrm{BC} \\times r \\right) \\\\
+                        //                 &= \\frac{1}{\,2\,} (\mathrm{AC} + \mathrm{AB} + \mathrm{BC})\,r 
+                        //                     = \\frac{r}{\,2\,} \\times {$perimeter_val} 
+                        //                     = {$r_eff_str}
+                        //         \\end{aligned}
+                        //     \]
+                        // </div>
+                        // <p>
+                        //     問題文より \(\displaystyle \\triangle \mathrm{ABC} = {$S_ABC_I} \,\mathrm{cm}^2\) なので、\(\displaystyle {$r_eff_str} = {$S_ABC_I}\).
+                        //     よって、\(\displaystyle r = {$r_val} \,\mathrm{cm}\).
+                        // </p>
+                        // ",
+                            // <p>下図の △ABC の面積が \(\displaystyle {$S_ABC_I} \,\mathrm{cm}^2\) で、AB = {$c_val} cm、</p>
+                            // <p>BC = {$a_val} cm、CA = {$b_val} cm とする。内接円の半径を求めよ。</p>
+                                        // &=  \\left(\\frac{1}{\,2\,} \\times {$b_val} \\times r \\right)
+                                        //     + \\left(\\frac{1}{\,2\,} \\times {$c_val} \\times r \\right)
+                                        //     + \\left(\\frac{1}{\,2\,} \\times {$a_val} \\times r \\right) \\\\
+                                        // &= \\frac{r}{\,2\,}({$b_val} + {$c_val} + {$a_val}) = {$r_eff_str}
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
+    }
+
     // 共分散（数ⅠＡ）
     public function h_math_covariance() {
         // 変数
@@ -17405,15 +17801,15 @@ class WorkbookController extends Controller
 
         $data_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5\">国語</td>";
+                            <td class=\"border border-gray-400 px-5\">国語</td>";
                             for ($i = 0; $i<$n; $i++) {
-                                $data_table .= "<td class=\"border border-gray-400 p-5\">" . $data_arr_x[$i] . "</td>";
+                                $data_table .= "<td class=\"border border-gray-400 px-5\">" . $data_arr_x[$i] . "</td>";
                             }
                         $data_table .= "</tr>
                         <tr class=\"bg-gray-100\">
-                            <td class=\"border border-gray-400 p-5\">数学</td>";
+                            <td class=\"border border-gray-400 px-5\">数学</td>";
                             for ($i = 0; $i<$n; $i++) {
-                                $data_table .= "<td class=\"border border-gray-400 p-5\">" . $data_arr_y[$i] . "</td>";
+                                $data_table .= "<td class=\"border border-gray-400 px-5\">" . $data_arr_y[$i] . "</td>";
                             }
                         $data_table .= "</tr>
                     </table>
