@@ -9987,11 +9987,282 @@ class WorkbookController extends Controller
         return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
+    // 円周角と中心角
+    public function circle_angle() {
+        $unitname = "円周角と中心角";
+        $result = $this->get_circle_angle();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_circle_angle() {
+        // グラフ描画用
+        $size = 400;    //viewportの大きさ（仮）
+        $margin = 40;
+        $vb_width = $size;
+        $vb_height = $size;
+        
+        // 変数
+        $R = rand(1, 10);   // 外接円の半径
+        $a1 = 10 + 2 * rand(0, 25);    // BOとBCのなす角（10～60°⇒ラジアン）
+        $a2 = $a1 + 2 * rand(10, 50);    // x軸とOAのなす角（$a1 + 20～100°⇒ラジアン）
+        $theta1 = 2 * M_PI * $a1/360;    // BOとBCのなす角（20～60°⇒ラジアン）
+        $theta2 = 2 * M_PI * $a2/360;    // x軸とOAのなす角（20～60°⇒ラジアン）
+        $scale = ($size - 2 * $margin) / (2 * $R); // x=1 に相当する描画エリアでの単位長
+
+        // 導出される値
+        $angle_ACB = 90 - ($a2 - $a1) / 2;
+
+        /****** 各頂点の座標 *****/
+        $Ox = $R * cos($theta1) * $scale;   // 外接円の中心
+        $Oy = -$R * sin($theta1) * $scale;
+        $Ax = $Ox + $R * cos($theta2) * $scale;
+        $Ay = $Oy - $R * sin($theta2) * $scale;
+        $Bx = 0;
+        $By = 0;
+        $Cx = $Ox * 2;
+        $Cy = 0;
+        $Dx = $Ox + $R * cos($theta1) * $scale;
+        $Dy = $Oy - $R * sin($theta1) * $scale;
+
+        // B'C' の中点を中心とする円用
+        $B2x = $Ox - $R * $scale;
+        $B2y = $Oy;
+        $C2x = $Ox + $R * $scale;
+        $C2y = $Oy;
+        $angle_AC2B2 = (180 - $a2) / 2;
+        $angle_AB2C2 = $a2 / 2;
+
+        // 角度の記号用
+        $ur = $Cx / 14; // 記号の半径
+
+        $vb_xfrom = $Ox - $R * $scale - $margin;
+        $vb_width = 2 * ($R * $scale + $margin);
+        $vb_yfrom = ($Oy - $R * $scale) - $margin;
+        $vb_height = 2 * ($R * $scale + $margin);
+        
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        /***** 一般的な三角形 ******/
+        // 共通の三角形
+        $plot_base = "
+            <!-- 三角形 -->
+            <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 10 . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx + 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Ox + 5 . "\" y=\"" . $Oy + 10 . "\" font-weight=\"bold\" font-size=\"18\">O</text>
+            <!-- 外接円 -->
+            <circle cx=\"{$Ox}\" cy=\"{$Oy}\" r=\"" . $R * $scale . "\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />                
+            <circle cx=\"{$Ox}\" cy=\"{$Oy}\" r=\"3\" fill=\"black\" />                
+            <!-- 補助線 -->
+            <line x1=\"{$Ox}\" y1=\"{$Oy}\" x2=\"{$Ax}\" y2=\"{$Ay}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ox}\" y1=\"{$Oy}\" x2=\"{$Bx}\" y2=\"{$By}\" stroke=\"black\" stroke-width=\"1\" />
+            ";
+
+        $plot_q1 = $plot_base . "
+            <!-- 角度 -->
+            <path d=\"M " . $Ox + $ur * cos($theta2) . " " . $Oy - $ur * sin($theta2) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Ox - $ur * cos($theta1) . " " . $Oy + $ur * sin($theta1) . "\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+            <text x=\"" . $Ox - 3 * $ur . "\" y=\"" . $Oy - $ur . "\" font-weight=\"bold\" font-size=\"18\">" . $angle_ACB * 2 . "°</text>
+            <path d=\"M {$Cx} {$Cy} L " . $Cx -$ur * cos(2 * M_PI * $angle_ACB / 360) . " " . -$ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " 0 Z\" 
+                fill=\"blue\" fill-opacity=\"0.4\"/>   
+        ";
+        $plot_q2 = $plot_base . "
+            <!-- 角度 -->
+            <path d=\"M {$Ox} {$Oy} L " . $Ox + $ur * cos($theta2) . " " . $Oy - $ur * sin($theta2) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Ox - $ur * cos($theta1) . " " . $Oy + $ur * sin($theta1) . " Z\" 
+                fill=\"blue\" fill-opacity=\"0.4\"/>   
+            <path d=\"M " . $Cx -$ur * cos(2 * M_PI * $angle_ACB / 360) . " " . -$ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " 0\" 
+                fill=\"none\" stroke=\"black\" stroke-width=\"1\"/>   
+            <text x=\"" . $Cx - 2.5 * $ur . "\" y=\"" . $Cy - $ur / 2 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ACB}°</text>
+        ";
+        $plot_q3 = $plot_base . "
+            <!-- 角度 -->
+            <path d=\"M {$Bx} {$By} L " . $ur * cos($theta1) . " " . -$ur * sin($theta1) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $ur * cos(($theta1 + $theta2)/ 2) . " " . $ur * -sin(($theta1 + $theta2)/ 2) . " Z\" 
+                fill=\"blue\" fill-opacity=\"0.4\"/>   
+            <path d=\"M " . $Cx -$ur * cos(2 * M_PI * $angle_ACB / 360) . " " . -$ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " 0\" 
+                fill=\"none\" stroke=\"black\" stroke-width=\"1\"/>   
+            <text x=\"" . $Cx - 2.5 * $ur . "\" y=\"" . $Cy - $ur / 2 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ACB}°</text>
+        ";
+
+        /***** 直径を B'C' とする円 ******/
+        // 共通の三角形
+        $plot_base2 = "
+            <!-- 三角形 -->
+            <path d=\"M{$Ax} {$Ay} L {$B2x} {$B2y} L {$C2x} {$C2y} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $B2x - 15 . "\" y=\"" . $B2y + 5 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $C2x + 5 . "\" y=\"" . $C2y + 5 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Ox + 5 . "\" y=\"" . $Oy + 15 . "\" font-weight=\"bold\" font-size=\"18\">O</text>
+            <!-- 外接円 -->
+            <circle cx=\"{$Ox}\" cy=\"{$Oy}\" r=\"" . $R * $scale . "\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />                
+            <circle cx=\"{$Ox}\" cy=\"{$Oy}\" r=\"3\" fill=\"black\" />                
+        ";
+
+        $plot_q4 = $plot_base2 . "
+            <!-- ∠ACB -->
+            <path d=\"M " . $C2x -$ur * cos(2 * M_PI * $angle_AC2B2 / 360) . " " . $C2y -$ur * sin(2 * M_PI * $angle_AC2B2 / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $C2x - $ur . " {$C2y}\" 
+                fill=\"none\" stroke=\"black\" stroke-width=\"1\"/>   
+            <text x=\"" . $C2x - 2.5 * $ur . "\" y=\"" . $C2y - $ur / 2 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_AC2B2}°</text>
+            <!-- ∠ABC -->
+            <path d=\"M {$B2x} {$B2y} L " . $B2x + $ur . " " . $B2y . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $B2x + $ur * cos(2 * M_PI * $angle_AB2C2 / 360) . " " . $B2y - $ur * sin(2 * M_PI * $angle_AB2C2 / 360) . " Z\" 
+                fill=\"blue\" fill-opacity=\"0.4\"/>   
+        ";
+        $plot_q5 = "
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 10 . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx + 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Dx - 5 . "\" y=\"" . $Dy - 5 . "\" font-weight=\"bold\" font-size=\"18\">D</text>
+            <text x=\"" . $Ox + 5 . "\" y=\"" . $Oy + 10 . "\" font-weight=\"bold\" font-size=\"18\">O</text>
+            <!-- 外接円 -->
+            <circle cx=\"{$Ox}\" cy=\"{$Oy}\" r=\"" . $R * $scale . "\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />                
+            <circle cx=\"{$Ox}\" cy=\"{$Oy}\" r=\"3\" fill=\"black\" />                
+            <!-- 四角形 -->
+            <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} L {$Dx} {$Dy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- 補助線 -->
+            <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"{$Dx}\" y2=\"{$Dy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$Cx}\" y2=\"{$Cy}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- ∠ACB -->
+            <path d=\"M " . $Cx -$ur * cos(2 * M_PI * $angle_ACB / 360) . " " . $Cy -$ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " {$Cy}\" 
+                fill=\"none\" stroke=\"black\" stroke-width=\"1\"/>   
+            <text x=\"" . $Cx - 2.5 * $ur . "\" y=\"" . $Cy - $ur / 2 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ACB}°</text>
+            <!-- ∠ABD -->
+            <path d=\"M {$Bx} {$By} L " . $Bx + $ur * cos(2 * M_PI * $a1 / 360) . " " . $By - $ur * sin(2 * M_PI * $a1 / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Bx + $ur * cos(2 * M_PI * (($a1 + $a2) / 2) / 360) . " " . $By - $ur * sin(2 * M_PI * (($a1 + $a2) / 2) / 360) . " Z\" 
+                fill=\"blue\" fill-opacity=\"0.4\"/>   
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_no' => 1,
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>円 O に内接する △ABC がある。∠AOB = " . 2 * $angle_ACB . "° のとき、<span class=\"bg-blue-200\">∠ACB </span>は何度か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$angle_ACB}^{\circ}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>孤 AB について、円周角の大きさは中心角の大きさの半分なので、</p>
+                            <p>∠ACB = ∠AOB ÷ 2 = " . 2 * $angle_ACB . "° ÷ 2 = {$angle_ACB}°.</p>
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => $plot_base,
+            ],
+            [
+                'q_no' => 2,
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>円 O に内接する △ABC がある。∠ACB = {$angle_ACB}° のとき、<span class=\"bg-blue-200\">∠AOB </span>は何度か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => 2 * $angle_ACB . "°",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>孤 AB について、中心角の大きさは円周角の大きさの２倍なので、</p>
+                            <p>∠AOB = ∠ACB × 2 = {$angle_ACB}° × 2 = " . 2 * $angle_ACB . "°.</p>
+                        </div>
+                        ",
+                'pq' => $plot_q2,
+                'pe' => $plot_base,
+            ],
+            [
+                'q_no' => 3,
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>円 O に内接する △ABC がある。∠ACB = {$angle_ACB}° のとき、<span class=\"bg-blue-200\">∠OBA </span>は何度か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => 90 - $angle_ACB . "°",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>孤 AB について、中心角の大きさは円周角の大きさの２倍なので、</p>
+                            <p>∠AOB = ∠ACB × 2 = {$angle_ACB}° × 2 = " . 2 * $angle_ACB . "°.</p>
+                            <p>また、円の半径は等しいので、OA = OB。</p>
+                            <p>よって、△OAB は二等辺三角形であり、∠OAB = ∠OBA。</p>
+                            <p>△OAB の内角の和は 180° なので、" . 2 * $angle_ACB . "° + 2∠OBA = 180°.</p>
+                            <p>これを解いて、∠OBA = " . 90 - $angle_ACB . "°.</p>
+                        </div>
+                        ",
+                'pq' => $plot_q3,
+                'pe' => $plot_base,
+            ],
+            [
+                'q_no' => 4,
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>円 O に内接する △ABC があり、BC は円の中心を通っている。</p>
+                            <p>∠ACB = {$angle_AC2B2}° のとき、<span class=\"bg-blue-200\">∠ABC </span>は何度か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$angle_AB2C2}^{\circ}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>半円の孤 BC の円周角は直角なので、∠BAC = 90°.</p>
+                            <p>三角形の内角の和は 180° なので、残り２角の和は 90°.</p>
+                            <p>よって、∠ABC + ∠ACB = 90°. ∠ACB = {$angle_AC2B2}° より、∠ABC = {$angle_AB2C2}°.</p>
+                        </div>
+                        ",
+                'pq' => $plot_q4,
+                'pe' => $plot_base,
+            ],
+            [
+                'q_no' => 5,
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>円 O に内接する四角形 ABCD があり、対角線 BD は円の中心を通っている。</p>
+                            <p>∠ACB = {$angle_ACB}° のとき、<span class=\"bg-blue-200\">∠ABD </span>は何度か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => 90 - $angle_ACB . "°",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>半円の孤 BD の円周角は直角なので、∠BCD = 90°.</p>
+                            <p>よって、∠ACD = ∠BCD － ∠ACB = 90° － {$angle_ACB}° = " . 90 - $angle_ACB . "°.</p>
+                            <p>また、∠ACD と ∠ABD はいずれも孤 AD の円周角なので、</p>
+                            <p>その大きさは等しい。よって、∠ABD = ∠ACD =  " . 90 - $angle_ACB . "°.</p>
+                        </div>
+                        ",
+                'pq' => $plot_q5,
+                'pe' => $plot_base,
+            ],
+        ];
+
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
+    }
 
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 8);
+        $idx = rand(0, 9);
         switch ($idx) {
             case 0:
                 $result = $this->get_positive_negative();   // 正負の数
@@ -10019,6 +10290,9 @@ class WorkbookController extends Controller
                 break;
             case 8:
                 $result = $this->get_sqrt_natural();   // 自然数になるような√(an)
+                break;
+            case 9:
+                $result = $this->get_circle_angle();   // 円周角と中心角
                 break;
         }
         $question = $result['question'];

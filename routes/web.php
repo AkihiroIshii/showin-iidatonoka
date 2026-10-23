@@ -450,6 +450,8 @@ Route::get('workbook/quadratic_function_application01', [WorkbookController::cla
 ->middleware(['auth', 'verified'])->name('workbook.quadratic_function_application01');
 Route::get('workbook/similarity', [WorkbookController::class, 'similarity'])
 ->middleware(['auth', 'verified'])->name('workbook.similarity');
+Route::get('workbook/circle_angle', [WorkbookController::class, 'circle_angle'])
+->middleware(['auth', 'verified'])->name('workbook.circle_angle');
 // 入試対策
 Route::get('workbook/math_entrance_exam_1', [WorkbookController::class, 'math_entrance_exam_1'])
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_1');

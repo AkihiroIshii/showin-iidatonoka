@@ -379,6 +379,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.similarity')}}">☆相似と面積比</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.circle_angle')}}">円周角と中心角</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
