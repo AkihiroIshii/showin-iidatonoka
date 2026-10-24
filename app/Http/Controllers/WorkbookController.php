@@ -6290,11 +6290,155 @@ class WorkbookController extends Controller
     //     return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
     // }
 
+    // // 一次関数（グラフ読取）(※)old
+    // public function read_linear_function() {
+    //     $a_numerator = (-1)**rand(1, 2) * rand(1, 4);
+    //     $a_denominator = rand(1, 3);
+    //     $b = (-1)**rand(1, 2) * rand(1, 3);
+
+    //     // 約分しておく
+    //     $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
+    //     $a_numerator = $sim_frac['numerator'];
+    //     $a_denominator = $sim_frac['denominator'];
+
+    //     $a = $a_numerator / $a_denominator;
+    //     $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
+    //     $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
+    //     $b_str = $b > 0 ? ("+" . $b) : $b;
+    //     $zougen_str = $a > 0 ? "増える" : "減る";
+
+    //     // グラフ描画用
+    //     $size = 300;    //viewportの大きさ
+    //     $val_size = 16; //実際の座標の大きさ
+    //     $scale = $size / $val_size; //縮尺
+    //     $py = $a * $a_denominator + $b;    // プロットする点Pでの y の値
+
+    //     // プロット用パラメータ
+    //     $w_full = $size;
+    //     $w_half = $size / 2;
+    //     $from_x = -$size / 2;
+    //     $to_x = $size / 2;
+    //     $from_y = $a * (-$size / 2) + $b * $scale;
+    //     // dd($from_y);
+    //     $to_y = $a * ($size / 2) + $b * $scale;
+    //     // $to_y = 0;
+    //     // 座標の表示場所
+    //     if ($a > 0) {
+    //         if ($a >= 1) {
+    //             $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+    //         // 0 < a < 1
+    //         } else {
+    //             $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
+    //         }
+    //     // a < 0
+    //     } else {
+    //         if ($a <= -1) {
+    //             $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
+    //         // -1 < a < 0
+    //         } else {
+    //             $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
+    //         }
+    //     }
+
+    //     $plot_par_q = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //     ];
+
+    //     $plot_con_q = "";
+    //     // 座標軸を作成
+    //     for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
+    //         $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+    //         $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+    //     }
+
+    //     $plot_con_q .= "
+    //         <!-- 座標軸先端の矢印を定義 -->
+    //         <defs>
+    //             <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+    //                 markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+    //             </marker>
+    //             <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+    //                 markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+    //             </marker>
+    //         </defs>
+    //         <!-- x軸とy軸を作成 -->
+    //         <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+    //         <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+    //         <!-- 関数 -->
+    //         <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
+    //     ";
+    //     $plot_par_e = $plot_par_q;
+    //     $plot_con_e = $plot_con_q . "
+    //         <!-- 解説用の点と補助線 -->
+    //         <line x1=\"0\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"" . -$b*$scale . "\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+    //         <line x1=\"" . $a_denominator*$scale . "\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale . 
+    //                 "\" y2=" . (-$a_numerator*$scale*0.9 -$b*$scale) . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+    //         <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale -$b*$scale) . "\" r=\"5\" fill=\"red\" />
+    //         <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+    //             ({$a_denominator},{$py})
+    //         </text>
+    //     ";
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+    //     $questions = [
+    //         [
+    //             'q_type' => 6,
+    //             'q' => "次のグラフを関数の式で表しなさい。",
+    //             'a_type' => 2,
+    //             'a' => "y = {$ax_str} {$b_str}",
+    //             'e_type' => 6,
+    //             'e' => "<div class=\"pl-5 text-left\">
+    //                         <ul class='list-disc'>
+    //                             <li>直線なので、一次関数の式（\(y=ax+b\)）で表せる。</li>
+    //                             <li>\((0,\,{$b})\) を通るので、切片は \(b={$b}\) 。</li>
+    //                             <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}ので、</span>
+    //                                 傾き \(a\) は \(\displaystyle {$a_str}\)。
+    //                             </li>
+    //                         </ul>
+    //                     </div>",
+    //         ],
+    //         // [
+    //         //     'q_type' => 6,
+    //         //     'q' => "次のグラフを関数の式で表しなさい。",
+    //         //     'a_type' => 2,
+    //         //     'a' => "y = {$ax_str}",
+    //         //     'e_type' => 6,
+    //         //     'e' => "<div class=\"pl-5 text-left\">
+    //         //                 <ul class='list-disc'>
+    //         //                     <li>原点 \((0,\,0)\) を通る直線なので、比例の式（\(y=ax\)）で表せる。</li>
+    //         //                     <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str} ので、</span>
+    //         //                         比例定数 \(a\) は \(\displaystyle {$a_str}\) 。
+    //         //                     </li>
+    //         //                 </ul>
+    //         //             </div>",
+    //         // ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "一次関数（グラフ読み取り）";
+    //     return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    // }
+
     // 一次関数（グラフ読取）
     public function read_linear_function() {
+        $unitname = "一次関数（グラフ読取）";
+        $result = $this->get_read_linear_function();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_read_linear_function() {
+        /***** 関数生成 ******/
         $a_numerator = (-1)**rand(1, 2) * rand(1, 4);
-        $a_denominator = rand(1, 3);
-        $b = (-1)**rand(1, 2) * rand(1, 3);
+        $a_denominator = rand(1, 4);
+        $b = (-1)**rand(1, 2) * rand(1, 2);
 
         // 約分しておく
         $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
@@ -6307,120 +6451,142 @@ class WorkbookController extends Controller
         $b_str = $b > 0 ? ("+" . $b) : $b;
         $zougen_str = $a > 0 ? "増える" : "減る";
 
-        // グラフ描画用
-        $size = 300;    //viewportの大きさ
-        $val_size = 16; //実際の座標の大きさ
-        $scale = $size / $val_size; //縮尺
-        $py = $a * $a_denominator + $b;    // プロットする点Pでの y の値
+        /***** グラフ描画用パラメータ *****/
+        $size = 400;    //viewportの大きさ
+        $margin = 0;   // 余白の大きさ
+        // $x_range = max(12, max(abs($a_numerator), $a_denominator)); //実際のx座標の範囲（-6<x<6 なら12）。a によって変える。
+        // $y_range = $a * $x_range + $b; //実際のy座標の範囲（-6<y<6 なら12）
+        $x_range = 14; //実際のx座標の範囲（-6<x<6 なら12）。a によって変える。
+        $y_range = 14; //実際のy座標の範囲（-6<y<6 なら12）
+        $x_unit = ($size - 2 * $margin) / $x_range;    // SVGでの x 1つ分の大きさ
+        $y_unit = ($size - 2 * $margin) / $y_range;    // SVGでの y 1つ分の大きさ
+        $x_delimiter_size = 5;  // 目盛りの値を表示する単位
+        $y_delimiter_size = 5;
 
-        // プロット用パラメータ
-        $w_full = $size;
-        $w_half = $size / 2;
-        $from_x = -$size / 2;
-        $to_x = $size / 2;
-        $from_y = $a * (-$size / 2) + $b * $scale;
-        // dd($from_y);
-        $to_y = $a * ($size / 2) + $b * $scale;
-        // $to_y = 0;
-        // 座標の表示場所
-        if ($a > 0) {
-            if ($a >= 1) {
-                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
-            // 0 < a < 1
-            } else {
-                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
-            }
-        // a < 0
-        } else {
-            if ($a <= -1) {
-                $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
-            // -1 < a < 0
-            } else {
-                $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
-            }
-        }
+        $x_min = - $x_range / 2;
+        $x_max = $x_range / 2;
+        $y_min = - $y_range / 2;
+        $y_max = $y_range / 2;
 
-        $plot_par_q = [
-            'w_full' => $size,
-            'w_half' => $size / 2,
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $size,
+            'vb_height' => $size,
+            'vb_xfrom' => $x_min * $x_unit,
+            'vb_yfrom' => $y_min * $y_unit,
         ];
 
-        $plot_con_q = "";
-        // 座標軸を作成
-        for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
-            $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-            $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-        }
+        // 座標を計算して配列に格納
+        $points_p = $points_n = []; //座標を格納する配列（p:x>0、n:x<0）
+        $dx = 0.1;
+        for ($x = $x_min; $x <= $x_max; $x += $dx) {
+            $y = $a * $x + $b;
 
-        $plot_con_q .= "
+            // 数学座標をSVG座標に変換する
+            $svgX = $x * $x_unit;
+            $svgY = -$y * $y_unit;   // y はSVGでは下方向が正
+
+            $points[] = "$svgX,$svgY";
+        }
+        $path = implode(' ', $points);
+
+        // 座標軸を作成
+        $plot_axis_main = "
             <!-- 座標軸先端の矢印を定義 -->
             <defs>
-                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
                     markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
                     <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
                 </marker>
                 <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
                     markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
-                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"red\"/>
                 </marker>
             </defs>
             <!-- x軸とy軸を作成 -->
-            <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
-            <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
-            <!-- 関数 -->
-            <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
-        ";
-        $plot_par_e = $plot_par_q;
-        $plot_con_e = $plot_con_q . "
-            <!-- 解説用の点と補助線 -->
-            <line x1=\"0\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"" . -$b*$scale . "\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
-            <line x1=\"" . $a_denominator*$scale . "\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale . 
-                    "\" y2=" . (-$a_numerator*$scale*0.9 -$b*$scale) . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
-            <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale -$b*$scale) . "\" r=\"5\" fill=\"red\" />
-            <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
-                ({$a_denominator},{$py})
-            </text>
+            <line x1=\"" . $x_min * $x_unit . "\" y1=\"0\" x2 =\"" . $x_max * $x_unit . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . $y_min * $y_unit . "\" x2=\"0\" y2=\"" . $y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
         ";
 
+        // 座標軸（補助線）と区切りの目盛りを作成
+        $plot_axis_sub = $plot_axis_delimiter = "";
+        for ($x = $x_min; $x <= $x_max; $x++) {
+            $plot_axis_sub .= "<line x1=\"" . $x * $x_unit . "\" y1=\"" . $y_min * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . $y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($x != 0) && ($x % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . $x * $x_unit . "\" y1=\"" . -0.2 * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . 0.2 * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . $x * $x_unit . "\" y=\"" . -0.4 * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        {$x}
+                    </text>
+                ";
+            }
+        }
+        for ($y = $y_min; $y <= $y_max; $y++) {
+            $plot_axis_sub .= "<line x1=\"" . $x_min * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2 =\"" . $x_max * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($y != 0) && ($y % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . -0.2 * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2=\"" . 0.2 * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . -0.6 * $x_unit . "\" y=\"" . $y * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        " . -$y . "
+                    </text>
+                ";
+            }
+        }
+
+        // 問題用のグラフ作成
+        $plot_con_q = $plot_axis_main . $plot_axis_sub . $plot_axis_delimiter . "
+            <!-- 関数 -->
+            <polyline points=\"{$path}\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\"/>
+        ";
+
+        // 解説用のグラフ作成
+        if ($a_denominator == 1) {
+            $sample_x = 1;
+        } else {
+            $sample_x = $a_denominator;
+        }
+        $sample_y = $a * $sample_x + $b;
+        $plot_con_e = $plot_con_q . "
+            <!-- 解説用の座標 -->
+            <circle cx=\"" . $sample_x * $x_unit . "\" cy=\"" . -$sample_y * $y_unit . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $sample_x * $x_unit + 5 . "\" y=\"" . -$sample_y * $y_unit . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$sample_x},{$sample_y})
+            </text>
+            <!-- 切片 -->
+            <line x1=\"" . -0.2 * $x_unit . "\" y1=\"" . -$b * $y_unit . "\" x2=\"" . 0.2 * $x_unit . "\" y2=\"" . -$b * $y_unit . "\" stroke=\"red\" stroke-width=\"4\"/>
+            <text x=\"" . -0.6 * $x_unit . "\" y=\"" . -$b * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"24\" fill=\"red\" >
+                " . $b . "
+            </text>
+            <!-- 増分 -->
+            <line x1=\"0\" y1=\"" . -$b * $y_unit . "\" x2=\"" . $a_denominator * $x_unit*0.95 . "\" y2=\"" . -$b * $y_unit . "\" 
+                stroke=\"red\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <line x1=\"" . $a_denominator*$y_unit . "\" y1=\"" . -$b*$y_unit . "\" x2=\"" . $a_denominator*$y_unit . 
+                "\" y2=" . (-$a_numerator * $y_unit*0.9 -$b*$y_unit) . " stroke=\"red\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+        ";
+
+        $e_add_part = ($a > 0 && $a_denominator != 1) ? "" : " = {$a_str}";
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
         $questions = [
             [
-                'q_type' => 6,
+                'q_type' => 8,
                 'q' => "次のグラフを関数の式で表しなさい。",
                 'a_type' => 2,
                 'a' => "y = {$ax_str} {$b_str}",
-                'e_type' => 6,
+                'e_type' => 8,
                 'e' => "<div class=\"pl-5 text-left\">
                             <ul class='list-disc'>
                                 <li>直線なので、一次関数の式（\(y=ax+b\)）で表せる。</li>
-                                <li>\((0,\,{$b})\) を通るので、切片は \(b={$b}\) 。</li>
-                                <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}ので、</span>
-                                    傾き \(a\) は \(\displaystyle {$a_str}\)。
+                                <li><span class=\"text-red-500\">\((0,\,{$b})\)</span> を通るので、切片は \(b={$b}\) 。</li>
+                                <li><span class=\"text-red-500\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}ので、</span>
+                                    傾きは \(\displaystyle a = \\frac{\,{$a_numerator}\,}{\,{$a_denominator}\,} {$e_add_part}\)。
                                 </li>
                             </ul>
                         </div>",
             ],
-            // [
-            //     'q_type' => 6,
-            //     'q' => "次のグラフを関数の式で表しなさい。",
-            //     'a_type' => 2,
-            //     'a' => "y = {$ax_str}",
-            //     'e_type' => 6,
-            //     'e' => "<div class=\"pl-5 text-left\">
-            //                 <ul class='list-disc'>
-            //                     <li>原点 \((0,\,0)\) を通る直線なので、比例の式（\(y=ax\)）で表せる。</li>
-            //                     <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str} ので、</span>
-            //                         比例定数 \(a\) は \(\displaystyle {$a_str}\) 。
-            //                     </li>
-            //                 </ul>
-            //             </div>",
-            // ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "一次関数（グラフ読み取り）";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 一次関数（変域）
@@ -6582,68 +6748,224 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
+    // // ２点を通る直線
+    // public function linear_function3() {
+    //     // y=ax+b
+    //     $a = (-1)**rand(1,2) * rand(1,4);
+    //     $b = (-1)**rand(1,2) * rand(1,4);
+        
+    //     // 点P、Qの座標を決める。
+    //     $p_x = (-1)**rand(1,2) * rand(1,4);
+    //     $p_y = $a * $p_x + $b;
+    //     $q_x = (-1)**rand(1,2) * rand(1,4);
+    //     while ($p_x == $q_x) {
+    //         $q_y = (-1)**rand(1,2) * rand(1,4);
+    //     }
+    //     $q_y = $a * $q_x + $b;
+
+    //     // 文字列変数
+    //     $str_px = $p_x < 0 ? "({$p_x})" : "{$p_x}";
+    //     if ($p_x < $q_x) {
+    //         $str_subx = $p_x < 0 ? "{$q_x} - ({$p_x})" : "{$q_x} - {$p_x}";
+    //         $str_suby = $p_y < 0 ? "{$q_y} - ({$p_y})" : "{$q_y} - {$p_y}";
+    //     } else {
+    //         $str_subx = $q_x < 0 ? "{$p_x} - ({$q_x})" : "{$p_x} - {$q_x}";
+    //         $str_suby = $q_y < 0 ? "{$p_y} - ({$q_y})" : "{$p_y} - {$q_y}";
+    //     }
+    //     $str_equation = $b < 0 ? "y={$this->sign($a)}x {$b}" : "y={$this->sign($a)}x + {$b}";
+
+    //     // グラフ描画用
+    //     $size = 500;    //viewportの大きさ
+    //     $val_size = max(abs($p_x), abs($p_y), abs($q_x), abs($q_y)) * 4;   //実際の座標の大きさ 
+    //     $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
+    //     $plots = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //         'from_x' => -$size / 2,
+    //         'to_x' => $size / 2,
+    //         'from_y' => $a * (-$size / 2) + ($b * $scale),
+    //         'to_y' => $a * ($size / 2) + ($b * $scale),
+    //         'a' => $a,
+    //         'b' => $b,
+    //         'p_x' => $p_x,
+    //         'p_y' => $p_y,
+    //         'q_x' => $q_x,
+    //         'q_y' => $q_y,
+    //         'scale' => $scale,        
+    //     ];
+
+    //     $questions = [
+    //         [
+    //             'q' => "\(\,\mathrm{P({$p_x},{$p_y}),Q({$q_x},{$q_y})\,}を通る直線の式を求めなさい。\)",
+    //             'a' => "{$str_equation}",
+    //             'e' => "<div>
+    //                         <p>\(\ 求める直線の式を\,y=ax+b\,とおく。\)</p>
+    //                         <p>\(\displaystyle P,Q\,の座標より、a=\\frac{ \,y\,座標の差\, }{ \,x\,座標の差\, } = \\frac{ \,{$str_suby}\, }{ \,{$str_subx}\, } = {$a}.\)</p>
+    //                         <p>\(よって、y={$this->sign($a)}x+b\,と表せる。ここに\,P\,の座標を代入すると、{$p_y}={$a}\\times{$str_px}+b.\)</p>
+    //                         <p>\(これを\,b\,について解くと、b={$b}。よって、直線の式は、{$str_equation}\,である。\)</p>
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "２点を通る直線";
+    //     return view('workbook.unit.linear_function3', compact('unitname','question','plots'));
+    // }
+
     // ２点を通る直線
     public function linear_function3() {
+        $unitname = "２点を通る直線";
+        $result = $this->get_linear_function3();
+        $question = $result['question'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+    public function get_linear_function3() {
+        /***** 関数生成 ******/
         // y=ax+b
         $a = (-1)**rand(1,2) * rand(1,4);
         $b = (-1)**rand(1,2) * rand(1,4);
-        
         // 点P、Qの座標を決める。
         $p_x = (-1)**rand(1,2) * rand(1,4);
         $p_y = $a * $p_x + $b;
         $q_x = (-1)**rand(1,2) * rand(1,4);
         while ($p_x == $q_x) {
-            $q_y = (-1)**rand(1,2) * rand(1,4);
+            $q_x= (-1)**rand(1,2) * rand(1,4);
         }
         $q_y = $a * $q_x + $b;
 
         // 文字列変数
-        $str_px = $p_x < 0 ? "({$p_x})" : "{$p_x}";
-        if ($p_x < $q_x) {
-            $str_subx = $p_x < 0 ? "{$q_x} - ({$p_x})" : "{$q_x} - {$p_x}";
-            $str_suby = $p_y < 0 ? "{$q_y} - ({$p_y})" : "{$q_y} - {$p_y}";
-        } else {
-            $str_subx = $q_x < 0 ? "{$p_x} - ({$q_x})" : "{$p_x} - {$q_x}";
-            $str_suby = $q_y < 0 ? "{$p_y} - ({$q_y})" : "{$p_y} - {$q_y}";
-        }
+        $str_px = $this->add_braket($p_x);
+        $str_subx = "{$q_x} - " . $this->add_braket($p_x);
+        $str_suby = "{$q_y} - " . $this->add_braket($p_y);
+        $subx = $q_x - $p_x;
+        $suby = $q_y - $p_y;
         $str_equation = $b < 0 ? "y={$this->sign($a)}x {$b}" : "y={$this->sign($a)}x + {$b}";
 
-        // グラフ描画用
-        $size = 500;    //viewportの大きさ
-        $val_size = max(abs($p_x), abs($p_y), abs($q_x), abs($q_y)) * 4;   //実際の座標の大きさ 
-        $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
-        $plots = [
-            'w_full' => $size,
-            'w_half' => $size / 2,
-            'from_x' => -$size / 2,
-            'to_x' => $size / 2,
-            'from_y' => $a * (-$size / 2) + ($b * $scale),
-            'to_y' => $a * ($size / 2) + ($b * $scale),
-            'a' => $a,
-            'b' => $b,
-            'p_x' => $p_x,
-            'p_y' => $p_y,
-            'q_x' => $q_x,
-            'q_y' => $q_y,
-            'scale' => $scale,        
+        /***** グラフ描画用パラメータ *****/
+        $x_min = $y_min = min(-6, min($p_x, $q_x, $p_y, $q_y) - 2);
+        $x_max = $y_max = max(6, max($p_x, $q_x, $p_y, $q_y) + 2);
+
+        $size = 400;    //viewportの大きさ
+        $margin = 0;   // 余白の大きさ
+        $x_range = ($x_max - $x_min); //実際のx座標の範囲（-6<x<6 なら12）。a によって変える。
+        $y_range = ($y_max - $y_min); //実際のy座標の範囲（-6<y<6 なら12）
+        $x_unit = ($size - 2 * $margin) / $x_range;    // SVGでの x 1つ分の大きさ
+        $y_unit = ($size - 2 * $margin) / $y_range;    // SVGでの y 1つ分の大きさ
+        $x_delimiter_size = (($x_min % 5 == 0) || ($x_max % 5 == 0)) ? 6 : 5;  // 目盛りの値を表示する単位
+        $y_delimiter_size = (($y_min % 5 == 0) || ($y_max % 5 == 0)) ? 6 : 5;  // 目盛りの値を表示する単位
+
+        $plot_par_e = [
+            'vb_width' => $size,
+            'vb_height' => $size,
+            'vb_xfrom' => $x_min * $x_unit,
+            'vb_yfrom' => -$y_max * $y_unit,
         ];
 
+        // 座標を計算して配列に格納
+        $points_p = $points_n = []; //座標を格納する配列（p:x>0、n:x<0）
+        $dx = 0.1;
+        for ($x = $x_min; $x <= $x_max; $x += $dx) {
+            $y = $a * $x + $b;
+
+            // 数学座標をSVG座標に変換する
+            $svgX = $x * $x_unit;
+            $svgY = -$y * $y_unit;   // y はSVGでは下方向が正
+
+            $points[] = "$svgX,$svgY";
+        }
+        $path = implode(' ', $points);
+
+        // 座標軸を作成
+        $plot_axis_main = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"red\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . $x_min * $x_unit . "\" y1=\"0\" x2 =\"" . $x_max * $x_unit . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$y_min * $y_unit . "\" x2=\"0\" y2=\"" . -$y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+        ";
+
+        // 座標軸（補助線）と区切りの目盛りを作成
+        $plot_axis_sub = $plot_axis_delimiter = "";
+        for ($x = $x_min; $x <= $x_max; $x++) {
+            $plot_axis_sub .= "<line x1=\"" . $x * $x_unit . "\" y1=\"" . -$y_max * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . -$y_min * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($x != 0) && ($x % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . $x * $x_unit . "\" y1=\"" . -0.2 * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . 0.2 * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . $x * $x_unit . "\" y=\"" . -0.4 * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        {$x}
+                    </text>
+                ";
+            }
+        }
+        for ($y = -$y_max; $y <= -$y_min; $y++) {
+            $plot_axis_sub .= "<line x1=\"" . $x_min * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2 =\"" . $x_max * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($y != 0) && ($y % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . -0.2 * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2=\"" . 0.2 * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . -0.6 * $x_unit . "\" y=\"" . $y * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        " . -$y . "
+                    </text>
+                ";
+            }
+        }
+
+        // 解説用のグラフ作成
+        $plot_con_e = $plot_axis_main . $plot_axis_sub . $plot_axis_delimiter . "
+            <!-- 関数 -->
+            <polyline points=\"{$path}\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\"/>
+            <!-- 解説用の座標 -->
+            <circle cx=\"" . $p_x * $x_unit . "\" cy=\"" . -$p_y * $y_unit . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $p_x * $x_unit + 5 . "\" y=\"" . -$p_y * $y_unit . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                P({$p_x},{$p_y})
+            </text>
+            <circle cx=\"" . $q_x * $x_unit . "\" cy=\"" . -$q_y * $y_unit . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $q_x * $x_unit + 5 . "\" y=\"" . -$q_y * $y_unit . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                Q({$q_x},{$q_y})
+            </text>
+            <!-- 増分 -->
+            <line x1=\"" . $p_x * $x_unit . "\" y1=\"" . -$p_y * $y_unit . "\" x2=\"" . $q_x * $x_unit*0.95 . "\" y2=\"" . -$p_y * $y_unit . "\" 
+                stroke=\"red\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+            <line x1=\"" . $q_x*$x_unit . "\" y1=\"" . -$p_y*$y_unit . "\" x2=\"" . $q_x*$x_unit . 
+                "\" y2=" . -$q_y*$y_unit . " stroke=\"red\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
         $questions = [
             [
-                'q' => "\(\,\mathrm{P({$p_x},{$p_y}),Q({$q_x},{$q_y})\,}を通る直線の式を求めなさい。\)",
+                'q_type' => 3,
+                'q' => "<p class=\"mt-4\">\(\mathrm{P({$p_x},{$p_y}),Q({$q_x},{$q_y})}\) を通る直線の式を求めなさい。</p>",
+                'a_type' => 2,
                 'a' => "{$str_equation}",
-                'e' => "<div>
-                            <p>\(\ 求める直線の式を\,y=ax+b\,とおく。\)</p>
-                            <p>\(\displaystyle P,Q\,の座標より、a=\\frac{ \,y\,座標の差\, }{ \,x\,座標の差\, } = \\frac{ \,{$str_suby}\, }{ \,{$str_subx}\, } = {$a}.\)</p>
-                            <p>\(よって、y={$this->sign($a)}x+b\,と表せる。ここに\,P\,の座標を代入すると、{$p_y}={$a}\\times{$str_px}+b.\)</p>
-                            <p>\(これを\,b\,について解くと、b={$b}。よって、直線の式は、{$str_equation}\,である。\)</p>
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>求める直線の式を \(y=ax+b\) とおく。\(\mathrm{P,\,Q}\) の座標より、</p>
+                            <p class=\"leading-[4]\">
+                                \(\displaystyle
+                                    a=\\frac{\,y\,座標の変化量\,}{\,x\,座標の変化量\,}
+                                        = \\frac{\,{$str_suby}\,}{\,{$str_subx}\,} 
+                                        = \\frac{\,{$suby}\,}{\,{$subx}\,} = {$a}.
+                                \)
+                            </p>
+                            <p>よって、\(y={$this->sign($a)}x+b\) と表せる。ここに \(\mathrm{P}\) の座標を代入すると、\({$p_y}={$a}\\times{$str_px}+b.\)</p>
+                            <p>これを \(b\) について解くと、\(b={$b}\)。よって、直線の式は、<span class=\"text-blue-700\">\({$str_equation}\)</span> である。</p>
                         </div>",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "２点を通る直線";
-        return view('workbook.unit.linear_function3', compact('unitname','question','plots'));
+        return compact('question','plot_par_e','plot_con_e');
     }
 
     // 一次関数（表）
@@ -6739,9 +7061,59 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 一次関数（交点の座標）
+    // // 一次関数（交点の座標）
+    // public function plot_linear_function2() {
+    //     // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
+    //     $a = (-1)**rand(1,2) * rand(1,4);
+    //     $b = (-1)**rand(1,2) * rand(1,4);
+    //     $c = (-1)**rand(1,2) * rand(1,4);
+        
+    //     // a = c になっていたら c を変更
+    //     while ($a == $c) {
+    //         $c = (-1)**rand(1,2) * rand(1,4);
+    //     }
+
+    //     // 先に交点のx座標を決める。
+    //     $p_x = (-1)**rand(1,2) * rand(1,4);
+    //     $p_y = $a * $p_x + $b;
+
+    //     // y2の切片dが決まる。
+    //     $d = ($a - $c) * $p_x + $b;
+
+    //     // グラフ描画用
+    //     $size = 500;    //viewportの大きさ
+    //     $val_size = max(abs($p_x), abs($p_y)) * 4;   //実際の座標の大きさ 
+    //     $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
+    //     $plots = [
+    //         'w_full' => $size,
+    //         'w_half' => $size / 2,
+    //         'from_x' => -$size / 2,
+    //         'to_x' => $size / 2,
+
+    //         'from_y1' => $a * (-$size / 2) + ($b * $scale),
+    //         'to_y1' => $a * ($size / 2) + ($b * $scale),
+    //         'from_y2' => $c * (-$size / 2) + ($d * $scale),
+    //         'to_y2' => $c * ($size / 2) + ($d * $scale),
+
+    //         'p_x' => $p_x,
+    //         'p_y' => $p_y,
+    //         'scale' => $scale,        
+    //     ];
+
+    //     return view('workbook.unit.plot_linear_function2', compact('a','b','c','d','plots'));
+    // }
+
     public function plot_linear_function2() {
-        // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
+        $unitname = "交点の座標";
+        $result = $this->get_plot_linear_function2();
+        $question = $result['question'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+    public function get_plot_linear_function2() {
+        /***** 関数生成 ******/
+        // f1=ax+b, f2=cx+d, 交点の座標を(p_x, p_y)とする。
         $a = (-1)**rand(1,2) * rand(1,4);
         $b = (-1)**rand(1,2) * rand(1,4);
         $c = (-1)**rand(1,2) * rand(1,4);
@@ -6758,27 +7130,127 @@ class WorkbookController extends Controller
         // y2の切片dが決まる。
         $d = ($a - $c) * $p_x + $b;
 
-        // グラフ描画用
-        $size = 500;    //viewportの大きさ
-        $val_size = max(abs($p_x), abs($p_y)) * 4;   //実際の座標の大きさ 
-        $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
-        $plots = [
-            'w_full' => $size,
-            'w_half' => $size / 2,
-            'from_x' => -$size / 2,
-            'to_x' => $size / 2,
+        $f1_str = "y = " . $this->fracnum_to_str($a, 1, "x", 1) . $this->add_plus($b);
+        $f2_str = "y = " . $this->fracnum_to_str($c, 1, "x", 1) . $this->add_plus($d);
 
-            'from_y1' => $a * (-$size / 2) + ($b * $scale),
-            'to_y1' => $a * ($size / 2) + ($b * $scale),
-            'from_y2' => $c * (-$size / 2) + ($d * $scale),
-            'to_y2' => $c * ($size / 2) + ($d * $scale),
+        /***** グラフ描画用パラメータ *****/
+        $x_min = $y_min = min(min(-2, $p_x - 6), $p_y - 6);
+        $x_max = $y_max = max(max(2, $p_x + 6), $p_y + 6);
 
-            'p_x' => $p_x,
-            'p_y' => $p_y,
-            'scale' => $scale,        
+        $size = 400;    //viewportの大きさ
+        $margin = 0;   // 余白の大きさ
+        $x_range = ($x_max - $x_min); //実際のx座標の範囲（-6<x<6 なら12）。a によって変える。
+        $y_range = ($y_max - $y_min); //実際のy座標の範囲（-6<y<6 なら12）
+        $x_unit = ($size - 2 * $margin) / $x_range;    // SVGでの x 1つ分の大きさ
+        $y_unit = ($size - 2 * $margin) / $y_range;    // SVGでの y 1つ分の大きさ
+        $x_delimiter_size = (($x_min % 5 == 0) || ($x_max % 5 == 0)) ? 6 : 5;  // 目盛りの値を表示する単位
+        $y_delimiter_size = (($y_min % 5 == 0) || ($y_max % 5 == 0)) ? 6 : 5;  // 目盛りの値を表示する単位
+
+        $plot_par_e = [
+            'vb_width' => $size,
+            'vb_height' => $size,
+            'vb_xfrom' => $x_min * $x_unit,
+            'vb_yfrom' => -$y_max * $y_unit,
         ];
 
-        return view('workbook.unit.plot_linear_function2', compact('a','b','c','d','plots'));
+        // 座標を計算して配列に格納
+        $points_p = $points_n = []; //座標を格納する配列（p:x>0、n:x<0）
+        $dx = 0.1;
+        for ($x = $x_min; $x <= $x_max; $x += $dx) {
+            $f1 = $a * $x + $b;
+            $f2 = $c * $x + $d;
+
+            // 数学座標をSVG座標に変換する
+            $svgX = $x * $x_unit;
+            $svgY1 = -$f1 * $y_unit;   // y はSVGでは下方向が正
+            $svgY2 = -$f2 * $y_unit;   // y はSVGでは下方向が正
+
+            $points1[] = "$svgX,$svgY1";
+            $points2[] = "$svgX,$svgY2";
+        }
+        $path1 = implode(' ', $points1);
+        $path2 = implode(' ', $points2);
+
+        // 座標軸を作成
+        $plot_axis_main = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+                <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+                    markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"red\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . $x_min * $x_unit . "\" y1=\"0\" x2 =\"" . $x_max * $x_unit . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . -$y_min * $y_unit . "\" x2=\"0\" y2=\"" . -$y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+        ";
+
+        // 座標軸（補助線）と区切りの目盛りを作成
+        $plot_axis_sub = $plot_axis_delimiter = "";
+        for ($x = $x_min; $x <= $x_max; $x++) {
+            $plot_axis_sub .= "<line x1=\"" . $x * $x_unit . "\" y1=\"" . -$y_max * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . -$y_min * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($x != 0) && ($x % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . $x * $x_unit . "\" y1=\"" . -0.2 * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . 0.2 * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . $x * $x_unit . "\" y=\"" . -0.4 * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        {$x}
+                    </text>
+                ";
+            }
+        }
+        for ($y = -$y_max; $y <= -$y_min; $y++) {
+            $plot_axis_sub .= "<line x1=\"" . $x_min * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2 =\"" . $x_max * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($y != 0) && ($y % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . -0.2 * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2=\"" . 0.2 * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . -0.6 * $x_unit . "\" y=\"" . $y * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        " . -$y . "
+                    </text>
+                ";
+            }
+        }
+
+        // 解説用のグラフ作成
+        $plot_con_e = $plot_axis_main . $plot_axis_sub . $plot_axis_delimiter . "
+            <!-- 関数 -->
+            <polyline points=\"{$path1}\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\"/>
+            <polyline points=\"{$path2}\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"/>
+            <!-- 解説用の座標 -->
+            <circle cx=\"" . $p_x * $x_unit . "\" cy=\"" . -$p_y * $y_unit . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $p_x * $x_unit + 5 . "\" y=\"" . -$p_y * $y_unit . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                P({$p_x},{$p_y})
+            </text>
+        ";
+
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "
+                    <p>次の２つの関数について、交点の座標を求めなさい。</p>
+                    $$ {$f1_str},\,\,{$f2_str} $$
+                ",
+                'a_type' => 2,
+                'a' => "({$p_x},\,{$p_y})",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>２つの関数の交点では \( (x,y) \) がともに一致するので、連立方程式の解を求めればよい。</p>
+                            <p>
+                                なお、<span class=\"text-blue-700\">\({$f1_str}\)</span>
+                                 と <span class=\"text-green-700\">\({$f2_str}\)</span>
+                                 のグラフは下図のようになる。</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question','plot_par_e','plot_con_e');
     }
 
     // 正多角形の角
