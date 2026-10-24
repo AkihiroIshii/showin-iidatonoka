@@ -362,6 +362,8 @@ Route::get('workbook/table_proportional_function', [WorkbookController::class, '
 ->middleware(['auth', 'verified'])->name('workbook.table_proportional_function');
 Route::get('workbook/domain_proportional_function', [WorkbookController::class, 'domain_proportional_function'])
 ->middleware(['auth', 'verified'])->name('workbook.domain_proportional_function');
+Route::get('workbook/read_inverse_proportion_function', [WorkbookController::class, 'read_inverse_proportion_function'])
+->middleware(['auth', 'verified'])->name('workbook.read_inverse_proportion_function');
 // Route::get('workbook/plot_proportional_function', [WorkbookController::class, 'plot_proportional_function'])
 // ->middleware(['auth', 'verified'])->name('workbook.unit.plot_proportional_function');
 // Route::get('workbook/plane_figure', [WorkbookController::class, 'plane_figure'])

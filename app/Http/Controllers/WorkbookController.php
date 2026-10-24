@@ -2901,7 +2901,6 @@ class WorkbookController extends Controller
         $question = $result['question'];
         return view('workbook.unit_template', compact('unitname','question'));
     }
-
     public function get_linear_equation2() {
         // a, b, c をランダムに決める
         $primes = $this->get_primes(2, 11);    // 11以下の素数を2つ取得する。
@@ -4046,6 +4045,164 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $unitname = "比例（変域）";
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+
+    // 反比例（グラフ読取）
+    public function read_inverse_proportion_function() {
+        $unitname = "反比例（グラフ読取）";
+        $result = $this->get_read_inverse_proportion_function();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_read_inverse_proportion_function() {
+        // グラフ描画用パラメータ
+        $size = 400;    //viewportの大きさ
+        $margin = 0;   // 余白の大きさ
+        $x_range = 12; //実際のx座標の範囲（-6<x<6 なら12）
+        $y_range = 12; //実際のy座標の範囲（-6<y<6 なら12）
+        $x_unit = ($size - 2 * $margin) / $x_range;    // SVGでの x 1つ分の大きさ
+        $y_unit = ($size - 2 * $margin) / $y_range;    // SVGでの y 1つ分の大きさ
+        $x_delimiter_size = 5;  // 目盛りの値を表示する単位
+        $y_delimiter_size = 5;
+
+        $x_min = - $x_range / 2;
+        $x_max = $x_range / 2;
+        $y_min = - $y_range / 2;
+        $y_max = $y_range / 2;
+
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $size,
+            'vb_height' => $size,
+            'vb_xfrom' => $x_min * $x_unit,
+            'vb_yfrom' => $y_min * $y_unit,
+        ];
+
+        /***** 関数生成 ******/
+        $a_abs_seed =  [1, 2, 3, 6, 8, 9, 12];
+        $a_abs = $a_abs_seed[rand(0, count($a_abs_seed) - 1)];
+        $a_sign = (-1)**rand(1, 2);
+        $a = $a_sign * $a_abs;  // 比例定数
+        $func_str = ($a_sign == 1) ? "\\frac{{$a_abs}}{\,x\,}" : "-\\frac{{$a_abs}}{\,x\,}";  // 関数形（表示用）
+
+        // 座標を計算して配列に格納
+        $points_p = $points_n = []; //座標を格納する配列（p:x>0、n:x<0）
+        $dx = 0.1;
+        for ($x = $dx; $x <= $x_max; $x += $dx) {
+            $y = $a / $x;
+
+            // 数学座標をSVG座標に変換する
+            $svgXp = $x * $x_unit;
+            $svgYp = -$y * $y_unit;   // y はSVGでは下方向が正
+            $svgXn = -$x * $x_unit;
+            $svgYn = $y * $y_unit;   // y はSVGでは下方向が正
+
+            $points_p[] = "$svgXp,$svgYp";
+            $points_n[] = "$svgXn,$svgYn";
+        }
+        $path_p = implode(' ', $points_p);
+        $path_n = implode(' ', $points_n);
+
+        // 座標軸を作成
+        $plot_axis_main = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . $x_min * $x_unit . "\" y1=\"0\" x2 =\"" . $x_max * $x_unit . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . $y_min * $y_unit . "\" x2=\"0\" y2=\"" . $y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+        ";
+
+        // 座標軸（補助線）と区切りの目盛りを作成
+        $plot_axis_sub = $plot_axis_delimiter = "";
+        for ($x = $x_min; $x <= $x_max; $x++) {
+            $plot_axis_sub .= "<line x1=\"" . $x * $x_unit . "\" y1=\"" . $y_min * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . $y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($x != 0) && ($x % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . $x * $x_unit . "\" y1=\"" . -0.2 * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . 0.2 * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . $x * $x_unit . "\" y=\"" . -0.4 * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        {$x}
+                    </text>
+                ";
+            }
+        }
+        for ($y = $y_min; $y <= $y_max; $y++) {
+            $plot_axis_sub .= "<line x1=\"" . $x_min * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2 =\"" . $x_max * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($y != 0) && ($y % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . -0.2 * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2=\"" . 0.2 * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . -0.6 * $x_unit . "\" y=\"" . $y * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        " . -$y . "
+                    </text>
+                ";
+            }
+        }
+
+        // 問題用のグラフ作成
+        $plot_con_q = $plot_axis_main . $plot_axis_sub . $plot_axis_delimiter . "
+            <!-- 関数 -->
+            <polyline points=\"{$path_p}\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\"/>
+            <polyline points=\"{$path_n}\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\"/>
+        ";
+
+        // 解説用のグラフ作成
+        if ($a_abs % 3 == 0) {
+            $sample_x = $a_abs / 3;
+        } elseif ($a_abs % 2 == 0) {
+            $sample_x = $a_abs / 2;
+        } else {
+            $sample_x = $a_abs;
+        }
+        $sample_y = $a / $sample_x;
+        $plot_con_e = $plot_con_q . "
+            <!-- 解説用の座標 -->
+            <circle cx=\"" . $sample_x * $x_unit . "\" cy=\"" . -$sample_y * $y_unit . "\" r=\"5\" fill=\"red\" />
+            <text x=\"" . $sample_x * $x_unit + 5 . "\" y=\"" . -$sample_y * $y_unit . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+                ({$sample_x},{$sample_y})
+            </text>
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "次の反比例のグラフを関数の式で表しなさい。",
+                'a_type' => 2,
+                'a' => "y = {$func_str}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[3]\">
+                            <p>
+                                反比例の式は、\(\displaystyle y=\\frac{a}{\,x\,}\) で表せる。グラフを見ると 
+                                <span class=\"text-red-500\">\(({$sample_x},\,{$sample_y})\)</span> 
+                                を通っているので、これを
+                            </p>
+                            <p>
+                                代入すると \(\displaystyle {$sample_y}=\\frac{a}{\,{$sample_x}\,}\)。これを \(a\) について解けば、\(a = {$a}\)。
+                                よって、反比例の式は \(\displaystyle y = {$func_str}\)。
+                            </p>
+                        </div>
+                        <div class=\"leading-[2] mb-4\">
+                            <p>【補足：比例定数 \(a\) を簡単に求める方法】</p>
+                            <p>
+                                反比例の式を変形すると \(a = xy\) になるので、これに 
+                                <span class=\"text-red-500\">\(({$sample_x},\,{$sample_y})\)</span> 
+                                を代入して
+                            </p>
+                            <p>\(a = {$sample_x} \\times " . $this->add_braket($sample_y) . " = {$a}\) としても \(a\) は求まる。こちらの方が簡単に求まるのでお勧めだ。</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // // 平面図形
