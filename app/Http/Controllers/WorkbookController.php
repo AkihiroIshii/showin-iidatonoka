@@ -19004,6 +19004,160 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
+    // 対数グラフ（未完成というか保留）
+    // public function h_math_log_plot() {
+    //     $unitname = "対数のグラフ";
+    //     $result = $this->get_h_math_log_plot();
+    //     $question = $result['question'];
+    //     $plot_par_e = $result['plot_par_e'];
+    //     $plot_con_e = $result['plot_con_e'];
+    //     return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    // }
+    // public function get_h_math_log_plot() {
+    //     /***** パラメータの決定 ******/
+    //     // a^p = b, b^q = c
+    //     $a = rand(2, 3);
+    //     $p = rand(2, 3);
+    //     $b = pow($a, $p);
+    //     $q = rand(2, 3);
+    //     $c = pow($b, $q);
+    //     $log_ab = $p;
+    //     $log_bc = $q;
+    //     $log_ac = $p*$q;
+        
+    //     /***** グラフ描画用パラメータ *****/
+    //     $x_min = -1;
+    //     $y_min = -1;
+    //     // $x_max = $y_max = max(max($a, $b), log($M, min($a, $b)));
+    //     $x_max = $c + 10;
+    //     $y_max = log($x_max, $a) + 2;
+
+    //     $size = 400;    //viewportの大きさ
+    //     $margin = 0;   // 余白の大きさ
+    //     $x_range = ($x_max - $x_min); //実際のx座標の範囲（-6<x<6 なら12）。a によって変える。
+    //     $y_range = ($y_max - $y_min); //実際のy座標の範囲（-6<y<6 なら12）
+    //     $x_unit = ($size - 2 * $margin) / $x_range;    // SVGでの x 1つ分の大きさ
+    //     $y_unit = ($size - 2 * $margin) / $y_range;    // SVGでの y 1つ分の大きさ
+    //     $x_delimiter_size = (($x_min % 5 == 0) || ($x_max % 5 == 0)) ? 6 : 5;  // 目盛りの値を表示する単位
+    //     $y_delimiter_size = (($y_min % 5 == 0) || ($y_max % 5 == 0)) ? 6 : 5;  // 目盛りの値を表示する単位
+
+    //     $plot_par_e = [
+    //         'vb_width' => $size,
+    //         'vb_height' => $size,
+    //         'vb_xfrom' => $x_min * $x_unit,
+    //         'vb_yfrom' => -$y_max * $y_unit,
+    //     ];
+
+    //     // 座標を計算して配列に格納
+    //     $points_p = $points_n = []; //座標を格納する配列（p:x>0、n:x<0）
+    //     $dx = 0.1;
+    //     for ($x = $dx; $x <= $x_max; $x += $dx) {
+    //         $f1 = log($x, $a);
+    //         $f2 = log($x, $b);
+
+    //         // 数学座標をSVG座標に変換する
+    //         $svgX = $x * $x_unit;
+    //         $svgY1 = -$f1 * $y_unit;   // y はSVGでは下方向が正
+    //         $svgY2 = -$f2 * $y_unit;   // y はSVGでは下方向が正
+
+    //         $points1[] = "$svgX,$svgY1";
+    //         $points2[] = "$svgX,$svgY2";
+    //     }
+    //     $path1 = implode(' ', $points1);
+    //     $path2 = implode(' ', $points2);
+
+    //     // 座標軸を作成
+    //     $plot_axis_main = "
+    //         <!-- 座標軸先端の矢印を定義 -->
+    //         <defs>
+    //             <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+    //                 markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+    //             </marker>
+    //             <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
+    //                 markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
+    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"red\"/>
+    //             </marker>
+    //         </defs>
+    //         <!-- x軸とy軸を作成 -->
+    //         <line x1=\"" . $x_min * $x_unit . "\" y1=\"0\" x2 =\"" . $x_max * $x_unit . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+    //         <line x1=\"0\" y1=\"" . -$y_min * $y_unit . "\" x2=\"0\" y2=\"" . -$y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+    //     ";
+
+    //     // 座標軸（補助線）と区切りの目盛りを作成
+    //     $plot_axis_sub = $plot_axis_delimiter = "";
+    //     // for ($x = $x_min; $x <= $x_max; $x++) {
+    //     //     $plot_axis_sub .= "<line x1=\"" . $x * $x_unit . "\" y1=\"" . -$y_max * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . -$y_min * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+    //     //     if (($x != 0) && ($x % $x_delimiter_size == 0)) {
+    //     //         $plot_axis_delimiter .= "
+    //     //             <line x1=\"" . $x * $x_unit . "\" y1=\"" . -0.2 * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . 0.2 * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+    //     //             <text x=\"" . $x * $x_unit . "\" y=\"" . -0.4 * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+    //     //                 {$x}
+    //     //             </text>
+    //     //         ";
+    //     //     }
+    //     // }
+    //     // for ($y = -$y_max; $y <= -$y_min; $y++) {
+    //     //     $plot_axis_sub .= "<line x1=\"" . $x_min * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2 =\"" . $x_max * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+    //     //     if (($y != 0) && ($y % $x_delimiter_size == 0)) {
+    //     //         $plot_axis_delimiter .= "
+    //     //             <line x1=\"" . -0.2 * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2=\"" . 0.2 * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+    //     //             <text x=\"" . -0.6 * $x_unit . "\" y=\"" . $y * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+    //     //                 " . -$y . "
+    //     //             </text>
+    //     //         ";
+    //     //     }
+    //     // }
+
+    //     // 解説用のグラフ作成
+    //     $plot_con_e = $plot_axis_main . "
+    //         <!-- 関数 -->
+    //         <polyline points=\"{$path1}\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\"/>
+    //         <polyline points=\"{$path2}\" fill=\"none\" stroke=\"green\" stroke-width=\"2\"/>
+    //         <!-- log_b c -->
+    //         <circle cx=\"" . $c * $x_unit . "\" cy=\"" . -$log_bc * $y_unit . "\" r=\"5\" fill=\"red\" />
+    //         <text x=\"" . $c * $x_unit . "\" y=\"" . -$log_bc * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
+    //             ({$c}, log<tspan baseline-shift=\"sub\" font-size=\"70%\">{$b}</tspan>{$c})
+    //         </text>
+    //         <!-- log_a b -->
+    //         <circle cx=\"" . $b * $x_unit . "\" cy=\"" . -$log_ab * $y_unit . "\" r=\"5\" fill=\"blue\" />
+    //         <text x=\"" . $b * $x_unit . "\" y=\"" . -$log_ab * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"22\" fill=\"blue\" >
+    //             ({$b}, log<tspan baseline-shift=\"sub\" font-size=\"70%\">{$a}</tspan>{$b})
+    //         </text>
+    //         <!-- log_a c -->
+    //         <circle cx=\"" . $c * $x_unit . "\" cy=\"" . -$log_ac * $y_unit . "\" r=\"5\" fill=\"green\" />
+    //         <text x=\"" . $c * $x_unit . "\" y=\"" . -$log_ac * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"22\" fill=\"green\" >
+    //             ({$c}, log<tspan baseline-shift=\"sub\" font-size=\"70%\">{$a}</tspan>{$c})
+    //         </text>
+    //     ";
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "
+    //                 <p>\(a^p = b, b^q = c\) ならば、\(a^{p \\times q} = b^q = c\)</p>
+    //                 <p>\({$a}^{$p} = {$b}, {$b}^{$q} = {$c}\) より、\({$a}^{{$p} \\times {$q}} = {$b}^{$q} = {$c}\)</p>
+    //                 <p>\(y=\log_{{$a}} x,\,\, y=\log_{{$b}} x\)</p>
+    //             ",
+    //             'a_type' => 2,
+    //             'a' => "",
+    //             'e_type' => 8,
+    //             'e' => "<div class=\"leading-[2] mb-4\">
+    //                         <p>
+    //                             <span class=\"text-red-500\">\(\log_{{$b}} {$c} \\fallingdotseq {$q}\)</span>
+    //                             <span class=\"text-blue-700\">\(\log_{{$a}} {$b} \\fallingdotseq {$p}\)</span>
+    //                             <span class=\"text-green-700\">\(\log_{{$a}} {$c} \\fallingdotseq " . $p * $q . "\)</span>
+    //                         </p>
+    //                     </div>",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     return compact('question','plot_par_e','plot_con_e');
+    // }
+
     // 数列（数Ｂ）
     public function h_math_number_sequence(Request $request) {
         $a = 5 * rand(1, 10);   // 初項
