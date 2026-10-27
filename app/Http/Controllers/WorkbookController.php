@@ -853,159 +853,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
-    // // 10日は何時間？（旧）
-    // public function day_to_hour() {
-    //     $days = [2,3,4,5,7,9,10];   // 1, 6, 8 は除く。
-    //     $idx = rand(0, count($days)-1);
-    //     $day = $days[$idx];
-    //     $hour = 24 * $day;
-
-    //     $exp = "<p>1日は 24時間なので、24時間を {$day}回たします。</p>
-    //             <p>24時間は、20時間と 4時間にわけてみましょう。</p>
-    //             <div class=\"text-left\">
-    //             <p>24時間</p>
-    //             <p>= ○○○○○ ○○○○○ ○○○○○ ○○○○○　○○○○</p>
-    //             <p>= [10] [10] ○○○○</p>
-    //             </div>
-    //             <p>すると、{$day}日は つぎのように あらわせます。</p>
-    //             <div class=\"text-left\">";
-    //     for ($i = 1; $i <= $day; $i++) {
-    //         $exp .= "<p class=\"pl-8 [line-height:initial]\">[10] [10]　○○○○　ここまでで、" . $i * 20 . " + " . $i * 4 . " = " . $i * 24 . "時間。</p>";
-    //     }
-    //     $exp .= "</div>";
-    //     //解説を場合分け
-    //     // if ($day == 5) {
-    //     //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
-    //     //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>";
-    //     // } elseif ($day == 10) {
-    //     //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
-    //     //             <p>24 を 10かい たすのは、10 を 24かい たすのとおなじ。</p>
-    //     //             <p>つまり、10円玉が 24まいで 240円になるのとおなじ。</p>";
-    //     // } elseif ($day == 9) {
-    //     //     $exp = "<p>1 日は 24 時間なので、10 日で 240 時間。</p>
-    //     //             <p>9 日は 10 日よりも 1日（24時間）すくないので、</p>
-    //     //             <div class=\"text-left\">
-    //     //                 <p>9 日 = 10 日 － 1 日</p>
-    //     //                 <p>= 240 時間 － 24 時間</p>
-    //     //                 <p>= 240 時間 － 20 時間 － 4 時間</p>
-    //     //                 <p>= 220 時間 － 4 時間</p>
-    //     //                 <p>= 216 時間。</p>
-    //     //             </div>";
-    //     // } elseif ($day > 5) {
-    //     //     $exp = "<p>まず {$day} 日を 5 日と " . $day - 5 . " 日にわけてみます。</p>
-    //     //             <p>1 日は 24 時間なので、10 日で 240 時間。</p>
-    //     //             <p>5 日は 10 日の半分（はんぶん）なので、120 時間。</p>
-    //     //             <p>のこりの " . $day - 5 . " 日が何時間かは、つぎのように かんがえます。</p>";
-    //     //     for ($i = 1; $i < $day - 5; $i++) {
-    //     //         $exp .= "24 + ";
-    //     //     }
-    //     //     $exp .= "24</p><p> = ";
-    //     //     for ($i = 1; $i < $day - 5; $i++) {
-    //     //         $exp .= "(20 + 4) + ";
-    //     //     }
-    //     //     $exp .= "(20 + 4)</p><p> = (";
-    //     //     for ($i = 1; $i < $day - 5; $i++) {
-    //     //         $exp .= "20 + ";
-    //     //     }
-    //     //     $exp .= "20) + (";
-    //     //     for ($i = 1; $i < $day - 5; $i++) {
-    //     //         $exp .= "4 + ";
-    //     //     }
-    //     //     $exp .= "4)</p><p> = ". 20 * ($day - 5) . " + " . 4 * ($day - 5) . " = " . 24*($day - 5) . " 時間。
-    //     //     <p>よって、{$day} 日は 120 時間＋" . 24*($day - 5) . " 時間 = {$hour} 時間。";
-    //     // } else {
-    //     //     $exp = "<p>1 日は 24 時間なので、{$day} 日が何時間かは つぎのように かんがえます。</p>";
-    //     //     for ($i = 1; $i < $day; $i++) {
-    //     //         $exp .= "24 + ";
-    //     //     }
-    //     //     $exp .= "24</p><p> = ";
-    //     //     for ($i = 1; $i < $day; $i++) {
-    //     //         $exp .= "(20 + 4) + ";
-    //     //     }
-    //     //     $exp .= "(20 + 4)</p><p> = (";
-    //     //     for ($i = 1; $i < $day; $i++) {
-    //     //         $exp .= "20 + ";
-    //     //     }
-    //     //     $exp .= "20) + (";
-    //     //     for ($i = 1; $i < $day; $i++) {
-    //     //         $exp .= "4 + ";
-    //     //     }
-    //     //     $exp .= "4)</p><p> = ". 20 * $day . " + " . 4 * $day . " = {$hour} 時間。";
-    //     // } 
-
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p class=\"text-xl\">{$day} 日は何時間（なんじかん）ですか。</p>",
-    //             'a_type' => 2,
-    //             'a' => "{$hour}\,時間",
-    //             'e_type' => 3,
-    //             'e' => "{$exp}",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "10日は何時間？";
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
-
-    // // 10日は何時間？（旧ver２）
-    // public function day_to_hour() {
-    //     $day = rand(2, 10);
-    //     $hour = 24 * $day;
-
-    //     $exp = "<p>1 日は 24 時間です。◎ = 10、○ = 1 とすると、24 時間は ◎◎○○○○ とあらわせます。</p>
-    //             <p>よって、{$day} 日 = ";
-    //     for ($i = 0; $i < $day - 1; $i++) {
-    //         $exp .= "◎◎○○○○ + ";
-    //     }
-    //     $exp .= "◎◎○○○○</p>
-    //             <p>= ";
-    //     for ($i = 0; $i < $day; $i++) {
-    //         $exp .= "◎◎ ";
-    //     }
-    //     for ($i = 0; $i < $day; $i++) {
-    //         $exp .= "○○○○ ";
-    //     }
-    //     $exp .= "</p>
-    //             <p>= " . 20*$day . " + " . 4*$day . " = <span class=\"underline\">{$hour} 時間</span></p>";
-    //     if ($day > 5) {
-    //         $exp .= "<p>(※)5 日 = 120 時間 を おぼえておくと べんりです。</p>
-    //                 <p>5 日 = ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ + ◎◎○○○○ </p>
-    //                 <p>= ◎◎ ◎◎ ◎◎ ◎◎ ◎◎ + ○○○○ ○○○○ ○○○○ ○○○○ ○○○○ </p>
-    //                 <p>= 100 + 20 = 120 時間</p>
-    //                 <p>すると、{$day} 日 = 5 日 + " . $day - 5 . " 日 = 120 時間 + ";
-    //         for ($i = 0; $i < $day - 5; $i++) {
-    //             $exp .= "◎◎ ";
-    //         }
-    //         for ($i = 0; $i < $day - 5; $i++) {
-    //             $exp .= "○○○○ ";
-    //         }
-    //         $exp .= "</p>
-    //                 <p>= 120 時間 + " . 20*($day - 5) . " 時間 + " . 4*($day - 5) . " 時間 = <span class=\"underline\">{$hour} 時間</span></p>";
-    //     }
-
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p>□ に あてはまる かずを こたえましょう。</p>
-    //                     <p class=\"text-xl\">{$day} 日 = □ 時間</p>",
-    //             'a_type' => 2,
-    //             'a' => "{$hour}",
-    //             'e_type' => 3,
-    //             'e' => "{$exp}",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "10日は何時間？";
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
-
     // 日⇒時間
     public function day_to_hour(Request $request) {
         $day = rand(2, 10);
@@ -1195,65 +1042,6 @@ class WorkbookController extends Controller
         $unitname = "帯分数⇔仮分数";
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e','subject','flags'));
     }
-
-    // // 割合
-    // public function ratio1() {
-    //     $num = 10 * rand(1, 20);
-    //     $wari = rand(1, 9); //割
-    //     $waribiki = 10 - $wari;     //例：6割＝4割引
-    //     $bu = rand(1, 9); //分
-    //     $per_array = [1, 2, 4, 5, 10, 12, 20, 25, 50, 80];  // % の候補
-    //     $per_idx = array_rand($per_array);
-    //     $per = $per_array[$per_idx];
-    //     $val1 = $num * (0.1 * $wari); 
-    //     $val2 = $num * (0.01 * $bu);
-    //     $val_waribiki = $num * (1 - 0.1 * $wari);
-    //     $val_1wari = $num * 0.1;
-    //     $val_1bu = $num * 0.01;
-    //     $val_1per = $num * 0.01;
-    //     $val_per = $num * 0.01 * $per;
-    //     $val_per2 = 0.01 * $per;
-
-    //     $questions = [
-    //         [
-    //             'q' => "\({$num}\,の\,{$wari}\,割はいくつか。\)",
-    //             'a' => "{$val1}",
-    //             'e' => "<div>
-    //                         <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
-    //                         <p>\(\displaystyle {$num}\,の\,1\,割（0.1倍）が\,{$val_1wari}\,なので、{$val_1wari}\,\\times{$wari} = {$val1}\,と計算してもよい.\)</p>
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\({$num}\,の\,{$bu}\,分（ぶ）はいくつか。\)",
-    //             'a' => "{$val2}",
-    //             'e' => "<div>
-    //                         <p>\(\displaystyle {$bu}\,分は\,0.0{$bu}\\left(=\\frac{{$bu}}{\,100\,} \\right)倍なので、{$num}\,\\times\,0.0{$bu} = {$val2}.\)</p>
-    //                         <p>\(\displaystyle {$num}\,の\,1\,分（0.01倍）が\,{$val_1bu}\,なので、{$val_1bu}\,\\times{$bu} = {$val2}\,と計算してもよい.\)</p>
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\({$num}\,の\,{$per}\,\%\,はいくつか。\)",
-    //             'a' => "{$val_per}",
-    //             'e' => "<div>
-    //                         <p>\(\displaystyle {$per}\,\%\,は\,{$val_per2}\\left(=\\frac{{$per}}{\,100\,} \\right)\,倍なので、{$num}\,\\times{$val_per2} = {$val_per}.\)</p>
-    //                         <p>\(\displaystyle {$num}\,の\,1\,\%（0.01倍）が\,{$val_1per}\,なので、{$val_1per}\,\\times{$per} = {$val_per}\,と計算してもよい.\)</p>
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\({$num}\,の\,{$wari}\,割引はいくつか。\)",
-    //             'a' => "{$val_waribiki}",
-    //             'e' => "<div>
-    //                         <p>\(\displaystyle {$wari}\,割は\,0.{$wari}\\left(=\\frac{{$wari}}{\,10\,} \\right)倍なので、{$num}\,\\times\,0.{$wari} = {$val1}.\)</p>
-    //                         <p>\(これをもとの値から割り引くと、{$num} - {$val1} = {$val_waribiki}.\)</p>
-    //                         <p>\(また、{$wari}\,割引はもとの値の{$waribiki}\,割と同じなので、{$num} \\times 0.{$waribiki} = {$val_waribiki}\,と計算してもよい.\)</p>
-    //                     </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "割合";
-    //     return view('workbook.unit.child', compact('unitname','question'));
-    // }
 
     // 単位変換
     public function math_unit_conversion(Request $request) {
@@ -1895,36 +1683,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // // 速さ１
-    // public function velocity1() {
-    //     $v = rand(2, 9);    // m/s
-    //     $t = 10 * rand(1, 9);    // s
-    //     $d = $v * $t;   // m
-
-    //     $questions = [
-    //         [
-    //             'q' => "\,{$d}\,\mathrm{m}\,の距離を\,{$t}\,秒で通過する物体の速さ（秒速）を求めなさい。",
-    //             'a' => "{$v}\,\mathrm{m/秒}",
-    //             'e' => "秒速とは、１秒あたりに進む距離のことである。よって、\mathrm{秒速[m/秒] = 距離[m] \div 時間[秒] = {$d}[m] \div {$t}[秒] = {$v}[m/秒] }。",
-    //         ],
-    //         [
-    //             'q' => "\,{$d}\,\mathrm{m}\,の距離を、秒速\,{$v}\,\mathrm{m}で通過するのにかかる時間を求めなさい。",
-    //             'a' => "{$t}\,秒",
-    //             'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
-    //                     よって、\mathrm{かかる時間[秒] = 距離[m] \div 速さ[m/秒] = {$d}[m] \div {$v}[m/秒] = {$t}[秒] }。",
-    //         ],
-    //         [
-    //             'q' => "秒速\,{$v}\,\mathrm{m}で\,{$t}\,秒間動き続けると、何\,\mathrm{m}\,進むか。",
-    //             'a' => "{$d}\,\mathrm{m}",
-    //             'e' => "秒速\,{$v}\,\mathrm{m}とは、1\,秒で\,{$v}\,\mathrm{m}\,進む速さのことである。
-    //                     よって、\mathrm{{$t}秒あればその\,{$t}\,倍進めるので、{$v}[m/秒] \\times {$t}[秒] = {$d}[m] }。",
-    //         ],
-    //     ];
-    //     $index = rand(0,count($questions)-1);
-    //     $question = $questions[$index];
-    //     return view('workbook.unit.velocity1', compact('question'));
-    // }
-
     // 速さ
     public function velocity(Request $request) {
         // 基礎
@@ -2106,59 +1864,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e','subject','flags'));
     }
 
-    // // 速さ２
-    // public function velocity2() {
-    //     $v_ms = rand(2, 9);    // m/s
-    //     $t_s = 10 * rand(1, 9);    // s
-    //     $d_m = $v_ms * $t_s;   // m
-
-    //     $v_mm = $v_ms * 60; // m/min
-    //     $v_km = $v_mm / 1000; // km/min
-
-    //     // 時速算出用（上記の変数と独立）
-    //     $v_km2 = rand(2, 9);    //km/min
-    //     $v_kh2 = $v_km2 * 60; // km/h
-
-    //     // さらに独立な変数
-    //     $v_kh3 = 18 * rand(1, 20);   // km/h
-    //     $v_ms3 = $v_kh3 * 1000 / 3600;   // m/s
-
-    //     $questions = [
-    //         [
-    //             'q' => "秒速\,{$v_ms}\,\mathrm{m}\,を分速 [\mathrm{m/分}] に直せ。",
-    //             'a' => "{$v_mm}\,\mathrm{m/分}",
-    //             'e' => "\mathrm{秒速\,{$v_ms}\,m\,では1秒間に\,{$v_ms}\,m\,進むので、1分間（60秒間）あれば\,{$v_ms} \\times 60 = {$v_mm}\,m\,進める。}",
-    //         ],
-    //         [
-    //             'q' => "分速\,{$v_mm}\,\mathrm{m}\,を秒速 [\mathrm{m/秒}] に直せ。",
-    //             'a' => "{$v_ms}\,\mathrm{m/秒}",
-    //             'e' => "\mathrm{分速\,{$v_mm}\,m\,では1分間（60秒間)に\,{$v_mm}\,m\,進む。1秒間では\,{$v_mm} \div 60 = {$v_ms}\,m\,しか進まない。}",
-    //         ],
-    //         [
-    //             'q' => "分速\,{$v_mm}\,\mathrm{m}\,を、\mathrm{km}\,単位の分速 [\mathrm{km/分}] に直せ。",
-    //             'a' => "{$v_km}\,\mathrm{km/分}",
-    //             'e' => "\mathrm{分速であることに変わりはないので、距離の単位の違いだけ考えればよい。1km=1000mなので、{$v_mm} \div 1000 = {$v_km}。}",
-    //         ],
-    //         [
-    //             'q' => "分速\,{$v_km2}\,\mathrm{km}\,を時速 [\mathrm{km/時}] に直せ。",
-    //             'a' => "{$v_kh2}\,\mathrm{km/時}",
-    //             'e' => "\mathrm{分速\,{$v_km2}\,km\,では1分間に\,{$v_km2}\,km\,進むので、1時間（60分間）あれば\,{$v_km2} \\times 60 = {$v_kh2}\,km\,進める。}",
-    //         ],
-    //         [
-    //             'q' => "時速\,{$v_kh3}\,\mathrm{km}\,を秒速 [\mathrm{m/秒}] に直せ。",
-    //             'a' => "{$v_ms3}\,\mathrm{m/秒}",
-    //             'e' => "\mathrm{
-    //                         {$v_kh3}\,[km/時] = \\frac{ \,{{ $v_kh3 }}\,[km]\, }{ 1\,[時間] }
-    //                         = \\frac{ \,{{ $v_kh3 }}\\times 1000\,[m]\, }{ 60 \\times 60\,[秒] }
-    //                         = {$v_ms3}\,[m/秒]
-    //                     }",
-    //         ],
-    //     ];
-    //     $index = rand(0,count($questions)-1);
-    //     $question = $questions[$index];
-    //     return view('workbook.unit.velocity2', compact('question'));
-    // }
-
     // 分数の積
     public function fraction_multiple(Request $request) {
         // x1 の生成
@@ -2294,81 +1999,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
-
-    // // 分数の乗除
-    // public function fraction_muldiv() {
-    //     $primes1 = $this->get_primes(4, 11);
-    //     $a = $primes1[0];
-    //     $b = $primes1[1];
-    //     $c = $primes1[2];
-    //     $d = $primes1[3];
-    //     $numerator = $b * $d;
-    //     $denominator = $a * $c;
-
-    //     $primes2 = $this->get_primes(2, 11);
-    //     $m = $primes2[0];
-    //     $n = $primes2[1];
-    //     $ma = $m * $a;
-    //     $md = $m * $d;
-    //     $nb = $n * $b;
-    //     $nc = $n * $c;
-
-    //     $questions = [
-    //         [
-    //             'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,を計算しなさい。 \)",
-    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
-    //             'e' => "<div>
-    //                         \(\displaystyle
-    //                             \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
-    //                             = \\frac{\,{$b}\\times{$d}\,}{\,{$a}\\times{$c}\,}
-    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
-    //                         \)
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}\,を計算しなさい。 \)",
-    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
-    //             'e' => "<div>
-    //                         <p>\( まず\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分してから計算する。 \)</p>
-    //                         \(\displaystyle
-    //                             \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
-    //                             = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
-    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
-    //                         \)
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\(\displaystyle \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,を計算しなさい。 \)",
-    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
-    //             'e' => "<div>
-    //                         \(\displaystyle
-    //                             \\frac{\,{$b}\,}{\,{$a}\,}\\div\\frac{\,{$c}\,}{\,{$d}\,}\,
-    //                             =\\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}\,
-    //                             = \\frac{\,{$b}\\times{$d}\,}{\,{$a}\\times{$c}\,}
-    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
-    //                         \)
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\(\displaystyle \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}\,を計算しなさい。 \)",
-    //             'a' => "\\frac{\,{$numerator}\,}{{$denominator}}",
-    //             'e' => "<div>
-    //                         <p>\( わり算をかけ算に直したら、次に\,{$ma}\,と\,{$md}\,、\,{$nb}\,と\,{$nc}\,をそれぞれ約分する。 \)</p>
-    //                         \(\displaystyle
-    //                             \\frac{\,{$nb}\,}{\,{$ma}\,}\\div\\frac{\,{$nc}\,}{\,{$md}\,}
-    //                             = \\frac{\,{$nb}\,}{\,{$ma}\,}\\times\\frac{\,{$md}\,}{\,{$nc}\,}
-    //                             = \\frac{\,{$b}\,}{\,{$a}\,}\\times\\frac{\,{$d}\,}{\,{$c}\,}
-    //                             = \\frac{\,{$numerator}\,}{{$denominator}}
-    //                         \)
-    //                     </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "分数の乗除";
-    //     return view('workbook.unit.child', compact('unitname','question'));
-    // }
-
     // 分数の乗除
     public function fraction_muldiv() {
         // 互いに素な４つの整数をつくる。
@@ -2497,73 +2127,6 @@ class WorkbookController extends Controller
         $unitname = "分数の乗除";
         return view('workbook.unit_template', compact('unitname','question'));
     }
-
-    // // 比（旧）
-    // public function ratio2() {
-    //     $primes1 = $this->get_primes(3, 13);
-    //     $multi = rand(2, 6);    //倍率
-    //     $mul10 = 10 ** rand(1,2);      //小数用
-    //     $div = $primes1[0];
-    //     $b = $primes1[1];
-    //     $a = $primes1[2];
-    //     $am = $a * $multi;
-    //     $bm = $b * $multi;
-    //     $c = $b * $div;
-    //     // $cm = $c * $multi;
-    //     $am_deci = $am / $mul10;
-    //     $bm_deci = $bm / $mul10;
-
-    //     // t/s = v/u, v=mt
-    //     $primes2 = $this->get_primes(4, 13);
-    //     $m = $primes2[0];
-    //     $s = $primes2[1];
-    //     $u = $primes2[2];
-    //     $t = $primes2[3];
-    //     $v = $m * $t;
-    //     $ms = $m * $s;
-
-    //     $questions = [
-    //         [
-    //             'q' => "\( {$am}:{$bm}\,を簡単な整数比で表しなさい。 \)",
-    //             'a' => "{$a}:{$b}",
-    //             'e' => "<div>
-    //                         \(いずれも\,{$multi}\,の倍数である。\)
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\(\displaystyle \\frac{{$a}}{{$div}}:{$b}\,を簡単な整数比で表しなさい。 \)",
-    //             'a' => "{$a}:{$c}",
-    //             'e' => "<div>
-    //                         <p>\(それぞれ\,{$div}\,倍する。\)</p>
-    //                         <p>\(\displaystyle \\frac{{$a}}{{$div}}:{$b} = \\left(\\frac{{$a}}{{$div}}\\times {$div}\\right):({$b}\\times {$div}) = {$a}:{$c}.\)</p>
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\(\displaystyle \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}\,を簡単な整数比で表しなさい。 \)",
-    //             'a' => "{$u}:{$ms}",
-    //             'e' => "<div>
-    //                         <p>\(\displaystyle 分子同士が簡単な整数比になるので、まずそれぞれを\,{$t}\,で割るとよい。 \)</p>
-    //                         <p>\(\displaystyle
-    //                             \\frac{\,{$t}\,}{\,{$s}\,}:\\frac{\,{$v}\,}{\,{$u}\,}
-    //                             = \\frac{\,1\,}{\,{$s}\,}:\\frac{\,{$m}\,}{\,{$u}\,}
-    //                             = {$u}:{$ms}
-    //                         \)</p>
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "\( {$am_deci}:{$bm_deci}\,を簡単な整数比で表しなさい。 \)",
-    //             'a' => "{$a}:{$b}",
-    //             'e' => "<div>
-    //                         <p>\(まず整数比にするために\,{$mul10}\,倍すると扱いやすくなる。\)</p>
-    //                         <p>\({$am_deci}:{$bm_deci} = ({$am_deci}\\times{$mul10}):({$bm_deci}\\times{$mul10}) = {$am}:{$bm} = {$a}:{$b} \)</p>
-    //                     </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "比";
-    //     return view('workbook.unit.child', compact('unitname','question'));
-    // }
 
     // 比
     public function ratio2() {
@@ -2745,15 +2308,6 @@ class WorkbookController extends Controller
         $unitname = "比";
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
-
-    // 分配法則１（旧）
-    // public function distributive_law1() {
-    //     $a = (-1)**rand(1,2) * rand(2, 9);
-    //     $b = (-1)**rand(1,2) * rand(2, 9);
-    //     $c = (-1)**rand(1,2) * rand(2, 9);
-
-    //     return view('workbook.unit.distributive_law1', compact('a','b','c'));
-    // }
 
     // 正負の数
     public function positive_negative() {
@@ -3389,45 +2943,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // // 比例（グラフ描画）(※)old
-    // public function plot_proportional_function() {
-    //     $a_sign = (-1)**rand(1,2);
-    //     $a_numerator = rand(1, 4);
-    //     $a_denominator = rand(1, 4);
-
-    //     // 最大公約数を求める
-    //     $gcd = $this->gcd($a_numerator, $a_denominator);
-
-    //     // 約分
-    //     $a_numerator /= $gcd;
-    //     $a_denominator /= $gcd;
-
-    //     // グラフ描画用
-    //     $a = $a_sign * $a_numerator / $a_denominator;
-    //     $size = 500;    //viewportの大きさ
-    //     $val_size = 10; //実際の座標の大きさ
-    //     $scale = $size / $val_size; //縮尺
-    //     $p_x = $a_denominator; //代表点Pのx座標
-    //     $p_y = $a_sign * $a_numerator; //代表点Pのy座標
-    //     $q_x = -$a_denominator; //代表点Q(原点に対してPと対称な点)のx座標
-    //     $q_y = $a_sign * -$a_numerator; //代表点Q(原点に対してPと対称な点)のy座標
-    //     $plots = [
-    //         'w_full' => $size,
-    //         'w_half' => $size / 2,
-    //         'from_x' => -$size / 2,
-    //         'to_x' => $size / 2,
-    //         'from_y' => $a * (-$size / 2),
-    //         'to_y' => $a * ($size / 2),
-    //         'p_x' => $p_x,
-    //         'p_y' => $p_y,
-    //         'q_x' => $q_x,
-    //         'q_y' => $q_y,
-    //         'scale' => $scale,        
-    //     ];
-
-    //     return view('workbook.unit.plot_proportional_function', compact('a_sign','a_numerator','a_denominator','plots'));
-    // }
-
     // 座標の読み取り
     public function reading_coordinates() {
         $x = (-1)**rand(1,2) * rand(0, 4);
@@ -3718,116 +3233,6 @@ class WorkbookController extends Controller
         $unitname = "比例（グラフの読み取り）";
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
-
-    // // 比例（グラフ描画）（旧）
-    // public function plot_proportional_function() {
-    //     $a_sign = (-1)**rand(1,2);
-    //     $a_numerator = rand(1, 4);
-    //     $a_denominator = rand(1, 4);
-
-    //     // 最大公約数を求める
-    //     $gcd = $this->gcd($a_numerator, $a_denominator);
-
-    //     // 約分
-    //     $a_numerator /= $gcd;
-    //     $a_denominator /= $gcd;
-
-    //     // グラフ描画用
-    //     $a = $a_sign * $a_numerator / $a_denominator;
-    //     $size = 500;    //viewportの大きさ
-    //     $val_size = 10; //実際の座標の大きさ
-    //     $scale = $size / $val_size; //縮尺
-    //     $p_x = $a_denominator; //代表点Pのx座標
-    //     $p_y = $a_sign * $a_numerator; //代表点Pのy座標
-    //     $q_x = -$a_denominator; //代表点Q(原点に対してPと対称な点)のx座標
-    //     $q_y = $a_sign * -$a_numerator; //代表点Q(原点に対してPと対称な点)のy座標
-
-    //     // プロット用パラメータ
-    //     $w_full = $size;
-    //     $w_half = $size / 2;
-    //     $from_x = -$size / 2;
-    //     $to_x = $size / 2;
-    //     $from_y = $a * (-$size / 2);
-    //     $to_y = $a * ($size / 2);
-
-    //     $plot_para = [
-    //         'w_full' => $size,
-    //         'w_half' => $size / 2,
-    //     ];
-    //     $plot_contents = "
-    //         <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
-
-    //         <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
-
-    //         <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
-    //             x2=\"" . $to_x . "\" y2=" . -$to_y . "
-    //             stroke=\"red\"
-    //             stroke-width=\"2\" />
-
-    //         <circle
-    //             cx=\"" . ( $p_x * $scale ) . "\"
-    //             cy=\"" . ( -$p_y * $scale ) . "\"
-    //             r=\"5\"
-    //             fill=\"red\"
-    //         />
-    //         <text
-    //             x=\"" . ( $p_x * $scale + 10 ) . "\"
-    //             y=\"" . ( -$p_y * $scale ) . "\"
-    //             font-size=\"16\"
-    //         >
-    //             ({$p_x},{$p_y})
-    //         </text>
-
-    //         <circle
-    //             cx=\"" . ( $q_x * $scale ) . "\"
-    //             cy=\"" . ( -$q_y * $scale ) . "\"
-    //             r=\"5\"
-    //             fill=\"red\"
-    //         />
-    //         <text
-    //             x=\"" . ( $q_x * $scale + 10 ) . "\"
-    //             y=\"" . ( -$q_y * $scale ) . "\"
-    //             font-size=\"16\"
-    //         >
-    //             ({$q_x},{$q_y})
-    //         </text>
-    //     ";
-    //     // 傾きの文字列作成
-    //     $a_sign_str = $this->num_to_str($a_sign, 1, 1);
-    //     $a_str = $a_sign < 0 ? "-" : "";
-    //     if ($a_denominator == 1) {
-    //         if ($a_numerator != 1) {
-    //            $a_str = $a_str.$a_numerator;
-    //         }
-    //     } else {
-    //         $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
-    //     }
-    //     $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
-
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p>次の関数のグラフを描画しなさい。</p>
-    //                     $$ y = {$a_str}x $$",
-    //             'a_type' => 5,
-    //             'a' => "a",
-    //             'e_type' => 3,
-    //             'e' => "<div class=\"pl-5 text-left\">
-    //                         <ul class='list-disc'>
-    //                             <li>比例のグラフは原点を通る。</li>
-    //                             <li>比例定数（傾き）が正なら右上がり、負なら右下がり。</li>
-    //                             <li>ここでは比例定数（傾き）が \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
-    //                         </ul>
-    //                     </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "比例（グラフ描画）";
-    //     return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
-    // }
 
     // 比例（表）
     public function table_proportional_function() {
@@ -4205,39 +3610,6 @@ class WorkbookController extends Controller
         return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
-    // // 平面図形
-    // public function plane_figure() {
-    //     $questions = [
-    //         [
-    //             'q' => '半径\,r\,の円の円周の長さ\,l',
-    //             'a' => 'l=2\\pi r',
-    //             'e' => '公式として覚える（にぱいあーる）。',
-    //         ],
-    //         [
-    //             'q' => '半径\,r\,の円の面積\,S',
-    //             'a' => 'S=\\pi r^2',
-    //             'e' => '公式として覚える（ぱいあーる にじょう）。',
-    //         ],
-    //         [
-    //             'q' => '半径\,r\,、中心角\,a^{\\circ}\,のおうぎ形の孤の長さ\,l',
-    //             'a' => 'l=2\\pi r \\times \\frac{a}{360}',
-    //             'e' => '[半径\,r\,の円の円周の長さ] \\times [円に対する中心角の比率]。',
-    //         ],
-    //         [
-    //             'q' => '半径\,r\,、中心角\,a^{\\circ}\,のおうぎ形の面積\,S',
-    //             'a' => 'S=\\pi r^2 \\times \\frac{a}{360}',
-    //             'e' => '[半径\,r\,の円の面積] \\times [円に対する中心角の比率]。',
-    //         ],
-    //         [
-    //             'q' => '半径\,r\,、孤の長さ\,l\,のおうぎ形の面積\,S',
-    //             'a' => 'S=\\pi r^2 \\times \\frac{l}{2\\pi r}',
-    //             'e' => '2\\pi r\,は半径\,r\,の円の円周の長さ。',
-    //         ],
-    //     ];
-    //     $index = rand(0,count($questions)-1);
-    //     $question = $questions[$index];
-    //     return view('workbook.unit.plane_figure', compact('question'));
-    // }
 
     // 基本図形の公式
     public function formulas_basic_shapes(Request $request) {
@@ -4481,90 +3853,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e','subject','flags'));
     }
 
-    // // 空間図形
-    // public function spacial_figure() {
-    //     $questions = [
-    //         [
-    //             'q' => '底面積\,S\,、高さ\,h\,の円柱・角柱の体積\,V',
-    //             'a' => 'V=Sh',
-    //             'e' => '公式として覚える。',
-    //         ],
-    //         [
-    //             'q' => '底面積\,S\,、高さ\,h\,の円すい・角すいの体積\,V',
-    //             'a' => 'V=\\frac{1}{\\,3\\,}Sh',
-    //             'e' => '公式として覚える。',
-    //         ],
-    //         [
-    //             'q' => '半径\,r\,の球の体積\,V',
-    //             'a' => 'V=\\frac{4}{\\,3\\,}\\pi r^3',
-    //             'e' => '公式として覚える。',
-    //         ],
-    //         [
-    //             'q' => '半径\,r\,の球の表面積\,S',
-    //             'a' => 'S=4\\pi r^2',
-    //             'e' => '公式として覚える。',
-    //         ],
-    //     ];
-    //     $index = rand(0,count($questions)-1);
-    //     $question = $questions[$index];
-    //     return view('workbook.unit.spacial_figure', compact('question'));
-    // }
-
-    // 円錐の表面積（旧）
-    // public function corn_surface() {
-    //     $r = rand(1, 6);
-    //     $R = $r * rand(2, 6);   //R:母線（大円の半径）> r:底面の半径
-    //     $a = 360 * $r / $R;   //展開した側面（おうぎ形）の中心角
-    //     $Sf_str = ($r * $R) . "\pi";
-    //     $r2 = $r**2;
-    //     $R2 = $R**2;
-    //     $S_str = (($r*$R) + $r2) . "\pi";
-        
-    //     $imageUrl_q = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_q.png']);
-    //     $imageUrl_e1 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e1.png']);
-    //     $imageUrl_e2 = route('secure.file', ['folder' => 'workbook', 'filename' => 'corn_e2.png']);
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p>\(底面の半径が\,{$r}\,\mathrm{cm}、母線が\,{$R}\,\mathrm{cm}\,の円錐の表面積を求めよ。\)</p>
-    //                     <img src=\"{$imageUrl_q}\" class=\"mx-auto\" >",
-    //             'a_type' => 2,
-    //             'a' => "{$S_str}\,\mathrm{cm}^2",
-    //             'e_type' => 3,
-    //             'e' => "<img src=\"{$imageUrl_e1}\" class=\"mx-auto\" >
-    //                     <img src=\"{$imageUrl_e2}\" class=\"mx-auto\" >
-    //                     <p>円錐を展開すると、底面は半径 \(r\) = {$r} cm の円、側面は半径 \(R\) = {$R} cm の扇形になる。</p>
-    //                     <p>(※)必ず円錐の展開図を描いて考えること。</p>
-    //                     <p>底面の円周は、側面の扇形の孤の部分と重なっていたので、それらの長さは一致する。</p>
-    //                     <p class=\"text-center\">[底面の円周の長さ] = [扇形の孤の長さ]</p>
-    //                     <p>この扇形の孤の長さは、半径 \(R\) の大円の円周 \((=2\pi R)\) に、360\(^{\circ}\) に対する中心角の比率をかけた値になる。</p>
-    //                     <p>そこで、扇形の中心角の大きさを \(a^{\circ}\) とおけば、\(\displaystyle 2\pi r = 2\pi R \\times \\frac{a}{\,360\,}\, \)が成り立つ。</p>
-    //                     <p>両辺を \(2\pi\) で割ると、\(\displaystyle r = R \\times \\frac{a}{\,360\,}\)。これを \(a\) について解くと、</p>
-    //                     <p>\(\displaystyle a = \\frac{r}{\,R\,} \\times 360 = \\frac{{$r}}{\,{$R}\,} \\times 360 = {$a}^{\circ}\). よって、扇形の面積 \(S_f\) は、</p>
-    //                     <p>\(S_f =\) [大円の面積] \(\\times\) [中心角の比率]
-    //                         \(\displaystyle= \pi R^2 \\times \\frac{a}{\,360\,}
-    //                             = {$R2}\pi \\times \\frac{{$a}}{\,360\,} = {$Sf_str}\,\mathrm{cm}^2\)</p>
-    //                     <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi\, \mathrm{cm}^2\) である。</p>
-    //                     <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
-
-    //                     <p class=\"mt-8 text-center font-bold\"><別解（中心角を求めない解き方）></p>
-    //                     <p>半径（ \(R\) cm とする）が等しい円と扇形を比べると、孤の長さの比と面積比は等しい。</p>
-    //                     <p class=\"text-center\">\(円周の長さ:孤の長さ = 円の面積:扇形の面積\)</p>
-    //                     <p>孤の長さを \(l\) cm、扇形の面積を \(S_f\) cm\(^2\) とすると、\(2\pi R:l = \pi R^2:S_f\)。よって、\(\displaystyle S_f=\\frac{\,Rl\,}{2}\)。</p>
-    //                     <p>また、この扇形の孤の長さ \(l\) は、底面の円周の長さに一致するので、\(l=2\pi r\) と表せる。</p>
-    //                     <p>これを先ほどの式に代入すると、\(\displaystyle S=\\frac{\,Rl\,}{2}=\\frac{\,2\pi rR\,}{2}=\pi rR = \pi \\times {$r} \\times {$R} = {$Sf_str}\, \mathrm{cm}^2\)。</p>
-    //                     <p>さて、底面の面積を \(S_c\) とすると、\(S_c = \pi r^2 = \pi \\times {$r}^2 = {$r2}\pi \, \mathrm{cm}^2\) である。</p>
-    //                     <p>したがって、円錐の表面積は、\(S_f + S_c = {$Sf_str} + {$r2}\pi = {$S_str}\,\mathrm{cm}^2\)。
-    //                     ",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "円錐の表面積";
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
 
     // 円錐の表面積
     public function corn_surface(Request $request) {
@@ -6129,300 +5417,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_a','plot_con_a'));
     }
 
-    // 一次関数（グラフ描画）(※)old2
-    // public function plot_linear_function() {
-    //     $a_sign = (-1)**rand(1,2);
-    //     $a_numerator = rand(1, 4);
-    //     $a_denominator = rand(1, 4);
-    //     $b = (-1)**rand(1,2) * rand(1,4);
-
-    //     // 最大公約数を求める
-    //     $gcd = $this->gcd($a_numerator, $a_denominator);
-
-    //     // 約分
-    //     $a_numerator /= $gcd;
-    //     $a_denominator /= $gcd;
-
-    //     // グラフ描画用
-    //     $a = $a_sign * $a_numerator / $a_denominator;
-    //     $size = 500;    //viewportの大きさ
-    //     $val_size = 10; //実際の座標の大きさ
-    //     $scale = $size / $val_size; //縮尺
-    //     $x_seppen = -$b/$a; //x切片
-    //     $p_x = $a_denominator; //代表点Pのx座標
-    //     $p_y = $a * $p_x + $b; //代表点Pのy座標
-    //     if(abs($p_y) > ($val_size-1) / 2) {
-    //         $p_x = -$p_x;
-    //         $p_y = $a * $p_x + $b;
-    //     } // p_y がviewportに収まらない場合は、x = -x での代表点に変える。
-    //     // プロット用パラメータ
-    //     $w_full = $size;
-    //     $w_half = $size / 2;
-    //     $from_x = -$size / 2;
-    //     $to_x = $size / 2;
-    //     $from_y = $a * (-$size / 2) + ($b * $scale);
-    //     $to_y = $a * ($size / 2) + ($b * $scale);
-
-    //     $plot_para = [
-    //         'w_full' => $size,
-    //         'w_half' => $size / 2,
-    //     ];
-    //     $plot_contents = "
-    //         <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half . "\" y2=\"0\" stroke=\"black\" />
-
-    //         <line x1=\"0\" y1=\"" . -$w_half . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" />
-
-    //         <line x1=\"" . $from_x . "\" y1=" . -$from_y . "
-    //             x2=\"" . $to_x . "\" y2=" . -$to_y . "
-    //             stroke=\"red\"
-    //             stroke-width=\"2\" />
-
-    //         <circle
-    //             cx=\"0\" 
-    //             cy=\"" . ( -$b * $scale ) . "\"
-    //             r=\"5\"
-    //             fill=\"red\"
-    //         />
-    //         <text
-    //             x=\"10\" 
-    //             y=\"" . ( -$b * $scale ) . "\"
-    //             font-size=\"16\"
-    //         >
-    //             (0,{$b})
-    //         </text>
-
-    //         <circle
-    //             cx=\"" . ( $p_x * $scale ) . "\"
-    //             cy=\"" . ( -$p_y * $scale ) . "\"
-    //             r=\"5\"
-    //             fill=\"red\"
-    //         />
-    //         <text
-    //             x=\"" . ( $p_x * $scale + 10 ) . "\"
-    //             y=\"" . ( -$p_y * $scale ) . "\"
-    //             font-size=\"16\"
-    //         >
-    //             ({$p_x},{$p_y})
-    //         </text>
-
-    //     ";
-    //     // 傾きの文字列作成
-    //     $a_sign_str = $this->num_to_str($a_sign, 1, 1);
-    //     $a_str = $a_sign < 0 ? "-" : "";
-    //     if ($a_denominator == 1) {
-    //         if ($a_numerator != 1) {
-    //            $a_str = $a_str.$a_numerator;
-    //         }
-    //     } else {
-    //         $a_str = $a_str."\\frac{".$a_numerator."}{ \,".$a_denominator."\, }";
-    //     }
-    //     if ($b >= 0) {
-    //         $fx_str = $a_str . "x\,+{$b}";
-    //     } else {
-    //         $fx_str = $a_str . "x\,{ $b }";
-    //     }
-    //     $a_val_str = abs($a) == 1 ? $a_str."1" : $a_str;
-
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p>次の関数のグラフを描画しなさい。</p>
-    //                     $$ y = {$fx_str} $$",
-    //             'a_type' => 5,
-    //             'a' => "a",
-    //             'e_type' => 3,
-    //             'e' => "<div class=\"pl-5 text-left\">
-    //                         <ul class=\"list-disc\">
-    //                             <li>切片が \({ $b }\) なので、\( (0,{ $b }) \) の点を通る。</li>
-    //                             <li>\(y=ax+b\) のグラフは、\(y=ax\) のグラフを \(y\) 軸方向に \(b\) だけ平行移動したグラフになる。</li>
-    //                             <li>傾きが正なら右上がり、負なら右下がり。</li>
-    //                             <li>ここでは傾きが \(\displaystyle {$a_val_str}\) なので、 \(x\) が \({$a_denominator}\) 増えるごとに \(y\) は \({$a_sign_str}{$a_numerator}\) 増える。</li>
-    //                         </ul>
-    //                     </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "一次関数（グラフ描画）";
-    //     return view('workbook.unit_template', compact('unitname','question','plot_para','plot_contents'));
-    // }
-
-    // // 一次関数（グラフ描画）(※)old
-    // public function plot_linear_function() {
-    //     $a_sign = (-1)**rand(1,2);
-    //     $a_numerator = rand(1, 4);
-    //     $a_denominator = rand(1, 4);
-    //     $b = (-1)**rand(1,2) * rand(1,4);
-
-    //     // 最大公約数を求める
-    //     $gcd = $this->gcd($a_numerator, $a_denominator);
-
-    //     // 約分
-    //     $a_numerator /= $gcd;
-    //     $a_denominator /= $gcd;
-
-    //     // グラフ描画用
-    //     $a = $a_sign * $a_numerator / $a_denominator;
-    //     $size = 500;    //viewportの大きさ
-    //     $val_size = 10; //実際の座標の大きさ
-    //     $scale = $size / $val_size; //縮尺
-    //     $x_seppen = -$b/$a; //x切片
-    //     $p_x = $a_denominator; //代表点Pのx座標
-    //     $p_y = $a * $p_x + $b; //代表点Pのy座標
-    //     if(abs($p_y) > ($val_size-1) / 2) {
-    //         $p_x = -$p_x;
-    //         $p_y = $a * $p_x + $b;
-    //     } // p_y がviewportに収まらない場合は、x = -x での代表点に変える。
-    //     $plots = [
-    //         'w_full' => $size,
-    //         'w_half' => $size / 2,
-    //         'from_x' => -$size / 2,
-    //         'to_x' => $size / 2,
-    //         'from_y' => $a * (-$size / 2) + ($b * $scale),
-    //         'to_y' => $a * ($size / 2) + ($b * $scale),
-    //         'p_x' => $p_x,
-    //         'p_y' => $p_y,
-    //         'scale' => $scale,        
-    //     ];
-
-    //     return view('workbook.unit.plot_linear_function', compact('a_sign','a_numerator','a_denominator','a','b','plots'));
-    // }
-
-    // // 一次関数（グラフ読取）(※)old
-    // public function read_linear_function() {
-    //     $a_numerator = (-1)**rand(1, 2) * rand(1, 4);
-    //     $a_denominator = rand(1, 3);
-    //     $b = (-1)**rand(1, 2) * rand(1, 3);
-
-    //     // 約分しておく
-    //     $sim_frac = $this->simplify_fraction($a_numerator, $a_denominator);
-    //     $a_numerator = $sim_frac['numerator'];
-    //     $a_denominator = $sim_frac['denominator'];
-
-    //     $a = $a_numerator / $a_denominator;
-    //     $a_str = $this->fracnum_to_str($a_numerator, $a_denominator, "", 1);
-    //     $ax_str = $this->fracnum_to_str($a_numerator, $a_denominator, "x", 1);
-    //     $b_str = $b > 0 ? ("+" . $b) : $b;
-    //     $zougen_str = $a > 0 ? "増える" : "減る";
-
-    //     // グラフ描画用
-    //     $size = 300;    //viewportの大きさ
-    //     $val_size = 16; //実際の座標の大きさ
-    //     $scale = $size / $val_size; //縮尺
-    //     $py = $a * $a_denominator + $b;    // プロットする点Pでの y の値
-
-    //     // プロット用パラメータ
-    //     $w_full = $size;
-    //     $w_half = $size / 2;
-    //     $from_x = -$size / 2;
-    //     $to_x = $size / 2;
-    //     $from_y = $a * (-$size / 2) + $b * $scale;
-    //     // dd($from_y);
-    //     $to_y = $a * ($size / 2) + $b * $scale;
-    //     // $to_y = 0;
-    //     // 座標の表示場所
-    //     if ($a > 0) {
-    //         if ($a >= 1) {
-    //             $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
-    //         // 0 < a < 1
-    //         } else {
-    //             $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py + 0.5) * $scale ];
-    //         }
-    //     // a < 0
-    //     } else {
-    //         if ($a <= -1) {
-    //             $posi_text = ['x' => ($a_denominator + 0.5)*$scale, 'y' => -($py - 0.5) * $scale ];
-    //         // -1 < a < 0
-    //         } else {
-    //             $posi_text = ['x' => ($a_denominator - 2)*$scale, 'y' => -($py - 1.5) * $scale ];
-    //         }
-    //     }
-
-    //     $plot_par_q = [
-    //         'w_full' => $size,
-    //         'w_half' => $size / 2,
-    //     ];
-
-    //     $plot_con_q = "";
-    //     // 座標軸を作成
-    //     for ($i = -$val_size/2; $i <= $val_size/2; $i++) {
-    //         $plot_con_q .= "<line x1=\"" . -$w_half . "\" y1=\"" . $i*$scale . "\" x2 =\"" . $w_half . "\" y2=\"" . $i*$scale . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-    //         $plot_con_q .= "<line x1=\"" . $i*$scale . "\" y1=\"" . -$w_half . "\" x2=\"" . $i*$scale . "\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
-    //     }
-
-    //     $plot_con_q .= "
-    //         <!-- 座標軸先端の矢印を定義 -->
-    //         <defs>
-    //             <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
-    //                 markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
-    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
-    //             </marker>
-    //             <marker id=\"arrow2\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"5\"
-    //                 markerWidth=\"4\" markerHeight=\"4\" orient=\"auto-start-reverse\">
-    //                 <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"blue\"/>
-    //             </marker>
-    //         </defs>
-    //         <!-- x軸とy軸を作成 -->
-    //         <line x1=\"" . -$w_half . "\" y1=\"0\" x2 =\"" . $w_half*0.95 . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
-    //         <line x1=\"0\" y1=\"" . -$w_half*0.95 . "\" x2=\"0\" y2=\"" . $w_half . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
-    //         <!-- 関数 -->
-    //         <line x1=\"" . $from_x . "\" y1=" . -$from_y . " x2=\"" . $to_x . "\" y2=" . -$to_y . " stroke=\"red\" stroke-width=\"2\" />
-    //     ";
-    //     $plot_par_e = $plot_par_q;
-    //     $plot_con_e = $plot_con_q . "
-    //         <!-- 解説用の点と補助線 -->
-    //         <line x1=\"0\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale*0.95 . "\" y2=\"" . -$b*$scale . "\" stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
-    //         <line x1=\"" . $a_denominator*$scale . "\" y1=\"" . -$b*$scale . "\" x2=\"" . $a_denominator*$scale . 
-    //                 "\" y2=" . (-$a_numerator*$scale*0.9 -$b*$scale) . " stroke=\"blue\" stroke-width=\"3\" marker-end=\"url(#arrow2)\" />
-    //         <circle cx=\"" . ( $a_denominator * $scale ) . "\" cy=\"" . ( -$a_numerator * $scale -$b*$scale) . "\" r=\"5\" fill=\"red\" />
-    //         <text x=\"" . $posi_text['x'] . "\" y=\"" . $posi_text['y'] . "\" font-weight=\"bold\" font-size=\"22\" fill=\"red\" >
-    //             ({$a_denominator},{$py})
-    //         </text>
-    //     ";
-
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
-    //     $questions = [
-    //         [
-    //             'q_type' => 6,
-    //             'q' => "次のグラフを関数の式で表しなさい。",
-    //             'a_type' => 2,
-    //             'a' => "y = {$ax_str} {$b_str}",
-    //             'e_type' => 6,
-    //             'e' => "<div class=\"pl-5 text-left\">
-    //                         <ul class='list-disc'>
-    //                             <li>直線なので、一次関数の式（\(y=ax+b\)）で表せる。</li>
-    //                             <li>\((0,\,{$b})\) を通るので、切片は \(b={$b}\) 。</li>
-    //                             <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str}ので、</span>
-    //                                 傾き \(a\) は \(\displaystyle {$a_str}\)。
-    //                             </li>
-    //                         </ul>
-    //                     </div>",
-    //         ],
-    //         // [
-    //         //     'q_type' => 6,
-    //         //     'q' => "次のグラフを関数の式で表しなさい。",
-    //         //     'a_type' => 2,
-    //         //     'a' => "y = {$ax_str}",
-    //         //     'e_type' => 6,
-    //         //     'e' => "<div class=\"pl-5 text-left\">
-    //         //                 <ul class='list-disc'>
-    //         //                     <li>原点 \((0,\,0)\) を通る直線なので、比例の式（\(y=ax\)）で表せる。</li>
-    //         //                     <li><span class=\"text-blue-600\">\(x\) が \({$a_denominator}\) 増えると \(y\) は \(" . abs($a_numerator) . "\) {$zougen_str} ので、</span>
-    //         //                         比例定数 \(a\) は \(\displaystyle {$a_str}\) 。
-    //         //                     </li>
-    //         //                 </ul>
-    //         //             </div>",
-    //         // ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "一次関数（グラフ読み取り）";
-    //     return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
-    // }
-
     // 一次関数（グラフ読取）
     public function read_linear_function() {
         $unitname = "一次関数（グラフ読取）";
@@ -6748,70 +5742,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
     }
 
-    // // ２点を通る直線
-    // public function linear_function3() {
-    //     // y=ax+b
-    //     $a = (-1)**rand(1,2) * rand(1,4);
-    //     $b = (-1)**rand(1,2) * rand(1,4);
-        
-    //     // 点P、Qの座標を決める。
-    //     $p_x = (-1)**rand(1,2) * rand(1,4);
-    //     $p_y = $a * $p_x + $b;
-    //     $q_x = (-1)**rand(1,2) * rand(1,4);
-    //     while ($p_x == $q_x) {
-    //         $q_y = (-1)**rand(1,2) * rand(1,4);
-    //     }
-    //     $q_y = $a * $q_x + $b;
-
-    //     // 文字列変数
-    //     $str_px = $p_x < 0 ? "({$p_x})" : "{$p_x}";
-    //     if ($p_x < $q_x) {
-    //         $str_subx = $p_x < 0 ? "{$q_x} - ({$p_x})" : "{$q_x} - {$p_x}";
-    //         $str_suby = $p_y < 0 ? "{$q_y} - ({$p_y})" : "{$q_y} - {$p_y}";
-    //     } else {
-    //         $str_subx = $q_x < 0 ? "{$p_x} - ({$q_x})" : "{$p_x} - {$q_x}";
-    //         $str_suby = $q_y < 0 ? "{$p_y} - ({$q_y})" : "{$p_y} - {$q_y}";
-    //     }
-    //     $str_equation = $b < 0 ? "y={$this->sign($a)}x {$b}" : "y={$this->sign($a)}x + {$b}";
-
-    //     // グラフ描画用
-    //     $size = 500;    //viewportの大きさ
-    //     $val_size = max(abs($p_x), abs($p_y), abs($q_x), abs($q_y)) * 4;   //実際の座標の大きさ 
-    //     $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
-    //     $plots = [
-    //         'w_full' => $size,
-    //         'w_half' => $size / 2,
-    //         'from_x' => -$size / 2,
-    //         'to_x' => $size / 2,
-    //         'from_y' => $a * (-$size / 2) + ($b * $scale),
-    //         'to_y' => $a * ($size / 2) + ($b * $scale),
-    //         'a' => $a,
-    //         'b' => $b,
-    //         'p_x' => $p_x,
-    //         'p_y' => $p_y,
-    //         'q_x' => $q_x,
-    //         'q_y' => $q_y,
-    //         'scale' => $scale,        
-    //     ];
-
-    //     $questions = [
-    //         [
-    //             'q' => "\(\,\mathrm{P({$p_x},{$p_y}),Q({$q_x},{$q_y})\,}を通る直線の式を求めなさい。\)",
-    //             'a' => "{$str_equation}",
-    //             'e' => "<div>
-    //                         <p>\(\ 求める直線の式を\,y=ax+b\,とおく。\)</p>
-    //                         <p>\(\displaystyle P,Q\,の座標より、a=\\frac{ \,y\,座標の差\, }{ \,x\,座標の差\, } = \\frac{ \,{$str_suby}\, }{ \,{$str_subx}\, } = {$a}.\)</p>
-    //                         <p>\(よって、y={$this->sign($a)}x+b\,と表せる。ここに\,P\,の座標を代入すると、{$p_y}={$a}\\times{$str_px}+b.\)</p>
-    //                         <p>\(これを\,b\,について解くと、b={$b}。よって、直線の式は、{$str_equation}\,である。\)</p>
-    //                     </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "２点を通る直線";
-    //     return view('workbook.unit.linear_function3', compact('unitname','question','plots'));
-    // }
-
     // ２点を通る直線
     public function linear_function3() {
         $unitname = "２点を通る直線";
@@ -7061,48 +5991,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // // 一次関数（交点の座標）
-    // public function plot_linear_function2() {
-    //     // y1=ax+b, y2=cx+d, 交点の座標を(p_x, p_y)とする。
-    //     $a = (-1)**rand(1,2) * rand(1,4);
-    //     $b = (-1)**rand(1,2) * rand(1,4);
-    //     $c = (-1)**rand(1,2) * rand(1,4);
-        
-    //     // a = c になっていたら c を変更
-    //     while ($a == $c) {
-    //         $c = (-1)**rand(1,2) * rand(1,4);
-    //     }
-
-    //     // 先に交点のx座標を決める。
-    //     $p_x = (-1)**rand(1,2) * rand(1,4);
-    //     $p_y = $a * $p_x + $b;
-
-    //     // y2の切片dが決まる。
-    //     $d = ($a - $c) * $p_x + $b;
-
-    //     // グラフ描画用
-    //     $size = 500;    //viewportの大きさ
-    //     $val_size = max(abs($p_x), abs($p_y)) * 4;   //実際の座標の大きさ 
-    //     $scale = $size / $val_size;  // 交点が範囲に収まるようにスケールを決める。
-    //     $plots = [
-    //         'w_full' => $size,
-    //         'w_half' => $size / 2,
-    //         'from_x' => -$size / 2,
-    //         'to_x' => $size / 2,
-
-    //         'from_y1' => $a * (-$size / 2) + ($b * $scale),
-    //         'to_y1' => $a * ($size / 2) + ($b * $scale),
-    //         'from_y2' => $c * (-$size / 2) + ($d * $scale),
-    //         'to_y2' => $c * ($size / 2) + ($d * $scale),
-
-    //         'p_x' => $p_x,
-    //         'p_y' => $p_y,
-    //         'scale' => $scale,        
-    //     ];
-
-    //     return view('workbook.unit.plot_linear_function2', compact('a','b','c','d','plots'));
-    // }
-
+    // 交点の座標
     public function plot_linear_function2() {
         $unitname = "交点の座標";
         $result = $this->get_plot_linear_function2();
@@ -9183,54 +8072,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // // 平方根（旧）
-    // public function sqrt_calc() {
-    //     // √a = p√b
-    //     $b_arr = [2, 3, 5, 7, 11];
-    //     $b_idx = array_rand($b_arr);
-    //     $b = $b_arr[$b_idx];
-
-    //     $p1 = rand(2, 6);
-    //     $a1 = pow($p1, 2) * $b;
-    //     $p2 = rand(2, 6);
-    //     while($p1 == $p2) {
-    //         $p2 = rand(2, 6);
-    //     }
-    //     $a2 = pow($p2, 2) * $b;
-    //     $add_p1p2 = $p1 + $p2;
-    //     // $sub_p1p2 = ($p1 - $p2 == -1 ? "-" : $p1 - $p2);
-    //     $sub_p1p2 = $this->sign($p1 - $p2);
-
-    //     $questions = [
-    //         [
-    //             'q' => "<div>
-    //                         <p>\(次の計算をしなさい。\)</p>
-    //                         <p>\( \sqrt{{$a1}} + \sqrt{{$a2}} \)</p>
-    //                     </div>",
-    //             'a' => "{$add_p1p2}\sqrt{$b}",
-    //             'e' => "<div>
-    //                         \( \sqrt{{$a1}} + \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} + \sqrt{{$p2}^2 \\times {$b}}
-    //                         = {$p1}\sqrt{{$b}} + {$p2}\sqrt{{$b}} = {$add_p1p2}\sqrt{$b} \)
-    //                     </div>",
-    //         ],
-    //         [
-    //             'q' => "<div>
-    //                         <p>\(次の計算をしなさい。\)</p>
-    //                         <p>\( \sqrt{{$a1}} - \sqrt{{$a2}} \)</p>
-    //                     </div>",
-    //             'a' => "{$sub_p1p2}\sqrt{$b}",
-    //             'e' => "<div>
-    //                         \( \sqrt{{$a1}} - \sqrt{{$a2}} = \sqrt{{$p1}^2 \\times {$b}} - \sqrt{{$p2}^2 \\times {$b}}
-    //                         = {$p1}\sqrt{{$b}} - {$p2}\sqrt{{$b}} = {$sub_p1p2}\sqrt{$b} \)
-    //                     </div>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "平方根の和差";
-    //     return view('workbook.unit.child', compact('unitname','question'));
-    // }
-
     // 平方根
     public function sqrt_calc() {
         // √a = p√b
@@ -9459,27 +8300,6 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         return compact('question');
     }
-
-    // // 自然数になるような √(an)（旧）
-    // public function sqrt_natural() {
-    //     $ns = [2, 3, 5, 7, 11, 13];
-    //     $n_index = rand(0, count($ns)-1);
-    //     $n = $ns[$n_index];   //自然数 n
-    //     // √(an) = p√(qn)
-    //     $q = $n;
-    //     $ps = [2, 3, 5];
-    //     $p_index = rand(0, count($ps)-1);
-    //     $p = $ps[$p_index];
-    //     $a = pow($p, 2) * $q;
-
-    //     $question = [
-    //         'q' => "n\,を自然数とする。\\sqrt{ {{ $a }} n}\,が自然数となるような\,n\,のうち、最小の値を求めなさい。",
-    //         'a' => "{$n}",
-    //         'e' => "\\sqrt{ {$a}n } = {$p}\\sqrt{ {$q}n }\,なので、\\sqrt{ {$q}n }\,が自然数になればよい。",
-    //     ];
-
-    //     return view('workbook.unit.sqrt_natural', compact('n','p','a','question'));
-    // }
 
     // 二次関数（グラフ描画）
     public function plot_quadratic_function() {
@@ -14169,6 +12989,260 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
+    // 溶解度と再結晶
+    public function solubility() {
+        $unitname = "溶解度と再結晶";
+        $result = $this->get_solubility();
+        $question = $result['question'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+    }
+    public function get_solubility() {
+        /***** データ生成 ******/
+        $KNO3s = [0 => 13.3, 10 => 22.0, 20 => 31.6, 40 => 63.9, 60 => 109.2, 80 => 168.8, 100 => 244.8];
+        $NaCls = [0 => 37.6, 10 => 37.7, 20 => 37.8, 40 => 38.3, 60 => 39.0, 80 => 40.0, 100 => 41.1];
+
+        /***** 使うデータを決定 ******/
+        $T_l = 10 * rand(0, 2); // 低い温度
+        $T_h = 20 * rand(2, 5); // 高い温度
+
+        $sol_K_l = number_format($KNO3s[$T_l], 1);    // 低温でのKNO3の溶解度
+        $sol_K_h = number_format($KNO3s[$T_h], 1);    // 高温でのKNO3の溶解度
+        $sol_N_l = number_format($NaCls[$T_l], 1);    // 低温でのNaClの溶解度
+        $sol_N_h = number_format($NaCls[$T_h], 1);    // 高温でのNaClの溶解度
+
+        $w = 100 * rand(1, 4);  // 水の質量(g)
+        $m_K_h = rand(ceil($sol_K_l), floor($sol_K_h)) * ($w/100);    // 高温で溶けているKNO3の質量
+        $m_K_l = $m_K_h - $sol_K_l * ($w/100);    // 低温で析出するKNO3の質量
+        $m_N_h = rand(ceil($sol_N_l), floor($sol_N_h)) * ($w/100);    // 高温で溶けているNaClの質量
+        $m_N_l = $m_N_h - $sol_N_l * ($w/100);    // 低温で析出するNaClの質量
+
+        /***** グラフ描画用パラメータ *****/
+        $x_min = 0;
+        $x_max = 100;
+        $y_min = 0;
+        $y_max = 260 * ($w/100);
+
+        $size = 400;    //viewportの大きさ
+        $margin = 50;   // 余白の大きさ
+        $x_range = ($x_max - $x_min); //実際のx座標の範囲（-6<x<6 なら12）。a によって変える。
+        $y_range = ($y_max - $y_min); //実際のy座標の範囲（-6<y<6 なら12）
+        $x_unit = ($size - 3 * $margin) / $x_range;    // SVGでの x 1つ分の大きさ
+        $y_unit = ($size - 2 * $margin) / $y_range;    // SVGでの y 1つ分の大きさ
+        $x_delimiter_size = 20;  // 目盛りの値を表示する単位
+        $y_delimiter_size = 40 * ($w/100);  // 目盛りの値を表示する単位
+
+        $plot_par_e = [
+            'vb_width' => $size,
+            'vb_height' => $size,
+            'vb_xfrom' => $x_min * $x_unit - (3/2) * $margin,
+            'vb_yfrom' => -$y_max * $y_unit - $margin,
+        ];
+
+        // 溶解度の表
+        $sol_table = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed mt-4\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 px-5 py-0\" rowspan=\"2\">水の温度[℃]</td>
+                            <td class=\"border border-gray-400 px-5 py-0\" colspan=\"2\">溶解度（g/水100g）</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"border border-gray-400 px-5 py-0\">硝酸カリウム</td>
+                            <td class=\"border border-gray-400 px-5 py-0\">塩化ナトリウム</td>
+                        </tr>";
+                        foreach($KNO3s as $t => $sol) {
+                            $sol_table .= "
+                                <tr class=\"bg-gray-100\">
+                                    <td class=\"border border-gray-400 px-5 py-0\">{$t}</td>
+                                    <td class=\"border border-gray-400 px-5 py-0\">" . number_format($sol, 1) . "</td>
+                                    <td class=\"border border-gray-400 px-5 py-0\">" . number_format($NaCls[$t], 1) . "</td>
+                                </tr>";
+                        }
+                    $sol_table .= "</table>
+                    ";
+
+        // 座標を計算して配列に格納
+        $points_K = $points_N = []; //座標を格納する配列（K:KNO3、N:NaCl）
+        foreach ($KNO3s as $t => $sol) {
+            $x = $t;    // 温度
+            $y = $sol * ($w/100);  // 溶解度
+
+            // 数学座標をSVG座標に変換する
+            $svgX = $x * $x_unit;
+            $svgY = -$y * $y_unit;   // y はSVGでは下方向が正
+
+            $points_K[] = "$svgX,$svgY";
+        }
+        $path_K = implode(' ', $points_K);
+        foreach ($NaCls as $t => $sol) {
+            $x = $t;    // 温度
+            $y = $sol * ($w/100);  // 水 w g に溶ける質量(g)
+
+            // 数学座標をSVG座標に変換する
+            $svgX = $x * $x_unit;
+            $svgY = -$y * $y_unit;   // y はSVGでは下方向が正
+
+            $points_N[] = "$svgX,$svgY";
+        }
+        $path_N = implode(' ', $points_N);
+
+        // 凡例を作成
+        $plot_axis_main = "
+            <!-- x,y の単位 -->
+            <text x=\"" . $x_max * $x_unit - $margin . "\" y=\"" . -$y_min * $y_unit + $margin * (3/4) . "\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"16\" fill=\"black\" >
+                水の温度[℃]
+            </text>
+            <text x=\"" . -$margin . "\" y=\"" . -$y_max * $y_unit - $margin / 2 . "\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"16\" fill=\"black\" >
+                溶ける質量（g/水{$w}g）
+            </text>
+        ";
+
+        // 座標軸（補助線）と区切りの目盛りを作成
+        $plot_axis_sub = $plot_axis_delimiter = "";
+        for ($x = $x_min; $x <= $x_max; $x+=20) {
+            $plot_axis_sub .= "<line x1=\"" . $x * $x_unit . "\" y1=\"" . -$y_max * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . -$y_min * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($x != 0) && ($x % $x_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . $x * $x_unit . "\" y1=\"" . -5 * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . 5 * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . $x * $x_unit . "\" y=\"" . + 20*($w/100) * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        {$x}
+                    </text>
+                ";
+            }
+        }
+        for ($y = -$y_max; $y <= -$y_min; $y+=(20*$w/100)) {
+            $plot_axis_sub .= "<line x1=\"" . $x_min * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2 =\"" . $x_max * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+            if (($y != 0) && ($y % $y_delimiter_size == 0)) {
+                $plot_axis_delimiter .= "
+                    <line x1=\"" . -2 * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2=\"" . 2 * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+                    <text x=\"" . -12 * $x_unit . "\" y=\"" . $y * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+                        " . -$y . "
+                    </text>
+                ";
+            }
+        }
+
+        // 解説用のグラフ作成
+        $w_bar = $x_unit * 6;   // 棒グラフの幅
+        $plot_sol_K = "
+            <!-- 溶解度曲線 -->
+            <polyline points=\"{$path_K}\" fill=\"none\" stroke=\"red\" stroke-width=\"2\"/>
+            <!-- 棒グラフ -->
+            <rect x=\"" . $x_unit * $T_h - $w_bar/2 . "\" y=\"" . -$y_unit * $m_K_h 
+                . "\" width=\"" . $w_bar . "\" height=\"" . $y_unit * $m_K_h 
+                . "\" fill=\"red\" fill-opacity=\"0.4\"/>
+            <rect x=\"" . $x_unit * $T_l - $w_bar/2 . "\" y=\"" . -$y_unit * $sol_K_l*($w/100) 
+                . "\" width=\"" . $w_bar . "\" height=\"" . $y_unit * $sol_K_l*($w/100) 
+                . "\" fill=\"blue\" fill-opacity=\"0.4\"/>
+            <rect x=\"" . $x_unit * $T_l - $w_bar/2 . "\" y=\"" . -$y_unit * $m_K_h 
+                . "\" width=\"" . $w_bar . "\" height=\"" . $y_unit * ($m_K_h - $sol_K_l*($w/100))  
+                . "\" fill=\"green\" fill-opacity=\"0.4\"/>
+            <!-- 物質名 -->
+            <text x=\"" . $size/4 . "\" y=\"" . -max($KNO3s)*($w/100) * $y_unit - $margin / 6 . "\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"16\" fill=\"red\" >
+                硝酸カリウムの溶解度曲線
+            </text>
+        ";
+        $plot_sol_N = "
+            <!-- 溶解度曲線 -->
+            <polyline points=\"{$path_N}\" fill=\"none\" stroke=\"blue\" stroke-width=\"2\"/>
+            <!-- 棒グラフ -->
+            <rect x=\"" . $x_unit * $T_h - $w_bar/2 . "\" y=\"" . -$y_unit * $m_N_h 
+                . "\" width=\"" . $w_bar . "\" height=\"" . $y_unit * $m_N_h 
+                . "\" fill=\"red\" fill-opacity=\"0.4\"/>
+            <rect x=\"" . $x_unit * $T_l - $w_bar/2 . "\" y=\"" . -$y_unit * $sol_N_l*($w/100) 
+                . "\" width=\"" . $w_bar . "\" height=\"" . $y_unit * $sol_N_l*($w/100) 
+                . "\" fill=\"blue\" fill-opacity=\"0.4\"/>
+            <rect x=\"" . $x_unit * $T_l - $w_bar/2 . "\" y=\"" . -$y_unit * $m_N_h 
+                . "\" width=\"" . $w_bar . "\" height=\"" . $y_unit * ($m_N_h - $sol_N_l*($w/100))  
+                . "\" fill=\"green\" fill-opacity=\"0.8\"/>
+            <!-- 物質名 -->
+            <text x=\"" . $size/4 . "\" y=\"" . -max($NaCls)*($w/100) * $y_unit - $margin / 6 . "\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"16\" fill=\"blue\" >
+                塩化ナトリウムの溶解度曲線
+            </text>
+        ";
+
+        $e_add_part_K = ($w == 100) ? "" : "{$sol_K_l} g × ({$w} / 100) = ";
+        $e_add_part_N = ($w == 100) ? "" : "{$sol_N_l} g × ({$w} / 100) = ";
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>硝酸カリウムを {$T_h}℃ の水 {$w} g に {$m_K_h} g 溶かした。</p>
+                            <p>この水溶液を {$T_l}℃ まで冷やすと、何 g の結晶が出てくるか。</p>
+                            <p>なお、溶解度は次の表を参照すること。</p>
+                            {$sol_table}
+                        </div>",
+                'a_type' => 2,
+                'a' => $m_K_h - $sol_K_l * $w / 100 . "\,\mathrm{g}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>表より、硝酸カリウムの溶解度は {$T_l}℃ で {$sol_K_l} である。表にも単位が書かれているが、</p>
+                            <p>
+                                溶解度とは水 100 g に解ける物質の質量である。そのため、
+                                <span class=\"bg-blue-200\">{$T_l} ℃ では 水 {$w} g に対して</span>
+                            </p>
+                            <p>
+                                {$e_add_part_K}
+                                <span class=\"bg-blue-200\">" . $sol_K_l * $w / 100 . " g </span>
+                                までは溶かすことができる。ただし、それを超える分は
+                            </p>
+                            <p>
+                                結晶として出てくる。
+                                <span class=\"bg-red-200\">{$T_h}℃ では水 {$w} g に対して {$m_K_h} g </span>
+                                溶けていたので、</p>
+                            <p>
+                                結晶として出てくるのは、
+                                <span class=\"bg-red-200\">{$m_K_h} g</span> － 
+                                <span class=\"bg-blue-200\">" . $sol_K_l * $w / 100 . " g</span>
+                                 = <span class=\"bg-green-200\">" . $m_K_h - $sol_K_l * $w / 100 . " g</span> である。
+                            </p>
+                        </div>",
+                'ep' => $plot_sol_K,
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>塩化ナトリウムを {$T_h}℃ の水 {$w} g に {$m_N_h} g 溶かした。</p>
+                            <p>この水溶液を {$T_l}℃ まで冷やすと、何 g の結晶が出てくるか。</p>
+                            <p>なお、溶解度は次の表を参照すること。</p>
+                            {$sol_table}
+                        </div>",
+                'a_type' => 2,
+                'a' => round($m_N_h - $sol_N_l * $w / 100, 1) . "\,\mathrm{g}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>表より、塩化ナトリウムの溶解度は {$T_l}℃ で {$sol_N_l} である。表にも単位が書かれているが、</p>
+                            <p>
+                                溶解度とは水 100 g に解ける物質の質量である。そのため、
+                                <span class=\"bg-blue-200\">{$T_l} ℃ では 水 {$w} g に対して</span>
+                            </p>
+                            <p>
+                                {$e_add_part_N}
+                                <span class=\"bg-blue-200\">" . $sol_N_l * $w / 100 . " g </span>
+                                までは溶かすことができる。ただし、それを超える分は
+                            </p>
+                            <p>
+                                結晶として出てくる。
+                                <span class=\"bg-red-200\">{$T_h}℃ では水 {$w} g に対して {$m_N_h} g </span>
+                                溶けていたので、</p>
+                            <p>
+                                結晶として出てくるのは、
+                                <span class=\"bg-red-200\">{$m_N_h} g</span> － 
+                                <span class=\"bg-blue-200\">" . $sol_N_l * $w / 100 . " g</span>
+                                 = <span class=\"bg-green-200\">" . round($m_N_h - $sol_N_l * $w / 100, 1) . " g</span> である。
+                            </p>
+                        </div>",
+                'ep' => $plot_sol_N,
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $plot_con_e = $plot_axis_main . $plot_axis_sub . $plot_axis_delimiter . $question['ep'];
+        return compact('question','plot_par_e','plot_con_e');
+    }
+
     // 地震
     public function sci_earth(Request $request) {
         $terms = [
@@ -15205,7 +14279,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // 湿度（旧）
+    // // 湿度（旧）
     // public function humidity() {
     //     // h = m/M * 100
     //     $h = rand(1, 90);   //湿度
@@ -19004,7 +18078,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
-    // 対数グラフ（未完成というか保留）
+    // // 対数グラフ（未完成というか保留）
     // public function h_math_log_plot() {
     //     $unitname = "対数のグラフ";
     //     $result = $this->get_h_math_log_plot();
