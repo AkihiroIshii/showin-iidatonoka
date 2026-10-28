@@ -8122,6 +8122,134 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 式の値
+    public function value_of_expression() {
+        $unitname = "式の値";
+        $result = $this->get_value_of_expression();
+        $question = $result['question'];
+        // $plot_par_q = $result['plot_par_q'];
+        // $plot_con_q = $result['plot_con_q'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_value_of_expression() {
+        $a = rand(31, 59);
+        $b = $a - rand(1, 3);
+
+        // 素数
+        $primes = $this->get_primes(2, 11);
+        $p = $primes[0];
+        $q = $primes[1];
+
+        // 大きめの素数
+        $primes2 = $this->get_primes(1, 50);
+        $p2 = $primes2[0];
+
+        $sqrt_p_int = floor(sqrt($p2));
+        $ans_5 = ($sqrt_p_int == 1) ? "{$p2} - \sqrt{{$p2}}" : "{$p2} - {$sqrt_p_int}\sqrt{{$p2}}";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>\(a = {$a},\,b = " . -$b . "\) のとき、次の式の値を求めなさい。</p>
+                        <p>\( a^2 + 2ab + b^2 \)",
+                'a_type' => 2,
+                'a' => pow($a - $b, 2),
+                'e_type' => 3,
+                'e' => "$$ a^2 + 2ab + b^2 = (a+b)^2 = ({$a} - {$b})^2 = " . $a - $b . "^2 = " . pow($a - $b, 2) . " $$
+                        <p>【補足】</p>
+                        <p>次のように代入しても求まるが、面倒なのでお勧めはしない。</p>
+                        $$
+                            a^2 + 2ab + b^2 = {$a}^2 + \{2 \\times {$a} \\times (-{$b})\} + (-{$b})^2 
+                            = " . $a**2 . " - " . 2 * $a * $b . " + " . $b**2 . " = " . pow($a - $b, 2) . " 
+                        $$",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>\(a = {$a},\,b = {$b}\) のとき、次の式の値を求めなさい。</p>
+                        <p>\( a^2 - 2ab + b^2 \)",
+                'a_type' => 2,
+                'a' => pow($a - $b, 2),
+                'e_type' => 3,
+                'e' => "$$ a^2 - 2ab + b^2 = (a-b)^2 = ({$a} - {$b})^2 = " . $a - $b . "^2 = " . pow($a - $b, 2) . " $$
+                        <p>【補足】</p>
+                        <p>次のように代入しても求まるが、面倒なのでお勧めはしない。</p>
+                        $$
+                            a^2 - 2ab + b^2 = {$a}^2 - \{2 \\times {$a} \\times {$b}\} + {$b}^2 
+                            = " . $a**2 . " - " . 2 * $a * $b . " + " . $b**2 . " = " . pow($a - $b, 2) . " 
+                        $$",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"mt-4\">\(x = \sqrt{{$p}} + \sqrt{{$q}},\,y = \sqrt{{$p}} - \sqrt{{$q}}\) のとき、次の式の値を求めなさい。</p>
+                        <p>\( x^2y+xy^2 \)",
+                'a_type' => 2,
+                'a' => 2*($p - $q) . "\sqrt{{$p}}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mt-4\">
+                            <p>そのまま代入すると大変そうだが、\(x\) と \(y\) が対照的な形をしていることに注目する。</p>
+                            <p>\(x^2y+xy^2 = xy(x+y)\) と変形できて、それぞれの因数を計算すると次のようになる。</p>
+                            \[
+                                \\begin{aligned}
+                                    x + y &= (\sqrt{{$p}} + \sqrt{{$q}}) + (\sqrt{{$p}} - \sqrt{{$q}}) = 2\sqrt{{$p}} \\\\
+                                    xy &= (\sqrt{{$p}} + \sqrt{{$q}})(\sqrt{{$p}} - \sqrt{{$q}}) = (\sqrt{{$p}})^2 - (\sqrt{{$q}})^2 = {$p} - {$q} = " . $p - $q . " \\\\
+                                \\end{aligned}
+                            \]
+                            <p>よって、\(x^2y+xy^2 = xy(x+y) = " . $p - $q . " \\times 2\sqrt{{$p}} = " . 2*($p - $q) . "\sqrt{{$p}}.\)</p>
+                            <p>(※) \(xy\) の展開では、\((a+b)(a-b) = a^2 - b^2\) を用いた。</p>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"mt-4\">\(x = \sqrt{{$p}} + \sqrt{{$q}},\,y = \sqrt{{$p}} - \sqrt{{$q}}\) のとき、次の式の値を求めなさい。</p>
+                        <p>\( x^3y-xy^3 \)",
+                'a_type' => 2,
+                'a' => 4*($p - $q) . "\sqrt{" . $p*$q . "}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mt-4\">
+                            <p>そのまま代入すると大変そうだが、\(x\) と \(y\) が対照的な形をしていることに注目する。</p>
+                            <p>\(x^3y-xy^3 = xy(x^2-y^2) = xy(x+y)(x-y)\) と変形することができて、</p>
+                            <p>それぞれの因数を計算すると次のようになる。</p>
+                            \[
+                                \\begin{aligned}
+                                    x + y &= (\sqrt{{$p}} + \sqrt{{$q}}) + (\sqrt{{$p}} - \sqrt{{$q}}) = 2\sqrt{{$p}} \\\\
+                                    x - y &= (\sqrt{{$p}} + \sqrt{{$q}}) - (\sqrt{{$p}} - \sqrt{{$q}}) = 2\sqrt{{$q}} \\\\
+                                    xy &= (\sqrt{{$p}} + \sqrt{{$q}})(\sqrt{{$p}} - \sqrt{{$q}}) = (\sqrt{{$p}})^2 - (\sqrt{{$q}})^2 = {$p} - {$q} = " . $p - $q . " \\\\
+                                \\end{aligned}
+                            \]
+                            <p>よって、\(x^3y-xy^3 = xy(x+y)(x-y) = " . $p - $q . " \\times 2\sqrt{{$p}} \\times 2\sqrt{{$q}} = " . 4*($p - $q) . "\sqrt{" . $p*$q . "}.\)</p>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"mt-4\">\(\sqrt{{$p2}}\) の小数部分を \(a\) とするとき、次の式の値を求めなさい。</p>
+                        <p>\( a(a + {$sqrt_p_int}) \)",
+                'a_type' => 2,
+                'a' => $ans_5,
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mt-4\">
+                            <p>いきなり小数部分を考えるのではなく、まずは整数部分を考えるとよい。</p>
+                            <p>
+                                \(\sqrt{" . $sqrt_p_int**2 . "} < \sqrt{{$p2}} < \sqrt{" . ($sqrt_p_int + 1)**2 . "}\) より、
+                                \({$sqrt_p_int} < \sqrt{{$p2}} < " . $sqrt_p_int + 1 . "\)
+                            </p>
+                            <p>よって、\(\sqrt{{$p2}}\) の整数部分は \({$sqrt_p_int}\) である。もとの数から</p>
+                            <p>これを引いたものが小数部分なので、\(a = \sqrt{{$p2}} - {$sqrt_p_int}\)。よって、</p>
+                            $$
+                                a(a + {$sqrt_p_int}) 
+                                = (\sqrt{{$p2}} - {$sqrt_p_int})\{(\sqrt{{$p2}} - {$sqrt_p_int}) + {$sqrt_p_int}\}
+                                = (\sqrt{{$p2}} - {$sqrt_p_int}) \\times \sqrt{{$p2}}
+                                = {$ans_5}.
+                            $$
+                        </div>",
+            ],        
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 二次方程式
     public function quadratic_equation() {
         $unitname = "二次方程式";
@@ -8289,11 +8417,26 @@ class WorkbookController extends Controller
         $questions = [
             [
                 'q_type' => 3,
-                'q' => "<p class=\"mt-4\">\(n\) を自然数とする。\(\\sqrt{ {{ $a }} n}\) が自然数となるような \(n\) のうち、最小の値を求めなさい。",
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>\(n\) を自然数とする。\(\\sqrt{ {{ $a }} n}\) が自然数となるような</p>
+                            <p>\(n\) のうち、最小の値を求めなさい。</p>
+                        </div>",
                 'a_type' => 2,
                 'a' => "{$n}",
                 'e_type' => 3,
                 'e' => "\(\\sqrt{ {$a}n } = {$p}\\sqrt{ {$q}n }\) なので、\(\\sqrt{ {$q}n }\) が自然数になればよい。",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>\(n\) を自然数とする。\(\displaystyle \\sqrt{\\frac{\,{$a}\,}{n}}\) が自然数となるような</p>
+                            <p>\(n\) のうち、最小の値を求めなさい。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$n}",
+                'e_type' => 3,
+                'e' => "\(\displaystyle \\sqrt{\\frac{\,{$a}\,}{n}} = {$p}\\sqrt{\\frac{\,{$q}\,}{n}}\) なので、
+                        \(\displaystyle \\sqrt{\\frac{\,{$q}\,}{n}}\) が自然数になればよい。",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
@@ -9711,7 +9854,7 @@ class WorkbookController extends Controller
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 9);
+        $idx = rand(0, 10);
         switch ($idx) {
             case 0:
                 $result = $this->get_positive_negative();   // 正負の数
@@ -9742,6 +9885,9 @@ class WorkbookController extends Controller
                 break;
             case 9:
                 $result = $this->get_circle_angle();   // 円周角と中心角
+                break;
+            case 10:
+                $result = $this->get_value_of_expression();   // 式の値
                 break;
         }
         $question = $result['question'];

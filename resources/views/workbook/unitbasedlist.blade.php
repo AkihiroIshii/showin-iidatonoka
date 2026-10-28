@@ -209,7 +209,10 @@
                                     <a href="{{route('workbook.sqrt_calc')}}">平方根の和差</a>
                                 </x-button-link>
                                 <x-button-link>
-                                    <a href="{{route('workbook.unit.sqrt_natural')}}">自然数になる\(\sqrt{an}\)</a>
+                                    <a href="{{route('workbook.value_of_expression')}}">式の値</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.sqrt_natural')}}">自然数になる\(\sqrt{an}\)</a>
                                 </x-button-link>
                             </div>
                         </x-td>

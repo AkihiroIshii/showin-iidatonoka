@@ -436,8 +436,10 @@ Route::get('workbook/factorization', [WorkbookController::class, 'factorization'
 ->middleware(['auth', 'verified'])->name('workbook.factorization');
 Route::get('workbook/sqrt_calc', [WorkbookController::class, 'sqrt_calc'])
 ->middleware(['auth', 'verified'])->name('workbook.sqrt_calc');
+Route::get('workbook/value_of_expression', [WorkbookController::class, 'value_of_expression'])
+->middleware(['auth', 'verified'])->name('workbook.value_of_expression');
 Route::get('workbook/sqrt_natural', [WorkbookController::class, 'sqrt_natural'])
-->middleware(['auth', 'verified'])->name('workbook.unit.sqrt_natural');
+->middleware(['auth', 'verified'])->name('workbook.sqrt_natural');
 Route::get('workbook/expansion', [WorkbookController::class, 'expansion'])
 ->middleware(['auth', 'verified'])->name('workbook.expansion');
 Route::get('workbook/quadratic_equation', [WorkbookController::class, 'quadratic_equation'])
