@@ -328,6 +328,9 @@
                                 <x-button-link>
                                     <a href="{{route('workbook.quadratic_function_application01')}}">☆交点と三角形の面積</a>
                                 </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.invpro_and_linear_function')}}">☆反比例と一次関数</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>

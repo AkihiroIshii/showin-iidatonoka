@@ -8152,7 +8152,7 @@ class WorkbookController extends Controller
         $questions = [
             [
                 'q_type' => 3,
-                'q' => "<p>\(a = {$a},\,b = " . -$b . "\) のとき、次の式の値を求めなさい。</p>
+                'q' => "<p class=\"mt-4\">\(a = {$a},\,b = " . -$b . "\) のとき、次の式の値を求めなさい。</p>
                         <p>\( a^2 + 2ab + b^2 \)",
                 'a_type' => 2,
                 'a' => pow($a - $b, 2),
@@ -8167,7 +8167,7 @@ class WorkbookController extends Controller
             ],
             [
                 'q_type' => 3,
-                'q' => "<p>\(a = {$a},\,b = {$b}\) のとき、次の式の値を求めなさい。</p>
+                'q' => "<p class=\"mt-4\">\(a = {$a},\,b = {$b}\) のとき、次の式の値を求めなさい。</p>
                         <p>\( a^2 - 2ab + b^2 \)",
                 'a_type' => 2,
                 'a' => pow($a - $b, 2),
@@ -9352,6 +9352,208 @@ class WorkbookController extends Controller
         $plot_con_e = $question['pe'];
         $unitname = "☆交点と三角形の面積";
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+
+    // 反比例と一次関数
+    public function invpro_and_linear_function() {
+        $unitname = "反比例と一次関数";
+        $result = $this->get_invpro_and_linear_function();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_invpro_and_linear_function() {
+        /***** 関数生成 ******/
+        // 反比例
+        $a_seed =  [2, 3, 6, 8, 9, 12];
+        $a = $a_seed[rand(0, count($a_seed) - 1)];
+        $func_str = "\\frac{{$a}}{\,x\,}";  // 関数形（表示用）
+        // 一次関数(y=cx+d) (※)解説では、このcをaと表記する。
+        $d = rand(1, 10);
+        $c_numerator = 3 * $d**2;   // 反比例の曲線との交点のx座標に平方根が残らないように、d^2 + 4ac = 4d^2 になるようにする（c=3d^2/4a）
+        $c_denominator = 4 * $a;
+        $c = $c_numerator / $c_denominator;
+        $cx_frac = $this->fracnum_to_str($c_numerator, $c_denominator, "x", 1);
+        $x_Q = - $d/$c;
+        $S_OPQ_frac = [
+            'numerator' => 3*$c_denominator*$d**2,
+            'denominator' => 4*$c_numerator
+        ]; 
+        $S_OPQ_str = $this->fracnum_to_str($S_OPQ_frac['numerator'], $S_OPQ_frac['denominator'], "", 1);
+        $x_P_frac = [
+            'numerator' => $a * $d * $c_denominator * $S_OPQ_frac['denominator'],
+            'denominator' => 2 * $c_numerator * $S_OPQ_frac['numerator'],
+        ];
+        $y_P_frac = [
+            'numerator' => $a * $x_P_frac['denominator'],
+            'denominator' => $x_P_frac['numerator'],
+        ];
+        $x_P = $x_P_frac['numerator'] / $x_P_frac['denominator'];
+        $y_P = $y_P_frac['numerator'] / $y_P_frac['denominator'];        
+        $x_P_str = $this->fracnum_to_str($x_P_frac['numerator'], $x_P_frac['denominator'], "", 1);
+        $y_P_str = $this->fracnum_to_str($y_P_frac['numerator'], $y_P_frac['denominator'], "", 1);
+        $ax_P_str = $this->fracnum_to_str($d * $a * $S_OPQ_frac['denominator'], 2 * $S_OPQ_frac['numerator'], "", 1);
+
+        $x_max = max(ceil(-$x_Q), $x_P_frac['numerator']/$x_P_frac['denominator']) + 2;
+        $x_min = -$x_max;
+        $y_max = ceil($y_P_frac['numerator']/$y_P_frac['denominator']) + 2;
+        $y_min = -$y_max;
+
+        // グラフ描画用パラメータ
+        $size = 400;    //viewportの大きさ
+        $margin = 0;   // 余白の大きさ
+        $x_range = $x_max - $x_min; //実際のx座標の範囲（-6<x<6 なら12）
+        $y_range = $y_max - $y_min; //実際のy座標の範囲（-6<y<6 なら12）
+        $x_unit = ($size - 2 * $margin) / $x_range;    // SVGでの x 1つ分の大きさ
+        $y_unit = ($size - 2 * $margin) / $y_range;    // SVGでの y 1つ分の大きさ
+        $x_delimiter_size = 5;  // 目盛りの値を表示する単位
+        $y_delimiter_size = 5;
+
+        // $x_min = - $x_range / 2;
+        // $x_max = $x_range / 2;
+        // $y_min = - $y_range / 2;
+        // $y_max = $y_range / 2;
+
+        $l_min = $c * $x_min + $d;  // 直線 y=cx+d の最小値（グラフの左端）
+        $l_max = $c * $x_max + $d;  // 直線 y=cx+d の最大値（グラフの右端）
+
+        // 座標
+        $Px = $x_P * $x_unit;
+        $Py = -$y_P * $y_unit;
+        $Qx = $x_Q * $x_unit;
+
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $size,
+            'vb_height' => $size,
+            'vb_xfrom' => $x_min * $x_unit,
+            'vb_yfrom' => $y_min * $y_unit,
+        ];
+
+        // 座標を計算して配列に格納
+        $points_p = $points_n = []; //座標を格納する配列（p:x>0、n:x<0）
+        $dx = 0.1;
+        for ($x = $dx; $x <= $x_max; $x += $dx) {
+            $y = $a / $x;
+
+            // 数学座標をSVG座標に変換する
+            $svgXp = $x * $x_unit;
+            $svgYp = -$y * $y_unit;   // y はSVGでは下方向が正
+            $svgXn = -$x * $x_unit;
+            $svgYn = $y * $y_unit;   // y はSVGでは下方向が正
+
+            $points_p[] = "$svgXp,$svgYp";
+            $points_n[] = "$svgXn,$svgYn";
+        }
+        $path_p = implode(' ', $points_p);
+        $path_n = implode(' ', $points_n);
+
+        // 座標軸を作成
+        $plot_axis_main = "
+            <!-- 座標軸先端の矢印を定義 -->
+            <defs>
+                <marker id=\"arrow\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\"
+                    markerWidth=\"6\" markerHeight=\"6\" orient=\"auto-start-reverse\">
+                    <path d=\"M0,0 L10,5 L0,10 Z\" fill=\"black\"/>
+                </marker>
+            </defs>
+            <!-- x軸とy軸を作成 -->
+            <line x1=\"" . $x_min * $x_unit . "\" y1=\"0\" x2 =\"" . $x_max * $x_unit . "\" y2=\"0\" stroke=\"black\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>
+            <line x1=\"0\" y1=\"" . $y_min * $y_unit . "\" x2=\"0\" y2=\"" . $y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"3\" marker-start=\"url(#arrow)\"/>
+        ";
+
+        // // 座標軸（補助線）と区切りの目盛りを作成
+        // $plot_axis_sub = $plot_axis_delimiter = "";
+        // for ($x = $x_min; $x <= $x_max; $x++) {
+        //     $plot_axis_sub .= "<line x1=\"" . $x * $x_unit . "\" y1=\"" . $y_min * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . $y_max * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        //     if (($x != 0) && ($x % $x_delimiter_size == 0)) {
+        //         $plot_axis_delimiter .= "
+        //             <line x1=\"" . $x * $x_unit . "\" y1=\"" . -0.2 * $y_unit . "\" x2=\"" . $x * $x_unit . "\" y2=\"" . 0.2 * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+        //             <text x=\"" . $x * $x_unit . "\" y=\"" . -0.4 * $y_unit . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+        //                 {$x}
+        //             </text>
+        //         ";
+        //     }
+        // }
+        // for ($y = $y_min; $y <= $y_max; $y++) {
+        //     $plot_axis_sub .= "<line x1=\"" . $x_min * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2 =\"" . $x_max * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"0.4\"/>";
+        //     if (($y != 0) && ($y % $x_delimiter_size == 0)) {
+        //         $plot_axis_delimiter .= "
+        //             <line x1=\"" . -0.2 * $x_unit . "\" y1=\"" . $y * $y_unit . "\" x2=\"" . 0.2 * $x_unit . "\" y2=\"" . $y * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+        //             <text x=\"" . -0.6 * $x_unit . "\" y=\"" . $y * $y_unit . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" >
+        //                 " . -$y . "
+        //             </text>
+        //         ";
+        //     }
+        // }
+
+        // 問題用のグラフ作成
+        $plot_con_q = $plot_axis_main . "
+            <!-- 関数 -->
+            <polyline points=\"{$path_p}\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/>
+            <polyline points=\"{$path_n}\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/>
+            <line x1=\"" . $x_min * $x_unit . "\" y1=\"" . -$l_min * $y_unit . "\" x2=\"" . $x_max * $x_unit . "\" y2=\"" . -$l_max * $y_unit . "\" stroke=\"black\" stroke-width=\"2\"/>
+            <!-- 座標 -->
+            <text x=\"" . $x_P * $x_unit + 5 . "\" y=\"" . -$y_P * $y_unit + 10 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                P
+            </text>
+            <text x=\"" . $x_Q * $x_unit - 10 . "\" y=\"" . -5 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                Q
+            </text>
+            <text x=\"" . 0 + 10 . "\" y=\"" . -5 . "\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >
+                O
+            </text>
+            <!-- 三角形 -->
+            <path d=\"M 0 0 L {$Px} {$Py} L {$Qx} 0 Z\" fill=\"blue\" fill-opacity=\"0.2\" stroke=\"black\" stroke-width=\"1\" />
+        ";
+
+        $plot_con_e = "";
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "
+                    <div class=\"leading-[2] my-4\">
+                        <p>\(\displaystyle y = {$func_str}\) の曲線と、傾きが正で切片が \({$d}\) の直線がある。</p>
+                        <p>\(x>0\) での曲線と直線の交点を \(\mathrm{P}\)、直線と \(x\) 軸との交点を \(\mathrm{Q}\)、原点を \(\mathrm{O}\) とする。</p>
+                        <p><span class=\"bg-blue-200\">\(\\triangle \mathrm{OPQ}\)</span> の面積が \({$S_OPQ_str}\) のとき、点 \(\mathrm{P}\) の座標を求めなさい。</p>
+                    </div>",
+                'a_type' => 2,
+                'a' => "({$x_P_str},\,{$y_P_str})",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2]\">
+                            <p>直線の式は、\(y = ax + {$d}\) と表せる。交点では直線と曲線の両式が満たされるので、</p>
+                            <p>それらの連立方程式を解くのが定石だが、\(a\) が不定なのでまだ解くことができない。</p>
+                            <p>そこでひとまず、与えられている \(\\triangle \mathrm{OPQ} = {$S_OPQ_str}\) の利用を考える。点 \(\mathrm{P},\,\mathrm{Q}\) の座標を</p>
+                            <p>それぞれ \((x_P,\,y_P),\,(x_Q,\,0)\) とすると、\(\\triangle \mathrm{OPQ}\) は底辺が \(\mathrm{OQ}\)、高さが \(y_P\) の三角形なので、</p>
+                            $$ \\frac{1}{\,2\,} \\times \mathrm{OQ} \\times y_P = {$S_OPQ_str} ・・・①$$
+                            <p>これより、\(x_Q\) が求まれば \(\mathrm{OQ}\) もわかり、①式は \(y_P\) について解けそうである。</p>
+                            <p>さて、\(\mathrm{Q}\) は直線上にあるので、その式に座標を代入すると、\(0 = ax_Q + {$d}\)。</p>
+                            <p>
+                                よって、\(\displaystyle x_Q = -\\frac{\,{$d}\,}{a}\)。\(x_Q < 0\) なので、
+                                \(\displaystyle \mathrm{OQ} = -x_Q = \\frac{\,{$d}\,}{a}\)。これを①式に代入すると、
+                            </p>
+                            $$ \\frac{1}{\,2\,} \\times \\frac{\,{$d}\,}{a} \\times y_P = {$S_OPQ_str} $$
+                            <p>ここで、点 \(\mathrm{P}\) は曲線上にあるため、\(\displaystyle y_P = \\frac{\,{$a}\,}{x_P}\) であり、これを上式に代入すると、</p>
+                            $$ \\frac{1}{\,2\,} \\times \\frac{\,{$d}\,}{a} \\times \\frac{\,{$a}\,}{x_P} = {$S_OPQ_str} $$
+                            <p>まだ文字が２つ残っているものの、これを整理すれば次の関係式が得られる。</p>
+                            $$ ax_P = {$ax_P_str} ・・・② $$
+                            <p>\(a\) についての制約が求まったので、改めて直線と曲線の両式の連立方程式を考えてみよう。</p>
+                            <p>
+                                点 \(\mathrm{P}\) において、\(\displaystyle ax_P + {$d} = \\frac{\,{$a}\,}{\,x_P\,}\)。
+                                これに②式を代入すれば、\(\displaystyle {$ax_P_str} + {$d} = \\frac{\,{$a}\,}{\,x_P\,}\)。
+                            </p>
+                            <p>すると、これは \(x_P\) だけの方程式になる。これを解いて、\(\displaystyle x_P = {$x_P_str}\)。</p>
+                            <p>さらに、これを曲線の式に代入すれば、\(\displaystyle y_P = \\frac{\,{$a}\,}{\,x_P\,} = {$y_P_str}\)。</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 相似と面積比

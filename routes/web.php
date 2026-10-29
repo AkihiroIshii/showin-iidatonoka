@@ -452,6 +452,8 @@ Route::get('workbook/domain_quadratic_function', [WorkbookController::class, 'do
 ->middleware(['auth', 'verified'])->name('workbook.domain_quadratic_function');
 Route::get('workbook/quadratic_function_application01', [WorkbookController::class, 'quadratic_function_application01'])
 ->middleware(['auth', 'verified'])->name('workbook.quadratic_function_application01');
+Route::get('workbook/invpro_and_linear_function', [WorkbookController::class, 'invpro_and_linear_function'])
+->middleware(['auth', 'verified'])->name('workbook.invpro_and_linear_function');
 Route::get('workbook/similarity', [WorkbookController::class, 'similarity'])
 ->middleware(['auth', 'verified'])->name('workbook.similarity');
 Route::get('workbook/circle_angle', [WorkbookController::class, 'circle_angle'])
