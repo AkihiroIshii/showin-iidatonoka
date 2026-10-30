@@ -951,6 +951,9 @@
                                 <x-button-link color="green">
                                     <a href="{{route('workbook.h_sci_mol')}}">物質量</a>
                                 </x-button-link>
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.h_sci_buffer_solution')}}">緩衝液</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
@@ -966,6 +969,32 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!---------------------------------------- javaScript ---------------------------------------->
+            {{-- <x-h3 color="pink">javaScript</x-h3>
+            <table class="border-separate border border-slate-400 m-auto table-fixed">
+                <thead>
+                    <tr class="bg-gray-300">
+                        <x-th>科目</x-th>
+                        <x-th>単元</x-th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <x-td>数理物理</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link>
+                                    <a href="{{route('workbook.js_make_harmony')}}">３つの音波を重ねて和音をつくる</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.js_matrix_notation')}}">行列の積と成分表記</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                    </tr>
+                </tbody>
+            </table> --}}
 
         </div>
     </div>

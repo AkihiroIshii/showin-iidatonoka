@@ -608,9 +608,18 @@ Route::get('workbook/h_sci_significant_figures', [WorkbookController::class, 'h_
 ->middleware(['auth', 'verified'])->name('workbook.h_sci_significant_figures');
 Route::get('workbook/h_sci_mol', [WorkbookController::class, 'h_sci_mol'])
 ->middleware(['auth', 'verified'])->name('workbook.h_sci_mol');
+Route::get('workbook/h_sci_buffer_solution', [WorkbookController::class, 'h_sci_buffer_solution'])
+->middleware(['auth', 'verified'])->name('workbook.h_sci_buffer_solution');
 // 英語
 Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relative'])
 ->middleware(['auth', 'verified'])->name('workbook.h_eng_relative');
+
+/******** javaScript **************/
+// 数理物理
+Route::get('workbook/js_make_harmony', [WorkbookController::class, 'js_make_harmony'])
+->middleware(['auth', 'verified'])->name('workbook.js_make_harmony');
+Route::get('workbook/js_matrix_notation', [WorkbookController::class, 'js_matrix_notation'])
+->middleware(['auth', 'verified'])->name('workbook.js_matrix_notation');
 
 /*************** 単元別学習　ここまで *************************/
 

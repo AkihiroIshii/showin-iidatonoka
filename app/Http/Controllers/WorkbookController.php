@@ -19174,6 +19174,318 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
+    // 緩衝液
+    public function h_sci_buffer_solution(Request $request) {
+        // $n = 0.5 * rand(1, 6);    // モル数（物質量）
+        // $v = 22.4 * $n; // 体積（L）
+        // $a = rand(2, 6);
+        // $ns = 0.1 * rand(1, 8);    // 小さめの n (0.1 ～ 0.8)
+        // $vl = 250 * rand(1, 2);    // 溶液の体積(mL)
+        // $MA = 40 + 4 * rand(1, 10);  // 金属 M の原子量
+        // $Md = 1.2 * rand(1, 4);     // 金属 M の密度(g/cm^3)
+
+
+
+
+        $C_CH3COOH = 0.2;   // 酢酸のモル濃度(mol/L)
+        $V_CH3COOH = 0.1;   // 酢酸の体積(L)
+        $C_CH3COONa = 0.1;   // 酢酸ナトリウムのモル濃度(mol/L)
+        $V_CH3COONa = 0.1;   // 酢酸ナトリウムの体積(L)
+
+        $n_NaOH = 0.01; // 追加するNaOH結晶の物質量(mol)
+        $Ka = 2.7;  // 酢酸の電離定数(×10^-5 mol/L)
+        $log10_2 = 0.3;
+        $log10_27 = 0.43;
+
+        /***** 各水溶液の物質量の表 *****/
+        $td_class_common = "border border-gray-400 px-5 py-0 text-base";
+        $td_class_mol = $td_class_common . " w-30";
+        $table1 = "
+            <table class=\"border-collapse border border-gray-400 m-auto table-fixed mt-4 text-center\" cellpadding=\"5\">
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\" rowspan=\"2\">溶液</td>
+                    <td class=\"{$td_class_common}\" rowspan=\"2\">体積</td>
+                    <td class=\"{$td_class_common}\" colspan=\"6\">物質量(mol)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COOH}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COO^-}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{H^+}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{Na^+}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{OH^-}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{H_2 O}\)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\">
+                        <div>①酢酸水溶液</div>
+                        <div>(電離平衡)</div>
+                    </td>
+                    <td class=\"{$td_class_common}\">\({$V_CH3COOH}\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\">
+                        <div>②酢酸ナトリウム</div>
+                        <div>水溶液(電離後)</div>
+                    </td>
+                    <td class=\"{$td_class_common}\">\({$V_CH3COONa}\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\">
+                        <div>③混ぜた直後</div>
+                        <div>(①+②)</div>
+                    </td>
+                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + " . $C_CH3COOH * $V_CH3COOH . "\alpha\\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\">
+                        <div>④平衡状態</div>
+                        <div>(①＋②)</div>
+                    </td>
+                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+                    <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                </tr>
+            </table>";
+
+        $table2 = "
+            <table class=\"border-collapse border border-gray-400 m-auto table-fixed mt-4 text-center\" cellpadding=\"5\">
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\" rowspan=\"2\">溶液</td>
+                    <td class=\"{$td_class_common}\" rowspan=\"2\">体積</td>
+                    <td class=\"{$td_class_common}\" colspan=\"6\">物質量(mol)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COOH}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COO^-}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{H^+}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{Na^+}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{OH^-}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\mathrm{H_2 O}\)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\">
+                        <div>(1)の混合溶液</div>
+                        <div>(平衡状態)</div>
+                    </td>
+                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+                    <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\">
+                        <div>NaOHの結晶を</div>
+                        <div>入れた直後</div>
+                    </td>
+                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+                    <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
+                    <td class=\"{$td_class_mol}\">\(\)</td>
+                </tr>
+                <tr class=\"bg-gray-100\">
+                    <td class=\"{$td_class_common}\">
+                        <div>(2)の混合溶液</div>
+                        <div>(平衡状態)</div>
+                    </td>
+                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "- \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . " + \Delta\\)</td>
+                    <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(0\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
+                </tr>
+            </table>";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>
+                            (1) {$C_CH3COOH} mol/L 酢酸水溶液 " . $V_CH3COOH * 1000 . " mL と
+                            {$C_CH3COONa} mol/L 酢酸ナトリウム水溶液 " . $V_CH3COONa * 1000 . " mL の混合水溶液の pH を求めよ。
+                        </p>
+                        <p>
+                            (2) さらに NaOH の結晶 {$n_NaOH} mol を溶かしたときの pH を求めよ。ただし、溶液の体積変化はないものとする。
+                        </p>
+                        <p>(※)酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5},\,\log_{10} 2 = {$log10_2},\,\log_{10} 2.7 = {$log10_27}}\) とする。</p>
+                    </div>
+                ",
+                'a_type' => 2,
+                'a' => "(1)\," . -$log10_2 - $log10_27 + 5 . "\,\,(2)\," . $log10_2 - $log10_27 + 5,
+                'e_type' => 3,
+                'e' => "
+                    <p class=\"font-bold\">
+                        (1) {$C_CH3COOH} mol/L 酢酸水溶液 " . $V_CH3COOH * 1000 . " mL と
+                        {$C_CH3COONa} mol/L 酢酸ナトリウム水溶液 " . $V_CH3COONa * 1000 . " mL の混合水溶液の pH を求めよ。
+                    </p>
+                    <div class=\"leading-[2] text-left pl-5\">
+                        <p>酢酸は、水に溶かすと次のように電離する。</p>
+                        $$ \mathrm{CH_3 COOH \\rightleftharpoons CH_3 COO^- + H^+} $$
+                        <p>酢酸水溶液には、{$C_CH3COOH} mol/L × {$V_CH3COOH} L = " . $C_CH3COOH * $V_CH3COOH . " mol の酢酸が溶けている。電離前後の各物質のモル比は</p>
+                        <p>
+                            1 : 1 : 1 なので、酢酸の電離度を \(\alpha\) とすると、生じる \(\mathrm{CH_3 COO^-,\,H^+}\) の物質量は
+                            \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol。
+                        </p>
+                        <p>
+                            \(\mathrm{CH_3 COOH}\) の物質量は電離した分だけ減るので、
+                            \(" . $C_CH3COOH * $V_CH3COOH . " - " . $C_CH3COOH * $V_CH3COOH . "\,\alpha = " . $C_CH3COOH * $V_CH3COOH . "(1 - \alpha)\) mol（下表①）。
+                        </p>
+
+                        <p class=\"mt-4\">また、酢酸ナトリウムは水に溶かすと次のように電離する。</p>
+                        $$ \mathrm{CH_3 COONa \\to CH_3 COO^- + Na^+} $$
+                        <p>酢酸ナトリウム水溶液には、{$C_CH3COONa} mol/L × {$V_CH3COONa} L = " . $C_CH3COONa * $V_CH3COONa . " mol の酢酸ナトリウムが溶けている。</p>
+                        <p>塩は完全に電離するため、\(\mathrm{CH_3 COONa}\) は残らない。こちらも電離前後の各物質のモル比は</p>
+                        <p>1 : 1 : 1 なので、生じる \(\mathrm{CH_3 COO^-,\,Na^+}\) の物質量は \(" . $C_CH3COONa * $V_CH3COONa . "\) mol（下表②）。</p>
+                        
+                        <p class=\"mt-4\">これらの水溶液を混ぜた直後は下表③の状態に、しばらくすると下表④の平衡状態に落ち着く。</p>
+                        <p>①では酢酸が \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol 電離していたが、②で多量の \(\mathrm{CH_3 COO^-}\) が加わったことで左に平衡が移り、</p>
+                        <p>\(\mathrm{CH_3 COOH}\) はほぼ電離していない状態になると考えてよい。下表では \(\Delta \ll 1\) を用いている。</p>
+                        
+                        {$table1}
+
+                        <p class=\"mt-4\">ここまで整理出来れば、あとは④の状態について pH を求めればよい。まず \(\mathrm{[H^+]}\) を求める。</p>
+                        <p>酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5}}\) がわかっているので、電離定数の定義から、</p>
+                        $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]} = {$Ka} \\times 10^{-5}} $$
+                        <p>これに表④からわかる濃度を代入していく。\(\Delta \ll 1\) であることを考慮すれば、</p>
+                        $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]}} = {$Ka} \\times 10^{-5} $$
+                        \[
+                            \\begin{aligned}
+                                \mathrm{[H^+]}
+                                    &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
+                                        = \\frac{\,
+                                            \\frac{
+                                                " . ($C_CH3COOH * $V_CH3COOH) . "- \Delta
+                                            }{
+                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                            }
+                                        \,}{
+                                            \\frac{
+                                                " . ($C_CH3COONa * $V_CH3COONa) . " + \Delta
+                                            }{
+                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                            }
+                                        } \\times {$Ka} \\times 10^{-5} \\\\
+                                    &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH . "\,}{" . $C_CH3COONa * $V_CH3COONa . "} \\times {$Ka} \\times 10^{-5}
+                                        = " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>よって、</p>
+                        \[
+                            \\begin{aligned}
+                                \mathrm{pH}
+                                    &= -\log_{10} \mathrm{[H^+]}
+                                        = -\log_{10} (" . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5}) \\\\
+                                    &= -(\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
+                                    &= -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
+                                    &= -{$log10_2} - {$log10_27} + 5  = " . -$log10_2 - $log10_27 + 5 . "
+                            \\end{aligned}
+                        \]
+                    </div>            
+
+                    <p class=\"font-bold\">
+                        (2) さらに NaOH の結晶 {$n_NaOH} mol を溶かしたときの pH を求めよ。ただし、溶液の体積変化はないものとする。
+                    </p>
+                    <div class=\"leading-[2] text-left pl-5\">
+                        <p>\(\mathrm{NaOH}\) は、水に溶かすと \(\mathrm{Na^+}\) と \(\mathrm{OH^-}\) に電離する。この \(\mathrm{OH^-}\) は、酢酸と中和反応を起こす。</p>
+                        $$ \mathrm{CH_3 COOH + OH^- \\to CH_3 COO^- + H_2 O} $$
+                        <p>\(\mathrm{NaOH}\) {$n_NaOH} mol からは、\(\mathrm{OH^-}\) も {$n_NaOH} mol 生じる。これが中和することで、\(\mathrm{CH_3 COOH}\) は{$n_NaOH} mol 減り、</p>
+                        <p>\(\mathrm{CH_3 COO^-}\) は {$n_NaOH} mol 増える。すると、下表の最下行の状態になる。</p>
+
+                        {$table2}
+
+                        <p class=\"mt-4\">あとは最下行の平衡状態について、(1)の手順と同様に pH を求めればよい。電離定数の定義から、</p>
+                        $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]} = {$Ka} \\times 10^{-5}} $$
+                        <p>これに表からわかる濃度を代入していく。\(\Delta \ll 1\) であることを考慮すれば、</p>
+                        \[
+                            \\begin{aligned}
+                                \mathrm{[H^+]}
+                                    &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
+                                        = \\frac{\,
+                                            \\frac{
+                                                " . ($C_CH3COOH * $V_CH3COOH - $n_NaOH) . "- \Delta
+                                            }{
+                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                            }
+                                        \,}{
+                                            \\frac{
+                                                " . ($C_CH3COONa * $V_CH3COONa + $n_NaOH) . " + \Delta
+                                            }{
+                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                            }
+                                        } \\times {$Ka} \\times 10^{-5} \\\\
+                                    &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "\,}{" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "} \\times {$Ka} \\times 10^{-5}
+                                        = " . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\\\
+                            \\end{aligned}
+                        \]
+                        <p>よって、</p>
+                        \[
+                            \\begin{aligned}
+                                \mathrm{pH}
+                                    &= -\log_{10} \mathrm{[H^+]}
+                                        = -\log_{10} \\left(" . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\right) \\\\
+                                    &= -(\log_{10} 1 -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
+                                    &= -\log_{10} 1 +\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
+                                    &= 0 + {$log10_2} - {$log10_27} + 5  = " . $log10_2 - $log10_27 + 5 . "
+                            \\end{aligned}
+                        \]
+                    </div>
+                ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        // $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
+        // $flag2 = $request->boolean('flag2');    // 計算問題
+        // $flags = ['flag1' => '基礎', 'flag2' => '実践'];
+        // if ($flag1 == true && $flag2 == false) {
+        //     $q_index = rand(0, 5);
+        //     $question = $questions[$q_index];
+        // } else if ($flag1 == false && $flag2 == true) {
+        //     $q_index = rand(6, count($questions)-1);
+        //     $question = $questions[$q_index];
+        // } else {
+        //     $q_index = rand(0,count($questions)-1);
+        //     $question = $questions[$q_index];
+        // }
+        // $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "緩衝液";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     /******* 高校英語 **********/
     // 関係詞
     public function h_eng_relative(Request $request) {
@@ -19339,5 +19651,175 @@ class WorkbookController extends Controller
         $subject = "unite";   // 結合or分解の問題であることをbladeに伝える。
         $unitname = "関係詞";
         return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
+    /******* javaScript **********/
+    // ３つの音波を重ねて和音をつくる
+    // public function js_make_harmony() {
+    //     $unitname = "３つの音波を重ねて和音をつくる";
+    //     $result = $this->get_js_make_harmony();
+    //     $question = $result['question'];
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
+    // public function get_js_make_harmony() {
+ 
+    //         $q = "
+    //             振動数の異なる３つの波を重ね合わせて、和音を作ってみましょう。
+    //             まず、音階と振動数の関係について表に示します。
+    //             音階にも種類があるようですが、ここでは純正律という音階を考えます。
+    //             後藤さんがまとめていたので、参考にさせていただきました。
+
+    //             <a href=\"https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html\">https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html</a>
+
+    //             <table id=\"doremi_table\">
+    //                 <thead>
+    //                     <tr>
+    //                     <th></th>
+    //                     <th>ド</th>
+    //                     <th>レ</th>
+    //                     <th>ミ</th>
+    //                     <th>ファ</th>
+    //                     <th>ソ</th>
+    //                     <th>ラ</th>
+    //                     <th>シ</th>
+    //                     <th>ド</th>
+    //                     </tr>
+    //                 </thead>
+    //                 <tbody>
+    //                     <tr>
+    //                         <th>振動数(Hz)</th>
+    //                         <td>264</td>
+    //                         <td>297</td>
+    //                         <td>330</td>
+    //                         <td>352</td>
+    //                         <td>396</td>
+    //                         <td>440</td>
+    //                         <td>495</td>
+    //                         <td>528</td>
+    //                     </tr>
+    //                     <tr>
+    //                     <th>振動数比</th>
+    //                         <td>1</td>
+    //                         <td>9/8</td>
+    //                         <td>5/4</td>
+    //                         <td>4/3</td>
+    //                         <td>3/2</td>
+    //                         <td>5/3</td>
+    //                         <td>15/8</td>
+    //                         <td>2</td>
+    //                     </tr>
+    //                 </tbody>
+    //             </table>
+
+    //                 重ねる波の振動数比が整数比に近いと、和音として聞こえるようです。
+    //                 例えばドミソは、\(264:330:396=4:5:6\)と整数比になっていますね。
+
+    //                 また、振動数が倍になると１オクターブ上がります。
+    //                 １オクターブを12の音階に分けることができます。
+    //                 詳しくはマスオさんの記事を参照してください。
+
+    //                 <a href=\"https://mathtrain.jp/onkai\">https://mathtrain.jp/onkai</a>
+    //                 <h3>和音を作ってみよう</h3>
+    //                 ３つの波 \(u_{i}(t)=\cos(2\pi f_{i} t) (i=1,2,3)\) の振動数 \(f_{i}\) を与えて、重ねた音を聞いてみましょう。それぞれの波と合成波の波形も以下に表示されます。
+
+    //                 注意事項
+    //                 <ul>
+    //                     <li>再生ボタンを押すと、再度ボタンを押すまで音が再生されます</li>
+    //                     <li>不協和音や高音を聴き続けると精神的に辛いかもしれません</li>
+    //                     <li>1以上の値を入力してください</li>
+    //                     <li>振動数の差が大きいと、合成波の波形が正確に描かれない場合があります</li>
+    //                     <li>ブラウザによって音が再生されない場合があります</li>
+    //                 </ul>
+
+    //                 <div class=\"set_parameters\">
+
+    //                 \(f_1 = \)<input id=\"para_1\" class=\"parameter\" min=\"1\" type=\"number\" value=\"264\" />Hz
+
+    //                 \(f_2 = \)<input id=\"para_2\" class=\"parameter\" min=\"1\" type=\"number\" value=\"330\" />Hz
+
+    //                 \(f_3 = \)<input id=\"para_3\" class=\"parameter\" min=\"1\" type=\"number\" value=\"396\" />Hz
+
+    //                 </div>
+    //                 <button id=\"display_button\" type=\"button\" class=\"font-bold bg-green-300\">再生(音が流れます)</button>
+
+    //                 <p>———- 表示ここから ———-</p>
+    //                 <div id=\"equation1\"></div>
+    //                 <div class=\"canvas_container\"><canvas id=\"canvas1\">meaningless</canvas></div>
+    //                 <div id=\"equation2\"></div>
+    //                 <div class=\"canvas_container\"><canvas id=\"canvas2\">meaningless</canvas></div>
+    //                 <div id=\"equation3\"></div>
+    //                 <div class=\"canvas_container\"><canvas id=\"canvas3\">meaningless</canvas></div>
+    //                 <div id=\"equation4\"></div>
+    //                 <div class=\"canvas_container\"><canvas id=\"canvas4\">meaningless</canvas></div>
+    //                 ———- 表示ここまで ———-
+    //                 <h3>参考</h3>
+    //                 ブラウザで鍵盤を弾けるアプリを作っている方がいたので、
+    //                 Web Audio APIを使った音を出すやり方を参考にさせていただきました。
+
+    //                 <a href=\"https://q-az.net/web-audio-api-piano/\">https://q-az.net/web-audio-api-piano/</a>
+    //             ";
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "<div class=\"leading-[2]\">
+    //                         {$q}
+    //                     </div>",
+    //             'a_type' => 2,
+    //             'a' => "",
+    //             'e_type' => 3,
+    //             'e' => "<div class=\"leading-[2] mb-4\">
+
+    //                     </div>
+    //                     ",
+    //         ],
+    //     ];
+    //    $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+
+    //     return compact('question');
+    // }
+
+    // 行列の積と成分表記
+    public function js_matrix_notation() {
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "
+                        行列表示は次元が大きくなると書くのがしんどい。
+                        例えば3×3の行列\( A,B,C \)の積などあまり考えたくない。
+                        このような場合は、行列 \(A \)の \(ij\) 成分を\( a_{ij} \)と表記してシグマ記号を使うとシンプルになり、
+                        紙面の節約にもなって環境にもやさしい。
+
+                        具体的に、3×3の行列の積 \( S = ABC \) の \(ij\) 成分 \( s_{ij} \) は次のように表記できる。
+                        $$ s_{ij} = \sum_{k,l}^3 a_{ik}b_{kl}c_{lj} $$
+                        <h3>行列表示での確認</h3>
+                        <div>行列の次元\(n\)に対して3つの行列の積の成分が上記の式のようになっているか、
+                        行列形式での展開の過程を確認します。
+                        次元 \( n = \) <input id=\"para_n\" max=\"5\" min=\"1\" type=\"number\" value=\"3\" />(最大5)
+
+                        <h3>あとがき</h3>
+                        最近は行列計算のライブラリが充実しているので、
+                        学生のレポートでもない限り手計算はしないほうがいいだろう。
+                        ただ、具体的な計算ではなく概念の説明となると式が必要になる。
+                        シグマ記号という表現方法がなかったら発狂すると思う。
+                    ",
+                'a_type' => 2,
+                'a' => "",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+
+                        </div>
+                        ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "行列の積と成分表記";
+        return view('workbook.unit_js_template', compact('unitname','question'));
     }
 }
