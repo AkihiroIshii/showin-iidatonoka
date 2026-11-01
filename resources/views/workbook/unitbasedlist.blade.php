@@ -778,7 +778,10 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="yellow">
-                                    <a href="{{route('workbook.unit.map_scale')}}">地図の縮尺</a>
+                                    <a href="{{route('workbook.map_scale')}}">地図の縮尺</a>
+                                </x-button-link>
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.time_difference')}}">時差</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -848,7 +851,7 @@
                 </tbody>
             </table>
 
-                        <!---------------------------------------- 社会 ---------------------------------------->
+            <!---------------------------------------- 国語 ---------------------------------------->
             <x-h3 color="red">国語</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>

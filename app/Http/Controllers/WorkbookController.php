@@ -14821,109 +14821,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
-    // // 電磁気（旧）
-    // public function electromagnetism() {
-    //     $i1 = 0.2 * rand(1, 10);
-    //     $r1 = 0.5 * rand(1, 10);
-    //     if ( is_float($i1) && is_float($r1) ){
-    //         $r1 = rand(1, 5);   // I,R がともに小数だと V が細かくなるため、R だけ整数にする。
-    //     }
-    //     $v1 = $r1 * $i1;
-    //     $w1 = $v1 * $i1;
-
-    //     $i2 = 0.1 * rand(1, 10);
-    //     $r2 = 0.5 * rand(1, 10);
-    //     if ( is_float($i2) && is_float($r2) ){
-    //         $r2 = rand(1, 5);   // I,R がともに小数だと V が細かくなるため、R だけ整数にする。
-    //     }
-    //     $v2 = $r2 * $i2;
-
-    //     $w3 = 100 * rand(1, 6); //熱量計算用の電力
-    //     $t3 = rand(1, 5);   // 時間（分）
-    //     $q3 = $w3 * ($t3 * 60);
-
-    //     $V_series = $v1 + $v2;
-    //     $R_series = $r1 + $r2;
-    //     $I_series = $i1 + $i2;
-    //     // 並列回路の合成抵抗用（整数のみ） 1/R = 1/r3 + 1/r4
-    //     $r3 = rand(1,10);
-    //     $r4 = rand(1,10);
-    //     $R_para_numerator = $r3 + $r4;
-    //     $R_para_denominator = $r3 * $r4;
-    //     // 最大公約数を求める
-    //     $gcd = $this->gcd($R_para_numerator, $R_para_denominator);
-    //     // 約分
-    //     $R_para_numerator /= $gcd;
-    //     $R_para_denominator /= $gcd;
-    //     $R_para_answer = ($R_para_numerator == 1)
-    //         ? "{$R_para_denominator}\,\mathrm{\Omega}"
-    //         : "\\frac{{$R_para_denominator}}{\,{$R_para_numerator}\,}\,\mathrm{\Omega}";
-
-    //     $questions = [
-    //         [
-    //             'q' => "ある素子に、{$v1}\,\mathrm{V}\,の電圧がかかっており、{$i1}\,\mathrm{A}\,の電流が流れている。この素子の抵抗は何\,\Omega\,か。",
-    //             'a' => "{$r1}\,\mathrm{\Omega}",
-    //             'e' => "オームの法則より、V=RI。よって、R=\\frac{V}{\,I\,}=\\frac{ {$v1} }{ \,{$i1}\, } = {$r1}\,\mathrm{\Omega}。",
-    //         ],
-    //         [
-    //             'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$v1}\,\mathrm{V}\,の電圧がかかっているとき、何\,\mathrm{A}\,の電流が流れているか。",
-    //             'a' => "{$i1}\,\mathrm{A}",
-    //             'e' => "オームの法則より、V=RI。よって、I=\\frac{V}{\,R\,}=\\frac{ {$v1} }{ \,{$r1}\, } = {$i1} \,\mathrm{A}。",
-    //         ],
-    //         [
-    //             'q' => "抵抗が\,{$r1}\,\Omega\,の素子に、{$i1}\,\mathrm{A}\,の電流が流れているとき、何\,\mathrm{V}\,の電圧がかかっているか。",
-    //             'a' => "{$v1}\,\mathrm{V}",
-    //             'e' => "オームの法則より、V=RI。よって、V=RI={$r1}\\times{$i1}  = {$v1} \,\mathrm{V}。",
-    //         ],
-    //         [
-    //             'q' => "{$r1}\,\mathrm{\Omega}\,の素子と、{$r2}\,\mathrm{\Omega}\,の素子が、直列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
-    //             'a' => "{$R_series}\,\Omega",
-    //             'e' => "直列回路の合成抵抗は、各素子の抵抗の和になるので、{$r1}+{$r2}={$R_series}\,\mathrm{\Omega}。",
-    //         ],
-    //         [
-    //             'q' => "{$r3}\,\mathrm{\Omega}\,の素子と、{$r4}\,\mathrm{\Omega}\,の素子が、並列に繋がれている。合成抵抗は何\,\mathrm{\Omega}\,か。",
-    //             'a' => "{$R_para_answer}",
-    //             'e' => "並列回路の合成抵抗\,R\,は、各素子の抵抗の逆数の和になるので、
-    //                     \\frac{1}{\,R\,} = \\frac{1}{\,{$r3}\,} + \\frac{1}{\,{$r4}\,} 
-    //                     = \\frac{ \,{$R_para_numerator}\, }{ {$R_para_denominator} }。
-    //                     よって、R={$R_para_answer}。",
-    //         ],
-    //         [
-    //             'q' => "２つの素子が直列に繋がれており、それぞれ\,{$v1}\,\mathrm{V}, \,{$v2}\,\mathrm{V}\,の電圧がかかっている。全体の電圧は何\,\mathrm{V}\,か。",
-    //             'a' => "{$V_series}\,\mathrm{V}",
-    //             'e' => "直列回路全体の電圧は、各素子にかかる電圧の和になるので、{$v1}+{$v2}={$V_series}\,\mathrm{V}。",
-    //         ],
-    //         [
-    //             'q' => "２つの素子が並列に繋がれており、それぞれ\,{$i1}\,\mathrm{A}, \,{$i2}\,\mathrm{A}\,の電流が流れている。全体の電流は何\,\mathrm{A}\,か。",
-    //             'a' => "{$I_series}\,\mathrm{A}",
-    //             'e' => "並列回路全体の電流は、各素子に流れる電流の和になるので、{$i1}+{$i2}={$I_series}\,\mathrm{A}。",
-    //         ],
-    //         [
-    //             'q' => "電熱線に\,{$v1}\,\mathrm{V}\,の電圧をかけると、\,{$i1}\,\mathrm{A}\,の電流が流れた。この電熱線に生じる電力は何\,\mathrm{W}\,か。",
-    //             'a' => "{$w1}\,\mathrm{W}",
-    //             'e' => "W=VI= {$v1}\\times{$i1} = {$w1}\,\mathrm{W}",
-    //         ],
-    //         [
-    //             'q' => "{$w3}\mathrm{W}\,の電化製品を\,{$t3}\,分使った時、生じる熱量は何\,\mathrm{J}\,か。",
-    //             'a' => "{$q3}\,\mathrm{J}",
-    //             'e' => "Q=Wt = {$w3}\\times ({$t3} \\times 60)  = {$q3} \,\mathrm{J}\,（t\,は秒であることに注意）。",
-    //         ],
-    //         [
-    //             'q' => "直線状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
-    //             'a' => "右手を「いいね」にしたときの親指の指す向きを電流の方向として、他の４本の指の向きが磁界の向きになる。",
-    //             'e' => "試験では図が載っていると思います。右手を「いいね」にして色々な向きで考えられるようにしましょう。",
-    //         ],
-    //         [
-    //             'q' => "コイル状の導線を電流が流れるとき、その周辺ではどのような向きに磁界が生じるか。（記述不要。イメージできたら答えを確認。）",
-    //             'a' => "右手を「いいね」にしたときの親指以外の４本の指が指す向きを電流の方向として、親指の向きが磁界の向きになる。",
-    //             'e' => "コイルの外側では回り込むように磁界が生じます。教科書などで図のイメージを確認しておきましょう。",
-    //         ],
-    //     ];
-    //     $index = rand(0,count($questions)-1);
-    //     $question = $questions[$index];
-    //     return view('workbook.unit.electromagnetism', compact('v1','i1','r1','question'));
-    // }
-
     // 電気回路
     public function electric_circuit(Request $request) {
         $i1 = 0.2 * rand(1, 10);
@@ -15568,165 +15465,158 @@ class WorkbookController extends Controller
         $d_real_cm = $scale * $d_map_cm;   //実際の距離(cm)
         $d_real_km = $d_real_cm / 100 / 1000;   //実際の距離(km)
 
-        return view('workbook.unit.map_scale', compact('scale','d_map_cm','d_real_cm','d_real_km'));
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"mt-4\">ある２地点間の距離は、縮尺 \(1 / {{ $scale }} \) の地図上で \( {{ $d_map_cm }}\, \mathrm{cm} \) である。実際の距離は何 \(\mathrm{km}\) か。</p>",
+                'a_type' => 2,
+                'a' => "{{ $d_real_km }} \,\mathrm{km}",
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"leading-[2]\">
+                        <p>実際の距離は、 \({{ $d_map_cm }} \,\mathrm{cm} \\times {{ $scale }} = {{ $d_real_cm }} \,\mathrm{cm}\)。</p>
+                        <p>
+                            \(1 \,\mathrm{m} = 100 \,\mathrm{cm}\) より、
+                            \(
+                                {{ $d_real_cm }} \,\mathrm{cm}
+                                = " . $d_real_cm / 100 . " \,\mathrm{m}
+                                = {{ $d_real_km}} \,\mathrm{km}
+                            \)。
+                        </p>
+                        <p>(※) \(\mathrm{cm}\) から \(\mathrm{km}\) に直すよりも、まず \(\mathrm{m}\) に直した方がミスしにくい。</p>
+                    </div>
+                ",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $subject = "science";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "地図の縮尺";
+        return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // // 九州地方
-    // public function soc_kyushu() {
-    //     $terms = [
-    //         ['term' => 'カルデラ', 'mean' => '噴火のあとにできた大きなくぼ地。', 
-    //             'explanation' => '<p>吹き出したマグマの分だけ陥没する。</p>
-    //                                 <p>約 9 万年前の阿蘇山の噴火では、火砕流が山口県まで到達したと考えられている。</p>'],
-    //         ['term' => '季節風', 'mean' => '季節によって吹く方向が変わる風。', 
-    //             'explanation' => '<p>海よりも陸の方が温度変化しやすい。夏はユーラシア大陸が暖められて空気が上昇し、</p>
-    //                             <p>地表付近では太平洋側から空気が流れ込む。そのため、日本では夏に南風が吹く。</p>'],
-    //         ['term' => '黒潮（日本海流）', 'mean' => '日本列島の太平洋側を、南から北に向かって流れる暖かな海流。', 
-    //             'explanation' => '<p>黒潮と対馬海流は南から流れる暖流、親潮とリマン海流は北から流れる寒流。</p>'],
-    //         ['term' => '対馬海流', 'mean' => '日本列島の日本海側を、南から北に向かって流れる暖かな海流。', 
-    //             'explanation' => '<p>黒潮と対馬海流は南から流れる暖流、親潮とリマン海流は北から流れる寒流。</p>'],
-    //         ['term' => 'シラス', 'mean' => '過去の大規模な火砕流などの噴出物。', 
-    //             'explanation' => '<p>栄養分が少なく、水を保ちにくい。</p>'],
-    //         ['term' => '土石流', 'mean' => 'くずれた土砂が一気に流れ下ること。', 
-    //             'explanation' => '<p>九州地方はシラスの地層があるため、斜面が崩れやすい。</p>'],
-    //         ['term' => '間伐（かんばつ）', 'mean' => '森林で過密な場所の木々を適度に伐採すること。', 
-    //             'explanation' => '<p>高木の葉が日光を遮ると、背の低い若木が育たなくなる。それを防ぐために行う。</p>'],
-    //         ['term' => '二毛作', 'mean' => '同じ耕地で、一年間に二種類の作物を栽培すること。', 
-    //             'explanation' => '<p>稲を収穫した秋以降に小麦を栽培するなど。</p>'],
-    //         ['term' => '促成栽培', 'mean' => '出荷時期を早める工夫をした栽培方法。', 
-    //             'explanation' => '<p>他の地域と出荷時期をずらすことにより、高価格で売れる。</p>
-    //                             <p>なお、九州は他地域より温暖ではあるが、ビニールハウスや温室は使う。</p>'],
-    //         ['term' => '公害', 'mean' => '人間の生活や生産活動により自然環境が悪化し、健康被害が生じること。', 
-    //             'explanation' => '<p>各地で大気汚染や水質汚濁などの公害が問題視され、1967年に公害対策基本法が制定された。</p>
-    //                             <p>熊本県水俣市では、化学工場からの排水に含まれるメチル水銀が魚に蓄積して、</p>
-    //                             <p>それを食べた人が病気（水俣病）を発症する事例が問題視された。</p>'],
-    //     ];
-    //     $idx = rand(0,count($terms)-1);
-    //     $term = $terms[$idx];
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p class=\"text-xl\">「{$term['term']}」の意味を説明しなさい。</p>",
-    //             'a_type' => 3,
-    //             'a' => "<p class=\"text-2xl\">{$term['mean']}</p>",
-    //             'e_type' => 3,
-    //             'e' => "{$term['explanation']}",
-    //         ],
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p>次の意味をもつ用語を答えなさい。</p>
-    //                     <p class=\"text-xl\">{$term['mean']}</p>",
-    //             'a_type' => 3,
-    //             'a' => "<p class=\"text-2xl\">{$term['term']}</p>",
-    //             'e_type' => 3,
-    //             'e' => "{$term['explanation']}",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "九州地方";
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
+    // 時差
+    public function time_difference() {
+        // 地点Aの経度
+        $A_longitude_val = (-1)**rand(1, 2) * 15*rand(1, 11);
+        // 地点Bの経度（地点Aの経度と同じにならないようにする）
+        do {
+            $B_longitude_val = (-1)**rand(1, 2) * 15*rand(1, 11);
+        } while ($A_longitude_val == $B_longitude_val);
+        // 地点Aの方が東になるようにする
+        if ($A_longitude_val < $B_longitude_val) {
+            $temp = $A_longitude_val;
+            $A_longitude_val = $B_longitude_val;
+            $B_longitude_val = $temp;
+        }
+        $A_longitude = abs($A_longitude_val);
+        $B_longitude = abs($B_longitude_val);
+        $A_EW = ($A_longitude_val > 0) ? "東経" : "西経";
+        $B_EW = ($B_longitude_val > 0) ? "東経" : "西経";
+        $l_diff = $A_longitude_val - $B_longitude_val;  // 経度差
+        $t_diff = $l_diff / 15; // 時差
+        
+        // 時刻計算
+        if ($t_diff >= 12) {
+            $t2 = "3 月 31 日午後 " . 12 - ($t_diff - 12) . " 時";
+            $t3 = "4 月 2 日午前 " . $t_diff - 12 . " 時";
+        } else {
+            $t2 = "4 月 1 日午前 " . 12 - $t_diff . " 時";
+            $t3 = "4 月 1 日午後 " . $t_diff . " 時";
+        }
 
-    // // 中国・四国地方
-    // public function soc_shikoku() {
-    //     $terms = [
-    //         ['term' => '山陰', 'mean' => '中国山地の北側の地域。', 
-    //             'explanation' => '<p>冬は北西からの季節風により雨や雪が多く降る地域。</p>'],
-    //         ['term' => '瀬戸内（せとうち）', 'mean' => '中国山地と四国山地の間の地域。', 
-    //             'explanation' => '<p>二つの山地に挟まれているため、太平洋や日本海の湿った空気が届きにくく、比較的雨が少ない。</p>'],
-    //         ['term' => '南四国', 'mean' => '四国山地の南側の地域。', 
-    //             'explanation' => '<p>夏は太平洋からの季節風や台風により雨が多く降る地域。</p>'],
-    //         ['term' => 'ため池', 'mean' => '水を貯えるために人工的につくられた池。', 
-    //             'explanation' => '<p>讃岐平野は瀬戸内の地域で雨が少ないことに加えて大きな川も少ないため、</p>
-    //                                 水不足が問題になりやすかった。讃岐のため池は特に江戸時代に多く作られた。</p>
-    //                                 昭和50年からは香川用水が使えるようになり、吉野川から水を引いている。<p>'],
-    //         ['term' => '本州四国連絡橋', 'mean' => '本州と四国を結ぶすべての橋の総称。', 
-    //             'explanation' => '<p>しまなみ海道、瀬戸大橋、大鳴門橋、明石海峡大橋がある。</p>'],
-    //         ['term' => '石油化学コンビナート', 'mean' => '石油精製工場を中心に、関連企業や工場が集まる地域。', 
-    //             'explanation' => '<p>瀬戸内海の沿岸は外国からの原材料の受け入れや出荷がしやすいため都合がよい。</p>'],
-    //         ['term' => '過疎化', 'mean' => '人口の流出や高齢化により、社会生活の維持に支障がでるようになること。', 
-    //             'explanation' => '<p>利用者が減少してバスが廃止されるとさらに不便になるなど、悪循環に繋がりやすい。</p>'],
-    //     ];
-    //     $idx = rand(0,count($terms)-1);
-    //     $term = $terms[$idx];
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p class=\"text-xl\">「{$term['term']}」の意味を説明しなさい。</p>",
-    //             'a_type' => 3,
-    //             'a' => "<p class=\"text-2xl\">{$term['mean']}</p>",
-    //             'e_type' => 3,
-    //             'e' => "{$term['explanation']}",
-    //         ],
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p>次の意味をもつ用語を答えなさい。</p>
-    //                     <p class=\"text-xl\">{$term['mean']}</p>",
-    //             'a_type' => 3,
-    //             'a' => "<p class=\"text-2xl\">{$term['term']}</p>",
-    //             'e_type' => 3,
-    //             'e' => "{$term['explanation']}",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "中国・四国地方";
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
-
-    // // 近畿・中部地方
-    // public function soc_kinki() {
-    //     $terms = [
-    //         ['term' => 'リアス海岸（リアス式海岸）', 'mean' => '入り江と岬とが複雑に入り組んだ海岸の地形。', 
-    //             'explanation' => '<p>近畿地方では三重県の志摩半島がこの地形になっている。津波が大きくなりやすい。</p>'],
-    //         ['term' => 'ニュータウン', 'mean' => '郊外に新しく建設された都市。', 
-    //             'explanation' => '<p>1960年代以降に都市部の住宅が不足したために造られた。</p>
-    //                                 <p>近畿地方では大阪の千里ニュータウンが有名。</p>'],
-    //         ['term' => '日本アルプス', 'mean' => '飛騨山脈、木曽山脈、赤石山脈の総称。', 
-    //             'explanation' => '<p>もともとのアルプス山脈はヨーロッパのイタリア北部にある。'],
-    //         ['term' => '園芸農業', 'mean' => '大都市に出荷する目的で、野菜、草花、果物などを栽培する農業。', 
-    //             'explanation' => '<p>ビニールハウスなどの施設を利用する場合、施設園芸農業という。</p>
-    //                             <p>愛知県の渥美半島では、電照によって開花時期を遅らせて出荷する電照菊が有名。</p>'],
-    //         ['term' => '扇状地', 'mean' => '川が山地から平野に流れ出るところに土砂が堆積してできた土地。</p>', 
-    //             'explanation' => '<p>川が「海に」流れ出るところにできるのは三角州。できる場所の違いに注意すること。</p>'],
-    //         ['term' => '早場米（はやばまい）', 'mean' => '他の地域よりも市場に早く出荷される米のこと。</p>', 
-    //             'explanation' => '<p>一般的な収穫時期は10月前後だが、北陸では8～9月に収穫する。</p>
-    //                                 <p>北陸は春から夏にかけて雪解け水が豊富。秋の長雨を避ける目的もある。</p>'],
-    //     ];
-    //     $idx = rand(0,count($terms)-1);
-    //     $term = $terms[$idx];
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p class=\"text-xl\">「{$term['term']}」の意味を説明しなさい。</p>",
-    //             'a_type' => 3,
-    //             'a' => "<p class=\"text-2xl\">{$term['mean']}</p>",
-    //             'e_type' => 3,
-    //             'e' => "{$term['explanation']}",
-    //         ],
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<p>次の意味をもつ用語を答えなさい。</p>
-    //                     <p class=\"text-xl\">{$term['mean']}</p>",
-    //             'a_type' => 3,
-    //             'a' => "<p class=\"text-2xl\">{$term['term']}</p>",
-    //             'e_type' => 3,
-    //             'e' => "{$term['explanation']}",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "近畿地方";
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
-
-
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>地点Aの経度は{$A_EW}{$A_longitude}°、地点Bの経度は{$B_EW}{$B_longitude}°である。</p>
+                        <P>この2点間の時差は何時間か。</p>
+                    </div>",
+                'a_type' => 3,
+                'a' => "<p>{$t_diff} 時間</p>",
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"leading-[2]\">
+                        <p>
+                            東経を正、西経を負とすれば、両地点の経度差は 
+                            \({$A_longitude_val} - " . $this->add_braket($B_longitude_val) . " = {$l_diff}^{\circ}\)。
+                        </p>
+                        <p>
+                            経度 15° につき 1 時間の時差があるので、両地点の時差は 
+                            \(\displaystyle \\frac{\,{$l_diff}\,}{\,15\,} = {$t_diff}\) 時間。
+                        </p>
+                        <p>【別解】</p>
+                        <p>
+                            東経を正、西経を負とすれば、両地点の経度差は 
+                            \({$A_longitude_val} - " . $this->add_braket($B_longitude_val) . " = {$l_diff}^{\circ}\)。
+                        </p>
+                        <p>地球は 1 日（24時間）で 1 回（360°）自転するので、経度差 {$l_diff}°、時差 \(T\) とすれば、</p>
+                        $$ 24 : 360 = T : {$l_diff} $$
+                        <p>が成り立つ。これを \(T\) について解けば、\(T = {$t_diff}\) 時間。</p>
+                    </div>
+                ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>地点Aの経度は{$A_EW}{$A_longitude}°、地点Bの経度は{$B_EW}{$B_longitude}°である。</p>
+                        <P>地点Aが 4 月 1 日正午のとき、地点Bの日時を求めなさい。</p>
+                    </div>",
+                'a_type' => 3,
+                'a' => "{$t2}",
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"leading-[2]\">
+                        <p>
+                            東経を正、西経を負とすれば、両地点の経度差は 
+                            \({$A_longitude_val} - " . $this->add_braket($B_longitude_val) . " = {$l_diff}^{\circ}\)。
+                        </p>
+                        <p>
+                            経度 15° につき 1 時間の時差があるので、両地点の時差は 
+                            \(\displaystyle \\frac{\,{$l_diff}\,}{\,15\,} = {$t_diff}\) 時間。
+                        </p>
+                        <p class=\"underline\">太陽は東から昇るので、東の地域が先に朝を迎える。よって、西の地域ほど時刻が遅れる。</p>
+                        <p>地点Bは地点Aより西にあるので、地点Aが正午のとき、地点Bはまだその {$t_diff} 時間前である。</p>
+                    </div>
+                ",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>地点Aの経度は{$A_EW}{$A_longitude}°、地点Bの経度は{$B_EW}{$B_longitude}°である。</p>
+                        <P>地点Bが 4 月 1 日正午のとき、地点Aの日時を求めなさい。</p>
+                    </div>",
+                'a_type' => 3,
+                'a' => "{$t3}",
+                'e_type' => 3,
+                'e' => "
+                    <div class=\"leading-[2]\">
+                        <p>
+                            東経を正、西経を負とすれば、両地点の経度差は 
+                            \({$A_longitude_val} - " . $this->add_braket($B_longitude_val) . " = {$l_diff}^{\circ}\)。
+                        </p>
+                        <p>
+                            経度 15° につき 1 時間の時差があるので、両地点の時差は 
+                            \(\displaystyle \\frac{\,{$l_diff}\,}{\,15\,} = {$t_diff}\) 時間。
+                        </p>
+                        <p class=\"underline\">太陽は東から昇るので、東の地域が先に朝を迎える。よって、東の地域ほど時刻が早まる。</p>
+                        <p>地点Aは地点Bより東にあるので、地点Bが正午のとき、地点Aはすでにその {$t_diff} 時間後である。</p>
+                    </div>
+                ",
+            ],        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "時差";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
 
     // 縄文、弥生、古墳時代
     public function soc_kodai() {
@@ -20002,171 +19892,137 @@ class WorkbookController extends Controller
 
     /******* javaScript **********/
     // ３つの音波を重ねて和音をつくる
-    // public function js_make_harmony() {
-    //     $unitname = "３つの音波を重ねて和音をつくる";
-    //     $result = $this->get_js_make_harmony();
-    //     $question = $result['question'];
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
-    // public function get_js_make_harmony() {
- 
-    //         $q = "
-    //             振動数の異なる３つの波を重ね合わせて、和音を作ってみましょう。
-    //             まず、音階と振動数の関係について表に示します。
-    //             音階にも種類があるようですが、ここでは純正律という音階を考えます。
-    //             後藤さんがまとめていたので、参考にさせていただきました。
+    public function js_make_harmony() {
+        $sentence = "
+            <x-h3>概要</x-h3>
+            <div class=\"pl-4\">
+                振動数の異なる３つの波を重ね合わせて、和音を作ってみましょう。
+                まず、音階と振動数の関係について表に示します。
+                音階にも種類があるようですが、ここでは純正律という音階を考えます。
+                後藤さんがまとめていたので、参考にさせていただきました。
 
-    //             <a href=\"https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html\">https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html</a>
+                <a href=\"https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html\">https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html</a>
 
-    //             <table id=\"doremi_table\">
-    //                 <thead>
-    //                     <tr>
-    //                     <th></th>
-    //                     <th>ド</th>
-    //                     <th>レ</th>
-    //                     <th>ミ</th>
-    //                     <th>ファ</th>
-    //                     <th>ソ</th>
-    //                     <th>ラ</th>
-    //                     <th>シ</th>
-    //                     <th>ド</th>
-    //                     </tr>
-    //                 </thead>
-    //                 <tbody>
-    //                     <tr>
-    //                         <th>振動数(Hz)</th>
-    //                         <td>264</td>
-    //                         <td>297</td>
-    //                         <td>330</td>
-    //                         <td>352</td>
-    //                         <td>396</td>
-    //                         <td>440</td>
-    //                         <td>495</td>
-    //                         <td>528</td>
-    //                     </tr>
-    //                     <tr>
-    //                     <th>振動数比</th>
-    //                         <td>1</td>
-    //                         <td>9/8</td>
-    //                         <td>5/4</td>
-    //                         <td>4/3</td>
-    //                         <td>3/2</td>
-    //                         <td>5/3</td>
-    //                         <td>15/8</td>
-    //                         <td>2</td>
-    //                     </tr>
-    //                 </tbody>
-    //             </table>
+                <table id=\"doremi_table\">
+                    <thead>
+                        <tr>
+                        <th></th>
+                        <th>ド</th>
+                        <th>レ</th>
+                        <th>ミ</th>
+                        <th>ファ</th>
+                        <th>ソ</th>
+                        <th>ラ</th>
+                        <th>シ</th>
+                        <th>ド</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>振動数(Hz)</th>
+                            <td>264</td>
+                            <td>297</td>
+                            <td>330</td>
+                            <td>352</td>
+                            <td>396</td>
+                            <td>440</td>
+                            <td>495</td>
+                            <td>528</td>
+                        </tr>
+                        <tr>
+                        <th>振動数比</th>
+                            <td>1</td>
+                            <td>9/8</td>
+                            <td>5/4</td>
+                            <td>4/3</td>
+                            <td>3/2</td>
+                            <td>5/3</td>
+                            <td>15/8</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    //                 重ねる波の振動数比が整数比に近いと、和音として聞こえるようです。
-    //                 例えばドミソは、\(264:330:396=4:5:6\)と整数比になっていますね。
+                    重ねる波の振動数比が整数比に近いと、和音として聞こえるようです。
+                    例えばドミソは、\(264:330:396=4:5:6\)と整数比になっていますね。
 
-    //                 また、振動数が倍になると１オクターブ上がります。
-    //                 １オクターブを12の音階に分けることができます。
-    //                 詳しくはマスオさんの記事を参照してください。
+                    また、振動数が倍になると１オクターブ上がります。
+                    １オクターブを12の音階に分けることができます。
+                    詳しくはマスオさんの記事を参照してください。
 
-    //                 <a href=\"https://mathtrain.jp/onkai\">https://mathtrain.jp/onkai</a>
-    //                 <h3>和音を作ってみよう</h3>
-    //                 ３つの波 \(u_{i}(t)=\cos(2\pi f_{i} t) (i=1,2,3)\) の振動数 \(f_{i}\) を与えて、重ねた音を聞いてみましょう。それぞれの波と合成波の波形も以下に表示されます。
+                    <a href=\"https://mathtrain.jp/onkai\">https://mathtrain.jp/onkai</a>
 
-    //                 注意事項
-    //                 <ul>
-    //                     <li>再生ボタンを押すと、再度ボタンを押すまで音が再生されます</li>
-    //                     <li>不協和音や高音を聴き続けると精神的に辛いかもしれません</li>
-    //                     <li>1以上の値を入力してください</li>
-    //                     <li>振動数の差が大きいと、合成波の波形が正確に描かれない場合があります</li>
-    //                     <li>ブラウザによって音が再生されない場合があります</li>
-    //                 </ul>
+            </div>
+            
+            <x-h3>確かめよう</x-h3>
+            <div class=\"pl-4\">
+                    <h3>和音を作ってみよう</h3>
+                    ３つの波 \(u_{i}(t)=\cos(2\pi f_{i} t) (i=1,2,3)\) の振動数 \(f_{i}\) を与えて、重ねた音を聞いてみましょう。それぞれの波と合成波の波形も以下に表示されます。
 
-    //                 <div class=\"set_parameters\">
+                    注意事項
+                    <ul>
+                        <li>再生ボタンを押すと、再度ボタンを押すまで音が再生されます</li>
+                        <li>不協和音や高音を聴き続けると精神的に辛いかもしれません</li>
+                        <li>1以上の値を入力してください</li>
+                        <li>振動数の差が大きいと、合成波の波形が正確に描かれない場合があります</li>
+                        <li>ブラウザによって音が再生されない場合があります</li>
+                    </ul>
 
-    //                 \(f_1 = \)<input id=\"para_1\" class=\"parameter\" min=\"1\" type=\"number\" value=\"264\" />Hz
+                    <div class=\"set_parameters\">
 
-    //                 \(f_2 = \)<input id=\"para_2\" class=\"parameter\" min=\"1\" type=\"number\" value=\"330\" />Hz
+                    \(f_1 = \)<input id=\"para_1\" class=\"parameter\" min=\"1\" type=\"number\" value=\"264\" />Hz
 
-    //                 \(f_3 = \)<input id=\"para_3\" class=\"parameter\" min=\"1\" type=\"number\" value=\"396\" />Hz
+                    \(f_2 = \)<input id=\"para_2\" class=\"parameter\" min=\"1\" type=\"number\" value=\"330\" />Hz
 
-    //                 </div>
-    //                 <button id=\"display_button\" type=\"button\" class=\"font-bold bg-green-300\">再生(音が流れます)</button>
+                    \(f_3 = \)<input id=\"para_3\" class=\"parameter\" min=\"1\" type=\"number\" value=\"396\" />Hz
 
-    //                 <p>———- 表示ここから ———-</p>
-    //                 <div id=\"equation1\"></div>
-    //                 <div class=\"canvas_container\"><canvas id=\"canvas1\">meaningless</canvas></div>
-    //                 <div id=\"equation2\"></div>
-    //                 <div class=\"canvas_container\"><canvas id=\"canvas2\">meaningless</canvas></div>
-    //                 <div id=\"equation3\"></div>
-    //                 <div class=\"canvas_container\"><canvas id=\"canvas3\">meaningless</canvas></div>
-    //                 <div id=\"equation4\"></div>
-    //                 <div class=\"canvas_container\"><canvas id=\"canvas4\">meaningless</canvas></div>
-    //                 ———- 表示ここまで ———-
-    //                 <h3>参考</h3>
-    //                 ブラウザで鍵盤を弾けるアプリを作っている方がいたので、
-    //                 Web Audio APIを使った音を出すやり方を参考にさせていただきました。
+                    </div>
+            </div>
+                    <p>———- 表示ここから ———-</p>
+                    <div id=\"equation1\"></div>
+                    <div class=\"canvas_container\"><canvas id=\"canvas1\">meaningless</canvas></div>
+                    <div id=\"equation2\"></div>
+                    <div class=\"canvas_container\"><canvas id=\"canvas2\">meaningless</canvas></div>
+                    <div id=\"equation3\"></div>
+                    <div class=\"canvas_container\"><canvas id=\"canvas3\">meaningless</canvas></div>
+                    <div id=\"equation4\"></div>
+                    <div class=\"canvas_container\"><canvas id=\"canvas4\">meaningless</canvas></div>
+                    ———- 表示ここまで ———-
+                    <h3>参考</h3>
+                    ブラウザで鍵盤を弾けるアプリを作っている方がいたので、
+                    Web Audio APIを使った音を出すやり方を参考にさせていただきました。
 
-    //                 <a href=\"https://q-az.net/web-audio-api-piano/\">https://q-az.net/web-audio-api-piano/</a>
-    //             ";
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "<div class=\"leading-[2]\">
-    //                         {$q}
-    //                     </div>",
-    //             'a_type' => 2,
-    //             'a' => "",
-    //             'e_type' => 3,
-    //             'e' => "<div class=\"leading-[2] mb-4\">
+                    <a href=\"https://q-az.net/web-audio-api-piano/\">https://q-az.net/web-audio-api-piano/</a>
+        ";
 
-    //                     </div>
-    //                     ",
-    //         ],
-    //     ];
-    //    $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-
-    //     return compact('question');
-    // }
+        $jsAction = "make_harmony";
+        $unitname = "３つの音波を重ねて和音をつくる";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction'));
+    }
 
     // 行列の積と成分表記
     public function js_matrix_notation() {
+        $sentence = "
+            <x-h3>概要</x-h3>
+            <div class=\"pl-4\">
+                行列表示は次元が大きくなると書くのがしんどい。
+                例えば3×3の行列\( A,B,C \)の積などあまり考えたくない。
+                このような場合は、行列 \(A \)の \(ij\) 成分を\( a_{ij} \)と表記してシグマ記号を使うとシンプルになり、
+                紙面の節約にもなって環境にもやさしい。
 
-        // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
-        $questions = [
-            [
-                'q_type' => 3,
-                'q' => "
-                        行列表示は次元が大きくなると書くのがしんどい。
-                        例えば3×3の行列\( A,B,C \)の積などあまり考えたくない。
-                        このような場合は、行列 \(A \)の \(ij\) 成分を\( a_{ij} \)と表記してシグマ記号を使うとシンプルになり、
-                        紙面の節約にもなって環境にもやさしい。
+                具体的に、3×3の行列の積 \( S = ABC \) の \(ij\) 成分 \( s_{ij} \) は次のように表記できる。
+                $$ s_{ij} = \sum_{k,l}^3 a_{ik}b_{kl}c_{lj} $$
+            </div>
+            
+            <x-h3>確かめよう</x-h3>
+            <div class=\"pl-4\">
+                <p>行列の次元\(n\)に対して3つの行列の積の成分が上記の式のようになっているか、行列形式での展開の過程を確認しましょう。<p>
+                <p class=\"mt-4\">次元 \( n = \) <input id=\"para_n\" max=\"5\" min=\"1\" type=\"number\" value=\"3\" />(最大5)</p>
+            </div>
+        ";
 
-                        具体的に、3×3の行列の積 \( S = ABC \) の \(ij\) 成分 \( s_{ij} \) は次のように表記できる。
-                        $$ s_{ij} = \sum_{k,l}^3 a_{ik}b_{kl}c_{lj} $$
-                        <h3>行列表示での確認</h3>
-                        <div>行列の次元\(n\)に対して3つの行列の積の成分が上記の式のようになっているか、
-                        行列形式での展開の過程を確認します。
-                        次元 \( n = \) <input id=\"para_n\" max=\"5\" min=\"1\" type=\"number\" value=\"3\" />(最大5)
-
-                        <h3>あとがき</h3>
-                        最近は行列計算のライブラリが充実しているので、
-                        学生のレポートでもない限り手計算はしないほうがいいだろう。
-                        ただ、具体的な計算ではなく概念の説明となると式が必要になる。
-                        シグマ記号という表現方法がなかったら発狂すると思う。
-                    ",
-                'a_type' => 2,
-                'a' => "",
-                'e_type' => 3,
-                'e' => "<div class=\"leading-[2] mb-4\">
-
-                        </div>
-                        ",
-            ],
-        ];
-        $q_index = rand(0,count($questions)-1);
-        $question = $questions[$q_index];
+        $jsAction = "matrix_notation";
         $unitname = "行列の積と成分表記";
-        return view('workbook.unit_js_template', compact('unitname','question'));
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction'));
     }
 }

@@ -568,7 +568,9 @@ Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_te
 ->middleware(['auth', 'verified'])->name('workbook.science_terms_all');
 // 社会
 Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
-->middleware(['auth', 'verified'])->name('workbook.unit.map_scale');
+->middleware(['auth', 'verified'])->name('workbook.map_scale');
+Route::get('workbook/time_difference', [WorkbookController::class, 'time_difference'])
+->middleware(['auth', 'verified'])->name('workbook.time_difference');
 Route::get('workbook/soc_kyushu', [WorkbookController::class, 'soc_kyushu'])
 ->middleware(['auth', 'verified'])->name('workbook.soc_kyushu');
 Route::get('workbook/soc_shikoku', [WorkbookController::class, 'soc_shikoku'])
