@@ -19174,28 +19174,400 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
+    // 緩衝液（値固定 backup）
+    // public function h_sci_buffer_solution() {
+    //     $C_CH3COOH = 0.2;   // 酢酸のモル濃度(mol/L)
+    //     $V_CH3COOH = 0.1;   // 酢酸の体積(L)
+    //     $C_CH3COONa = 0.1;   // 酢酸ナトリウムのモル濃度(mol/L)
+    //     $V_CH3COONa = 0.1;   // 酢酸ナトリウムの体積(L)
+
+    //     $n_NaOH = 0.01; // 追加するNaOH結晶の物質量(mol)
+    //     $Ka = 2.7;  // 酢酸の電離定数(×10^-5 mol/L)
+    //     $log10_2 = 0.3;
+    //     $log10_27 = 0.43;
+
+    //     /***** 各水溶液の物質量の表 *****/
+    //     $td_class_common = "border border-gray-400 px-5 py-0 text-base";
+    //     $td_class_mol = $td_class_common . " w-30";
+    //     $table1 = "
+    //         <table class=\"border-collapse border border-gray-400 m-auto table-fixed mt-4 text-center\" cellpadding=\"5\">
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">溶液</td>
+    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">体積</td>
+    //                 <td class=\"{$td_class_common}\" colspan=\"6\">物質量(mol)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COOH}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COO^-}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H^+}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{Na^+}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{OH^-}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H_2 O}\)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\">
+    //                     <div>①酢酸水溶液</div>
+    //                     <div>(電離平衡)</div>
+    //                 </td>
+    //                 <td class=\"{$td_class_common}\">\({$V_CH3COOH}\mathrm{L}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\">
+    //                     <div>②酢酸ナトリウム</div>
+    //                     <div>水溶液(電離後)</div>
+    //                 </td>
+    //                 <td class=\"{$td_class_common}\">\({$V_CH3COONa}\mathrm{L}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\">
+    //                     <div>③混ぜた直後</div>
+    //                     <div>(①+②)</div>
+    //                 </td>
+    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + " . $C_CH3COOH * $V_CH3COOH . "\alpha\\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\">
+    //                     <div>④平衡状態</div>
+    //                     <div>(①＋②)</div>
+    //                 </td>
+    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //             </tr>
+    //         </table>";
+
+    //     $table2 = "
+    //         <table class=\"border-collapse border border-gray-400 m-auto table-fixed mt-4 text-center\" cellpadding=\"5\">
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">溶液</td>
+    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">体積</td>
+    //                 <td class=\"{$td_class_common}\" colspan=\"6\">物質量(mol)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COOH}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COO^-}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H^+}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{Na^+}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{OH^-}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H_2 O}\)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\">
+    //                     <div>(1)の混合溶液</div>
+    //                     <div>(平衡状態)</div>
+    //                 </td>
+    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\">
+    //                     <div>NaOHの結晶を</div>
+    //                     <div>入れた直後</div>
+    //                 </td>
+    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
+    //                 <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\)</td>
+    //             </tr>
+    //             <tr class=\"bg-gray-100\">
+    //                 <td class=\"{$td_class_common}\">
+    //                     <div>(2)の混合溶液</div>
+    //                     <div>(平衡状態)</div>
+    //                 </td>
+    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "- \Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . " + \Delta\\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
+    //                 <td class=\"{$td_class_mol}\">\(0\)</td>
+    //                 <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
+    //             </tr>
+    //         </table>";
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+    //     $questions = [
+    //         [
+    //             'q_type' => 3,
+    //             'q' => "
+    //                 <div class=\"leading-[2] mt-4\">
+    //                     <p>
+    //                         (1) {$C_CH3COOH} mol/L 酢酸水溶液 " . $V_CH3COOH * 1000 . " mL と
+    //                         {$C_CH3COONa} mol/L 酢酸ナトリウム水溶液 " . $V_CH3COONa * 1000 . " mL の混合水溶液の pH を求めよ。
+    //                     </p>
+    //                     <p>
+    //                         (2) さらに NaOH の結晶 {$n_NaOH} mol を溶かしたときの pH を求めよ。ただし、溶液の体積変化はないものとする。
+    //                     </p>
+    //                     <p>(※)酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5},\,\log_{10} 2 = {$log10_2},\,\log_{10} 2.7 = {$log10_27}}\) とする。</p>
+    //                 </div>
+    //             ",
+    //             'a_type' => 2,
+    //             'a' => "(1)\," . -$log10_2 - $log10_27 + 5 . "\,\,(2)\," . $log10_2 - $log10_27 + 5,
+    //             'e_type' => 3,
+    //             'e' => "
+    //                 <p class=\"font-bold\">
+    //                     (1) {$C_CH3COOH} mol/L 酢酸水溶液 " . $V_CH3COOH * 1000 . " mL と
+    //                     {$C_CH3COONa} mol/L 酢酸ナトリウム水溶液 " . $V_CH3COONa * 1000 . " mL の混合水溶液の pH を求めよ。
+    //                 </p>
+    //                 <div class=\"leading-[2] text-left pl-5\">
+    //                     <p>酢酸は、水に溶かすと次のように電離する。</p>
+    //                     $$ \mathrm{CH_3 COOH \\rightleftharpoons CH_3 COO^- + H^+} $$
+    //                     <p>酢酸水溶液には、{$C_CH3COOH} mol/L × {$V_CH3COOH} L = " . $C_CH3COOH * $V_CH3COOH . " mol の酢酸が溶けている。電離前後の各物質のモル比は</p>
+    //                     <p>
+    //                         1 : 1 : 1 なので、酢酸の電離度を \(\alpha\) とすると、生じる \(\mathrm{CH_3 COO^-,\,H^+}\) の物質量は
+    //                         \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol。
+    //                     </p>
+    //                     <p>
+    //                         \(\mathrm{CH_3 COOH}\) の物質量は電離した分だけ減るので、
+    //                         \(" . $C_CH3COOH * $V_CH3COOH . " - " . $C_CH3COOH * $V_CH3COOH . "\,\alpha = " . $C_CH3COOH * $V_CH3COOH . "(1 - \alpha)\) mol（下表①）。
+    //                     </p>
+
+    //                     <p class=\"mt-4\">また、酢酸ナトリウムは水に溶かすと次のように電離する。</p>
+    //                     $$ \mathrm{CH_3 COONa \\to CH_3 COO^- + Na^+} $$
+    //                     <p>酢酸ナトリウム水溶液には、{$C_CH3COONa} mol/L × {$V_CH3COONa} L = " . $C_CH3COONa * $V_CH3COONa . " mol の酢酸ナトリウムが溶けている。</p>
+    //                     <p>塩は完全に電離するため、\(\mathrm{CH_3 COONa}\) は残らない。こちらも電離前後の各物質のモル比は</p>
+    //                     <p>1 : 1 : 1 なので、生じる \(\mathrm{CH_3 COO^-,\,Na^+}\) の物質量は \(" . $C_CH3COONa * $V_CH3COONa . "\) mol（下表②）。</p>
+                        
+    //                     <p class=\"mt-4\">これらの水溶液を混ぜた直後は下表③の状態に、しばらくすると下表④の平衡状態に落ち着く。</p>
+    //                     <p>①では酢酸が \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol 電離していたが、②で多量の \(\mathrm{CH_3 COO^-}\) が加わったことで左に平衡が移り、</p>
+    //                     <p>\(\mathrm{CH_3 COOH}\) はほぼ電離していない状態になると考えてよい。下表では \(\Delta \ll 1\) を用いている。</p>
+                        
+    //                     {$table1}
+
+    //                     <p class=\"mt-4\">ここまで整理出来れば、あとは④の状態について pH を求めればよい。まず \(\mathrm{[H^+]}\) を求める。</p>
+    //                     <p>酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5}}\) がわかっているので、電離定数の定義から、</p>
+    //                     $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]} = {$Ka} \\times 10^{-5}} $$
+    //                     <p>これに表④からわかる濃度を代入していく。\(\Delta \ll 1\) であることを考慮すれば、</p>
+    //                     $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]}} = {$Ka} \\times 10^{-5} $$
+    //                     \[
+    //                         \\begin{aligned}
+    //                             \mathrm{[H^+]}
+    //                                 &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
+    //                                     = \\frac{\,
+    //                                         \\frac{
+    //                                             " . ($C_CH3COOH * $V_CH3COOH) . "- \Delta
+    //                                         }{
+    //                                             " . $V_CH3COOH + $V_CH3COONa . "
+    //                                         }
+    //                                     \,}{
+    //                                         \\frac{
+    //                                             " . ($C_CH3COONa * $V_CH3COONa) . " + \Delta
+    //                                         }{
+    //                                             " . $V_CH3COOH + $V_CH3COONa . "
+    //                                         }
+    //                                     } \\times {$Ka} \\times 10^{-5} \\\\
+    //                                 &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH . "\,}{" . $C_CH3COONa * $V_CH3COONa . "} \\times {$Ka} \\times 10^{-5}
+    //                                     = " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5} \\\\
+    //                         \\end{aligned}
+    //                     \]
+    //                     <p>よって、</p>
+    //                     \[
+    //                         \\begin{aligned}
+    //                             \mathrm{pH}
+    //                                 &= -\log_{10} \mathrm{[H^+]}
+    //                                     = -\log_{10} (" . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5}) \\\\
+    //                                 &= -(\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
+    //                                 &= -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
+    //                                 &= -{$log10_2} - {$log10_27} + 5  = " . -$log10_2 - $log10_27 + 5 . "
+    //                         \\end{aligned}
+    //                     \]
+    //                 </div>            
+
+    //                 <p class=\"font-bold\">
+    //                     (2) さらに NaOH の結晶 {$n_NaOH} mol を溶かしたときの pH を求めよ。ただし、溶液の体積変化はないものとする。
+    //                 </p>
+    //                 <div class=\"leading-[2] text-left pl-5\">
+    //                     <p>\(\mathrm{NaOH}\) は、水に溶かすと \(\mathrm{Na^+}\) と \(\mathrm{OH^-}\) に電離する。この \(\mathrm{OH^-}\) は、酢酸と中和反応を起こす。</p>
+    //                     $$ \mathrm{CH_3 COOH + OH^- \\to CH_3 COO^- + H_2 O} $$
+    //                     <p>\(\mathrm{NaOH}\) {$n_NaOH} mol からは、\(\mathrm{OH^-}\) も {$n_NaOH} mol 生じる。これが中和することで、\(\mathrm{CH_3 COOH}\) は{$n_NaOH} mol 減り、</p>
+    //                     <p>\(\mathrm{CH_3 COO^-}\) は {$n_NaOH} mol 増える。すると、下表の最下行の状態になる。</p>
+
+    //                     {$table2}
+
+    //                     <p class=\"mt-4\">あとは最下行の平衡状態について、(1)の手順と同様に pH を求めればよい。電離定数の定義から、</p>
+    //                     $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]} = {$Ka} \\times 10^{-5}} $$
+    //                     <p>これに表からわかる濃度を代入していく。\(\Delta \ll 1\) であることを考慮すれば、</p>
+    //                     \[
+    //                         \\begin{aligned}
+    //                             \mathrm{[H^+]}
+    //                                 &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
+    //                                     = \\frac{\,
+    //                                         \\frac{
+    //                                             " . ($C_CH3COOH * $V_CH3COOH - $n_NaOH) . "- \Delta
+    //                                         }{
+    //                                             " . $V_CH3COOH + $V_CH3COONa . "
+    //                                         }
+    //                                     \,}{
+    //                                         \\frac{
+    //                                             " . ($C_CH3COONa * $V_CH3COONa + $n_NaOH) . " + \Delta
+    //                                         }{
+    //                                             " . $V_CH3COOH + $V_CH3COONa . "
+    //                                         }
+    //                                     } \\times {$Ka} \\times 10^{-5} \\\\
+    //                                 &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "\,}{" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "} \\times {$Ka} \\times 10^{-5}
+    //                                     = " . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\\\
+    //                         \\end{aligned}
+    //                     \]
+    //                     <p>よって、</p>
+    //                     \[
+    //                         \\begin{aligned}
+    //                             \mathrm{pH}
+    //                                 &= -\log_{10} \mathrm{[H^+]}
+    //                                     = -\log_{10} \\left(" . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\right) \\\\
+    //                                 &= -(\log_{10} 1 -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
+    //                                 &= -\log_{10} 1 +\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
+    //                                 &= 0 + {$log10_2} - {$log10_27} + 5  = " . $log10_2 - $log10_27 + 5 . "
+    //                         \\end{aligned}
+    //                     \]
+    //                 </div>
+    //             ",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+
+    //     // チェックボックスの値を取得。
+    //     // $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
+    //     // $flag2 = $request->boolean('flag2');    // 計算問題
+    //     // $flags = ['flag1' => '基礎', 'flag2' => '実践'];
+    //     // if ($flag1 == true && $flag2 == false) {
+    //     //     $q_index = rand(0, 5);
+    //     //     $question = $questions[$q_index];
+    //     // } else if ($flag1 == false && $flag2 == true) {
+    //     //     $q_index = rand(6, count($questions)-1);
+    //     //     $question = $questions[$q_index];
+    //     // } else {
+    //     //     $q_index = rand(0,count($questions)-1);
+    //     //     $question = $questions[$q_index];
+    //     // }
+    //     // $subject = "custom";    // カスタムの選択ができることを blade に伝える。
+    //     $unitname = "緩衝液";
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
+
     // 緩衝液
-    public function h_sci_buffer_solution(Request $request) {
-        // $n = 0.5 * rand(1, 6);    // モル数（物質量）
-        // $v = 22.4 * $n; // 体積（L）
-        // $a = rand(2, 6);
-        // $ns = 0.1 * rand(1, 8);    // 小さめの n (0.1 ～ 0.8)
-        // $vl = 250 * rand(1, 2);    // 溶液の体積(mL)
-        // $MA = 40 + 4 * rand(1, 10);  // 金属 M の原子量
-        // $Md = 1.2 * rand(1, 4);     // 金属 M の密度(g/cm^3)
+    public function h_sci_buffer_solution() {
+        // /***** パラメータ *****/
+        // $m_seed = [2, 3, 5];
+        // $m = $m_seed[rand(0, count($m_seed) - 1)];    // 調整用の定数（(1)で log_2, log_3, log_5 を出すため）
+        // /***** 変数設定 *****/
+        // $C_CH3COOH = 0.2 * rand(1, 3);   // 酢酸のモル濃度(mol/L)
+        // $V_CH3COOH = 0.2 * rand(1, 3);   // 酢酸の体積(L)
+        // $C_CH3COONa = 0.1 * rand(1, 2);   // 酢酸ナトリウムのモル濃度(mol/L)
+        // $V_CH3COONa = $C_CH3COOH * $V_CH3COOH / ($m * $C_CH3COONa);   // 酢酸ナトリウムの体積(L)
+        // // $V_CH3COONa = 0.1 * rand(1, 2);   // 酢酸ナトリウムの体積(L)
 
+        // $n_NaOH = 0.01 * rand(1, 4); // 追加するNaOH結晶の物質量(mol)
+        // $Ka = 2.7;  // 酢酸の電離定数(×10^-5 mol/L)
+        // $log10_2 = 0.3;
+        // $log10_27 = 0.43;
 
+        // /***** 途中計算用の値 *****/
+        // $n_CH3COOH = $C_CH3COOH * $V_CH3COOH;   // はじめの酢酸の物質量(mol)
+        // $n_CH3COONa = $C_CH3COONa * $V_CH3COONa;   // はじめの酢酸ナトリウムの物質量(mol)
+        // $V_mixed = $V_CH3COOH + $V_CH3COONa;   // 混ぜた後の体積(L)
+        // $ratio_n = $this->simplify_fraction($n_CH3COOH * 100, $n_CH3COONa * 100);   // モル比（分母と分子を整数で入力するため100倍しておく）
+        // $ratio_n_str = $this->fracnum_to_str($n_CH3COOH * 100, $n_CH3COONa * 100, "", 1);
 
+        /***** パラメータ *****/
+        $m_seed = [2, 3];
+        $m = $m_seed[rand(0, count($m_seed) - 1)];    // 調整用の定数（(1)で log_2, log_3, log_5 を出すため）
+        /***** 変数設定 *****/
+        $n_CH3COONa = 0.02 * rand(1, 3);   // はじめの酢酸ナトリウムの物質量(mol)
+        $n_CH3COOH = $m * $n_CH3COONa;   // はじめの酢酸の物質量(mol)
 
-        $C_CH3COOH = 0.2;   // 酢酸のモル濃度(mol/L)
-        $V_CH3COOH = 0.1;   // 酢酸の体積(L)
-        $C_CH3COONa = 0.1;   // 酢酸ナトリウムのモル濃度(mol/L)
-        $V_CH3COONa = 0.1;   // 酢酸ナトリウムの体積(L)
+        $C_CH3COOH = 10 * $n_CH3COOH / rand(1, 2);   // 酢酸のモル濃度(mol/L)
+        $V_CH3COOH = $n_CH3COOH / $C_CH3COOH;   // 酢酸の体積(L)
+        $C_CH3COONa = 10 * $n_CH3COONa / rand(1, 2);   // 酢酸ナトリウムのモル濃度(mol/L)
+        $V_CH3COONa = $n_CH3COONa / $C_CH3COONa;   // 酢酸ナトリウムの体積(L)
+        // $V_CH3COONa = 0.1 * rand(1, 2);   // 酢酸ナトリウムの体積(L)
 
-        $n_NaOH = 0.01; // 追加するNaOH結晶の物質量(mol)
+        do {
+            $n_NaOH = 0.01 * rand(1, 4); // 追加するNaOH結晶の物質量(mol)
+        } while($n_NaOH == $n_CH3COOH);
         $Ka = 2.7;  // 酢酸の電離定数(×10^-5 mol/L)
         $log10_2 = 0.3;
         $log10_27 = 0.43;
+
+        /***** 途中計算用の値 *****/
+        $V_mixed = $V_CH3COOH + $V_CH3COONa;   // 混ぜた後の体積(L)
+
+        $ratio_n = $this->simplify_fraction($n_CH3COOH * 100, $n_CH3COONa * 100);   // モル比（分母と分子を整数で入力するため100倍しておく）
+        $ratio_n_str = $this->fracnum_to_str($n_CH3COOH * 100, $n_CH3COONa * 100, "", 1);
+        // $ratio_n2 = $this->simplify_fraction(($n_CH3COOH - $n_NaOH) * 100, ($n_CH3COONa + $n_NaOH) * 100);   // モル比（NaOH結晶投入後）
+        // $ratio_n2_str = $this->fracnum_to_str(($n_CH3COOH - $n_NaOH) * 100, ($n_CH3COONa + $n_NaOH) * 100, "", 1);
+        $ratio_n2 = $this->simplify_fraction($n_CH3COOH * 100 - $n_NaOH * 100, ($n_CH3COONa + $n_NaOH) * 100);   // モル比（NaOH結晶投入後）
+        $ratio_n2_str = $this->fracnum_to_str($n_CH3COOH * 100 - $n_NaOH * 100, ($n_CH3COONa + $n_NaOH) * 100, "", 1);
+
+        $log10_m = round(log($m, 10), 2);
+        $log10_m_str = number_format($log10_m, 2);
+        $log10_no2n = round(log($ratio_n2['numerator'], 10), 2);
+        $log10_no2n_str = number_format($log10_no2n, 2);
+        $log10_no2d = round(log($ratio_n2['denominator'], 10), 2);
+        $log10_no2d_str = number_format($log10_no2d, 2);
+
+        $q2_part = "\log_{10} {$m} = {$log10_m_str},\,";
+        if (($ratio_n2['numerator'] != 1) && ($ratio_n2['numerator'] != $m)) {
+            $q2_part .= "\log_{10} {$ratio_n2['numerator']} = {$log10_no2n_str},\,";
+        }
+        if (($ratio_n2['denominator'] != 1) && ($ratio_n2['denominator'] != $m) && ($ratio_n2['denominator'] != $ratio_n2['numerator'])) {
+            $q2_part .= "\log_{10} {$ratio_n2['denominator']} = {$log10_no2d_str},\,";
+        }
+
+        if ($ratio_n2['denominator'] == 1) {
+            $ans2 = -$log10_no2n - $log10_27 + 5;
+            $e2_part = "
+                &= -(\log_{10} " . $ratio_n2['numerator'] . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
+                &= -\log_{10} " . $ratio_n2['numerator'] . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
+                &= -{$log10_no2n_str} - {$log10_27} + 5  = {$ans2} \\\\
+            ";
+        } else {
+            $ans2 = -$log10_no2n + $log10_no2d - $log10_27 + 5;
+            $e2_part = "
+                &= -(\log_{10} " . $ratio_n2['numerator'] . " - \log_{10} " . $ratio_n2['denominator'] . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
+                &= -\log_{10} " . $ratio_n2['numerator'] . " + \log_{10} " . $ratio_n2['denominator'] . " - \log_{10} {$Ka} - \log_{10} 10^{-5}) \\\\
+                &= -{$log10_no2n_str} + {$log10_no2d_str} - {$log10_27} + 5  = {$ans2} \\\\
+            ";
+        }
+        $e2_part2 = ($ratio_n2['numerator'] == 4 || $ratio_n2['denominator'] == 4)
+            ? "(※)\log_{10} 4 = \log_{10} 2^2 = 2\log_{10} 2 を使って計算してもよい。"
+            : ""
+        ;
+        // dd("n_CH3COOH:{$n_CH3COOH}, n_NaOH:{$n_NaOH}, n_CH3COONa:{$n_CH3COONa}, " . 
+        // ($n_CH3COOH - $n_NaOH) * 100 . " / " . ($n_CH3COONa + $n_NaOH) * 100 . 
+        // " = {$ratio_n2['numerator']} / {$ratio_n2['denominator']}" );
+
+        // $n_CH3COOH - $n_NaOH . "\,}{" . $n_CH3COONa + $n_NaOH 
 
         /***** 各水溶液の物質量の表 *****/
         $td_class_common = "border border-gray-400 px-5 py-0 text-base";
@@ -19220,10 +19592,10 @@ class WorkbookController extends Controller
                         <div>①酢酸水溶液</div>
                         <div>(電離平衡)</div>
                     </td>
-                    <td class=\"{$td_class_common}\">\({$V_CH3COOH}\mathrm{L}\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
+                    <td class=\"{$td_class_common}\">\({$V_CH3COOH}\,\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH}(1-\alpha)\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH}\alpha\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH}\alpha\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
@@ -19233,11 +19605,11 @@ class WorkbookController extends Controller
                         <div>②酢酸ナトリウム</div>
                         <div>水溶液(電離後)</div>
                     </td>
-                    <td class=\"{$td_class_common}\">\({$V_CH3COONa}\mathrm{L}\)</td>
+                    <td class=\"{$td_class_common}\">\({$V_CH3COONa}\,\mathrm{L}\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa}\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa}\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                 </tr>
@@ -19246,11 +19618,11 @@ class WorkbookController extends Controller
                         <div>③混ぜた直後</div>
                         <div>(①+②)</div>
                     </td>
-                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + " . $C_CH3COOH * $V_CH3COOH . "\alpha\\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_common}\">\({$V_mixed}\,\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH}(1-\alpha)\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa} + {$n_CH3COOH}\alpha\\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH}\alpha\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa}\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                 </tr>
@@ -19259,11 +19631,11 @@ class WorkbookController extends Controller
                         <div>④平衡状態</div>
                         <div>(①＋②)</div>
                     </td>
-                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+                    <td class=\"{$td_class_common}\">\({$V_mixed}\,\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH}- \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa} + \Delta\\)</td>
                     <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa}\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                 </tr>
@@ -19289,11 +19661,11 @@ class WorkbookController extends Controller
                         <div>(1)の混合溶液</div>
                         <div>(平衡状態)</div>
                     </td>
-                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+                    <td class=\"{$td_class_common}\">\({$V_mixed}\,\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH}- \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa} + \Delta\\)</td>
                     <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa}\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                 </tr>
@@ -19302,11 +19674,11 @@ class WorkbookController extends Controller
                         <div>NaOHの結晶を</div>
                         <div>入れた直後</div>
                     </td>
-                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
+                    <td class=\"{$td_class_common}\">\({$V_mixed}\,\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COOH} - \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\({$n_CH3COONa} + \Delta\\)</td>
                     <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $n_CH3COONa + $n_NaOH . "\)</td>
                     <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
                     <td class=\"{$td_class_mol}\">\(\)</td>
                 </tr>
@@ -19315,11 +19687,11 @@ class WorkbookController extends Controller
                         <div>(2)の混合溶液</div>
                         <div>(平衡状態)</div>
                     </td>
-                    <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "- \Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . " + \Delta\\)</td>
+                    <td class=\"{$td_class_common}\">\({$V_mixed}\,\mathrm{L}\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $n_CH3COOH - $n_NaOH . "- \Delta\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $n_CH3COONa + $n_NaOH . " + \Delta\\)</td>
                     <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-                    <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
+                    <td class=\"{$td_class_mol}\">\(" . $n_CH3COONa + $n_NaOH . "\)</td>
                     <td class=\"{$td_class_mol}\">\(0\)</td>
                     <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
                 </tr>
@@ -19339,11 +19711,19 @@ class WorkbookController extends Controller
                         <p>
                             (2) さらに NaOH の結晶 {$n_NaOH} mol を溶かしたときの pH を求めよ。ただし、溶液の体積変化はないものとする。
                         </p>
-                        <p>(※)酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5},\,\log_{10} 2 = {$log10_2},\,\log_{10} 2.7 = {$log10_27}}\) とする。</p>
+                        <p>(※)酢酸の電離定数 
+                            <span class=\"text-base\">
+                                \(\mathrm{
+                                    K_a = {$Ka} \\times 10^{-5},\,
+                                    {$q2_part}
+                                    \log_{10} 2.7 = {$log10_27}
+                                }\)
+                            </span> とする。
+                        </p>
                     </div>
                 ",
                 'a_type' => 2,
-                'a' => "(1)\," . -$log10_2 - $log10_27 + 5 . "\,\,(2)\," . $log10_2 - $log10_27 + 5,
+                'a' => "(1)\," .-$log10_m - $log10_27 + 5 . "\,\,(2)\,{$ans2}",
                 'e_type' => 3,
                 'e' => "
                     <p class=\"font-bold\">
@@ -19353,24 +19733,24 @@ class WorkbookController extends Controller
                     <div class=\"leading-[2] text-left pl-5\">
                         <p>酢酸は、水に溶かすと次のように電離する。</p>
                         $$ \mathrm{CH_3 COOH \\rightleftharpoons CH_3 COO^- + H^+} $$
-                        <p>酢酸水溶液には、{$C_CH3COOH} mol/L × {$V_CH3COOH} L = " . $C_CH3COOH * $V_CH3COOH . " mol の酢酸が溶けている。電離前後の各物質のモル比は</p>
+                        <p>酢酸水溶液には、{$C_CH3COOH} mol/L × {$V_CH3COOH} L = {$n_CH3COOH} mol の酢酸が溶けている。電離前後の各物質のモル比は</p>
                         <p>
                             1 : 1 : 1 なので、酢酸の電離度を \(\alpha\) とすると、生じる \(\mathrm{CH_3 COO^-,\,H^+}\) の物質量は
-                            \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol。
+                            \({$n_CH3COOH}\,\alpha\) mol。
                         </p>
                         <p>
                             \(\mathrm{CH_3 COOH}\) の物質量は電離した分だけ減るので、
-                            \(" . $C_CH3COOH * $V_CH3COOH . " - " . $C_CH3COOH * $V_CH3COOH . "\,\alpha = " . $C_CH3COOH * $V_CH3COOH . "(1 - \alpha)\) mol（下表①）。
+                            \({$n_CH3COOH} - {$n_CH3COOH}\,\alpha = {$n_CH3COOH}(1 - \alpha)\) mol（下表①）。
                         </p>
 
                         <p class=\"mt-4\">また、酢酸ナトリウムは水に溶かすと次のように電離する。</p>
                         $$ \mathrm{CH_3 COONa \\to CH_3 COO^- + Na^+} $$
-                        <p>酢酸ナトリウム水溶液には、{$C_CH3COONa} mol/L × {$V_CH3COONa} L = " . $C_CH3COONa * $V_CH3COONa . " mol の酢酸ナトリウムが溶けている。</p>
+                        <p>酢酸ナトリウム水溶液には、{$C_CH3COONa} mol/L × {$V_CH3COONa} L = {$n_CH3COONa} mol の酢酸ナトリウムが溶けている。</p>
                         <p>塩は完全に電離するため、\(\mathrm{CH_3 COONa}\) は残らない。こちらも電離前後の各物質のモル比は</p>
-                        <p>1 : 1 : 1 なので、生じる \(\mathrm{CH_3 COO^-,\,Na^+}\) の物質量は \(" . $C_CH3COONa * $V_CH3COONa . "\) mol（下表②）。</p>
+                        <p>1 : 1 : 1 なので、生じる \(\mathrm{CH_3 COO^-,\,Na^+}\) の物質量は \({$n_CH3COONa}\) mol（下表②）。</p>
                         
                         <p class=\"mt-4\">これらの水溶液を混ぜた直後は下表③の状態に、しばらくすると下表④の平衡状態に落ち着く。</p>
-                        <p>①では酢酸が \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol 電離していたが、②で多量の \(\mathrm{CH_3 COO^-}\) が加わったことで左に平衡が移り、</p>
+                        <p>①では酢酸が \({$n_CH3COOH}\,\alpha\) mol 電離していたが、②で多量の \(\mathrm{CH_3 COO^-}\) が加わったことで左に平衡が移り、</p>
                         <p>\(\mathrm{CH_3 COOH}\) はほぼ電離していない状態になると考えてよい。下表では \(\Delta \ll 1\) を用いている。</p>
                         
                         {$table1}
@@ -19379,26 +19759,25 @@ class WorkbookController extends Controller
                         <p>酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5}}\) がわかっているので、電離定数の定義から、</p>
                         $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]} = {$Ka} \\times 10^{-5}} $$
                         <p>これに表④からわかる濃度を代入していく。\(\Delta \ll 1\) であることを考慮すれば、</p>
-                        $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]}} = {$Ka} \\times 10^{-5} $$
                         \[
                             \\begin{aligned}
                                 \mathrm{[H^+]}
                                     &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
                                         = \\frac{\,
                                             \\frac{
-                                                " . ($C_CH3COOH * $V_CH3COOH) . "- \Delta
+                                                {$n_CH3COOH} - \Delta
                                             }{
-                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                                {$V_mixed}
                                             }
                                         \,}{
                                             \\frac{
-                                                " . ($C_CH3COONa * $V_CH3COONa) . " + \Delta
+                                                {$n_CH3COONa} + \Delta
                                             }{
-                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                                {$V_mixed}
                                             }
                                         } \\times {$Ka} \\times 10^{-5} \\\\
-                                    &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH . "\,}{" . $C_CH3COONa * $V_CH3COONa . "} \\times {$Ka} \\times 10^{-5}
-                                        = " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5} \\\\
+                                    &\\fallingdotseq \\frac{\,{$n_CH3COOH}\,}{\,{$n_CH3COONa}\,} \\times {$Ka} \\times 10^{-5}
+                                        = {$ratio_n_str} \\times {$Ka} \\times 10^{-5} \\\\
                             \\end{aligned}
                         \]
                         <p>よって、</p>
@@ -19406,10 +19785,10 @@ class WorkbookController extends Controller
                             \\begin{aligned}
                                 \mathrm{pH}
                                     &= -\log_{10} \mathrm{[H^+]}
-                                        = -\log_{10} (" . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5}) \\\\
-                                    &= -(\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
-                                    &= -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
-                                    &= -{$log10_2} - {$log10_27} + 5  = " . -$log10_2 - $log10_27 + 5 . "
+                                        = -\log_{10} ({$ratio_n_str} \\times {$Ka} \\times 10^{-5}) \\\\
+                                    &= -(\log_{10} {$ratio_n_str} + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
+                                    &= -\log_{10} {$ratio_n_str} - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
+                                    &= -{$log10_m_str} - {$log10_27} + 5  = " . -$log10_m - $log10_27 + 5 . "
                             \\end{aligned}
                         \]
                     </div>            
@@ -19434,19 +19813,19 @@ class WorkbookController extends Controller
                                     &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
                                         = \\frac{\,
                                             \\frac{
-                                                " . ($C_CH3COOH * $V_CH3COOH - $n_NaOH) . "- \Delta
+                                                " . ($n_CH3COOH - $n_NaOH) . "- \Delta
                                             }{
-                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                                {$V_mixed}
                                             }
                                         \,}{
                                             \\frac{
-                                                " . ($C_CH3COONa * $V_CH3COONa + $n_NaOH) . " + \Delta
+                                                " . ($n_CH3COONa + $n_NaOH) . " + \Delta
                                             }{
-                                                " . $V_CH3COOH + $V_CH3COONa . "
+                                                {$V_mixed}
                                             }
                                         } \\times {$Ka} \\times 10^{-5} \\\\
-                                    &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "\,}{" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "} \\times {$Ka} \\times 10^{-5}
-                                        = " . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\\\
+                                    &\\fallingdotseq \\frac{\," . $n_CH3COOH - $n_NaOH . "\,}{" . $n_CH3COONa + $n_NaOH . "} \\times {$Ka} \\times 10^{-5}
+                                        = {$ratio_n2_str} \\times {$Ka} \\times 10^{-5} \\\\
                             \\end{aligned}
                         \]
                         <p>よって、</p>
@@ -19454,34 +19833,17 @@ class WorkbookController extends Controller
                             \\begin{aligned}
                                 \mathrm{pH}
                                     &= -\log_{10} \mathrm{[H^+]}
-                                        = -\log_{10} \\left(" . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\right) \\\\
-                                    &= -(\log_{10} 1 -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
-                                    &= -\log_{10} 1 +\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
-                                    &= 0 + {$log10_2} - {$log10_27} + 5  = " . $log10_2 - $log10_27 + 5 . "
+                                        = -\log_{10} \\left({$ratio_n2_str} \\times {$Ka} \\times 10^{-5} \\right) \\\\
+                                    {$e2_part}
                             \\end{aligned}
                         \]
+                        {$e2_part2}
                     </div>
                 ",
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-
-        // チェックボックスの値を取得。
-        // $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
-        // $flag2 = $request->boolean('flag2');    // 計算問題
-        // $flags = ['flag1' => '基礎', 'flag2' => '実践'];
-        // if ($flag1 == true && $flag2 == false) {
-        //     $q_index = rand(0, 5);
-        //     $question = $questions[$q_index];
-        // } else if ($flag1 == false && $flag2 == true) {
-        //     $q_index = rand(6, count($questions)-1);
-        //     $question = $questions[$q_index];
-        // } else {
-        //     $q_index = rand(0,count($questions)-1);
-        //     $question = $questions[$q_index];
-        // }
-        // $subject = "custom";    // カスタムの選択ができることを blade に伝える。
         $unitname = "緩衝液";
         return view('workbook.unit_template', compact('unitname','question'));
     }
