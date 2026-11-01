@@ -14627,46 +14627,7 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
-    // // 湿度（旧）
-    // public function humidity() {
-    //     // h = m/M * 100
-    //     $h = rand(1, 90);   //湿度
-    //     $M = rand(5, 20);   //飽和水蒸気量[g/m^3]
-    //     $m = $M * $h / 100;  //実際の水蒸気量[g/m^3]
-
-    //     $questions = [
-    //         [
-    //             'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、実際の水蒸気量は\,{$m}\,\mathrm{g/m^3}\,とする。このときの湿度を求めなさい。\)",
-    //             'a' => "{$h}\,\mathrm{\%}",
-    //             'e' => "<p>\(\displaystyle
-    //                         \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
-    //                         h=\\frac{\mathnormal{m}}{\,M\,}=\\frac{ \,{$m}\, }{ \,{$M}\, } \\times 100 = {$h}\,[\%]}。
-    //                     \)</p>",
-    //         ],
-    //         [
-    //             'q' => "\(ある気温での飽和水蒸気量が\,{$M}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの水蒸気量を求めなさい。\)",
-    //             'a' => "{$m}\,\mathrm{g/m^3}",
-    //             'e' => "<p>\(\displaystyle
-    //                         \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
-    //                         {$h}=\\frac{\,\mathnormal{m}\,}{\,{$M}\,}\\times 100。これを解いて、\mathnormal{m}={$m}\,[g/m^3]}。
-    //                     \)</p>",
-    //         ],
-    //         [
-    //             'q' => "\(ある気温での水蒸気量が\,{$m}\,\mathrm{g/m^3}\,で、湿度は\,{$h}\,\mathrm{\%}\,とする。このときの飽和水蒸気量を求めなさい。\)",
-    //             'a' => "{$M}\,\mathrm{g/m^3}",
-    //             'e' => "<p>\(\displaystyle
-    //                         \mathrm{湿度\,h\,[\%] = \\frac{実際の水蒸気量\,\mathnormal{m}\,[g/m^3]}{\,飽和水蒸気量\,M\,[g/m^3]\,}\\times 100\,より、
-    //                         {$h}=\\frac{\,{$m}\,}{\,M\,}\\times 100。これを解いて、M={$M}\,[g/m^3]}。
-    //                     \)</p>",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-    //     $unitname = "湿度・水蒸気量";
-    //     return view('workbook.unit.child', compact('unitname','question'));
-    // }
-
-    // 湿度
+    // 湿度・水蒸気量・露点
     public function humidity(Request $request) {
         $terms = [
             ['term' => '露点', 'mean' => '水蒸気が結露し始める気温。',
@@ -14739,46 +14700,70 @@ class WorkbookController extends Controller
             [
                 'q' => "気温が {$Th}℃ では、湿度が{$Hh}％だった。このときの水蒸気量を求めなさい。",
                 'a' => "{$mh} g/m\(^3\)",
-                'e' => "<p>湿度は次のように定義される。</p>
+                'e' => "
+                    <div class=\"leading-[2]\">
+                        <p>湿度は次のように定義される。</p>
                         $$ \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100 = 湿度[\%].$$
                         <p>表より、気温が {$Th}℃ のときの飽和水蒸気量は {$Mh} g/m\(^3\) であるから、</p>
-                        <p>水蒸気量を \(x\) g/m\(^3\) とすると、</p>
-                        \[
-                            \\begin{aligned}
-                                \\frac{\,x\,}{\,{$Mh}\,} \\times 100 &= {$Hh} \\\\
-                                \\therefore x &= \\frac{\,{$Hh} \\times {$Mh}\,}{100} = {$mh}
-                            \\end{aligned}
-                        \]
+                        <p>
+                            水蒸気量を \(x\) g/m\(^3\) とすると、
+                            \(\displaystyle \\frac{\,x\,}{\,{$Mh}\,} \\times 100 = {$Hh}\)
+                        </p>
+                        $$ \\therefore x = \\frac{\,{$Hh} \\times {$Mh}\,}{100} = {$mh} $$
+                    </div>
                         ",
             ],
             [
                 'q' => "気温が {$Th}℃ で湿度が {$Hh}％のとき、{$v} m\(^3\) の空気には何 g の水蒸気が含まれるか。",
                 'a' => $v * $mh . " g",
-                'e' => "<p>まず、気温が {$Th}℃ で湿度が {$Hh}％のときでの水蒸気量を求める。水蒸気量は次の関係を満たす。</p>
+                'e' => "
+                    <div class=\"leading-[2]\">
+                        <p>まず、気温が {$Th}℃ で湿度が {$Hh}％のときでの水蒸気量を求める。水蒸気量は次の関係を満たす。</p>
                         $$ \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100 = 湿度[\%].$$
                         <p>表より、気温が {$Th}℃ のときの飽和水蒸気量は {$Mh} g/m\(^3\) であるから、</p>
-                        <p>水蒸気量を \(x\) g/m\(^3\) とすると、</p>
-                        \[
-                            \\begin{aligned}
-                                \\frac{\,x\,}{\,{$Mh}\,} \\times 100 &= {$Hh} \\\\
-                                \\therefore x &= \\frac{\,{$Hh} \\times {$Mh}\,}{100} = {$mh}
-                            \\end{aligned}
-                        \]
+                        <p>水蒸気量を \(x\) g/m\(^3\) とすると、\(\displaystyle \\frac{\,x\,}{\,{$Mh}\,} \\times 100 = {$Hh}\)</p>
+                        $$ \\therefore x = \\frac{\,{$Hh} \\times {$Mh}\,}{100} = {$mh} $$
                         <p>水蒸気量は 1 m\(^3\) あたりに含まれる水蒸気の質量[g]であるから、</p>
                         <p>{$v} m\(^3\) あたりの水蒸気量は、{$mh}[g/m\(^3\)] × {$v}[m\(^3\)] = " . $v * $mh . " g.</p>
-                        ",
+                    </div>",
             ],
             [
                 'q' => "露点が {$Tl}℃のとき、同じ空気の気温 {$Th}℃ での湿度は何％か。整数値で答えよ。",
                 'a' => round($Ml * 100 / $Mh, 0) . "％",
-                'e' => "<p>露点とは、水蒸気が水滴になり始める気温であるが、これは空気が飽和状態に達したと考えてよい。</p>
+                'e' => "
+                    <div class=\"leading-[2]\">
+                        <p>露点とは、水蒸気が水滴になり始める気温であるが、これは空気が飽和状態に達したと考えてよい。</p>
                         <p>つまり、露点とは湿度が 100% になる気温であり、このとき水蒸気量 = 飽和水蒸気量である。</p>
                         <p>表より、 {$Tl}℃での飽和水蒸気量は {$Ml} g/m\(^3\) なので、<span class=\"underline\">この空気の水蒸気量も {$Ml} g/m\(^3\)</span> である。</p>
                         <p>さて、次に気温 {$Th}℃について考える。湿度は次のように定義される。</p>
                         $$ 湿度[\%] = \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100.$$
                         <p>表より、気温が {$Th}℃ のときの飽和水蒸気量は {$Mh} g/m\(^3\) であるから、式に代入して、</p>
                         $$ 湿度[\%] = \\frac{\,{$Ml}\,}{\,{$Mh}\,} \\times 100 \\fallingdotseq " . round($Ml * 100 / $Mh, 0) . "[\%]. $$
-                        ",
+                    </div>",
+            ],
+            [
+                'q' => "気温 {$Th}℃ での湿度が約 " . round($Ml * 100 / $Mh, 0) . " ％ のとき、この空気の露点は約何℃か。",
+                'a' => "約{$Tl}℃",
+                'e' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>露点とは、水蒸気が水滴になり始める気温であるが、これは空気が飽和状態に達したと考えてよい。</p>
+                        <p>つまり、<span class=\"underline\">露点とは湿度が 100% になる気温であり、このとき水蒸気量 = 飽和水蒸気量</span>である。</p>
+                        <p>そこで、まずは湿度から水蒸気量を求めて、その水蒸気量が飽和水蒸気量に近い気温を表から探せばよい。</p>
+                        $$ 湿度[\%] = \\frac{水蒸気量[\mathrm{g/m}^3]}{\,飽和水蒸気量[\mathrm{g/m}^3]\,} \\times 100.$$
+                        <p>この湿度の定義式で水蒸気量を \(x[\mathrm{g/m}^3]\) として、気温 {$Th}℃での湿度と飽和水蒸気量を代入すると、</p>
+                        $$ " . round($Ml * 100 / $Mh, 0) . "[\%] \\fallingdotseq \\frac{x[\mathrm{g/m}^3]}{\,{$Mh}[\mathrm{g/m}^3]\,} \\times 100.$$
+                        <p>
+                            これを \(x\) について解くと、
+                            \(\displaystyle x
+                                \\fallingdotseq \\frac{\," . round($Ml * 100 / $Mh, 0) . " \\times {$Mh}\,}{\,100\,} 
+                                = " . round($Ml * 100 / $Mh, 0) * $Mh / 100 . "\,\mathrm{g/m}^3.
+                            \)
+                        </p>
+                        <p>表より、この水蒸気量は {$Tl}℃での飽和水蒸気量（{$Ml} g/m<sup>3</sup>）とほぼ等しい。つまり、{$Tl}℃で</p>
+                        <p>湿度はほぼ 100％になる。このとき結露が生じ始めるので、約{$Tl}℃が露点であることを意味する。</p>
+                        <p class=\"underline\">もし気温 {$Th}℃ での湿度がすでに 100％（飽和状態）に近ければ、露点は約 {$Th}℃である。気温 {$Th}℃ での</p>
+                        <p class=\"underline\">湿度が " . round($Ml * 100 / $Mh, 0) . " ％よりも低ければ（乾燥していれば）、空気中の水蒸気量は少ないので露点は {$Tl}℃よりも低くなる。</p>
+                    </div>",
             ],
         ];
         $idx = rand(0,count($calc_qas)-1);
@@ -14832,7 +14817,7 @@ class WorkbookController extends Controller
             $question = $questions[$q_index];
         }
         $subject = "science";    // カスタムの選択ができることを blade に伝える。
-        $unitname = "湿度";
+        $unitname = "湿度・水蒸気量・露点";
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
