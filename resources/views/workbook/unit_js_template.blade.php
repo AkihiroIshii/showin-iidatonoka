@@ -27,7 +27,9 @@
                         <input type="button" id="display-button" value="表示">
                     </x-button-link>
                 </div>
-                <div id="result" class="horizontal-scroll"></div>
+                <div id="result" class="horizontal-scroll">
+                    {!! $disp_con !!}
+                </div>
             </div>
         </div>
     </div>

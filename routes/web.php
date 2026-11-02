@@ -575,22 +575,24 @@ Route::get('workbook/map_scale', [WorkbookController::class, 'map_scale'])
 ->middleware(['auth', 'verified'])->name('workbook.map_scale');
 Route::get('workbook/time_difference', [WorkbookController::class, 'time_difference'])
 ->middleware(['auth', 'verified'])->name('workbook.time_difference');
-Route::get('workbook/soc_kyushu', [WorkbookController::class, 'soc_kyushu'])
-->middleware(['auth', 'verified'])->name('workbook.soc_kyushu');
-Route::get('workbook/soc_shikoku', [WorkbookController::class, 'soc_shikoku'])
-->middleware(['auth', 'verified'])->name('workbook.soc_shikoku');
-Route::get('workbook/soc_kinki', [WorkbookController::class, 'soc_kinki'])
-->middleware(['auth', 'verified'])->name('workbook.soc_kinki');
-Route::get('workbook/soc_kodai', [WorkbookController::class, 'soc_kodai'])
-->middleware(['auth', 'verified'])->name('workbook.soc_kodai');
-Route::get('workbook/soc_asuka_nara', [WorkbookController::class, 'soc_asuka_nara'])
-->middleware(['auth', 'verified'])->name('workbook.soc_asuka_nara');
-Route::get('workbook/soc_bakumatsu', [WorkbookController::class, 'soc_bakumatsu'])
-->middleware(['auth', 'verified'])->name('workbook.soc_bakumatsu');
-Route::get('workbook/soc_meiji', [WorkbookController::class, 'soc_meiji'])
-->middleware(['auth', 'verified'])->name('workbook.soc_meiji');
-Route::get('workbook/soc_meiji2', [WorkbookController::class, 'soc_meiji2'])
-->middleware(['auth', 'verified'])->name('workbook.soc_meiji2');
+// Route::get('workbook/soc_kyushu', [WorkbookController::class, 'soc_kyushu'])
+// ->middleware(['auth', 'verified'])->name('workbook.soc_kyushu');
+// Route::get('workbook/soc_shikoku', [WorkbookController::class, 'soc_shikoku'])
+// ->middleware(['auth', 'verified'])->name('workbook.soc_shikoku');
+// Route::get('workbook/soc_kinki', [WorkbookController::class, 'soc_kinki'])
+// ->middleware(['auth', 'verified'])->name('workbook.soc_kinki');
+// Route::get('workbook/soc_kodai', [WorkbookController::class, 'soc_kodai'])
+// ->middleware(['auth', 'verified'])->name('workbook.soc_kodai');
+// Route::get('workbook/soc_asuka_nara', [WorkbookController::class, 'soc_asuka_nara'])
+// ->middleware(['auth', 'verified'])->name('workbook.soc_asuka_nara');
+Route::get('workbook/soc_modern_economy', [WorkbookController::class, 'soc_modern_economy'])
+->middleware(['auth', 'verified'])->name('workbook.soc_modern_economy');
+// Route::get('workbook/soc_meiji', [WorkbookController::class, 'soc_meiji'])
+// ->middleware(['auth', 'verified'])->name('workbook.soc_meiji');
+// Route::get('workbook/soc_meiji2', [WorkbookController::class, 'soc_meiji2'])
+// ->middleware(['auth', 'verified'])->name('workbook.soc_meiji2');
+Route::get('workbook/DHondt_method', [WorkbookController::class, 'DHondt_method'])
+->middleware(['auth', 'verified'])->name('workbook.DHondt_method');
 // 国語
 Route::get('workbook/jp_yougen', [WorkbookController::class, 'jp_yougen'])
 ->middleware(['auth', 'verified'])->name('workbook.jp_yougen');

@@ -767,8 +767,7 @@
 
 
             <!---------------------------------------- 社会 ---------------------------------------->
-            <x-h3 id="society" color="yellow">社会</x-h3>
-            <p class="text-center font-bold text-red-600">2026/9/30：社会は順次「問題集」に移行しています。</p>
+            <x-h3 id="society" color="yellow">社会（計算）</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -792,12 +791,15 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_bakumatsu')}}">幕末</a>
+                                    <a href="{{route('workbook.soc_modern_economy')}}">☆近代の経済</a>
                                 </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="yellow">
+                                    <a href="{{route('workbook.DHondt_method')}}">ドント方式</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
