@@ -222,6 +222,9 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
+                                    <a href="{{route('workbook.manipulation_equation')}}">方程式の変形</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.unit.linear_equation1')}}">\(ax=b\)</a>
                                 </x-button-link>
                                 <x-button-link>
@@ -766,15 +769,13 @@
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
-                        <x-th>分野</x-th>
-                        <x-th>中１</x-th>
-                        <x-th>中２</x-th>
-                        <x-th>中３</x-th>
+                        <x-th>地理</x-th>
+                        <x-th>歴史</x-th>
+                        <x-th>公民</x-th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <x-td>地理</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="yellow">
@@ -787,45 +788,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                {{-- <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_kyushu')}}">九州地方</a>
-                                </x-button-link> --}}
-                                {{-- <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_shikoku')}}">中国・四国地方</a>
-                                </x-button-link> --}}
-                                {{-- <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_kinki')}}">近畿・中部地方</a>
-                                </x-button-link> --}}
-                            </div>
-                        </x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
-                            </div>
-                        </x-td>
-                    </tr>
-                    <tr>
-                        <x-td>歴史</x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
-                                {{-- <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_kodai')}}">縄文、弥生、古墳</a>
-                                </x-button-link>
-                                <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_asuka_nara')}}">飛鳥、奈良</a>
-                                </x-button-link> --}}
-                            </div>
-                        </x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
                                 <x-button-link color="yellow">
                                     <a href="{{route('workbook.soc_bakumatsu')}}">幕末</a>
                                 </x-button-link>
-                                {{-- <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_meiji')}}">明治維新</a>
-                                </x-button-link>
-                                <x-button-link color="yellow">
-                                    <a href="{{route('workbook.soc_meiji2')}}">明治（議会、戦争）</a>
-                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -833,21 +798,6 @@
                             </div>
                         </x-td>
                     </tr>
-                    {{-- <tr>
-                        <x-td>公民</x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
-                            </div>
-                        </x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
-                            </div>
-                        </x-td>
-                        <x-td class="font-bold">
-                            <div class="flex flex-wrap gap-4">
-                            </div>
-                        </x-td>
-                    </tr> --}}
                 </tbody>
             </table>
 

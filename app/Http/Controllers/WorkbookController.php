@@ -2434,6 +2434,154 @@ class WorkbookController extends Controller
         return view('workbook.unit.fractional_expression', compact('p','q'));
     }
 
+    // 方程式の変形
+    public function manipulation_equation() {
+        $unitname = "方程式の変形";
+        $result = $this->get_manipulation_equation();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_manipulation_equation() {
+        $a = rand(2, 9);
+        $b = rand(2, 9);
+        do {
+            $c = rand(2, 9);
+        } while ($a == $c);
+        $d = rand(2, 9);
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺から {$b} を引きなさい。</p>
+                        <p>\({$a}x + {$b} = {$c}x + {$d}\)</p>",
+                'a_type' => 2,
+                'a' => "{$a}x = {$c}x" . $this->add_plus($d - $b),
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                {$a}x + {$b} &= {$c}x + {$d} \\\\
+                                {$a}x + {$b} - {$b} &= {$c}x + {$d} - {$b} \\\\
+                                {$a}x &= {$c}x" . $this->add_plus($d - $b) . " \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺から \({$c}x\) を引きなさい。</p>
+                        <p>\({$a}x + {$b} = {$c}x + {$d}\)</p>",
+                'a_type' => 2,
+                'a' => $this->fracnum_to_str($a - $c, 1, "", 1) . "x + {$b} = {$d}",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                {$a}x + {$b} &= {$c}x + {$d} \\\\
+                                {$a}x + {$b} - {$c}x &= {$c}x + {$d} - {$c}x \\\\
+                                " . $this->fracnum_to_str($a - $c, 1, "", 1) . "x + {$b} &= {$d} \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺に {$b} を足しなさい。</p>
+                        <p>\({$a}x - {$b} = {$c}x + {$d}\)</p>",
+                'a_type' => 2,
+                'a' => "{$a}x = {$c}x" . $this->add_plus($d + $b),
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                {$a}x - {$b} &= {$c}x + {$d} \\\\
+                                {$a}x - {$b} + {$b} &= {$c}x + {$d} + {$b} \\\\
+                                {$a}x &= {$c}x" . $this->add_plus($d + $b) . " \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺に \({$c}x\) を足しなさい。</p>
+                        <p>\({$a}x - {$b} = -{$c}x + {$d}\)</p>",
+                'a_type' => 2,
+                'a' => $this->fracnum_to_str($a + $c, 1, "x", 1) . " - {$b} = {$d}",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                {$a}x - {$b} &= -{$c}x + {$d} \\\\
+                                {$a}x - {$b} + {$c}x &= -{$c}x + {$d} + {$c}x \\\\
+                                " . $this->fracnum_to_str($a + $c, 1, "x", 1) . " - {$b} &= {$d} \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺に {$a} を掛けなさい。</p>
+                        $$ \\frac{\,{$b}x + {$c}\,}{{$a}} = {$d} $$",
+                'a_type' => 2,
+                'a' => "{$b}x + {$c} = " . $d * $a,
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                \\frac{\,{$b}x + {$c}\,}{{$a}} &= {$d} \\\\
+                                \\frac{\,{$b}x + {$c}\,}{{$a}} \\times {$a} &= {$d} \\times {$a} \\\\
+                                {$b}x + {$c} &= " . $d * $a . " \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺に \({$a}x\) を掛けなさい。</p>
+                        $$ \\frac{\,{$b}x + {$c}\,}{{$a}x} = {$d} $$",
+                'a_type' => 2,
+                'a' => "{$b}x + {$c} = " . $d * $a . "x",
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                \\frac{\,{$b}x + {$c}\,}{{$a}x} &= {$d} \\\\
+                                \\frac{\,{$b}x + {$c}\,}{{$a}x} \\times {$a}x &= {$d} \\times {$a}x \\\\
+                                {$b}x + {$c} &= " . $d * $a . "x \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺を {$a} で割りなさい。</p>
+                        <p>\({$a}x + {$b} = {$c}x + {$d}\)</p>",
+                'a_type' => 2,
+                'a' => "x + " . $this->fracnum_to_str($b, $a, "", 1) . " 
+                            = " . $this->fracnum_to_str($c, $a, "x", 1) . " + " . $this->fracnum_to_str($d, $a, "", 1),
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                {$a}x + {$b} &= {$c}x + {$d} \\\\
+                                ({$a}x + {$b}) \\div {$a} &= ({$c}x + {$d}) \\div {$a} \\\\
+                                x + " . $this->fracnum_to_str($b, $a, "", 1) . " 
+                                    &= " . $this->fracnum_to_str($c, $a, "x", 1) . " + " . $this->fracnum_to_str($d, $a, "", 1) . "\\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p class=\"text-xl mt-4\">両辺を {$b} で割りなさい。</p>
+                        <p>\({$a}x + {$b} = {$c}x + {$d}\)</p>",
+                'a_type' => 2,
+                'a' => $this->fracnum_to_str($a, $b, "x", 1) . " + 1  
+                            = " . $this->fracnum_to_str($c, $b, "x", 1) . " + " . $this->fracnum_to_str($d, $b, "", 1),
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                {$a}x + {$b} &= {$c}x + {$d} \\\\
+                                ({$a}x + {$b}) \\div {$b} &= ({$c}x + {$d}) \\div {$b} \\\\
+                                " . $this->fracnum_to_str($a, $b, "x", 1) . " + 1  
+                                    &= " . $this->fracnum_to_str($c, $b, "x", 1) . " + " . $this->fracnum_to_str($d, $b, "", 1) . "\\\\
+                            \\end{aligned}
+                        \]",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 一次方程式(1)
     public function linear_equation1() {
         $a = (-1)**rand(1,2) * rand(2, 9);
@@ -2548,6 +2696,7 @@ class WorkbookController extends Controller
         $denominator = abs($denominator);
         return view('workbook.unit.linear_equation4', compact('a','b','c','d','ans_sign','numerator','denominator'));
     }
+
 
     // 一次方程式まとめ
     public function linear_equation_summary(Request $request) {
@@ -10056,7 +10205,7 @@ class WorkbookController extends Controller
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 10);
+        $idx = rand(0, 11);
         switch ($idx) {
             case 0:
                 $result = $this->get_positive_negative();   // 正負の数
@@ -10091,6 +10240,9 @@ class WorkbookController extends Controller
             case 10:
                 $result = $this->get_value_of_expression();   // 式の値
                 break;
+            case 11:
+                $result = $this->get_manipulation_equation();   // 方程式の変形
+                break;                
         }
         $question = $result['question'];
         $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";

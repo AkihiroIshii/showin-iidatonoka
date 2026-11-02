@@ -338,6 +338,8 @@ Route::get('workbook/distributive_law2', [WorkbookController::class, 'distributi
 ->middleware(['auth', 'verified'])->name('workbook.unit.distributive_law2');
 Route::get('workbook/fractional_expression', [WorkbookController::class, 'fractional_expression'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.fractional_expression');
+Route::get('workbook/manipulation_equation', [WorkbookController::class, 'manipulation_equation'])
+->middleware(['auth', 'verified'])->name('workbook.manipulation_equation');
 Route::get('workbook/linear_equation1', [WorkbookController::class, 'linear_equation1'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.linear_equation1');
 Route::get('workbook/linear_equation2', [WorkbookController::class, 'linear_equation2'])
