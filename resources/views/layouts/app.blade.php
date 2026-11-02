@@ -12,6 +12,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
         <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=1">
+        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
