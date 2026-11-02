@@ -389,6 +389,8 @@ Route::get('workbook/data_analysisJ1', [WorkbookController::class, 'data_analysi
 Route::get('workbook/coordinates_triangle', [WorkbookController::class, 'coordinates_triangle'])
 ->middleware(['auth', 'verified'])->name('workbook.coordinates_triangle');
 // 数学（中2）
+Route::get('workbook/add_sub_polynomials', [WorkbookController::class, 'add_sub_polynomials'])
+->middleware(['auth', 'verified'])->name('workbook.add_sub_polynomials');
 Route::get('workbook/mul_div_monomials', [WorkbookController::class, 'mul_div_monomials'])
 ->middleware(['auth', 'verified'])->name('workbook.mul_div_monomials');
 Route::get('workbook/regularity', [WorkbookController::class, 'regularity'])

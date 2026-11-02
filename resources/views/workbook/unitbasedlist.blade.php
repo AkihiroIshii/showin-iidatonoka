@@ -190,6 +190,9 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
+                                    <a href="{{route('workbook.add_sub_polynomials')}}">多項式の加減</a>
+                                </x-button-link>
+                                <x-button-link>
                                     <a href="{{route('workbook.mul_div_monomials')}}">単項式の乗除</a>
                                 </x-button-link>
                                 <x-button-link>

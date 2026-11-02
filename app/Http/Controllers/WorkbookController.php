@@ -5029,6 +5029,67 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question', 'plot_par_q','plot_con_q', 'plot_par_e','plot_con_e'));
     }
 
+    // 多項式の加減
+    public function add_sub_polynomials() {
+        $unitname = "多項式の加減";
+        $result = $this->get_add_sub_polynomials();
+        $question = $result['question'];
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_add_sub_polynomials() {
+        $a = rand(1, 9);
+        $b = (-1)**rand(1, 2) * rand(1, 9);
+        do {
+            $c = rand(1, 9);
+        } while ($a == $c);
+        do {
+            $d = (-1)**rand(1, 2) * rand(1, 9);
+        } while (abs($b) == abs($d));
+        
+        $f1 = $this->fracnum_to_str($a, 1, "x", 1) . $this->add_plus($this->fracnum_to_str($b, 1, "y", 1));
+        $f2 = $this->fracnum_to_str($c, 1, "x", 1) . $this->add_plus($this->fracnum_to_str($d, 1, "y", 1));
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        $$ ({$f1}) + ({$f2}) $$
+                        ",
+                'a_type' => 2,
+                'a' => $this->fracnum_to_str($a + $c, 1, "x", 1) . $this->add_plus($this->fracnum_to_str($b + $d, 1, "y", 1)),
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                &({$f1}) + ({$f2}) \\\\
+                                &= {$f1} + {$f2} \\\\
+                                &= " . $this->fracnum_to_str($a + $c, 1, "x", 1) . $this->add_plus($this->fracnum_to_str($b + $d, 1, "y", 1)) . " \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>次の計算をしなさい。</p>
+                        $$ ({$f1}) - ({$f2}) $$
+                        ",
+                'a_type' => 2,
+                'a' => $this->fracnum_to_str($a - $c, 1, "x", 1) . $this->add_plus($this->fracnum_to_str($b - $d, 1, "y", 1)),
+                'e_type' => 3,
+                'e' => "\[
+                            \\begin{aligned}
+                                &({$f1}) - ({$f2}) \\\\
+                                &= {$f1} - " . $this->fracnum_to_str($c, 1, "x", 1) . $this->add_plus($this->fracnum_to_str(-$d, 1, "y", 1)) . " \\\\
+                                &= " . $this->fracnum_to_str($a - $c, 1, "x", 1) . $this->add_plus($this->fracnum_to_str($b - $d, 1, "y", 1)) . " \\\\
+                            \\end{aligned}
+                        \]",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 単項式の乗除
     public function mul_div_monomials() {
         $unitname = "単項式の乗除";
@@ -10205,7 +10266,7 @@ class WorkbookController extends Controller
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 11);
+        $idx = rand(0, 12);
         switch ($idx) {
             case 0:
                 $result = $this->get_positive_negative();   // 正負の数
@@ -10242,7 +10303,10 @@ class WorkbookController extends Controller
                 break;
             case 11:
                 $result = $this->get_manipulation_equation();   // 方程式の変形
-                break;                
+                break;
+            case 12:
+                $result = $this->get_add_sub_polynomials();   // 多項式の加減
+                break;
         }
         $question = $result['question'];
         $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";
