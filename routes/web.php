@@ -624,8 +624,14 @@ Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relativ
 
 /******** javaScript **************/
 // 数理物理
+Route::get('workbook/js_n_ary_numeral', [WorkbookController::class, 'js_n_ary_numeral'])
+->middleware(['auth', 'verified'])->name('workbook.js_n_ary_numeral');
+Route::get('workbook/js_series_sums_vs_integrals', [WorkbookController::class, 'js_series_sums_vs_integrals'])
+->middleware(['auth', 'verified'])->name('workbook.js_series_sums_vs_integrals');
 Route::get('workbook/js_make_harmony', [WorkbookController::class, 'js_make_harmony'])
 ->middleware(['auth', 'verified'])->name('workbook.js_make_harmony');
+Route::get('workbook/js_joukowski', [WorkbookController::class, 'js_joukowski'])
+->middleware(['auth', 'verified'])->name('workbook.js_joukowski');
 Route::get('workbook/js_matrix_notation', [WorkbookController::class, 'js_matrix_notation'])
 ->middleware(['auth', 'verified'])->name('workbook.js_matrix_notation');
 

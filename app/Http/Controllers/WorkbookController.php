@@ -20123,92 +20123,231 @@ class WorkbookController extends Controller
     }
 
     /******* javaScript **********/
+    // 十進数からn進数への変換
+    public function js_n_ary_numeral() {
+        $radix = 2;
+        $decimal = 73;
+        $buff_equation = $decimal;
+        $converted = "";
+
+        // 十進数が0になるまで基数で割り続ける
+        for ($i = 0; $decimal > 0; $i++) {
+            // 十進数を基数で割る
+            $quotient = floor($decimal / $radix);
+            $remainder = $decimal % $radix;
+
+            // 余りの羅列を記録
+            $converted = $remainder . $converted;
+            // 残りの項を作成
+            if ($i == 0)
+            {
+                $remain_terms = '';
+            }
+            else if ($i == 1)
+            {
+                $remain_terms = $previous_remainder . ' \\times ' . $radix . '^{' . ($i - 1) . '}';
+            }
+            else
+            {
+                $remain_terms = $previous_remainder . ' \\times ' . $radix . '^{' . ($i - 1) . '}+' . $remain_terms;
+            }
+
+            // 数式を追加
+            // buff_equation += '&=& (' + quotient + '\\times' + radix + '+' + remainder + ')\\times' + radix + '^{' + i + '}';
+            $buff_equation .= '&= (' . $quotient . ' \\times ' . $radix . '+' . $remainder . ') \\times ' . $radix . '^{' . $i . '}';
+            if ($i > 0)
+            {
+                $buff_equation .= '+' . $remain_terms;
+            }
+            $buff_equation .= '\\\\';
+            // 値を更新
+            $decimal = $quotient;
+            $previous_remainder = $remainder;
+        }
+        $buff_equation .= '&= (' . $converted . ')_{' . $radix . '}';
+
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+                十進法から二進法に変換する方法はよく知られており、Webで検索すると色々なサイトに載っています。
+                ここでは、この変換方法の解釈を考えたいと思います。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">例</h3>
+                例として、\(73\) を十進数から二進数に変換してみます。
+                素因数分解の要領で分解していき、余りを下から順に並べると二進数での表記 \((1001001)_2\) が得られます。
+                これは、次のように展開しているのと同じです。
+
+                \\[
+                    \\begin{aligned}
+                        {$buff_equation}
+                    \\end{aligned}
+                \\]
+
+                最終行の結果を見ると、\(73\) には \(2^6\) が1つ含まれることが分かります。一方で、筆算に現れる過程を縦方向に見ると、\(73\) には「\(2\) で \(6\) 回割り切れる成分が 1 つ含まれる」と捉えることもできます。
+                同様に、\(1\\times2^3\)の項は「\(2\) で \(3\) 回までなら割り切れる成分が 1 つ含まれる」ことを意味しています。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">好きな \(n\) 進数に変換してみよう</h3>
+                二進数以外の基数にも、同じように変換できます。好きな基数 \(n\) での表記（\(n\) 進数）に変換してみましょう。
+                基数nと変換したい数を入力し、変換ボタンを押してください。
+                <ul>
+                    <li>基数 \(n\) と変換したい数は、2〜999 の範囲で入力してください</li>
+                </ul>
+                <div class=\"set_parameters\">
+                    基数\(n\)：<input id=\"para_a\" class=\"parameter\" max=\"999\" min=\"1\" type=\"number\" value=\"2\" />
+                    \(n\) 進数に変換する数：<input id=\"para_b\" class=\"parameter\" max=\"999\" min=\"1\" type=\"number\" value=\"73\" />
+                </div>
+        ";
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div id=\"display_equation\"></div>
+            ———- 表示ここまで ———-
+        ";
+        $jsAction = "n_ary_numeral";
+        $unitname = "十進数から \(n\) 進数への変換";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
+    // 級数和と積分
+    public function js_series_sums_vs_integrals() {
+            // <figure><img class=""aligncenter wp-image-1867 size-medium" src="https://life-research.net/wp-content/uploads/2022/07/926d3ced825dad50ad43dadb92e3fbe1-300x291.jpeg" alt="ジューコフスキー変換前の円" width="300" height="291" /><figcaption><a href="https://honto.jp/ebook/pd_26273726.html" target="_blank" rel="noopener noreferrer">図の出典：『高校数学でわかる流体力学　ベルヌーイの定理から翼に働く揚力まで』講談社/竹内淳</a></figcaption></figure>
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            ある関数の積分を、級数和と比べてみましょう。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">説明</h3>
+            まず、積分の定義は次のようになっています。
+
+            $$ \\int_{a}^{b} f(x)dx = \\lim_{n \\to \\infty} \\sum_{k=1}^n f(x_k) \\Delta ・・・(式1) $$
+
+            ここで \(\displaystyle \\Delta =\\frac{b-a}{n} \) であり、これは積分する範囲を \(n\) 等分したときの 1 区間の幅に相当します。
+            このとき、(式1)の右辺の和は、\(n=10\) のとき、
+
+            $$ \\sum_{k=1}^{10} f(x_k)\\Delta = f(x_1)\\Delta + f(x_2)\\Delta + ・・・ + f(x_{10})\\Delta ・・・(式2) $$
+
+            となり、幅 \(\\Delta\)、高さ \(f(x_k)\) の長方形の面積の和になります。
+
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">試してみよう</h3>
+            ここでは \(f(x)=\sqrt{x}\) として、(式1)の右辺の和を計算してみましょう。
+            積分する範囲( \(a\) から \(b\) )と、分割する数 \(n\) を入力し、「表示」を押してください。
+            \(n=10,20,…\) と大きくしていくと、和が解析解に近づく様子が見られます。
+
+            <div class=\"set_parameters\">\( a = \)<input id=\"para_a\" class=\"parameter\" type=\"number\" value=\"0\" />
+                \( b = \)<input id=\"para_b\" class=\"parameter\" type=\"number\" value=\"10\" />
+                \( n = \)<input id=\"para_n\" class=\"parameter\" type=\"number\" max=\"50\" min=\"1\" step=\"1\" value=\"10\" />
+            </div>
+            ※ \(a\) は \(0\) 以上の値、 \(n\) は50以下の自然数を設定してください
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <h4>解析解</h4>
+            <div id=\"genmitsu-kai\"></div>
+            <h4>(式1)の右辺の和</h4>
+            <div class=\"equation\">
+                <div id=\"ans_sum\"></div>
+            </div>
+            <div class=\"canvas_container\"><canvas id=\"myChart\">meaningless</canvas></div>
+            ———- 表示ここまで ———-
+        ";
+
+        $jsAction = "series_sums_vs_integrals";
+        $unitname = "級数和と積分";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+    
     // ３つの音波を重ねて和音をつくる
     public function js_make_harmony() {
+        $td_class_common = "border border-gray-400 px-5 py-0 text-base w-30";
+        $table = "
+            <table id=\"doremi_table\" class=\"border-collapse border border-gray-400 m-auto table-fixed my-4 text-center\">
+                <thead>
+                    <tr class=\"bg-gray-100\">
+                        <th class=\"{$td_class_common}\"></th>
+                        <th class=\"{$td_class_common}\">ド</th>
+                        <th class=\"{$td_class_common}\">レ</th>
+                        <th class=\"{$td_class_common}\">ミ</th>
+                        <th class=\"{$td_class_common}\">ファ</th>
+                        <th class=\"{$td_class_common}\">ソ</th>
+                        <th class=\"{$td_class_common}\">ラ</th>
+                        <th class=\"{$td_class_common}\">シ</th>
+                        <th class=\"{$td_class_common}\">ド</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class=\"{$td_class_common}\">振動数(Hz)</th>
+                        <td class=\"{$td_class_common}\">264</td>
+                        <td class=\"{$td_class_common}\">297</td>
+                        <td class=\"{$td_class_common}\">330</td>
+                        <td class=\"{$td_class_common}\">352</td>
+                        <td class=\"{$td_class_common}\">396</td>
+                        <td class=\"{$td_class_common}\">440</td>
+                        <td class=\"{$td_class_common}\">495</td>
+                        <td class=\"{$td_class_common}\">528</td>
+                    </tr>
+                    <tr>
+                        <th class=\"{$td_class_common}\">振動数比</th>
+                        <td class=\"{$td_class_common}\">1</td>
+                        <td class=\"{$td_class_common}\">9/8</td>
+                        <td class=\"{$td_class_common}\">5/4</td>
+                        <td class=\"{$td_class_common}\">4/3</td>
+                        <td class=\"{$td_class_common}\">3/2</td>
+                        <td class=\"{$td_class_common}\">5/3</td>
+                        <td class=\"{$td_class_common}\">15/8</td>
+                        <td class=\"{$td_class_common}\">2</td>
+                    </tr>
+                </tbody>
+            </table>";
         $sentence = "
-            <x-h3>概要</x-h3>
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
             <div class=\"pl-4\">
                 振動数の異なる３つの波を重ね合わせて、和音を作ってみましょう。
                 まず、音階と振動数の関係について表に示します。
                 音階にも種類があるようですが、ここでは純正律という音階を考えます。
                 後藤さんがまとめていたので、参考にさせていただきました。
 
-                <a href=\"https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html\">https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html</a>
+                <p class=\"text-right\">
+                    <a href=\"https://www.ma.noda.tus.ac.jp/u/tg/html/scale.html\" target=\"_blank\">参考：音階について</a>
+                </p>
 
-                <table id=\"doremi_table\">
-                    <thead>
-                        <tr>
-                        <th></th>
-                        <th>ド</th>
-                        <th>レ</th>
-                        <th>ミ</th>
-                        <th>ファ</th>
-                        <th>ソ</th>
-                        <th>ラ</th>
-                        <th>シ</th>
-                        <th>ド</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>振動数(Hz)</th>
-                            <td>264</td>
-                            <td>297</td>
-                            <td>330</td>
-                            <td>352</td>
-                            <td>396</td>
-                            <td>440</td>
-                            <td>495</td>
-                            <td>528</td>
-                        </tr>
-                        <tr>
-                        <th>振動数比</th>
-                            <td>1</td>
-                            <td>9/8</td>
-                            <td>5/4</td>
-                            <td>4/3</td>
-                            <td>3/2</td>
-                            <td>5/3</td>
-                            <td>15/8</td>
-                            <td>2</td>
-                        </tr>
-                    </tbody>
-                </table>
+                {$table}
 
-                    重ねる波の振動数比が整数比に近いと、和音として聞こえるようです。
-                    例えばドミソは、\(264:330:396=4:5:6\)と整数比になっていますね。
+                重ねる波の振動数比が整数比に近いと、和音として聞こえるようです。
+                例えばドミソは、\(264:330:396=4:5:6\)と整数比になっていますね。
 
-                    また、振動数が倍になると１オクターブ上がります。
-                    １オクターブを12の音階に分けることができます。
-                    詳しくはマスオさんの記事を参照してください。
+                また、振動数が倍になると１オクターブ上がります。
+                １オクターブを12の音階に分けることができます。
+                詳しくはマスオさんの記事を参照してください。
 
-                    <a href=\"https://mathtrain.jp/onkai\">https://mathtrain.jp/onkai</a>
+                <p class=\"text-right\">
+                    <a href=\"https://mathtrain.jp/onkai\" target=\"_blank\">参考：高校数学の美しい物語</a>
+                </p>
 
+                ブラウザで鍵盤を弾けるアプリを作っている方がいたので、Web Audio APIを使った音を出すやり方を参考にさせていただきました。
+
+                <p class=\"text-right\">
+                    <a href=\"https://q-az.net/web-audio-api-piano/\" target=\"_blank\">参考：Web Audio API でピアノを作ってみる</a>
+                </p>
             </div>
             
-            <x-h3>確かめよう</x-h3>
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">和音を作ってみよう</h3>
             <div class=\"pl-4\">
-                    <h3>和音を作ってみよう</h3>
-                    ３つの波 \(u_{i}(t)=\cos(2\pi f_{i} t) (i=1,2,3)\) の振動数 \(f_{i}\) を与えて、重ねた音を聞いてみましょう。それぞれの波と合成波の波形も以下に表示されます。
+                <p>３つの波 \(u_{i}(t)=\cos(2\pi f_{i} t) (i=1,2,3)\) の振動数 \(f_{i}\) を与えて、重ねた音を聞いてみましょう。それぞれの波と合成波の波形も以下に表示されます。</p>
 
-                    注意事項
-                    <ul>
-                        <li>再生ボタンを押すと、再度ボタンを押すまで音が再生されます</li>
-                        <li>不協和音や高音を聴き続けると精神的に辛いかもしれません</li>
-                        <li>1以上の値を入力してください</li>
-                        <li>振動数の差が大きいと、合成波の波形が正確に描かれない場合があります</li>
-                        <li>ブラウザによって音が再生されない場合があります</li>
-                    </ul>
-
-                    <div class=\"set_parameters\">
-
-                    \(f_1 = \)<input id=\"para_1\" class=\"parameter\" min=\"1\" type=\"number\" value=\"264\" />Hz
-
-                    \(f_2 = \)<input id=\"para_2\" class=\"parameter\" min=\"1\" type=\"number\" value=\"330\" />Hz
-
-                    \(f_3 = \)<input id=\"para_3\" class=\"parameter\" min=\"1\" type=\"number\" value=\"396\" />Hz
-
-                    </div>
+                <p class=\"mt-4\">＜注意事項＞</p>
+                <ul class=\"pl-5 list-disc\">
+                    <li><span class=\"font-bold text-red-500\">【!!音量注意!!】表示ボタンを押すと、再度ボタンを押すまで音が再生されます。</span></li>
+                    <li>不協和音や高音を聴き続けると精神的に辛いかもしれません。</li>
+                    <li>1以上の値を入力してください。</li>
+                    <li>振動数の差が大きいと、合成波の波形が正確に描かれない場合があります。</li>
+                    <li>ブラウザによって音が再生されない場合があります。</li>
+                </ul>
+                {$table}
+                <div class=\"set_parameters\">
+                    \(f_1 = \) <input id=\"para_1\" class=\"parameter\" min=\"1\" type=\"number\" value=\"264\" />Hz
+                    \(f_2 = \) <input id=\"para_2\" class=\"parameter\" min=\"1\" type=\"number\" value=\"330\" />Hz
+                    \(f_3 = \) <input id=\"para_3\" class=\"parameter\" min=\"1\" type=\"number\" value=\"396\" />Hz
+                </div>
             </div>
         ";
 
@@ -20223,11 +20362,6 @@ class WorkbookController extends Controller
                     <div id=\"equation4\"></div>
                     <div class=\"canvas_container\"><canvas id=\"canvas4\">meaningless</canvas></div>
                     ———- 表示ここまで ———-
-                    <h3>参考</h3>
-                    ブラウザで鍵盤を弾けるアプリを作っている方がいたので、
-                    Web Audio APIを使った音を出すやり方を参考にさせていただきました。
-
-                    <a href=\"https://q-az.net/web-audio-api-piano/\">https://q-az.net/web-audio-api-piano/</a>
         ";
 
         $jsAction = "make_harmony";
@@ -20235,10 +20369,88 @@ class WorkbookController extends Controller
         return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
     }
 
+    // 円形を翼形に写す〜ジューコフスキー変換〜
+    public function js_joukowski() {
+            // <figure><img class=""aligncenter wp-image-1867 size-medium" src="https://life-research.net/wp-content/uploads/2022/07/926d3ced825dad50ad43dadb92e3fbe1-300x291.jpeg" alt="ジューコフスキー変換前の円" width="300" height="291" /><figcaption><a href="https://honto.jp/ebook/pd_26273726.html" target="_blank" rel="noopener noreferrer">図の出典：『高校数学でわかる流体力学　ベルヌーイの定理から翼に働く揚力まで』講談社/竹内淳</a></figcaption></figure>
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            流体力学の教科書に載っているジューコフスキー変換を試してみます。
+            この変換により、円形を翼形に変換できます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">準備</h3>
+            
+            <h4 class=\"text-xl font-bold mt-4\">円形の用意</h4>
+            <div class=\"pl-4\">
+                翼形に変換できる円形には条件があるようです。次の手順で作成すると、条件を満たせます。
+                <ul class=\"pl-5 list-disc\">
+                    <li>中心がy軸上にある円（以下、内接円と呼ぶ）を用意する</li>
+                    <li>内接円とx軸の交点\((a,0)\)で外接する円（以下、外接円）を用意する\((a&gt;0)\)</li>
+                    <li>外接円の中心を\((x_1,y_1)\)、半径を\(R\)とする</li>
+                </ul>
+            </div>
+
+            <h4 class=\"text-xl font-bold mt-4\">外接円の表現</h4>
+            <div class=\"pl-4\">
+                <p>外接円周上の点\((x,y)\)は、次のように表せます。</p>
+
+                $$ x = R\\cos\\theta + x_1 \\tag{1} $$
+                $$ y = R\\sin\\theta + y_1 \\tag{2} $$
+
+                また、点\((a,0)\)で外接するという条件から、半径\(R\)は次の条件を満たします。
+                $$ R = \\sqrt{(a-x_1)^2+y_1^2} \\tag{3} $$
+            </div>
+
+            <h4 class=\"text-xl font-bold mt-4\">ジューコフスキー変換の式</h4>
+            <div class=\"pl-4\">
+                外接円周上の点\((x,y)\)を、次式で\((X,Y)\)に変換します。
+
+                $$ X = x + \\frac{a^2x}{x^2+y^2} \\tag{4} $$
+                $$ Y = y - \\frac{a^2y}{x^2+y^2} \\tag{5} $$
+
+                (4,5)式に(1,2)式を代入すると、\(\\theta\)を変数とした形で表現できます。
+
+                $$ X(\\theta) = R\\cos\\theta + x_1 + \\frac{a^2(R\\cos\\theta+x_1)}{R^2+x_1^2+y_1^2+2R(x_1\\cos\\theta+y_1\\sin\\theta)} $$
+                $$ Y(\\theta) = R\\sin\\theta + y_1 + \\frac{a^2(R\\sin\\theta+y_1)}{R^2+x_1^2+y_1^2+2R(x_1\\cos\\theta+y_1\\sin\\theta)} $$
+
+                \(R\) は(3)式で表せるので、パラメータは \(a,x_1,y_1\) の３つにまとめられます。
+            </div>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">好きなパラメータで変換してみよう</h3>
+            <div class=\"pl-4\">
+                <p>パラメータを入力して「表示」を押してください。</p>
+                <div class=\"set_parameters\">
+                    内接円とx軸の交点のx座標： \(a=\) <input id=\"para_a\" class=\"parameter\" max=\"10\" min=\"0.1\" step=\"0.1\" type=\"number\" value=\"1.0\" />
+                    外接円の中心（x座標）： \(x_1=\) <input id=\"para_x1\" class=\"parameter\" max=\"10\" min=\"-10\" step=\"0.1\" type=\"number\" value=\"-0.2\" />
+                    外接円の中心（y座標）： \(y_1=\) <input id=\"para_y1\" class=\"parameter\" max=\"10\" min=\"-10\" step=\"0.1\" type=\"number\" value=\"0.3\" />
+                </div>
+            </div>
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div class=\"flex-container\">
+                <div class=\"canvas-container w-1/2 flex\">
+                    <h4>変換前</h4>
+                    <canvas id=\"canvas_1\">meaningless</canvas>
+
+                    <h4>変換後</h4>
+                    <canvas id=\"canvas_2\">meaningless</canvas>
+                </div>
+            </div>
+            (※)変換前の内接円は、点線に見せるためにプロット数を減らしています。
+
+            ———- 表示ここまで ———-
+        ";
+
+        $jsAction = "joukowski";
+        $unitname = "ジューコフスキー変換";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
     // 行列の積と成分表記
     public function js_matrix_notation() {
         $sentence = "
-            <x-h3>概要</x-h3>
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
             <div class=\"pl-4\">
                 行列表示は次元が大きくなると書くのがしんどい。
                 例えば3×3の行列\( A,B,C \)の積などあまり考えたくない。
@@ -20248,7 +20460,8 @@ class WorkbookController extends Controller
                 具体的に、3×3の行列の積 \( S = ABC \) の \(ij\) 成分 \( s_{ij} \) は次のように表記できる。
                 $$ s_{ij} = \sum_{k,l}^3 a_{ik}b_{kl}c_{lj} $$
             </div>
-            <x-h3>確かめよう</x-h3>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">確かめよう</h3>
             <div class=\"pl-4\">
                 <p>行列の次元\(n\)に対して3つの行列の積の成分が上記の式のようになっているか、行列形式での展開の過程を確認しましょう。<p>
                 <p class=\"mt-4\">次元 \( n = \) <input id=\"para_n\" max=\"5\" min=\"1\" type=\"number\" value=\"3\" />(最大5)</p>

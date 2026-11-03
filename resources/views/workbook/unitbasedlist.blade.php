@@ -928,8 +928,8 @@
                 </tbody>
             </table>
 
-            <!---------------------------------------- javaScript ---------------------------------------->
-            {{-- <x-h3 color="pink">javaScript</x-h3>
+            <!---------------------------------------- 塾長の雑記（jQuery） ---------------------------------------->
+            <x-h3 color="orange">塾長の雑記☕</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -942,17 +942,26 @@
                         <x-td>数理物理</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                <x-button-link>
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_n_ary_numeral')}}">十進数から \(n\) 進数への変換</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_series_sums_vs_integrals')}}">級数和と積分</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
                                     <a href="{{route('workbook.js_make_harmony')}}">３つの音波を重ねて和音をつくる</a>
                                 </x-button-link>
-                                <x-button-link>
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_joukowski')}}">円形を翼形に写す〜ジューコフスキー変換〜</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
                                     <a href="{{route('workbook.js_matrix_notation')}}">行列の積と成分表記</a>
                                 </x-button-link>
                             </div>
                         </x-td>
                     </tr>
                 </tbody>
-            </table> --}}
+            </table>
 
         </div>
     </div>
