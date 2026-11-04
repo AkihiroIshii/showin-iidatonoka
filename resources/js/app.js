@@ -22,9 +22,9 @@ $(function () {
         switch (window.pageConfig?.jsAction) {
             case 'make_harmony':
                 // 再生中の場合（停止するとき）は破棄しない
-                if(audioCtxes.length==3){
-                    break;
-                }
+                // if(audioCtxes.length==3){
+                //     break;
+                // }
             default:                           
                 myChart1 && myChart1.destroy();
                 myChart2 && myChart2.destroy();
@@ -43,17 +43,22 @@ $(function () {
                 matrix_notation();
                 break;
             case 'make_harmony':
-                // 再生中の場合は停止
-                if(audioCtxes.length==3){
-                    releaseAudio();
-                    $(this).html('再生（音が流れます）');
-                // 停止中の場合は再生
-                }else{
                     loadAndSound();
                     $(this).html('停止');
                     dispWaveFunc();
-                }
                 break;
+            // case 'make_harmony':
+            //     // 再生中の場合は停止
+            //     if(audioCtxes.length==3){
+            //         releaseAudio();
+            //         $(this).html('再生（音が流れます）');
+            //     // 停止中の場合は再生
+            //     }else{
+            //         loadAndSound();
+            //         $(this).html('停止');
+            //         dispWaveFunc();
+            //     }
+            //     break;
             case 'joukowski':
                 joukowski();
                 break;
@@ -63,17 +68,17 @@ $(function () {
     $(".parameter").on('change', function() {
         switch (window.pageConfig?.jsAction) {
             case 'make_harmony':
-                $(".parameter").on('change', function() {
-                    // 再生中の場合は処理を実行
-                    if(audioCtxes.length==3){
-                        // 再生中のaudioCtxを閉じる
-                        releaseAudio();
-                        // 更新されたパラメータで再生
-                        loadAndSound();
-                        dispWaveFunc();
-                    }
-                });
-                break;
+                // $(".parameter").on('change', function() {
+                //     // 再生中の場合は処理を実行
+                //     if(audioCtxes.length==3){
+                //         // 再生中のaudioCtxを閉じる
+                //         releaseAudio();
+                //         // 更新されたパラメータで再生
+                //         loadAndSound();
+                //         dispWaveFunc();
+                //     }
+                // });
+                // break;
         }
     });
 });
@@ -101,50 +106,6 @@ function n_ary_numeral() {
     var buff_equation; // 数式
     var radix = para_a; // 基数
     var decimal = para_b; // 変換したい十進数
-
-    // // buff_equation = '\\begin{eqnarray}\\\\' + decimal;
-    // buff_equation =  decimal;
-
-    // // 十進数が0になるまで基数で割り続ける
-    // for (var i = 0; decimal > 0; i++) {
-    //     // 十進数を基数で割る
-    //     quotient = Math.floor(decimal / radix);
-    //     remainder = decimal % radix;
-
-    //     // 余りの羅列を記録
-    //     converted = remainder + converted;
-    //     // 残りの項を作成
-    //     if (i == 0)
-    //     {
-    //         remain_terms = '';
-    //     }
-    //     else if (i == 1)
-    //     {
-    //         remain_terms = previous_remainder + '\\times' + radix + '^{' + (i - 1) + '}';
-    //     }
-    //     else
-    //     {
-    //         remain_terms = previous_remainder + '\\times' + radix + '^{' + (i - 1) + '}+' + remain_terms;
-    //     }
-
-    //     // 数式を追加
-    //     buff_equation += '&=& (' + quotient + '\\times' + radix + '+' + remainder + ')\\times' + radix + '^{' + i + '}';
-    //     if (i > 0)
-    //     {
-    //         buff_equation += '+' + remain_terms;
-    //     }
-    //     buff_equation += '\\\\';
-    //     // 値を更新
-    //     decimal = quotient;
-    //     previous_remainder = remainder;
-    // }
-    // // buff_equation += '&=&(' + converted + ')_{' + radix + '}\\\\'
-    // // + '\\end{eqnarray}';
-    // buff_equation += '&=&(' + converted + ')_{' + radix + '}';
-
-
-
-
 
     buff_equation = decimal;
 
@@ -182,20 +143,13 @@ function n_ary_numeral() {
         decimal = quotient;
         previous_remainder = remainder;
     }
-    // buff_equation += '&=&(' + converted + ')_{' + radix + '}\\\\'
-    // + '\\end{eqnarray}';
     buff_equation += '&= (' + converted + ')_{' + radix + '}';
 
     // 生成した数式と図形のdiv要素を出力
-    // alert(buff_equation);
     $("#display_equation").html("\\[ \\begin{aligned} " + buff_equation + " \\end{aligned} \\]");
     renderMathInElement(document.getElementById("display_equation"));
-
-    // MathJax.Hub.Queue(["Typeset",MathJax.Hub,"display_equation"]);
 }
 
-    // $("#result").html(f);
-    // renderMathInElement(document.getElementById("result"));
 
 /*******************************************************
 * 級数和と積分
@@ -458,50 +412,85 @@ function matrix_notation() {
 /*******************************************************
 * ３つの音波を重ねて和音をつくる
 ********************************************************/
-var audioCtxes = new Array();
-window.AudioContext = window.AudioContext || window.webkitAudioContext; //クロスブラウザ対応
+// var audioCtxes = new Array();
+// window.AudioContext = window.AudioContext || window.webkitAudioContext; //クロスブラウザ対応
 
 // 音を鳴らす処理
-function playSound(hz){
+// function playSound(hz){
 
-    var audioCtx = new AudioContext();
+//     var audioCtx = new AudioContext();
 
-    //音の出力先
-    var audioDestination = audioCtx.destination;
+//     //音の出力先
+//     var audioDestination = audioCtx.destination;
 
-    //正弦波の音を作成
-    var osciillator = audioCtx.createOscillator();
+//     //正弦波の音を作成
+//     var osciillator = audioCtx.createOscillator();
 
-    //ヘルツ（周波数）指定
-    osciillator.frequency.value = hz;
+//     //ヘルツ（周波数）指定
+//     osciillator.frequency.value = hz;
 
-    // 音量
-    //var gainNode = audioCtx.createGain();
-    //gainNode.gain.value = 0.1; // 10 %
+//     // 音量
+//     //var gainNode = audioCtx.createGain();
+//     //gainNode.gain.value = 0.1; // 10 %
 
-    //出力先のスピーカーに接続
-    osciillator.connect(audioDestination);
-    //gainNode.connect(audioDestination);
+//     //出力先のスピーカーに接続
+//     osciillator.connect(audioDestination);
+//     //gainNode.connect(audioDestination);
 
-    //音を出す
-    osciillator.start();
+//     //音を出す
+//     osciillator.start();
 
-    audioCtxes.push(audioCtx);
+//     audioCtxes.push(audioCtx);
+// }
+const AudioContextClass =
+    window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContextClass();
+// 音を鳴らす処理
+async function playSound(hz) {
+    if (audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+    }
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    const now = audioCtx.currentTime;
+    const duration = 1.5;
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(hz, now);
+
+    // 音量を徐々に上げ下げして、クリック音も抑える
+    gainNode.gain.setValueAtTime(0, now);
+    gainNode.gain.linearRampToValueAtTime(0.12, now + 0.02);
+    gainNode.gain.setValueAtTime(0.12, now + duration - 0.03);
+    gainNode.gain.linearRampToValueAtTime(0, now + duration);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start(now);
+    oscillator.stop(now + duration);
+
+    oscillator.onended = () => {
+        oscillator.disconnect();
+        gainNode.disconnect();
+    };
 }
 
 // Audioを解放
-function releaseAudio(){
-    // 再生中の場合は停止
-    if(audioCtxes.length==3){
-      // audioCtxを閉じる
-      audioCtxes[0].close();
-      audioCtxes[1].close();
-      audioCtxes[2].close();
+// function releaseAudio(){
+//     // 再生中の場合は停止
+//     if(audioCtxes.length==3){
+//       // audioCtxを閉じる
+//       audioCtxes[0].close();
+//       audioCtxes[1].close();
+//       audioCtxes[2].close();
 
-      // 配列を空にする
-      audioCtxes.length = 0;
-    }
-}
+//       // 配列を空にする
+//       audioCtxes.length = 0;
+//     }
+// }
 
 // パラメータ取得＆再生
 function loadAndSound(){

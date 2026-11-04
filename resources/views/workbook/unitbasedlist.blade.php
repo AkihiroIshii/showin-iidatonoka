@@ -373,7 +373,7 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link>
-                                    <a href="{{route('workbook.find_angle')}}">角度を求める</a>
+                                    <a href="{{route('workbook.find_angle')}}">角の大きさ</a>
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.unit.regular_polygon')}}">正多角形の角</a>
@@ -454,6 +454,9 @@
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.math_entrance_exam_2')}}">問２</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.math_entrance_exam_3')}}">問３</a>
                                 </x-button-link>
                                 <x-button-link>
                                     <a href="{{route('workbook.math_entrance_exam_4')}}">問４</a>

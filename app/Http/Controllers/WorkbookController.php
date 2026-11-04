@@ -6547,71 +6547,366 @@ class WorkbookController extends Controller
     // }
 
     // 角度を求める
+    // public function find_angle() {
+    //     // 変数
+    //     $ang1 = 10 * rand(2, 14);   // 20～140°
+    //     $ang_rest = 180 - $ang1;    // 他２角の和
+    //     $ang_base = $ang_rest / 2;  // ang1を頂角とする二等辺三角形の底角。
+    //     $ang2 = $ang_base + (-1)**rand(1,2) * rand(10, $ang_base);
+    //     $ang3 = 180 - ($ang1 + $ang2);
+
+    //     // q：問、a：答、e：解説
+    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+    //     $questions = [
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC\, ,\\angle ABC = {$ang_base}^{\circ}\,であるとき、\\angle BAC を求めよ。}",
+    //             'a_type' => 2,
+    //             'a' => "{$ang1}^{\circ}",
+    //             'e_type' => 3,
+    //             'e' => "<p>\(ノートに\,\mathrm{\\triangle \mathrm{ABC}}\,を描いて考えましょう。\)</p>
+    //                     <p>\(扱いやすくするため、\,\mathrm{\\angle \mathrm{BAC}=\mathnormal{a}^{\circ},
+    //                         \\angle \mathrm{ABC}=\mathnormal{b}^{\circ},\\angle \mathrm{ACB}=\mathnormal{c}^{\circ} }\,とする。\)</p>
+    //                     <p>\(二等辺三角形の底角は等しいので、b = c = {$ang_base}^{\circ}.\)</p> 
+    //                     <p>\(三角形の内角の和は\,180^{\circ}\,なので、\)</p>
+    //                     \\[
+    //                         \\begin{aligned}
+    //                             a + b + c &= 180 \\\\
+    //                             a + {$ang_base} + {$ang_base} &= 180 \\\\
+    //                             a & = 180 - {$ang_rest} \\\\
+    //                             a &= {$ang1}^{\circ}.
+    //                         \\end{aligned}
+    //                     \\]
+    //                     ",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC\, ,\\angle BAC = {$ang1}^{\circ}\,であるとき、\\angle ABC を求めよ。}",
+    //             'a_type' => 2,
+    //             'a' => "{$ang_base}^{\circ}",
+    //             'e_type' => 3,
+    //             'e' => "<p>\(ノートに\,\mathrm{\\triangle \mathrm{ABC}}\,を描いて考えましょう。\)</p>
+    //                     <p>\(扱いやすくするため、\,\mathrm{\\angle \mathrm{BAC}=\mathnormal{a}^{\circ},
+    //                         \\angle \mathrm{ABC}=\mathnormal{b}^{\circ},\\angle \mathrm{ACB}=\mathnormal{c}^{\circ} }\,とする。\)</p>
+    //                     <p>\(三角形の内角の和は\,180^{\circ}\,で、a = {$ang1}^{\circ}\,なので、\)</p>
+    //                     \\[
+    //                         \\begin{aligned}
+    //                             a + b + c &= 180 \\\\
+    //                             {$ang1} + b + c &= 180 \\\\
+    //                             b + c &= {$ang_rest}.
+    //                         \\end{aligned}
+    //                     \\]
+    //                     <p>\(二等辺三角形の底角は等しいので、b = c。よって、 b = {$ang_rest} / 2 = {$ang_base}^{\circ}.\)</p> 
+    //                     ",
+    //         ],
+    //         [
+    //             'q_type' => 2,
+    //             'q' => "平行四辺形\,\mathrm{ABCD}\,について、\mathrm{\\angle ABD = {$ang1}^{\circ}\,であるとき、\\angle BDC を求めよ。}",
+    //             'a_type' => 2,
+    //             'a' => "{$ang1}^{\circ}",
+    //             'e_type' => 2,
+    //             'e' => "図を描いて考えましょう。\mathrm{AB /\!/ DC}\,より、錯角は等しいから、\mathrm{\\angle ABD = \\angle BDC}.",
+    //         ],
+    //     ];
+    //     $q_index = rand(0,count($questions)-1);
+    //     $question = $questions[$q_index];
+    //     $unitname = "角度を求める";
+    //     return view('workbook.unit_template', compact('unitname','question'));
+    // }
+
+    // 角の大きさ
     public function find_angle() {
+        $unitname = "角の大きさ";
+        $result = $this->get_find_angle();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_find_angle() {
+        // グラフ描画用
+        $size = 400;    //viewportの大きさ（仮）
+        $margin = 40;
+        $vb_width = $size;
+        $vb_height = $size;
+        
         // 変数
-        $ang1 = 10 * rand(2, 14);   // 20～140°
-        $ang_rest = 180 - $ang1;    // 他２角の和
-        $ang_base = $ang_rest / 2;  // ang1を頂角とする二等辺三角形の底角。
-        $ang2 = $ang_base + (-1)**rand(1,2) * rand(10, $ang_base);
-        $ang3 = 180 - ($ang1 + $ang2);
+        $R = rand(1, 10);   // 外接円の半径
+        $a1 = 10 + 2 * rand(0, 20);    // BOとBCのなす角（10～40°⇒ラジアン）
+        $a2 = $a1 + 2 * rand(10, 40);    // x軸とOAのなす角（$a1 + 20～80°⇒ラジアン）
+        $theta1 = 2 * M_PI * $a1/360;    // BOとBCのなす角（20～60°⇒ラジアン）
+        $theta2 = 2 * M_PI * $a2/360;    // x軸とOAのなす角（20～60°⇒ラジアン）
+        $scale = ($size - 2 * $margin) / (2 * $R); // x=1 に相当する描画エリアでの単位長
+        $S_ABC = 2 * rand(1, 10);   // △ABCの面積
+
+        // 導出される値
+        $S_BGM_str = $this->fracnum_to_str($S_ABC, 6, "", 1);
+        $angle_ABC = ($a1 + $a2) / 2;
+        $angle_ACB = 90 + ($a1 - $a2) / 2;
+        $angle_BAC = 90 - $a1;
+        $angle_BOC = 180 - 2 * $a1;
+        $angle_AOC = $a1 + $a2;
+        $angle_OAC = 90 - $angle_AOC / 2;
+        $angle_AOB = 180 - ($angle_AOC + $angle_BOC);
+        $angle_OAB = 90 - $angle_AOB / 2; 
+        $angle_ANM = $angle_ABC + $angle_ACB;
+        $angle_AlAN = $angle_ABC + $angle_BAC;
+
+        $angle_IAB = $angle_BAC / 2;
+        $angle_ICB = $angle_ACB / 2;
+        $angle_AIC = $angle_ABC + $angle_IAB + $angle_ICB;
+
+        /****** 各頂点の座標 *****/
+        $Ox = $R * cos($theta1) * $scale;   // 外接円の中心
+        $Oy = -$R * sin($theta1) * $scale;
+        $Ax = $Ox + $R * cos($theta2) * $scale;
+        $Ay = $Oy -$R * sin($theta2) * $scale;
+        $Bx = 0;
+        $By = 0;
+        $Cx = $Ox * 2;
+        $Cy = 0;
+
+        $Lx = $Ax / 2;  // ABの中点
+        $Ly = $Ay / 2;
+        $Mx = $Cx / 2;  // BCの中点
+        $My = 0;
+        $Nx = ($Ax + $Cx) / 2;  // ACの中点
+        $Ny = $Ay / 2;
+
+        $Alx = $Ax - $Mx / 2;
+        $Aly = $Ay;
+        $Arx = $Ax + $Mx / 2;
+        $Ary = $Ay;
+        $BNx = $Bx;
+        $BNy = $Ny;
+        $CNx = $Cx;
+        $CNy = $Ny;
+
+        // 各辺の長さ
+        $a = $Cx;   // プロット用
+        $b = sqrt(pow($Cx - $Ax, 2) + pow($Ay, 2));
+        $c = sqrt($Ax**2 + $Ay**2);
+
+        // 内心
+        $Ix = ($a * $Ax + $b * $Bx + $c * $Cx)/($a + $b + $c);
+        $Iy = ($a * $Ay + $b * $By + $c * $Cy)/($a + $b + $c);
+
+        // 直線AIとBCの交点の座標
+        $IAx = $a * $c / ($b + $c);
+        $IAy = $By;
+
+        // 角度の記号用
+        $ur = $Cx / 14; // 記号の半径
+
+        $vb_xfrom = $Ox - $R * $scale - $margin;
+        $vb_width = 2 * ($R * $scale + $margin);
+        $vb_yfrom = ($Oy - $R * $scale) - $margin;
+        $vb_height = 2 * ($R * $scale + $margin);
+        
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        // 問１
+        $plot_q1 = "
+            <!-- 三角形 -->
+            <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- 頂点 -->
+            <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+            <text x=\"" . $Bx - 5 . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+            <text x=\"" . $Cx - 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+            <text x=\"" . $Mx - 5 . "\" y=\"" . $My + 20 . "\" font-weight=\"bold\" font-size=\"18\">M</text>
+            <text x=\"" . $Nx + 5 . "\" y=\"" . $Ny . "\" font-weight=\"bold\" font-size=\"18\">N</text>
+            <!-- 補助線 -->
+            <line x1=\"{$Mx}\" y1=\"{$My}\" x2=\"{$Nx}\" y2=\"{$Ny}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- ∠ABC -->
+            <path d=\"M " . $Bx + $ur . " " . $By . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Bx + $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $By - $ur * sin(2 * M_PI * $angle_ABC / 360) . "\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $Bx + $ur . "\" y=\"" . $By - 5 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ABC}°</text>
+            <!-- ∠ACB -->
+            <path d=\"M {$Cx} {$Cy} L " . $Cx -$ur * cos(2 * M_PI * $angle_ACB / 360) . " " . -$ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " 0 Z\"    
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+            <text x=\"" . $Cx - 3 * $ur . "\" y=\"" . $Cy - 5 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ACB}°</text>
+            <!-- ∠ANM -->
+            <path d=\"M {$Nx} {$Ny} L " . $Nx - $ur * cos(2 * M_PI * $angle_ACB / 360) . " " . $Ny - $ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Nx - $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $Ny + $ur * sin(2 * M_PI * $angle_ABC / 360) . " Z\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+        ";
+        $plot_e1 = $plot_q1 . "
+            <!-- ∠NMC -->
+            <path d=\"M " . $Mx + $ur . " " . $My . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Mx + $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $My - $ur * sin(2 * M_PI * $angle_ABC / 360) . "\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $Mx + $ur . "\" y=\"" . $My - 10 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ABC}°</text>
+        ";
+
+        // 問２
+        $plot_q2 =  "
+            <!-- 頂点 -->
+            <text x=\"" . $Nx - 2.5 * $ur . "\" y=\"" . $Ny - 5 . "\"  font-family=\"Latin Modern Math, Latin Modern Roman, serif\" font-style=\"italic\" font-size=\"18\">α</text>
+            <text x=\"" . $Ax + $Mx / 2 + 5 . "\" y=\"" . $Ay . "\"  font-family=\"Latin Modern Math, Latin Modern Roman, serif\" font-style=\"italic\" font-size=\"18\">m</text>
+            <text x=\"" . $Cx + 5 . "\" y=\"" . $Cy . "\"  font-family=\"Latin Modern Math, Latin Modern Roman, serif\" font-style=\"italic\" font-size=\"18\">n</text>
+            <!-- 補助線 -->
+            <line x1=\"{$Bx}\" y1=\"{$By}\" x2=\"{$Cx}\" y2=\"{$Cy}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Alx}\" y1=\"{$Aly}\" x2=\"{$Arx}\" y2=\"{$Ary}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Ax}\" y1=\"{$Ay}\" x2=\"{$Nx}\" y2=\"{$Ny}\" stroke=\"black\" stroke-width=\"1\" />
+            <line x1=\"{$Mx}\" y1=\"{$My}\" x2=\"{$Nx}\" y2=\"{$Ny}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- ∠B'AN -->
+            <path d=\"M " . $Ax - $ur . " " . $Ay . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Ax - $ur * cos(2 * M_PI * $angle_AlAN / 360) . " " . $Ay + $ur * sin(2 * M_PI * $angle_AlAN / 360) . "\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $Ax - 3 * $ur . "\" y=\"" . $Ay + 35 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_AlAN}°</text>
+            <!-- ∠NMC -->
+            <path d=\"M " . $Mx + $ur . " " . $My . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Mx + $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $My - $ur * sin(2 * M_PI * $angle_ABC / 360) . "\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $Mx + $ur . "\" y=\"" . $My - 5 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ABC}°</text>
+            <!-- ∠α -->
+            <path d=\"M {$Nx} {$Ny} L " . $Nx - $ur * cos(2 * M_PI * $angle_ACB / 360) . " " . $Ny - $ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Nx - $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $Ny + $ur * sin(2 * M_PI * $angle_ABC / 360) . " Z\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+        ";
+        $plot_e2 = $plot_q2 . "
+            <!-- 補助線 -->
+            <line x1=\"{$BNx}\" y1=\"{$BNy}\" x2=\"{$CNx}\" y2=\"{$CNy}\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $CNx + 5 . "\" y=\"" . $CNy . "\"  font-family=\"Latin Modern Math, Latin Modern Roman, serif\" font-style=\"italic\" font-size=\"18\">l</text>
+            <!-- ∠赤 -->
+            <path d=\"M {$Ax} {$Ay} L " . $Ax - $ur * cos(2 * M_PI * $angle_AlAN / 360) . " " . $Ay + $ur * sin(2 * M_PI * $angle_AlAN / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Ax + $ur . " " . $Ay . " Z\" 
+                fill=\"red\" fill-opacity=\"0.4\"/>   
+            <text x=\"" . $Ax + $ur . "\" y=\"" . $Ay + 35 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ACB}°</text>
+            <!-- ∠緑 -->
+            <path d=\"M {$Mx} {$My} L " . $Mx + $ur . " " . $My . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Mx + $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $My - $ur * sin(2 * M_PI * $angle_ABC / 360) . " Z\" 
+                fill=\"green\" fill-opacity=\"0.4\"/>   
+            <!-- ∠α -->
+            <path d=\"M {$Nx} {$Ny} L " . $Nx - $ur * cos(2 * M_PI * $angle_ACB / 360) . " " . $Ny - $ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Nx - $ur . " " . $Ny . " Z\" 
+                fill=\"red\" fill-opacity=\"0.4\"/>   
+            <path d=\"M {$Nx} {$Ny} L " . $Nx - $ur . " " . $Ny . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Nx - $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $Ny + $ur * sin(2 * M_PI * $angle_ABC / 360) . " Z\" 
+                fill=\"green\" fill-opacity=\"0.4\"/>   
+        ";
+
+        // 問３
+        $plot_q3 =  "
+            <!-- 三角形 -->
+            <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} L {$Ix} {$Iy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+            <!-- ∠ABC -->
+            <path d=\"M " . $Bx + $ur . " " . $By . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Bx + $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $By - $ur * sin(2 * M_PI * $angle_ABC / 360) . "\" 
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+            <text x=\"" . $Bx . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ABC}°</text>
+            <!-- ∠ICB -->
+            <path d=\"M {$Cx} {$Cy} L " . $Cx -$ur * cos(M_PI * $angle_ACB / 360) . " " . -$ur * sin(M_PI * $angle_ACB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " 0 Z\"    
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+            <text x=\"" . $Cx . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">" . $angle_ACB / 2 . "°</text>
+            <!-- ∠IAB -->
+            <path d=\"M {$Ax} {$Ay} L " . $Ax -$ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $Ay + $ur * sin(2 * M_PI * $angle_ABC / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Ax -$ur * cos(2 * M_PI * ($angle_ABC + $angle_BAC / 2) / 360) . " " . $Ay + $ur * sin(2 * M_PI * ($angle_ABC + $angle_BAC / 2) / 360) . " Z\"    
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+            <text x=\"" . $Ax + 10 . "\" y=\"" . $Ay . "\"  font-weight=\"bold\" font-size=\"18\">" . $angle_BAC / 2 . "°</text>
+            <!-- ∠α -->
+            <path d=\"M {$Ix} {$Iy} L " . $Ix + $ur * cos(2 * M_PI * $angle_ICB / 360) . " " . $Iy + $ur * sin(2 * M_PI * $angle_ICB / 360) . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $Ix + $ur * cos(2 * M_PI * ($angle_AIC - $angle_ICB) / 360) . " " . $Iy - $ur * sin(2 * M_PI * ($angle_AIC - $angle_ICB) / 360) . " Z\"    
+                fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+            <text x=\"" . $Ix + 30 . "\" y=\"" . $Iy . "\"  font-family=\"Latin Modern Math, Latin Modern Roman, serif\" font-style=\"italic\" font-size=\"18\">α</text>
+        ";
+        $plot_e3 = $plot_q3 . "
+            <!-- 補助線 -->
+            <line x1=\"{$Ix}\" y1=\"{$Iy}\" x2=\"{$IAx}\" y2=\"{$IAy}\" stroke=\"black\" stroke-width=\"1\" />
+            <!-- ∠緑 -->
+            <path d=\"M {$IAx} {$IAy} L " . $IAx + $ur . " " . $IAy . " 
+                A {$ur} {$ur}, 0, 0, 0, " . $IAx + $ur * cos(2 * M_PI * ($angle_ABC + $angle_IAB) / 360) . " " . $My - $ur * sin(2 * M_PI * ($angle_ABC + $angle_IAB) / 360) . " Z\" 
+                fill=\"red\" fill-opacity=\"0.4\"/>   
+            <text x=\"" . $IAx . "\" y=\"" . $IAy + 20 . "\"  font-weight=\"bold\" font-size=\"18\">" . $angle_ABC + $angle_IAB . "°</text>
+        ";
 
         // q：問、a：答、e：解説
-        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
         $questions = [
             [
-                'q_type' => 2,
-                'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC\, ,\\angle ABC = {$ang_base}^{\circ}\,であるとき、\\angle BAC を求めよ。}",
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>AB // NM のとき、∠ANM の角度を求めよ。</p>
+                        </div>",
                 'a_type' => 2,
-                'a' => "{$ang1}^{\circ}",
-                'e_type' => 3,
-                'e' => "<p>\(ノートに\,\mathrm{\\triangle \mathrm{ABC}}\,を描いて考えましょう。\)</p>
-                        <p>\(扱いやすくするため、\,\mathrm{\\angle \mathrm{BAC}=\mathnormal{a}^{\circ},
-                            \\angle \mathrm{ABC}=\mathnormal{b}^{\circ},\\angle \mathrm{ACB}=\mathnormal{c}^{\circ} }\,とする。\)</p>
-                        <p>\(二等辺三角形の底角は等しいので、b = c = {$ang_base}^{\circ}.\)</p> 
-                        <p>\(三角形の内角の和は\,180^{\circ}\,なので、\)</p>
-                        \\[
-                            \\begin{aligned}
-                                a + b + c &= 180 \\\\
-                                a + {$ang_base} + {$ang_base} &= 180 \\\\
-                                a & = 180 - {$ang_rest} \\\\
-                                a &= {$ang1}^{\circ}.
-                            \\end{aligned}
-                        \\]
+                'a' => "{$angle_ANM}^{\circ}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>AB // NM より、平行線の同位角は等しいので、∠NMC = ∠ABC = {$angle_ABC}°.</p>
+                            <p>△NMC について、外角はそれと隣り合わない２つの内角の和に等しいので、</p>
+                            <p>∠ANM = ∠NMC + ∠NCM = {$angle_ABC}° + {$angle_ACB}° = {$angle_ANM}°.</p>
+                        </div>
                         ",
+                'pq' => $plot_q1,
+                'pe' => $plot_e1,
             ],
             [
-                'q_type' => 2,
-                'q' => "\\triangle \mathrm{ABC}\,について、\mathrm{AB=AC\, ,\\angle BAC = {$ang1}^{\circ}\,であるとき、\\angle ABC を求めよ。}",
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>m // n のとき、∠a の大きさを求めよ。</p>
+                        </div>",
                 'a_type' => 2,
-                'a' => "{$ang_base}^{\circ}",
-                'e_type' => 3,
-                'e' => "<p>\(ノートに\,\mathrm{\\triangle \mathrm{ABC}}\,を描いて考えましょう。\)</p>
-                        <p>\(扱いやすくするため、\,\mathrm{\\angle \mathrm{BAC}=\mathnormal{a}^{\circ},
-                            \\angle \mathrm{ABC}=\mathnormal{b}^{\circ},\\angle \mathrm{ACB}=\mathnormal{c}^{\circ} }\,とする。\)</p>
-                        <p>\(三角形の内角の和は\,180^{\circ}\,で、a = {$ang1}^{\circ}\,なので、\)</p>
-                        \\[
-                            \\begin{aligned}
-                                a + b + c &= 180 \\\\
-                                {$ang1} + b + c &= 180 \\\\
-                                b + c &= {$ang_rest}.
-                            \\end{aligned}
-                        \\]
-                        <p>\(二等辺三角形の底角は等しいので、b = c。よって、 b = {$ang_rest} / 2 = {$ang_base}^{\circ}.\)</p> 
+                'a' => "{$angle_ANM}^{\circ}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>まず、下図のように \(m,\,n\) に平行で N を通る補助線 \(l\) を引く。平行線の錯角は</p>
+                            <p>
+                                等しいので、∠a の大きさは、下図の
+                                <span class=\"bg-red-200\">赤い部分</span>と
+                                <span class=\"bg-green-200\">緑の部分</span>
+                                の角度の合計に等しい。
+                            </p>
+                            <p>
+                                ∠a 
+                                = <span class=\"bg-red-200\">(180°－{$angle_AlAN}°)</span>
+                                + <span class=\"bg-green-200\">{$angle_ABC}°</span>
+                                = <span class=\"bg-red-200\">" . 180 - $angle_AlAN . "°</span>
+                                + <span class=\"bg-green-200\">{$angle_ABC}°</span>
+                                = {$angle_ANM}°.</p>
+                        </div>
                         ",
+                'pq' => $plot_q2,
+                'pe' => $plot_e2,
             ],
             [
-                'q_type' => 2,
-                'q' => "平行四辺形\,\mathrm{ABCD}\,について、\mathrm{\\angle ABD = {$ang1}^{\circ}\,であるとき、\\angle BDC を求めよ。}",
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>∠a の大きさを求めよ。</p>
+                        </div>",
                 'a_type' => 2,
-                'a' => "{$ang1}^{\circ}",
-                'e_type' => 2,
-                'e' => "図を描いて考えましょう。\mathrm{AB /\!/ DC}\,より、錯角は等しいから、\mathrm{\\angle ABD = \\angle BDC}.",
+                'a' => "{$angle_AIC}^{\circ}",
+                'e_type' => 8,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>まず、下図のように二つの三角形に分ける。左側の三角形について、</p>
+                            <p><span class=\"bg-red-200\">外角</span>はそれと隣り合わない２つの内角の和に等しいので、</p>
+                            <p>
+                                <span class=\"bg-red-200\">∠赤</span> 
+                                = {$angle_ABC}° + {$angle_IAB}° = " . $angle_ABC + $angle_IAB . "°.
+                            </p>
+                            <p>すると、∠a は右側の三角形の外角になっているので、同様に考えれば、</p>
+                            <p>∠a = " . $angle_ABC + $angle_IAB . "° + {$angle_ICB}° = {$angle_AIC}°.</p>
+                        </div>
+                        ",
+                'pq' => $plot_q3,
+                'pe' => $plot_e3,
             ],
         ];
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
-        $unitname = "角度を求める";
-        return view('workbook.unit_template', compact('unitname','question'));
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 合同の証明
@@ -9192,6 +9487,16 @@ class WorkbookController extends Controller
 
     // 二次関数（応用：交点と三角形の面積）
     public function quadratic_function_application01() {
+        $unitname = "☆交点と三角形の面積";
+        $result = $this->get_quadratic_function_application01();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_quadratic_function_application01() {
         /***** 先に値を決める *****/
         // 曲線(y=ax^2)と直線(y=cx+d)の交点Pの x 座標を alpha, beta とする（alpha < 0, beta > 0）
         // a(x - alpha)(x - beta) = 0
@@ -9560,13 +9865,12 @@ class WorkbookController extends Controller
         $question = $questions[$q_index];
         $plot_con_q = $question['pq'];
         $plot_con_e = $question['pe'];
-        $unitname = "☆交点と三角形の面積";
-        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 反比例と一次関数
     public function invpro_and_linear_function() {
-        $unitname = "反比例と一次関数";
+        $unitname = "☆反比例と一次関数";
         $result = $this->get_invpro_and_linear_function();
         $question = $result['question'];
         $plot_par_q = $result['plot_par_q'];
@@ -10266,7 +10570,7 @@ class WorkbookController extends Controller
     // 入試　問１
     public function math_entrance_exam_1() {
         $unitname = "問１";
-        $idx = rand(0, 12);
+        $idx = rand(0, 13);
         switch ($idx) {
             case 0:
                 $result = $this->get_positive_negative();   // 正負の数
@@ -10307,6 +10611,9 @@ class WorkbookController extends Controller
             case 12:
                 $result = $this->get_add_sub_polynomials();   // 多項式の加減
                 break;
+            case 13:
+                $result = $this->get_find_angle();   // 角の大きさ（中２）
+                break;
         }
         $question = $result['question'];
         $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";
@@ -10337,6 +10644,28 @@ class WorkbookController extends Controller
                 break;
             case 4:
                 $result = $this->get_box_plot();    // 箱ひげ図の解釈
+                break;
+        }
+        $question = $result['question'];
+        $plot_par_q = isset($result['plot_par_q']) ? $result['plot_par_q'] : "";
+        $plot_con_q = isset($result['plot_con_q']) ? $result['plot_con_q'] : "";
+        $plot_par_a = isset($result['plot_par_a']) ? $result['plot_par_a'] : "";
+        $plot_con_a = isset($result['plot_con_a']) ? $result['plot_con_a'] : "";
+        $plot_par_e = isset($result['plot_par_e']) ? $result['plot_par_e'] : "";
+        $plot_con_e = isset($result['plot_con_e']) ? $result['plot_con_e'] : "";
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_a','plot_con_a','plot_par_e','plot_con_e'));
+    }
+
+    // 入試　問３
+    public function math_entrance_exam_3() {
+        $unitname = "問３";
+        $idx = rand(0, 1);
+        switch ($idx) {
+            case 0:
+                $result = $this->get_quadratic_function_application01(); // 交点と三角形の面積
+                break;
+            case 1:
+                $result = $this->get_invpro_and_linear_function();  // 反比例と一次関数
                 break;
         }
         $question = $result['question'];
@@ -20336,11 +20665,10 @@ class WorkbookController extends Controller
 
                 <p class=\"mt-4\">＜注意事項＞</p>
                 <ul class=\"pl-5 list-disc\">
-                    <li><span class=\"font-bold text-red-500\">【!!音量注意!!】表示ボタンを押すと、再度ボタンを押すまで音が再生されます。</span></li>
-                    <li>不協和音や高音を聴き続けると精神的に辛いかもしれません。</li>
+                    <li><span class=\"font-bold text-red-500\">【!!音量注意!!】表示ボタンを押すと音が出ます（1.5 秒間）。</span></li>
                     <li>1以上の値を入力してください。</li>
                     <li>振動数の差が大きいと、合成波の波形が正確に描かれない場合があります。</li>
-                    <li>ブラウザによって音が再生されない場合があります。</li>
+                    <li>ブラウザによって音がうまく再生されない場合があります。</li>
                 </ul>
                 {$table}
                 <div class=\"set_parameters\">

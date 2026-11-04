@@ -467,6 +467,8 @@ Route::get('workbook/math_entrance_exam_1', [WorkbookController::class, 'math_en
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_1');
 Route::get('workbook/math_entrance_exam_2', [WorkbookController::class, 'math_entrance_exam_2'])
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_2');
+Route::get('workbook/math_entrance_exam_3', [WorkbookController::class, 'math_entrance_exam_3'])
+->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_3');
 Route::get('workbook/math_entrance_exam_4', [WorkbookController::class, 'math_entrance_exam_4'])
 ->middleware(['auth', 'verified'])->name('workbook.math_entrance_exam_4');
 // 英語
