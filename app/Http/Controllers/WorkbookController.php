@@ -20535,6 +20535,78 @@ class WorkbookController extends Controller
         return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
     }
 
+    // 対数のグラフ
+    public function js_log_graph() {
+        $td_class_common = "border border-gray-400 px-5 py-0 text-base w-30";
+        $table = "
+            <table id=\"doremi_table\" class=\"border-collapse border border-gray-400 m-auto table-fixed my-4 text-center\">
+                <thead>
+                    <tr class=\"bg-gray-100\">
+                        <th class=\"{$td_class_common}\"></th>
+                        <th class=\"{$td_class_common}\">指数関数</th>
+                        <th class=\"{$td_class_common}\">対数関数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class=\"{$td_class_common}\">関数形</th>
+                        <td class=\"{$td_class_common}\">\(y=a^x\)</td>
+                        <td class=\"{$td_class_common}\">\(y=\\log_{a} x\)</td>
+                    </tr>
+                    <tr>
+                        <th class=\"{$td_class_common}\">\(y\) の意味</th>
+                        <td class=\"{$td_class_common}\">\(a\) を \(x\) 乗した値</td>
+                        <td class=\"{$td_class_common}\">\(a\) を何乗したら \(x\) になるかを示す値</td>
+                    </tr>
+                    <tr>
+                        <th class=\"{$td_class_common}\">具体例（\(a=2\)）</th>
+                        <td class=\"{$td_class_common}\">\(x=3\) のとき、\(y=2^3=8\)</td>
+                        <td class=\"{$td_class_common}\">\(x=8\) のとき、\(y=\\log_2 8 = 3\)</td>
+                    </tr>
+                    <tr>
+                        <th class=\"{$td_class_common}\">具体例の意味</th>
+                        <td class=\"{$td_class_common}\">\(2\) を \(3\) 乗した値は \(8\) である。</td>
+                        <td class=\"{$td_class_common}\">\(2\) を \(8\) にするために乗じる数は \(3\) である。</td>
+                    </tr>
+                </tbody>
+            </table>";
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            対数は初見ではイメージが難しいので、グラフと併せて整理しましょう。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">定義</h3>
+            <div>
+                <p>ひき算を理解するにはたし算を理解する必要があるように、対数を理解するには指数の理解が前提となります。</p>
+                    {$table}
+                <p>なお、\(\\log_{a} x\) の \(x\) のことを「真数」と呼びます。</p>
+            </div>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">グラフを見てみよう</h3>
+            <div>
+                <p>底 \(a\) と真数 \(x\) を変えながら値に慣れましょう。</p>
+                <p>「表示」を押すと、\( f(x) = \\log_a x \) のグラフと、指定した \(x_0\) での対数 \(f(x_0)\) の値が表示されます。</p>
+            </div>
+            <div class=\"set_parameters\">
+            底 \( a = \)<input id=\"para_a\" max=\"1000\" type=\"number\" value=\"2\">
+            真数 \( x_0 = \)<input id=\"val_x0\" max=\"1000\" type=\"number\" value=\"8\"></div>
+        ";
+
+        $disp_con = "
+            ---------- 表示ここから ----------
+            <div id=\"result1\" class=\"equation\">&nbsp;</div>
+            <div id=\"result2\" class=\"equation\">&nbsp;</div>
+            <div id=\"word_expression\"></div>
+            <div class=\"canvas\">
+                <canvas id=\"chart_line\"></canvas>
+            </div>
+            ---------- 表示ここまで ----------
+        ";
+
+        $jsAction = "log_graph";
+        $unitname = "対数のグラフ";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
     // 級数和と積分
     public function js_series_sums_vs_integrals() {
             // <figure><img class=""aligncenter wp-image-1867 size-medium" src="https://life-research.net/wp-content/uploads/2022/07/926d3ced825dad50ad43dadb92e3fbe1-300x291.jpeg" alt="ジューコフスキー変換前の円" width="300" height="291" /><figcaption><a href="https://honto.jp/ebook/pd_26273726.html" target="_blank" rel="noopener noreferrer">図の出典：『高校数学でわかる流体力学　ベルヌーイの定理から翼に働く揚力まで』講談社/竹内淳</a></figcaption></figure>

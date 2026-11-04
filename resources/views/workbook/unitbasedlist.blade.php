@@ -946,6 +946,9 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_log_graph')}}">対数のグラフ</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
                                     <a href="{{route('workbook.js_n_ary_numeral')}}">十進数から \(n\) 進数への変換</a>
                                 </x-button-link>
                                 <x-button-link color="orange">

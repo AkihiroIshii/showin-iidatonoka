@@ -19,22 +19,16 @@ let myChart4 = null;
 $(function () {
     $('#display-button').on('click', function () {
         // 既存のグラフがあれば破棄
-        switch (window.pageConfig?.jsAction) {
-            case 'make_harmony':
-                // 再生中の場合（停止するとき）は破棄しない
-                // if(audioCtxes.length==3){
-                //     break;
-                // }
-            default:                           
-                myChart1 && myChart1.destroy();
-                myChart2 && myChart2.destroy();
-                myChart3 && myChart3.destroy();
-                myChart4 && myChart4.destroy();
-                break;
-        }
+        myChart1 && myChart1.destroy();
+        myChart2 && myChart2.destroy();
+        myChart3 && myChart3.destroy();
+        myChart4 && myChart4.destroy();
         switch (window.pageConfig?.jsAction) {
             case 'n_ary_numeral':
                 n_ary_numeral();
+                break;
+            case 'log_graph':
+                log_graph();
                 break;
             case 'series_sums_vs_integrals':
                 series_sums_vs_integrals();
@@ -44,21 +38,8 @@ $(function () {
                 break;
             case 'make_harmony':
                     loadAndSound();
-                    $(this).html('停止');
                     dispWaveFunc();
                 break;
-            // case 'make_harmony':
-            //     // 再生中の場合は停止
-            //     if(audioCtxes.length==3){
-            //         releaseAudio();
-            //         $(this).html('再生（音が流れます）');
-            //     // 停止中の場合は再生
-            //     }else{
-            //         loadAndSound();
-            //         $(this).html('停止');
-            //         dispWaveFunc();
-            //     }
-            //     break;
             case 'joukowski':
                 joukowski();
                 break;
@@ -150,6 +131,206 @@ function n_ary_numeral() {
     renderMathInElement(document.getElementById("display_equation"));
 }
 
+/*******************************************************
+* 対数のグラフ
+********************************************************/
+function log_graph() {
+    // 入力パラメータを取得して数値に変換
+    var a = Number($("#para_a").val());
+    var x0 = Number($("#val_x0").val());
+
+    // a <= 0 または a > 100 の場合は警告メッセージを表示して処理終了
+    if ( a <= 0 | a > 100 ) {
+      alert("0 < a <= 100 の範囲で設定してください");
+      exit;
+    }
+	  
+    // x0 <= 0 の場合は警告メッセージを表示して処理終了
+    if ( x0 <= 0 ) {
+      alert("x は0より大きい実数を指定してください");
+      exit;
+    }
+
+    // mathJaxを適用する数式を生成
+	$("#result1").html("$$ f(x) = \\log_{" + a + "}x $$");
+    renderMathInElement(document.getElementById("result1"));
+
+	var fx0 = Math.log(x0)/Math.log(a);
+	fx0 = Math.round(fx0*1000)/1000;
+	  
+    // mathJaxを適用する数式を生成
+	$("#result2").html(
+        "$$ f(" + x0 + ") = \\log_{" + a + "}" + x0 + " = " + fx0 + " $$"
+        + "$$ (" + a + "^{" + fx0 + "} = " + x0 + ") $$"
+    );
+    renderMathInElement(document.getElementById("result2"));
+	  
+	// 日本語での表現
+	$("#word_expression").html(
+        "<p class=\"text-center\">「\\(" + a + "\\) を何乗すれば \\(" + x0 + "\\) になるか ⇒ \\(" + fx0 + "\\)」"
+        + " つまり 「底を \\(" + a + "\\) とする \\(" + x0 + "\\) の対数は \\(" + fx0 + "\\)」</p>"
+    );
+    renderMathInElement(document.getElementById("word_expression"));
+	  
+
+    // 0 < x <= 2*x0 を1000等分してf(x)を計算
+    var x;
+    var y = 0.0;
+    var R1 = [];
+	var R2 = [];
+    var dx = 2 * x0 / 1000;
+    
+    for ( var i = 0; i < 1000; i++) {
+      x = 0.1 + i*dx;
+      
+      y = Math.log(x)/Math.log(a);
+      R1.push({x,y});
+    }
+	
+	// 指定した真数での値を取得
+	x = x0;
+	y = Math.log(x0)/Math.log(a);
+	R2.push({x,y})
+			   
+    // canvas にグラフを表示
+    var ctx = document.getElementById('chart_line').getContext('2d');
+    myChart1 = new Chart(ctx, {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            type: 'line',
+            label: 'f(x)',
+            data: R1,
+            cubicInterpolationMode: 'monotone',
+            borderColor: "black",
+            fill: false,
+            pointRadius: 0, // 点の半径
+          },
+          {
+            type: 'scatter',
+            label: '( ' + x0 + ', f(' + x0 + ') )',
+            data: R2,
+            cubicInterpolationMode: 'monotone',
+            borderColor: "blue",
+			backgroundColor: "blue",
+            fill: false,
+            pointRadius: 8, // 点の半径
+          },
+        ]
+	  },
+      options: {
+            scales: {
+                x : {
+                        type: 'linear',
+                        min: 0,
+                        max: x0 * 2,
+                        offset: false,
+                        grid: {
+                            offset: false
+                        }
+                    },
+                y : {
+                        min: 0,
+                        max: Math.ceil(Math.max.apply(null, R1)) + 1,
+                        axis: 'y'
+                    }
+            }
+        // scales: {
+		//   x: {
+		// 	scaleLabel: {
+		// 	 display: true,
+		// 	 labelString: 'x'
+		// 	}
+		//   },			
+        //   y: {
+		// 	scaleLabel: {
+		// 	 display: true,
+		// 	 //labelString: 'f(x)'
+		// 	}
+		// 	/*,
+        //     ticks: {
+        //       min: 0.0
+        //     }*/
+        //   }
+        // }
+      }
+    });
+
+
+    // myChart1 = new Chart(ctx, {
+    //     data: {
+    //         datasets: [
+    //             {
+    //                 // 厳密解の曲線
+    //                 type: 'line',
+    //                 label: 'f(x)',
+    //                 data: kai1,
+    //                 cubicInterpolationMode: 'monotone',
+    //                 borderColor: "blue",
+    //                 pointRadius: 0 // 点の半径
+    //             },
+    //             {
+    //                 // 棒グラフ
+    //                 type: 'bar',
+    //                 label: '(式1)の右辺の和',
+    //                 data: kai2,
+    //                 borderWidth: 1,
+    //                 backgroundColor: "rgba(153,255,51,1)",
+    //                 // barThickness: 8
+    //                 barPercentage: 1,
+    //                 categoryPercentage: 1
+    //             },
+    //         ]
+    //     },
+    //     options: {
+    //         scales: {
+    //             x : {
+    //                     type: 'linear',
+    //                     min: a,
+    //                     max: b,
+    //                     offset: false,
+    //                     grid: {
+    //                         offset: false
+    //                     }
+    //                 },
+    //             y : {
+    //                     min: 0,
+    //                     max: Math.ceil(Math.max.apply(null, kai2)),
+    //                     axis: 'y'
+    //                 }
+    //         }
+    //     }
+    // });
+
+
+        // type: 'line',
+        // data: {
+        //     datasets: [
+        //         {
+        //             label: 'f1(t)+f2(t)+f3(t)',
+        //             borderWidth: 2,
+        //             pointRadius: 0, // 点の半径
+        //             borderColor: "blue",
+        //             backgroundColor: "rgba(0,0,128,0.5)",
+        //             data: F
+        //         }
+        //     ]
+        // },
+        // options: {
+        //     scales: {
+        //         x : {
+        //                 type: 'linear',
+        //                 min: 0,
+        //                 max: trange
+        //             },
+        //         y : {
+        //                 min: -3,
+        //                 max: 3
+        //             }
+        //     }
+        // }
+}
 
 /*******************************************************
 * 級数和と積分

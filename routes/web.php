@@ -626,6 +626,8 @@ Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relativ
 
 /******** javaScript **************/
 // 数理物理
+Route::get('workbook/js_log_graph', [WorkbookController::class, 'js_log_graph'])
+->middleware(['auth', 'verified'])->name('workbook.js_log_graph');
 Route::get('workbook/js_n_ary_numeral', [WorkbookController::class, 'js_n_ary_numeral'])
 ->middleware(['auth', 'verified'])->name('workbook.js_n_ary_numeral');
 Route::get('workbook/js_series_sums_vs_integrals', [WorkbookController::class, 'js_series_sums_vs_integrals'])
