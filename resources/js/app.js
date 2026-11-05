@@ -91,6 +91,12 @@ function euclidean_algorithm() {
 
     // 表示する正方形の背景色
     const COLOR_SET = ['blue','red','green','pink'];
+    const COLOR_MAP = {
+        blue: '#3b82f6',
+        red: '#ef4444',
+        green: '#22c55e',
+        pink: '#ec4899'
+    };
     var bg_color = new Array(); // 背景色を格納
 
     // ユークリッドの互除法で最大公約数を求める
@@ -131,7 +137,12 @@ function euclidean_algorithm() {
             div_parent = '<div class="flex" style="width:'+r[k-2]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;">';
             // 商q[k]分の正方形を追加
             for(let i = 0; i < q[k]; i++){
-                div_parent += '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;" class="bg-'+bg_color[k-2]+'-500 box-border border-black border-2"></div>';
+                // div_parent += '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;" class="bg-'+bg_color[k-2]+'-500 box-border border-black border-2"></div>';
+                div_parent += '<div class="box-border border-black border-2" '
+                    + 'style="width:' + r[k-1]*zoom_rate + 'px; '
+                    + 'height:' + r[k-1]*zoom_rate + 'px; '
+                    + 'background-color:' + COLOR_MAP[bg_color[k-2]] + '; '
+                    + 'flex-shrink:0;"></div>';
             }
             div_parent += div_child; //子要素を追加
             div_parent += '</div>';
@@ -143,7 +154,12 @@ function euclidean_algorithm() {
             // div_parent = '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-2]*zoom_rate+'px;">';
             // 商q[k]分の正方形を追加
             for(let i = 0; i < q[k]; i++){
-                div_parent += '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;" class="bg-'+bg_color[k-2]+'-500 box-border border-black border-2"></div>';
+                // div_parent += '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;" class="bg-'+bg_color[k-2]+'-500 box-border border-black border-2"></div>';
+                div_parent += '<div class="box-border border-black border-2" '
+                    + 'style="width:' + r[k-1]*zoom_rate + 'px; '
+                    + 'height:' + r[k-1]*zoom_rate + 'px; '
+                    + 'background-color:' + COLOR_MAP[bg_color[k-2]] + '; '
+                    + 'flex-shrink:0;"></div>';
             }
             div_parent += div_child; //子要素を追加
             div_parent += '</div>';
