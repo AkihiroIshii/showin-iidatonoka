@@ -70,8 +70,8 @@ span.verb {
 }
 
 /***** javaScript *****/
-空行のクラス
-.mb1{
+/* 空行のクラス */
+/* .mb1{
 margin-bottom: 1em;
 }
 .mb2{
@@ -79,9 +79,9 @@ margin-bottom: 2em;
 }
 .mb5{
 margin-bottom: 5em;
-}
+} */
 /* 画面幅調整 */
-.set_parameters {
+/* .set_parameters {
 width: 100%;
 }
 .table {
@@ -95,14 +95,14 @@ height: 100%;
 }
 .chart_block {
 width: 150px;
-/* background-color: pink; */
+background-color: pink;
 }
 .char_part {
 display: none;
 width: 50px;
 font-size: 30pt;
 text-align: center;
-/* background-color: green; */
+background-color: green;
 }
 .example_row {
 text-align: center;
@@ -114,14 +114,14 @@ width: 48px;
 #canvas_container {
 width: 374px;
 height: 153px;
-}
+} */
 
 /* パラメータ入力、計算 */
-.set_parameters .parameter {
+/* .set_parameters .parameter {
 width: auto;
 }
 #ans {
     word-wrap: break-word;
     overflow-wrap: break-word;
    width: auto;
-}
+} */

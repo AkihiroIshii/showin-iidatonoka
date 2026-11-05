@@ -20852,6 +20852,68 @@ class WorkbookController extends Controller
         return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
     }
 
+    // 三角関数を任意の区間で積分する
+    public function js_sin_cos_integral() {
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            三角関数（sin,cos）の積分をする時、様々な性質を利用することが多いです。
+            ここでは、基本的な形の三角関数 \(\sin(mx), \cos(mx)\)を任意の区間で積分し、その特徴を見ることにします。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">例</h3>
+            次の2種類の積分を考えます。
+            $$ \\int_a^b \\sin(mx)dx $$
+            $$ \\int_a^b \\cos(mx)dx $$
+
+            まず、三角関数の対称性による基本的な特徴を見てみましょう。
+            \(m=1\) のとき、\(\sin(x),\cos(x)\) の周期 \(2\pi\) で積分すると、プラス部分とマイナス部分が打ち消しあって \(0\) になることがわかります。
+
+            $$ \\int_{-\pi}^{\pi} \\sin(x)dx = 0 $$
+            $$ \\int_{-\pi}^{\pi} \\cos(x)dx = 0 $$
+
+            <div class=\"canvas_container\"><canvas id=\"cv1\">meaningless</canvas></div>
+            <div class=\"canvas_container\"><canvas id=\"cv2\">meaningless</canvas></div>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">好きなパラメータで試してみよう</h3>
+            区間\([a,b]\) と \(m\) を色々と変えて積分してみましょう。
+            整数でなくても大丈夫です。
+
+            下記の条件を満たす \(a,b,m\) を入力し、「表示」ボタンを押してください。
+            \(a,b\) は、それぞれ [入力値 × \(\pi\)] となります。
+            <ul class=\"pl-5 list-disc\">
+                <li>\(-2\pi \leq a \leq 2\pi\)</li>
+                <li>\(-2\pi \leq b \leq 2\pi\)</li>
+                <li>\(a \lt b\)</li>
+                <li>\(-100 \leq m \leq 100\)</li>
+            </ul>
+            <div class=\"set_parameters\">
+                \(a=\) <input id=\"para_a\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"-1\" /> \(\pi\), 
+                \(b=\) <input id=\"para_b\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> \(\pi\), 
+                \(m=\) <input id=\"para_m\" class=\"parameter\" max=\"100\" min=\"-100\" type=\"number\" value=\"1\" />
+            </div>
+
+
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div id=\"equation1\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas1\">meaningless</canvas></div>
+            <div id=\"equation2\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas2\">meaningless</canvas></div>
+            ———- 表示ここまで ———-
+            <p class=\"mt-4\">色々と試してみると、例えば次の特徴が確認できます。</p>
+            <ul class=\"pl-5 list-disc\">
+                <li>\(m\) が整数の時は、\(2\pi\)区間の積分が0になる（周期の整数倍が\(2\pi\)になる）</li>
+                <li>半周期分の積分(山1つ分の面積)は、\(2/m\) になる</li>
+            </ul>
+            ここでは \(\sin(mx)\) と \(\cos(mx)\) を別々に積分しましたが、積 \(\sin(mx) \cos(nx)\) を積分すると別の特徴も見えてきます。
+        ";
+
+        $jsAction = "sin_cos_integral";
+        $unitname = "三角関数を任意の区間で積分する";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
     // 円形を翼形に写す〜ジューコフスキー変換〜
     public function js_joukowski() {
             // <figure><img class=""aligncenter wp-image-1867 size-medium" src="https://life-research.net/wp-content/uploads/2022/07/926d3ced825dad50ad43dadb92e3fbe1-300x291.jpeg" alt="ジューコフスキー変換前の円" width="300" height="291" /><figcaption><a href="https://honto.jp/ebook/pd_26273726.html" target="_blank" rel="noopener noreferrer">図の出典：『高校数学でわかる流体力学　ベルヌーイの定理から翼に働く揚力まで』講談社/竹内淳</a></figcaption></figure>

@@ -961,6 +961,9 @@
                                     <a href="{{route('workbook.js_make_harmony')}}">３つの音波を重ねて和音をつくる</a>
                                 </x-button-link>
                                 <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_sin_cos_integral')}}">三角関数を任意の区間で積分する</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
                                     <a href="{{route('workbook.js_joukowski')}}">円形を翼形に写す〜ジューコフスキー変換〜</a>
                                 </x-button-link>
                                 <x-button-link color="orange">

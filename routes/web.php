@@ -636,6 +636,8 @@ Route::get('workbook/js_series_sums_vs_integrals', [WorkbookController::class, '
 ->middleware(['auth', 'verified'])->name('workbook.js_series_sums_vs_integrals');
 Route::get('workbook/js_make_harmony', [WorkbookController::class, 'js_make_harmony'])
 ->middleware(['auth', 'verified'])->name('workbook.js_make_harmony');
+Route::get('workbook/js_sin_cos_integral', [WorkbookController::class, 'js_sin_cos_integral'])
+->middleware(['auth', 'verified'])->name('workbook.js_sin_cos_integral');
 Route::get('workbook/js_joukowski', [WorkbookController::class, 'js_joukowski'])
 ->middleware(['auth', 'verified'])->name('workbook.js_joukowski');
 Route::get('workbook/js_matrix_notation', [WorkbookController::class, 'js_matrix_notation'])
