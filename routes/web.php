@@ -626,6 +626,8 @@ Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relativ
 
 /******** javaScript **************/
 // 数理物理
+Route::get('workbook/js_euclidean_algorithm', [WorkbookController::class, 'js_euclidean_algorithm'])
+->middleware(['auth', 'verified'])->name('workbook.js_euclidean_algorithm');
 Route::get('workbook/js_log_graph', [WorkbookController::class, 'js_log_graph'])
 ->middleware(['auth', 'verified'])->name('workbook.js_log_graph');
 Route::get('workbook/js_n_ary_numeral', [WorkbookController::class, 'js_n_ary_numeral'])

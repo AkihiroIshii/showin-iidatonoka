@@ -20452,6 +20452,89 @@ class WorkbookController extends Controller
     }
 
     /******* javaScript **********/
+    // ユークリッドの互除法
+    public function js_euclidean_algorithm() {
+        $block2 = "
+            <div class=\"flex w-[221px] mx-auto my-4\">
+                <div class=\"bg-green-500\">";
+                    for ($i = 0; $i < (153/17); $i++) {
+                        $block2 .= "
+                        <div class=\"w-[221px] h-[17px] flex\">";
+                            for ($j = 0; $j < (221/17); $j++) {
+                                $block2 .= "<div class=\"box-border w-[17px] h-[17px] border-black border-2\"></div>";
+                            }
+                        $block2 .= "
+                        </div>";
+                    }
+                $block2 .= "
+                </div>
+            </div>";
+
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            ある2つの自然数の最大公約数を求める方法として、ユークリッドの互除法が知られています。ここでは、図形を利用して互除法の考え方を見てみます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">図形を利用した互除法の考え方</h3>
+            例として、\(221\) と \(153\) の最大公約数をユークリッドの互除法で求めてみます。
+            <div>
+                <p class=\"text-center\">\(221 = 1 \,\\times \) <span style=\"color: blue;\">\(153\)</span> \(+\,68\)</p>
+                <p class=\"text-center\">\(153 = 2 \,\\times \) <span style=\"color: red;\">\(68\)</span> \(+\,17\)</p>
+                <p class=\"text-center\">\(68 = 4 \,\\times \) <span style=\"color: green;\">\(17\)</span></p>
+            </div>
+            <div>
+                上記の式は、\(221\,\mathrm{cm} × 153\,\mathrm{cm}\) の長方形の長辺を短辺で割ったときの、商と余りを示していることがわかります。
+                これより、\(221\,\mathrm{cm} × 153\,\mathrm{cm}\) の長方形は、次のように３種類の正方形で分割できることがわかります。
+            </div>
+
+            <div class=\"flex w-[221px] mx-auto my-4\">
+                <div class=\"box-border w-[153px] h-[153px] border-black border-2 bg-blue-700 \">
+                    <p class=\"leading-[1] mt-12 ml-10 text-white\">153cm</p>
+                    <p class=\"ml-10 text-white\">×153cm</p>
+                </div>
+                <div class=\"w-[68px] h-[153px] bg-red-600\">
+                    <div class=\"box-border w-[68px] h-[68px] border-black border-2\">
+                        <p class=\"leading-[1] mt-2 ml-1 text-white\">68cm</p>
+                        <p class=\"ml-1 text-white\">×68cm</p>
+                    </div>
+                    <div class=\"box-border w-[68px] h-[68px] border-black border-2\">
+                        <p class=\"leading-[1] mt-2 ml-1 text-white\">68cm</p>
+                        <p class=\"ml-1 text-white\">×68cm</p>
+                    </div>
+                    <div class=\"bg-green-500 w-[68px] h-[17px] flex\">
+                        <div class=\"box-border w-[17px] h-[17px] border-black border-2\"></div>
+                        <div class=\"box-border w-[17px] h-[17px] border-black border-2\"></div>
+                        <div class=\"box-border w-[17px] h-[17px] border-black border-2\"></div>
+                        <div class=\"box-border w-[17px] h-[17px] border-black border-2\"></div>
+                    </div>
+                </div>
+            </div>
+
+            長辺も短辺も \(17\) で割切れるので、\(221\) と \(153\) の最大公約数は \(17\) です。
+
+            {$block2}
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">最大公約数を求めてみよう</h3>
+            好きな自然数を2つ選んで、最大公約数を求めてみましょう。
+            自然数 \(a,b\) を入力し、表示ボタンを押してください。
+            <ul class=\"pl-5 list-disc\">
+                <li>自然数は1〜9999の範囲で入力してください</li>
+                <li>\(a,b\) と最大公約数の差が大きい場合、図形が崩れることがあります</li>
+            </ul>
+            <div class=\"set_parameters\">\(a=\) <input id=\"para_a\" class=\"parameter\" max=\"9999\" min=\"1\" type=\"number\" value=\"221\" />
+            \(b=\) <input id=\"para_b\" class=\"parameter\" max=\"9999\" min=\"1\" type=\"number\" value=\"153\" /></div>
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div id=\"display_equation\">ここに展開式が表示されます</div>
+            <div id=\"display_area\">ここに \(a×b\) の長方形を正方形で分割した図が表示されます。</div>
+        ";
+
+        $jsAction = "euclidean_algorithm";
+        $unitname = "ユークリッドの互除法";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
     // 十進数からn進数への変換
     public function js_n_ary_numeral() {
         $radix = 2;

@@ -30,6 +30,9 @@ $(function () {
             case 'log_graph':
                 log_graph();
                 break;
+            case 'euclidean_algorithm':
+                euclidean_algorithm();
+                break;
             case 'series_sums_vs_integrals':
                 series_sums_vs_integrals();
                 break;
@@ -63,6 +66,99 @@ $(function () {
         }
     });
 });
+
+/*******************************************************
+* ユークリッドの互除法
+********************************************************/
+function euclidean_algorithm() {
+    // パラメータを取得
+    var para_a = Number($("#para_a").val());
+    var para_b = Number($("#para_b").val());
+
+    // パラメータチェック
+    if (!Number.isInteger(para_a) || !Number.isInteger(para_b)
+        || para_a < 1 || para_b < 1 || para_a > 9999 || para_b > 9999){
+        alert('a,bには1〜9999の自然数を入力してください。');
+        return;
+    }
+
+    // 変数定義
+    var div_parent = ''; // 表示するdivの親要素
+    var div_child = ''; // 表示するdivの子要素
+    var buff_equation = ''; // 表示する数式
+
+    var zoom_rate = 1; // 表示するピクセルサイズの拡大率
+
+    // 表示する正方形の背景色
+    const COLOR_SET = ['blue','red','green','pink'];
+    var bg_color = new Array(); // 背景色を格納
+
+    // ユークリッドの互除法で最大公約数を求める
+    var q = new Array(); // 商を格納
+    var r = new Array(); // 余りを格納
+
+    // 変数初期化
+    var k = 0;
+    q.push(0, 0); // q_0 = q_1 = 0
+    r.push(Math.max(para_a, para_b), Math.min(para_a, para_b));
+    bg_color.push(COLOR_SET[0]);
+
+    // 互除法実行
+    // r_k = q_{k+2} r_{k+1} + r_{k+2} （ kの最大値は100 )
+    while(r[k+1] != 0 && k < 100){
+        q.push(Math.floor(r[k]/r[k+1]));
+        r.push(r[k]%r[k+1]);
+        bg_color.push(COLOR_SET[(k+1)%4]);
+
+        k += 1;
+    }
+
+    var area_width = 700;
+    zoom_rate = area_width / para_a;
+
+    // 表示する数式を生成
+    buff_equation = '<div class="text-xl text-center leading-[2]">';
+    for(k = 0; k <= q.length - 3; k++) {
+        buff_equation += '<p>\\(' + r[k] + '=' + q[k+2] + '\\,\\times\\,\\) <span style="color:'+bg_color[k]+';">\\(' + r[k+1] + '\\)</span> \\(+\\,' + r[k+2] + '\\)</p>';
+        // buff_equation += '<p>\\(' + r[k] + '=\\) <span style="color:'+bg_color[k]+';">\\(' + q[k+2] + '×' + r[k+1] + '\\)</span> \\(+\\,' + r[k+2] + '\\)</p>';
+    }
+    buff_equation += '<p>これより、\\(' + para_a + '\\) と \\(' + para_b + '\\) の最小公倍数は \\(' + r[k] + '\\) です。</p></div>';
+
+    // 表示する図形のdiv要素を生成
+    for(k = q.length - 1; k > 1; k--){
+        // 正方形を横に並べる
+        if(k%2==0) {
+            div_parent = '<div class="flex" style="width:'+r[k-2]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;">';
+            // 商q[k]分の正方形を追加
+            for(let i = 0; i < q[k]; i++){
+                div_parent += '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;" class="bg-'+bg_color[k-2]+'-500 box-border border-black border-2"></div>';
+            }
+            div_parent += div_child; //子要素を追加
+            div_parent += '</div>';
+            // 親要素を、次のループの子要素にする
+            div_child = div_parent;
+            // 正方形を縦に並べる
+        } else {
+            div_parent = '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-2]*zoom_rate+'px;">';
+            // div_parent = '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-2]*zoom_rate+'px;">';
+            // 商q[k]分の正方形を追加
+            for(let i = 0; i < q[k]; i++){
+                div_parent += '<div style="width:'+r[k-1]*zoom_rate+'px; height:'+r[k-1]*zoom_rate+'px;" class="bg-'+bg_color[k-2]+'-500 box-border border-black border-2"></div>';
+            }
+            div_parent += div_child; //子要素を追加
+            div_parent += '</div>';
+            // 親要素を、次のループの子要素にする
+            div_child = div_parent;
+        }
+    }
+
+    // 生成した数式と図形のdiv要素を出力
+    $("#display_equation").html(buff_equation);
+    $("#display_area").html('<div style="width:' + area_width + 'px; height:' + para_b*zoom_rate + 'px;" class="mx-auto my-4">' + div_parent + '</div>');
+    renderMathInElement(document.getElementById("display_equation"));
+    renderMathInElement(document.getElementById("display_area"));
+}
+
 
 /*******************************************************
 * 十進数からn進数への変換
