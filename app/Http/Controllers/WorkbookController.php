@@ -20452,6 +20452,169 @@ class WorkbookController extends Controller
     }
 
     /******* javaScript **********/
+    // かけ算のひっ算
+    public function js_long_multiplication() {
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            掛け算の筆算でやっていることを、図形で考えてみます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">２桁同士の掛け算の例</h3>
+            具体例として、\(21 \\times 32\) を考えます。
+
+            <h4 class=\"text-xl font-bold mt-4\">ひっ算</h4>
+            <div class=\"pl-4\">
+                \\[
+                    \\begin{aligned}
+                        \Large{
+                            \\begin{array}{rr}
+                                &amp; 21 \\\\
+                                \\times) &amp; 32 \\\\ \hline
+                                &amp; 42 \\\\
+                                &amp; 63 \hspace{0.65em} \\\\ \hline
+                                &amp; 672
+                            \\end{array}
+                        }
+                    \\end{aligned}
+                \\]
+
+                これは、次のように計算しているのと同じです。
+                <div class=\"mx-auto w-1/3\">
+                <div>\(21 × 32 \)</div>
+                <div>\(= 21 × (30+2)\)</div>
+                <div>\( = \)<span class=\"text-blue-700\">\((21 \\times 30)\)</span> \( + \) <span class=\"text-green-600\">\((21 \\times 2)\)</span>
+                \( = \) <span class=\"text-blue-700\">\( 630\)</span> \( + \) <span class=\"text-green-600\">\(42\)</span></div>
+                <div>\( = 672\)</div>
+                </div>
+            </div>
+
+            <h4 class=\"text-xl font-bold mt-4\">長方形の面積で考える</h4>
+            <div class=\"pl-4\">
+                上記の例は、縦21cm\(\\times\)横32cm の長方形の面積を求める問題に置き換えられます。
+
+                横の長さを<span class=\"text-blue-700\">30cm</span>と<span class=\"text-green-600\">2cm</span>に分割し、それぞれの面積を足せば全体の面積が求まります。
+
+                <!-- 長方形 -->
+                <div class=\"w-1/3 mx-auto\">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class=\"text-center\">30cm</th>
+                                <th>2cm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class=\"rotate90\">21cm</th>
+                                <td class=\"w-[300px] h-[210px] text-white bg-blue-700 text-center align-middle font-bold\">630㎠</td>
+                                <td class=\"w-[20px] h-[210px] text-white bg-green-600 text-center align-middle font-bold\">42㎠</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">好きな数値で試そう</h3>
+            好きな自然数を 2 つ入力し、表示ボタンを押してみましょう。筆算の計算と長方形の面積を比べてみましょう。
+            <ul>
+                <li>自然数は1〜99の範囲で入力してください</li>
+            </ul>
+
+            <div class=\"set_parameters\">
+                <input id=\"para_a\" class=\"parameter\" max=\"99\" min=\"1\" type=\"number\" value=\"21\" />
+                \(\\times\) <input id=\"para_b\" class=\"parameter\" max=\"99\" min=\"1\" type=\"number\" value=\"32\" />
+            </div>
+
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div id=\"display_equation\">ここに展開式が表示されます</div>
+            <div id=\"display_area\">ここに \(a×b\) の長方形を正方形で分割した図が表示されます。</div>
+        ";
+
+        $jsAction = "long_multiplication";
+        $unitname = "かけ算のひっ算";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
+    // 分数のわり算の意味
+    public function js_fraction_division() {
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            分数の割り算の意味について、図で考えます。
+
+            解釈について考えることを重視し、解き方（逆数をかけるなど）については深く触れません。
+            
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">整数のわり算</h3>
+            まず、整数の割り算について考えます。
+
+            例えば、\(6÷3=2\) ですが、これは「 \(6\) は \(3\) の塊が \(2\) 組分」ということです。
+            <p class=\"text-center my-6\">
+                &#x263A; 
+                &#x263A; 
+                &#x263A; 
+                &#x263A; 
+                &#x263A; 
+                &#x263A; 
+                = [
+                    &#x263A; 
+                    &#x263A; 
+                    &#x263A; 
+                ] × \(2\) 組
+            </p>
+            一般化すると、\(a÷b=c\) ならば、「 \(a\) は \(b\) の塊が \(c\) 個分（\(a=b×c\)）」となります。
+            
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">分数のわり算</h3>
+            <div class=\"mt-4\">
+                分数の割り算も、考え方は同じです。例えば、\(\displaystyle \\frac{\\,3\\,}{4} \\div \\frac{\\,3\\,}{8}=2\) ですが、
+                これは「 \(\displaystyle \\frac{\\,3\\,}{4}\) は \(\displaystyle \\frac{\\,3\\,}{8}\) の塊が \(2\) 個分 
+                \(\displaystyle \\left( \\frac{\\,3\\,}{4}=\\frac{\\,3\\,}{8}×2 \\right) \)」ということです。
+            </div>
+            <div class=\"flex items-center w-1/2 mx-auto my-4\">
+                <div class=\"w-[150px]\"><canvas id=\"canvas1\">meaningless</canvas></div>
+                <div class=\"text-5xl mx-4\">=</div>
+                <div class=\"w-[150px]\"><canvas id=\"canvas2\">meaningless</canvas></div>
+                <div class=\"text-5xl mx-4\">×</div>
+                <div class=\"text-5xl\">2</div>
+            </div>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">ほかの分数で試してみよう</h3>
+            以下の条件を満たすように整数を入力し、表示ボタンを押してください。
+            <ul class=\"pl-5 list-disc\">
+                <li>整数は1〜20の範囲で入力</li>
+                <li>各項は1以下の分数になるようにする</li>
+            </ul>
+
+            <div class=\"set_parameters\">
+                (
+                    <input id=\"para_1\" class=\"parameter\" max=\"20\" min=\"1\" type=\"number\" value=\"4\" />
+                    / <input id=\"para_2\" class=\"parameter\" max=\"20\" min=\"1\" type=\"number\" value=\"9\" />
+                ) ÷ (
+                    <input id=\"para_3\" class=\"parameter\" max=\"20\" min=\"1\" type=\"number\" value=\"5\" />
+                    / <input id=\"para_4\" class=\"parameter\" max=\"20\" min=\"1\" type=\"number\" value=\"18\" />
+                ) = ?
+            </div>
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div id=\"display_equation\" class=\"text-xl\"></div>
+            <div class=\"flex items-center w-1/3 mx-auto my-4\">
+                <div class=\"w-[150px]\"><canvas id=\"canvas3\">meaningless</canvas></div>
+                <div id=\"display_mark1\" class=\"text-5xl mx-4\"></div>
+                <div class=\"w-[150px]\"><canvas id=\"canvas4\">meaningless</canvas></div>
+                <div id=\"display_mark2\" class=\"text-5xl mx-4\"></div>
+                <div id=\"ans\" class=\"text-5xl\"></div>
+            </div>
+            ———- 表示ここまで ———-
+        ";
+
+        $jsAction = "fraction_division";
+        $unitname = "分数のわり算の意味";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
     // ユークリッドの互除法
     public function js_euclidean_algorithm() {
         $block2 = "
@@ -20520,8 +20683,10 @@ class WorkbookController extends Controller
                 <li>自然数は1〜9999の範囲で入力してください</li>
                 <li>\(a,b\) と最大公約数の差が大きい場合、図形が崩れることがあります</li>
             </ul>
-            <div class=\"set_parameters\">\(a=\) <input id=\"para_a\" class=\"parameter\" max=\"9999\" min=\"1\" type=\"number\" value=\"221\" />
-            \(b=\) <input id=\"para_b\" class=\"parameter\" max=\"9999\" min=\"1\" type=\"number\" value=\"153\" /></div>
+            <div class=\"set_parameters\">
+                \(a=\) <input id=\"para_a\" class=\"parameter\" max=\"9999\" min=\"1\" type=\"number\" value=\"221\" />
+                \(b=\) <input id=\"para_b\" class=\"parameter\" max=\"9999\" min=\"1\" type=\"number\" value=\"153\" />
+            </div>
         ";
 
         $disp_con = "
@@ -20852,6 +21017,62 @@ class WorkbookController extends Controller
         return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
     }
 
+    // 正弦波の重ね合わせ
+    public function js_superposition_sine_waves() {
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            波の性質のひとつに、重ね合わせの原理がありますね。
+            原理の説明はさておき、ここでは２つの波が重なった瞬間の形を見てみましょう。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">重ね合わせる波</h3>
+            重ね合わせる波は、２つの正弦波 \(f(x),g(x)\) とします。
+
+            $$ f(x) = c_1 \sin(mx-a) $$
+            $$ g(x) = c_2 \sin(nx-b) $$
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">好きなパラメータで試してみよう</h3>
+            上式のパラメータ \(a,b,c_1,c_2,m,n\) を色々と変えて試してみましょう。
+            整数でなくても大丈夫です。
+
+            下記の条件を満たすように入力し、「表示」ボタンを押してください。
+
+            \(a,b\) は、それぞれ [入力値 × \(\pi\)] となります。
+            <ul class=\"pl-5 list-disc\">
+                <li>\(-2\pi \leq a \leq 2\pi,-2\pi \leq b \leq 2\pi\)</li>
+                <li>\(-2 \leq c_1 \leq 2,-2 \leq c_2 \leq 2\)</li>
+                <li>\(-100 \leq m \leq 100,-100 \leq n \leq 100\)</li>
+            </ul>
+
+            $$ f(x) = c_1 \sin(mx-a) $$
+            $$ g(x) = c_2 \sin(nx-b) $$
+
+            <div class=\"set_parameters\">
+                \(a=\) <input id=\"para_a\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"-1\" /> \(\pi\), 
+                \(b=\) <input id=\"para_b\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> \(\pi\), 
+                \(c_1=\) <input id=\"para_c1\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> , 
+                \(c_2=\) <input id=\"para_c2\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> , 
+                \(m=\) <input id=\"para_m\" class=\"parameter\" max=\"100\" min=\"-100\" type=\"number\" value=\"2\" />, 
+                \(n=\) <input id=\"para_n\" class=\"parameter\" max=\"100\" min=\"-100\" type=\"number\" value=\"3\" />
+            </div>
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div id=\"equation1\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas1\">meaningless</canvas></div>
+            <div id=\"equation2\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas2\">meaningless</canvas></div>
+            <div id=\"equation3\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas3\">meaningless</canvas></div>
+            ———- 表示ここまで ———-
+        ";
+
+        $jsAction = "superposition_sine_waves";
+        $unitname = "正弦波の重ね合わせ";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
+
     // 三角関数を任意の区間で積分する
     public function js_sin_cos_integral() {
         $sentence = "
@@ -20890,8 +21111,6 @@ class WorkbookController extends Controller
                 \(b=\) <input id=\"para_b\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> \(\pi\), 
                 \(m=\) <input id=\"para_m\" class=\"parameter\" max=\"100\" min=\"-100\" type=\"number\" value=\"1\" />
             </div>
-
-
         ";
 
         $disp_con = "
@@ -20911,6 +21130,124 @@ class WorkbookController extends Controller
 
         $jsAction = "sin_cos_integral";
         $unitname = "三角関数を任意の区間で積分する";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+
+    // 三角関数の内積と直交性
+    public function js_sin_cos_orthogonality() {
+        $imageUrl_q1 = route('secure.file', ['folder' => 'workbook', 'filename' => 'sin2x_sin3x.png']);
+        $imageUrl_q2 = route('secure.file', ['folder' => 'workbook', 'filename' => 'cos2x_cos3x.png']);
+        $imageUrl_q3 = route('secure.file', ['folder' => 'workbook', 'filename' => 'sin2x_cos3x.png']);
+
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            フーリエ級数展開を理解する上で欠かせない、三角関数の直交性をみてみましょう。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">関数の内積</h3>
+            ここでは、2つの関数 \(f(x),g(x)\)の区間\([a,b]\)の内積を次のように考えます。
+
+            $$ \\langle f(x),g(x) \\rangle = \int_{a}^{b} f(x)g(x)dx $$
+
+            積分区間が\([-\infty,\infty]\)になっている式も見たことありますが、ここではある区間\([a,b]\)にしか注目しません。あと、左辺に区間の記述が入っていないけど気にしない！
+
+            丁寧な説明を知りたい方は、次のブログ記事などを読むと良さそう。関数の内積の捉え方を、ベクトルの内積の拡張として説明しています。
+            <p class=\"text-right\">
+                <a href=\"https://blog.physips.com/entry/fourier_orthogonal#%E9%96%A2%E6%95%B0%E3%81%AE%E5%86%85%E7%A9%8D%E7%9B%B4%E4%BA%A4\" target=\"_blank\">参考：Phys and Tips「フーリエ級数展開をベクトルで直観的に理解する」</a>
+            </p>
+            
+            <div class=\"blog-card external-blog-card blog-card-thumbnail-left cf\"></div>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">三角関数の内積と直交性</h3>
+            ここでは三角関数(sin,cos)だけを考えます。
+            積の順序は関係ないので、次の３種類の内積を考えることにします。
+
+            $$ \langle \sin(mx),\sin(nx) \\rangle = \int_{a}^{b} \sin(mx) \sin(nx) dx $$
+            $$ \langle \cos(mx),\cos(nx) \\rangle = \int_{a}^{b} \cos(mx) \cos(nx) dx $$
+            $$ \langle \sin(mx),\cos(nx) \\rangle = \int_{a}^{b} \sin(mx) \cos(nx) dx $$
+
+            試しに、区間を\([-\pi,\pi],m=2,n=3\) として1つずつ見ていきます。それぞれの関数の積分と併せて見てみましょう。
+
+            <h4 class=\"text-xl font-bold mt-4\">sin同士の内積</h4>
+            <img src=\"{$imageUrl_q1}\" class=\"w-1/3 mx-auto\" alt=\"sin(2x)sin(3x)の積分\">
+            
+            <h4 class=\"text-xl font-bold mt-4\">cos同士の内積</h4>
+            <img src=\"{$imageUrl_q2}\" class=\"w-1/3 mx-auto\" alt=\"sin(2x)sin(3x)の積分\">
+
+            <h4 class=\"text-xl font-bold mt-4\">sinとcosの内積</h4>            
+            <img src=\"{$imageUrl_q3}\" class=\"w-1/3 mx-auto\" alt=\"sin(2x)sin(3x)の積分\">
+
+            <div class=\"pl-4\">
+                グラフを見ると、いずれの内積もプラス(\(x\) 軸の上側)の面積とマイナス(\(x\) 軸の下側)の面積が相殺して \(0\) になっている様子がわかりますね。
+                上記の例のように、<span class=\"underline\">内積が \(0\) になる2つの関数 \(f(x),g(x)\) は、区間 \([a,b]\) で直交していると言います</span>。
+                もともと２つの直交したベクトルの内積が \(0\) であることから、関数にも直交という表現が拡張されたようですね。
+            </div>
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">好きなパラメータで試してみよう</h3>
+            さて、よく知られている直交性については確認できましたので、ここからは好きなパラメータで内積を調べてみましょう。
+            上述の例では三角関数の周期に合わせて区間の長さを \(2\pi\) にしていました。また、三角関数の振幅は \(1\) にしていました。
+            これらのパラメータをいろいろと変更して内積を計算し、直交する条件を確認しましょう。
+
+            <h4 class=\"text-xl font-bold mt-4\">関数の選択</h4>            
+            <div class=\"pl-4\">
+                <p>内積の対象とする関数 \(f(x),g(x)\) を、次の２種類からそれぞれ選んでください。</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class=\"w-80\"><label class=\"whitespace-nowrap\"><input id=\"radio1\" checked=\"checked\" name=\"radio_f\" type=\"radio\" value=\"0\" width=\"80\"/>\(f(x) = c_1 \sin(mx)\)</label></td>
+                            <td class=\"w-80\"><label class=\"whitespace-nowrap\"><input id=\"radio2\" name=\"radio_f\" type=\"radio\" value=\"1\" />\(f(x) = c_1 \cos(mx)\)</label></td>
+                        </tr>
+                        <tr>
+                            <td class=\"w-80\"><label class=\"whitespace-nowrap\"><input id=\"radio3\" name=\"radio_g\" type=\"radio\" value=\"2\" />\(g(x) = c_2 \sin(nx)\)</label></td>
+                            <td class=\"w-80\"><label class=\"whitespace-nowrap\"><input id=\"radio4\" checked=\"checked\" name=\"radio_g\" type=\"radio\" value=\"3\" />\(g(x) = c_2 \cos(nx)\)</label></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 class=\"text-xl font-bold mt-4\">パラメータの設定</h4>            
+            <div class=\"pl-4\">
+                積分区間\([a,b]\) と \(c_1,c_2,m,n\) を色々と変えて試してみましょう。整数でなくても大丈夫です。
+
+                下記の条件を満たすように入力し、「表示」ボタンを押してください。
+
+                \(a,b\) は、それぞれ [入力値 × \(\pi\)] となります。
+                <ul class=\"pl-5 list-disc\">
+                    <li>\(-2\pi \leq a \leq 2\pi,-2\pi \leq b \leq 2\pi\)</li>
+                    <li>\(a \lt b\)</li>
+                    <li>\(-2 \leq c_1 \leq 2,-2 \leq c_2 \leq 2\)</li>
+                    <li>\(-100 \leq m \leq 100,-100 \leq n \leq 100\)</li>
+                </ul>
+            </div>
+
+            <div class=\"set_parameters\">
+                \(a=\) <input id=\"para_a\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"-1\" /> \(\pi\), 
+                \(b=\) <input id=\"para_b\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> \(\pi\), 
+                \(c_1=\) <input id=\"para_c1\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> \(\pi\), 
+                \(c_2=\) <input id=\"para_c2\" class=\"parameter\" max=\"2\" min=\"-2\" type=\"number\" value=\"1\" /> \(\pi\), 
+                \(m=\) <input id=\"para_m\" class=\"parameter\" max=\"100\" min=\"-100\" type=\"number\" value=\"1\" />, 
+                \(n=\) <input id=\"para_n\" class=\"parameter\" max=\"100\" min=\"-100\" type=\"number\" value=\"1\" />
+            </div>
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div id=\"equation1\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas1\">meaningless</canvas></div>
+            <div id=\"equation2\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas2\">meaningless</canvas></div>
+            <div id=\"equation3\"></div>
+            <div class=\"canvas_container\"><canvas id=\"canvas3\">meaningless</canvas></div>
+            ———- 表示ここまで ———-
+            <p class=\"mt-4\">色々と試してみると、例えば次の特徴が確認できます。</p>
+            <ul class=\"pl-5 list-disc\">
+                <li>\(m\) が整数の時は、\(2\pi\)区間の積分が0になる（周期の整数倍が\(2\pi\)になる）</li>
+                <li>半周期分の積分(山1つ分の面積)は、\(2/m\) になる</li>
+            </ul>
+            ここでは \(\sin(mx)\) と \(\cos(mx)\) を別々に積分しましたが、積 \(\sin(mx) \cos(nx)\) を積分すると別の特徴も見えてきます。
+        ";
+
+        $jsAction = "sin_cos_orthogonality";
+        $unitname = "三角関数の内積と直交性";
         return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
     }
 

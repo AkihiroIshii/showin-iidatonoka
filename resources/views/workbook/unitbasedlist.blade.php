@@ -942,7 +942,27 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <x-td>数理物理</x-td>
+                        <x-td>小学生向け</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_long_multiplication')}}">かけ算のひっ算</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_fraction_division')}}">分数のわり算の意味</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>中学生向け</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>高校生向け</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="orange">
@@ -958,10 +978,23 @@
                                     <a href="{{route('workbook.js_series_sums_vs_integrals')}}">級数和と積分</a>
                                 </x-button-link>
                                 <x-button-link color="orange">
-                                    <a href="{{route('workbook.js_make_harmony')}}">３つの音波を重ねて和音をつくる</a>
+                                    <a href="{{route('workbook.js_superposition_sine_waves')}}">正弦波の重ね合わせ</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_make_harmony')}}">３つの音波を重ねて和音をつくる♪</a>
                                 </x-button-link>
                                 <x-button-link color="orange">
                                     <a href="{{route('workbook.js_sin_cos_integral')}}">三角関数を任意の区間で積分する</a>
+                                </x-button-link>
+                            </div>
+                        </x-td>
+                    </tr>
+                    <tr>
+                        <x-td>大学レベル</x-td>
+                        <x-td class="font-bold">
+                            <div class="flex flex-wrap gap-4">
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_sin_cos_orthogonality')}}">三角関数の内積と直交性</a>
                                 </x-button-link>
                                 <x-button-link color="orange">
                                     <a href="{{route('workbook.js_joukowski')}}">円形を翼形に写す〜ジューコフスキー変換〜</a>

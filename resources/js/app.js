@@ -22,6 +22,9 @@ $(function () {
         case 'sin_cos_integral':
             sin_cos_integral_initial();
             break;
+        case 'fraction_division':
+            fraction_division_initial();
+            break;
     }
     // 表示ボタンが押されたとき
     $('#display-button').on('click', function () {
@@ -31,6 +34,12 @@ $(function () {
         myChart3 && myChart3.destroy();
         myChart4 && myChart4.destroy();
         switch (window.pageConfig?.jsAction) {
+            case 'long_multiplication':
+                long_multiplication();
+                break;
+            case 'fraction_division':
+                fraction_division();
+                break;
             case 'n_ary_numeral':
                 n_ary_numeral();
                 break;
@@ -46,12 +55,18 @@ $(function () {
             case 'matrix_notation':
                 matrix_notation();
                 break;
+            case 'superposition_sine_waves':
+                superposition_sine_waves();
+                break;
             case 'make_harmony':
                     loadAndSound();
                     dispWaveFunc();
                 break;
             case 'sin_cos_integral':
                 sin_cos_integral();
+                break;
+            case 'sin_cos_orthogonality':
+                sin_cos_orthogonality();
                 break;
             case 'joukowski':
                 joukowski();
@@ -76,6 +91,225 @@ $(function () {
         }
     });
 });
+
+
+
+
+/*******************************************************
+* かけ算のひっ算
+********************************************************/
+function long_multiplication() {
+    // パラメータを取得
+    var para_a = Number($("#para_a").val());
+    var para_b = Number($("#para_b").val());
+
+    // パラメータチェック
+    if (!Number.isInteger(para_a) || !Number.isInteger(para_b)
+        || para_a < 10 || para_b < 10 || para_a > 99 || para_b > 99){
+        alert('a,bには10〜99の自然数を入力してください。');
+        return;
+    }
+
+    // 変数定義
+    var buff_equation = ''; // 表示する数式
+    var para_b_part1 = para_b % 10;
+    var para_b_part10 = para_b - (para_b % 10);
+    var ans_1 = para_a * para_b_part1;
+    var ans_10 = para_a * para_b_part10 / 10;
+    var rectangle; // 描画する長方形のdiv要素
+    // 表示する数式を生成
+    buff_equation = '\\['
+    + '\\begin{aligned}'
+    + '\\Large{'
+    + '\\begin{array}{rr}'
+    + '& ' + para_a + ' \\\\'
+    + '\\times) & ' + para_b + ' \\\\ \\hline'
+    + '& ' + ans_1 + ' \\\\'
+    + '& ' + ans_10 + ' \\hspace{0.65em} \\\\ \\hline'
+    + '& ' + para_a * para_b
+    + '\\end{array}'
+    + '}'
+    + '\\end{aligned} \\]';
+    // 長方形のdiv要素を生成
+    rectangle = '<div class="w-1/3 mx-auto"><table>'
+    + '<thead>'
+    + '<tr>'
+    + '<th></th>'
+    + '<th>' + para_b_part10 + 'cm</th>'
+    + '<th>' + para_b_part1 + 'cm</th>'
+    + '</tr>'
+    + '</thead>'
+    + '<tbody>'
+    + '<tr>'
+    + '<th class="rotate90">' + para_a + 'cm</th>'
+    + '<td class="w-[300px] h-[210px] text-white bg-blue-700 text-center align-middle font-bold">' + para_a * para_b_part10 + '㎠</td>'
+    + '<td class="text-white bg-green-600 text-center align-middle font-bold">' + para_a * para_b_part1 + '㎠</td>'
+    + '</tr>'
+    + '</tbody>'
+    + '</table></div>';
+    // 生成した数式と図形のdiv要素を出力
+    $("#display_equation").html(buff_equation);
+    renderMathInElement(document.getElementById("display_equation"));
+    $("#display_area").html(rectangle);
+    renderMathInElement(document.getElementById("display_area"));
+
+    // 描画拡大率を設定
+    var scale; // 長方形の描画拡大率
+    var max_size = 300; //長方形の一辺の最大幅(高さ)
+    var longer = Math.max(para_a, para_b);
+    scale = max_size / longer;
+    // 長方形のサイズを設定
+    $("#box-custom1").width(para_b_part10 * scale);
+    $("#box-custom2").width(para_b_part1 * scale);
+    $("#box-custom1").height(para_a * scale);
+    $("#box-custom2").height(para_a * scale);
+}
+
+
+/*******************************************************
+* 分数のわり算の意味
+********************************************************/
+// 初期処理
+function fraction_division_initial() {   
+    // canvas にグラフを表示
+    var pi_color = "rgb(240, 230, 140)";
+    var ctx1 = document.getElementById('canvas1').getContext('2d');
+    myChart1 = new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            labels: [],
+            datasets: [{
+                backgroundColor: [
+                    pi_color,
+                    pi_color,
+                    pi_color,
+                    "rgba(0, 0, 255, 0.1)"
+                ],
+                data: [1/4, 1/4, 1/4, 1/4]
+            }]
+        }
+    });
+
+    var ctx2 = document.getElementById('canvas2').getContext('2d');
+    myChart2 = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+            labels: [],
+            datasets: [{
+                backgroundColor: [
+                    pi_color,
+                    pi_color,
+                    pi_color,
+                    "rgba(0, 0, 255, 0.1)",
+                    "rgba(0, 0, 255, 0.1)",
+                    "rgba(0, 0, 255, 0.1)",
+                    "rgba(0, 0, 255, 0.1)",
+                    "rgba(0, 0, 255, 0.1)"
+                ],
+                data: [1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8]
+            }]
+        }
+    });
+    $('.example_part *').show();
+}
+
+// 表示ボタン押下時
+function fraction_division() {   
+    fraction_division_initial();
+
+    var pi_color = "rgb(240, 230, 140)";
+    var buff_equation;
+
+    // 入力パラメータを取得して数値に変換
+    var val1 = Number($("#para_1").val());
+    var val2 = Number($("#para_2").val());
+    var val3 = Number($("#para_3").val());
+    var val4 = Number($("#para_4").val());
+
+    if ( val1 < 1 | val2 < 1 | val3 < 1 | val4 < 1 ) {
+        alert("分子と分母には、1〜20の整数を入力してください");
+        exit;
+    } else if ( val1 > 20 | val2 > 20 | val3 > 20 | val4 > 20 ) {
+        alert("分子と分母には、1〜20の整数を入力してください");
+        exit;
+    } else if ( (val1/val2) > 1 | (val3/val4) > 1 ) {
+        alert("それぞれの項が1以下の分数になるように設定してください")
+        exit;
+    }
+
+    // 計算
+    var ans = (val1/val2)/(val3/val4);
+    ans = Math.round(ans*100)/100;
+    //var koubaisu = val2 * val4;
+
+    // 項ごとに分母で等分し、データセットに格納
+    var buff_color1 = [];
+    var buff_color2 = [];
+    var buff_val1 = [];
+    var buff_val2 = [];
+    for (var i = 1; i <= val2; i++){
+        if (i<=val1){
+            buff_color1.push(pi_color);
+        } else {
+            buff_color1.push("rgba(0, 0, 255, 0.1)");
+        }
+            buff_val1.push(1/val2);
+    }
+    for (var i = 1; i <= val4; i++){
+        if (i<=val3){
+            buff_color2.push(pi_color);
+        } else {
+            buff_color2.push("rgba(0, 0, 255, 0.1)");
+        }
+        buff_val2.push(1/val4);
+    }
+
+    // buff_equation = 
+    //     "\\frac{" + val1 + "}{" + val2 + "} \\div \\frac{" + val3 + "}{" + val4 + "} &= c \\\\ "
+    //     + "\\frac{" + val1 + "}{" + val2 + "} &= \\frac{" + val3 + "}{" + val4 + "} × c \\\\ "
+    //     + "c &= " + ans;
+    // buff_equation = 
+    //     "$$ \\frac{\\," + val1 + "\\,}{\\," + val2 + "\\,} \\div \\frac{\\," + val3 + "\\,}{\\," + val4 + "\\,} = " + ans + " $$ "
+    //     // + " \\,\\,\\,\\,\\,\\, \\Longleftrightarrow \\,\\,\\,\\,\\,"
+    //     + "$$ \\Longleftrightarrow \\frac{\\," + val1 + "\\,}{\\," + val2 + "\\,} = \\frac{\\," + val3 + "\\,}{\\," + val4 + "\\,} × " + ans + " $$ "
+    buff_equation = 
+        "\\[ \\begin{aligned} \\frac{\\," + val1 + "\\,}{\\," + val2 + "\\,} \\div \\frac{\\," + val3 + "\\,}{\\," + val4 + "\\,} &= " + ans + " \\\\[1em] "
+        + " つまり、 \\,\\, \\frac{\\," + val1 + "\\,}{\\," + val2 + "\\,} &= \\frac{\\," + val3 + "\\,}{\\," + val4 + "\\,} × " + ans + " \\end{aligned} \\] "
+
+        // 結果表示
+    $("#display_mark1").html("=");
+    $("#display_mark2").html("×");
+    $('#ans').html(ans);
+    $('.char_part').show();
+    $("#display_equation").html(buff_equation);
+    renderMathInElement(document.getElementById("display_equation"));
+
+    // canvas にグラフを表示
+    var ctx3 = document.getElementById('canvas3').getContext('2d');
+    myChart3 = new Chart(ctx3, {
+        type: 'pie',
+        data: {
+            labels: [],
+            datasets: [{
+                backgroundColor: buff_color1,
+                data: buff_val1
+            }]
+        }
+    });
+    var ctx4 = document.getElementById('canvas4').getContext('2d');
+    myChart4 = new Chart(ctx4, {
+        type: 'pie',
+        data: {
+            labels: [],
+            datasets: [{
+                backgroundColor: buff_color2,
+                data: buff_val2
+            }]
+        }
+    });
+
+}
+
 
 /*******************************************************
 * ユークリッドの互除法
@@ -713,6 +947,322 @@ function matrix_notation() {
 }
 
 /*******************************************************
+* 正弦波の重ね合わせ
+********************************************************/
+function superposition_sine_waves() {
+    // パラメータを取得
+    var para_a = Number($("#para_a").val());
+    var para_b = Number($("#para_b").val());
+    var para_c1 = Number($("#para_c1").val());
+    var para_c2 = Number($("#para_c2").val());
+    var para_m = Number($("#para_m").val());
+    var para_n = Number($("#para_n").val());
+
+    // パラメータチェック
+    if ((para_a < -2) || (para_a > 2)){
+        alert('aには-2〜2の値を入力してください。');
+        return;
+    } else if ((para_b < -2) || (para_b > 2)){
+        alert('bには-2〜2の値を入力してください。');
+        return;
+    } else if ((para_c1 < -2) || (para_c1 > 2)){
+        alert('c_1には-2〜2の値を入力してください。');
+        return;
+    } else if ((para_c2 < -2) || (para_c2 > 2)){
+        alert('c_2には-2〜2の値を入力してください。');
+        return;
+    } else if ((para_m < -100) || (para_m > 100)){
+        alert('mには-100〜100の値を入力してください。');
+        return;
+    } else if ((para_n < -100) || (para_n > 100)){
+        alert('nには-100〜100の値を入力してください。');
+        return;
+    }
+
+    // 変数定義
+    var a = para_a * Math.PI;
+    var b = para_b * Math.PI;
+    var c1 = para_c1;
+    var c2 = para_c2;
+    var m = para_m;
+    var n = para_n;
+    var char_c1 = c1;
+    var char_c2 = c2;
+    var char_m = m;
+    var char_n = n;
+    var ans_f = 0;
+    var ans_g = 0;
+    var ans_fg = 0;
+    var char_f = '';
+    var char_g = '';
+    var char_fg = '';
+    var buff_equation;
+
+    // 表示用の文字を加工
+    if(para_m==1){char_m=''};
+    if(para_m==-1){char_m='-'};
+    if(para_n==1){char_n=''};
+    if(para_n==-1){char_n='-'};
+    if(para_c1==1){char_c1=''};
+    if(para_c1==-1){char_c1='-'};
+    if(para_c2==1){char_c2=''};
+    if(para_c2==-1){char_c2='-'};
+
+    // f(x)の式を生成
+    if(c1==0){
+        char_f = 0;
+    }else if(para_a==0){
+        char_f = char_c1+'\\sin('+char_m+'x)';
+    }else if(para_a==1){
+        char_f = char_c1+'\\sin('+char_m+'x-\\pi)';
+    }else if(para_a==-1){
+        char_f = char_c1+'\\sin('+char_m+'x+\\pi)';
+    }else if(para_a>0){
+        char_f = char_c1+'\\sin('+char_m+'x-'+Math.abs(para_a)+'\\pi)';
+    }else{
+        char_f = char_c1+'\\sin('+char_m+'x+'+Math.abs(para_a)+'\\pi)';
+    }
+
+    // g(x)の式を生成
+    if(c2==0){
+        char_g = 0;
+    }else if(para_b==0){
+        char_g = char_c2+'\\sin('+char_n+'x)';
+    }else if(para_b==1){
+        char_g = char_c2+'\\sin('+char_n+'x-\\pi)';
+    }else if(para_b==-1){
+        char_g = char_c2+'\\sin('+char_n+'x+\\pi)';
+    }else if(para_b>0){
+        char_g = char_c2+'\\sin('+char_n+'x-'+Math.abs(para_b)+'\\pi)';
+    }else{
+        char_g = char_c2+'\\sin('+char_n+'x+'+Math.abs(para_b)+'\\pi)';
+    }
+
+    // f(x)+g(x)の式を生成
+    if(para_c1==0){
+        char_fg = char_g;
+    }else if(para_c2==0){
+        char_fg = char_f;
+    }else if(para_c2>0){
+        char_fg = char_f+'+'+char_g;
+    }else{
+        char_fg = char_f+char_g;
+    }
+
+    // 数式を生成して出力(f(x))
+    buff_equation = '$$ f(x)=' + char_f + ' $$';
+    $("#equation1").html(buff_equation);
+    renderMathInElement(document.getElementById("equation1"));
+
+    // 数式を生成して出力(g(x))
+    buff_equation = '$$ g(x)=' + char_g + ' $$';
+    $("#equation2").html(buff_equation);
+    renderMathInElement(document.getElementById("equation2"));
+
+    // 数式を生成して出力(f(x)+g(x))
+    buff_equation = '$$ f(x)+g(x)=' + char_fg + ' $$';
+    $("#equation3").html(buff_equation);
+    renderMathInElement(document.getElementById("equation3"));
+
+
+    // グラフ作成用の変数定義
+    var fx = new Array();
+    var gx = new Array();
+    var fg = new Array();
+    var dx = 0.01;
+    var x = 0;
+    var y = 0;
+    var i = 0;
+
+    // グラフ出力用のデータ生成
+    for(x=-2*Math.PI;x<=2*Math.PI;x+=dx){
+    // f(x)
+    y = c1*Math.sin(m*x-a);
+    fx.push({x,y});
+
+    // g(x)
+    y = c2*Math.sin(n*x-b);
+    gx.push({x,y});
+
+    // f(x)+g(x)
+    y = fx[i].y + gx[i].y;
+    fg.push({x,y});
+
+    i++;
+    }
+
+    // canvasのサイズを設定
+    var w = $('.canvas_container').width();
+    var h = $('.canvas_container').height();
+    $('#canvas1').attr('width', w);
+    $('#canvas1').attr('height', h);
+    $('#canvas2').attr('width', w);
+    $('#canvas2').attr('height', h);
+    $('#canvas3').attr('width', w);
+    $('#canvas3').attr('height', h);
+
+    // 計算してグラフを書く関数を呼ぶ
+    var ctx1 = document.getElementById('canvas1').getContext('2d');
+    myChart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'f(x)',
+                    pointRadius: 0, // 点の半径
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0,0,128,0.5)",
+                    data: fx,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: 
+                {
+                    type: 'linear',
+                    min: -2*Math.PI,
+                    max: 2*Math.PI,
+                    ticks: {
+                        stepSize: Math.PI / 2,
+                        autoSkip: false,
+                        callback: function(value) {
+                            const n = Math.round(value / (Math.PI / 2));
+
+                            if (n === 0) return '0';
+                            if (n === 1) return 'π/2';
+                            if (n === -1) return '-π/2';
+
+                            if (n % 2 === 0) {
+                                return (n < 0 ? '-' : '') +
+                                    (Math.abs(n) / 2 === 1 ? '' : Math.abs(n) / 2) +
+                                    'π';
+                            }
+
+                            return (n < 0 ? '-' : '') +
+                                Math.abs(n) + 'π/2';
+                        }
+                    }
+                }
+                ,
+                y:
+                {
+                    min: -4,
+                    max: 4
+                }
+            }
+        }
+    });
+
+    var ctx2 = document.getElementById('canvas2').getContext('2d');
+    myChart2 = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'g(x)',
+                    pointRadius: 0, // 点の半径
+                    borderColor: "green",
+                    backgroundColor: "rgba(0,128,0,0.5)",
+                    data: gx,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: 
+                {
+                    type: 'linear',
+                    min: -2*Math.PI,
+                    max: 2*Math.PI,
+                    ticks: {
+                        stepSize: Math.PI / 2,
+                        autoSkip: false,
+                        callback: function(value) {
+                            const n = Math.round(value / (Math.PI / 2));
+
+                            if (n === 0) return '0';
+                            if (n === 1) return 'π/2';
+                            if (n === -1) return '-π/2';
+
+                            if (n % 2 === 0) {
+                                return (n < 0 ? '-' : '') +
+                                    (Math.abs(n) / 2 === 1 ? '' : Math.abs(n) / 2) +
+                                    'π';
+                            }
+
+                            return (n < 0 ? '-' : '') +
+                                Math.abs(n) + 'π/2';
+                        }
+                    }
+                }
+                ,
+                y:
+                {
+                    min: -4,
+                    max: 4
+                }
+            }
+        }
+    });
+
+    var ctx3 = document.getElementById('canvas3').getContext('2d');
+    myChart3 = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'f(x)+g(x)',
+                    pointRadius: 0, // 点の半径
+                    borderColor: "skyblue",
+                    backgroundColor: "rgba(0,128,128,0.5)",
+                    data: fg,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: 
+                {
+                    type: 'linear',
+                    min: -2*Math.PI,
+                    max: 2*Math.PI,
+                    ticks: {
+                        stepSize: Math.PI / 2,
+                        autoSkip: false,
+                        callback: function(value) {
+                            const n = Math.round(value / (Math.PI / 2));
+
+                            if (n === 0) return '0';
+                            if (n === 1) return 'π/2';
+                            if (n === -1) return '-π/2';
+
+                            if (n % 2 === 0) {
+                                return (n < 0 ? '-' : '') +
+                                    (Math.abs(n) / 2 === 1 ? '' : Math.abs(n) / 2) +
+                                    'π';
+                            }
+
+                            return (n < 0 ? '-' : '') +
+                                Math.abs(n) + 'π/2';
+                        }
+                    }
+                }
+                ,
+                y:
+                {
+                    min: -4,
+                    max: 4
+                }
+            }
+        }
+    });
+}
+
+/*******************************************************
 * ３つの音波を重ねて和音をつくる
 ********************************************************/
 // var audioCtxes = new Array();
@@ -1020,6 +1570,7 @@ function dispWaveFunc() {
 }
 
 
+
 /*******************************************************
 * 三角関数を任意の区間で積分する
 ********************************************************/
@@ -1164,17 +1715,17 @@ function sin_cos_integral() {
 
     // パラメータチェック
     if ((para_a < -2) || (para_a > 2)){
-    alert('aには-2〜2の値を入力してください。');
-    return;
+        alert('aには-2〜2の値を入力してください。');
+        return;
     } else if ((para_b < -2) || (para_b > 2)){
-    alert('bには-2〜2の値を入力してください。');
-    return;
+        alert('bには-2〜2の値を入力してください。');
+        return;
     } else if (para_a > para_b){
-    alert('a < b となる値を入力してください。');
-    return;
+        alert('a < b となる値を入力してください。');
+        return;
     } else if ((para_m < -100) || (para_m > 100)){
-    alert('mには-100〜100の値を入力してください。');
-    return;
+        alert('mには-100〜100の値を入力してください。');
+        return;
     }
 
     // 変数定義
@@ -1350,6 +1901,371 @@ function sin_cos_integral() {
         }
     });
 
+}
+
+/*******************************************************
+* 三角関数の内積と直交性
+********************************************************/
+function sin_cos_orthogonality() {
+    // パラメータを取得
+    var para_a = Number($("#para_a").val());
+    var para_b = Number($("#para_b").val());
+    var para_c1 = Number($("#para_c1").val());
+    var para_c2 = Number($("#para_c2").val());
+    var para_m = Number($("#para_m").val());
+    var para_n = Number($("#para_n").val());
+    var radio_f = $("input[name='radio_f']:checked").val();
+    var radio_g = $("input[name='radio_g']:checked").val();
+
+    // パラメータチェック
+    if ((para_a < -2) || (para_a > 2)){
+        alert('aには-2〜2の値を入力してください。');
+        return;
+    } else if ((para_b < -2) || (para_b > 2)){
+        alert('bには-2〜2の値を入力してください。');
+        return;
+    } else if ((para_c1 < -2) || (para_c1 > 2)){
+        alert('c_1には-2〜2の値を入力してください。');
+        return;
+    } else if ((para_c2 < -2) || (para_c2 > 2)){
+        alert('c_2には-2〜2の値を入力してください。');
+        return;
+    } else if (para_a > para_b){
+        alert('a < b となる値を入力してください。');
+        return;
+    } else if ((para_m < -100) || (para_m > 100)){
+        alert('mには-100〜100の値を入力してください。');
+        return;
+    } else if ((para_n < -100) || (para_n > 100)){
+        alert('nには-100〜100の値を入力してください。');
+        return;
+    }
+
+    // 変数定義
+    var a = para_a * Math.PI;
+    var b = para_b * Math.PI;
+    var c1 = para_c1;
+    var c2 = para_c2;
+    var m = para_m;
+    var n = para_n;
+    var char_a = para_a + '\\pi';
+    var char_b = para_b + '\\pi';
+    var char_c1 = c1;
+    var char_c2 = c2;
+    var char_c1c2 = c1*c2;
+    var char_m = m;
+    var char_n = n;
+    var ans_f = 0;
+    var ans_g = 0;
+    var ans_fg = 0;
+    var char_f = '';
+    var char_g = '';
+    var buff_equation;
+
+    // 表示用の文字を加工
+    if(para_a==0){char_a=0};
+    if(para_a==1){char_a='\\pi'};
+    if(para_a==-1){char_a='-\\pi'};
+    if(para_b==0){char_b=0};
+    if(para_b==1){char_b='\\pi'};
+    if(para_b==-1){char_b='-\\pi'};
+    if(para_m==1){char_m=''};
+    if(para_m==-1){char_m='-'};
+    if(para_n==1){char_n=''};
+    if(para_n==-1){char_n='-'};
+    if(para_c1==1){char_c1=''};
+    if(para_c1==-1){char_c1='-'};
+    if(para_c2==1){char_c2=''};
+    if(para_c2==-1){char_c2='-'};
+    if(c1*c2==1){char_c1c2=''};
+    if(c1*c2==-1){char_c1c2='-'};
+
+    // 解析解
+    // f(x)=c1 sin(mx)
+    if(radio_f==0){
+        if(m==0){
+            ans_f = 0;
+        }else{
+            ans_f = c1*((-1/m)*(Math.cos(m*b) - Math.cos(m*a)));
+        }
+    // f(x)=c1 cos(mx)
+    }else{
+        if(m==0){
+            ans_f = c1*(b - a);
+        }else{
+            ans_f = c1*((1/m)*(Math.sin(m*b) - Math.sin(m*a)));
+        }
+    }
+    // g(x)=c2 sin(nx)
+    if(radio_g==2){
+        if(n==0){
+            ans_g = 0;
+        }else{
+            ans_g = c2*((-1/n)*(Math.cos(n*b) - Math.cos(n*a)));
+        }
+    // g(x)=c2 cos(nx)
+    }else{
+        if(n==0){
+            ans_g = c2*(b - a);
+        }else{
+            ans_g = c2*((1/n)*(Math.sin(n*b) - Math.sin(n*a)));
+        }
+    }
+    // f(x)g(x) = c1 sin(mx) * c2 sin(nx)
+    if(radio_f==0 && radio_g==2){
+        if(m==n){
+            ans_fg = (c1*c2/2)*((b-a) - (1/(2*m))*(Math.sin(2*m*b)-Math.sin(2*m*a)));
+        }else{
+            ans_fg = (c1*c2/2)*(-(1/(m+n))*(Math.sin((m+n)*b)-Math.sin((m+n)*a)) + (1/(m-n))*(Math.sin((m-n)*b)-Math.sin((m-n)*a)));
+        }
+    // f(x)g(x) = c1 sin(mx) * c2 cos(nx)
+    }else if(radio_f==0 && radio_g==3){
+        if(m==n){
+            -(c1*c2/(4*m))*(Math.cos(2*m*b)-Math.cos(2*m*a));
+        }else{
+            ans_fg = (c1*c2/2)*(-(1/(m+n))*(Math.cos((m+n)*b)-Math.cos((m+n)*a)) - (1/(m-n))*(Math.cos((m-n)*b)-Math.cos((m-n)*a)));
+        }
+    // f(x)g(x) = c1 cos(mx) * c2 sin(nx)
+    }else if(radio_f==1 && radio_g==2){
+        if(m==n){
+            -(c1*c2/(4*m))*(Math.cos(2*m*b)-Math.cos(2*m*a));
+        }else{
+            ans_fg = (c1*c2/2)*(-(1/(m+n))*(Math.cos((m+n)*b)-Math.cos((m+n)*a)) + (1/(m-n))*(Math.cos((m-n)*b)-Math.cos((m-n)*a)));
+        }
+    // f(x)g(x) = c1 cos(mx) * c2 cos(nx)
+    }else if(radio_f==1 && radio_g==3){
+        if(m==n){
+            ans_fg = (c1*c2/2)*((b-a) + (1/(2*m))*(Math.sin(2*m*b)-Math.sin(2*m*a)));
+        }else{
+            ans_fg = (c1*c2/2)*((1/(m+n))*(Math.sin((m+n)*b)-Math.sin((m+n)*a)) + (1/(m-n))*(Math.sin((m-n)*b)-Math.sin((m-n)*a)));
+        }
+    }
+
+    ans_f = Math.round(ans_f*1000)/1000;
+    ans_g = Math.round(ans_g*1000)/1000;
+    ans_fg = Math.round(ans_fg*1000)/1000;
+
+    char_f = (radio_f==0) ? 'sin' : 'cos';
+    char_g = (radio_g==2) ? 'sin' : 'cos';
+
+    // 数式を生成して出力(f(x))
+    buff_equation = '$$ \\int_{'+char_a+'}^{'+char_b+'}'+char_c1+'\\'+char_f+'('+char_m+'x)dx = ' + ans_f + ' $$';
+    $("#equation1").html(buff_equation);
+    renderMathInElement(document.getElementById("equation1"));
+
+    // 数式を生成して出力(g(x))
+    buff_equation = '$$ \\int_{'+char_a+'}^{'+char_b+'}'+char_c2+'\\'+char_g+'('+char_n+'x)dx = ' + ans_g + ' $$';
+    $("#equation2").html(buff_equation);
+    renderMathInElement(document.getElementById("equation2"));
+
+    // 数式を生成して出力(f(x)g(x))
+    buff_equation = '$$ \\int_{'+char_a+'}^{'+char_b+'}'+char_c1c2+'\\'+char_f+'('+char_m+'x)\\'+char_g+'('+char_n+'x)dx = ' + ans_fg + ' $$';
+    $("#equation3").html(buff_equation);
+    renderMathInElement(document.getElementById("equation3"));
+
+    // グラフ作成用の変数定義
+    var fx = new Array();
+    var gx = new Array();
+    var fg = new Array();
+    var dx = 0.01;
+    var x = 0;
+    var y = 0;
+    var i = 0;
+
+    // グラフ出力用のデータ生成
+    for(x=a;x<=b;x+=dx){
+        // f(x)
+        if(radio_f==0){
+            y = c1*Math.sin(m*x);
+        }else{
+            y = c1*Math.cos(m*x);
+        }
+        fx.push({x,y});
+
+        // g(x)
+        if(radio_g==2){
+            y = c2*Math.sin(n*x);
+        }else{
+            y = c2*Math.cos(n*x);
+        }
+        gx.push({x,y});
+
+        // f(x)g(x)
+        y = fx[i].y * gx[i].y;
+        fg.push({x,y});
+
+        i++;
+    }
+
+    // canvasのサイズを設定
+    var w = $('.canvas_container').width();
+    var h = $('.canvas_container').height();
+    $('#canvas1').attr('width', w);
+    $('#canvas1').attr('height', h);
+    $('#canvas2').attr('width', w);
+    $('#canvas2').attr('height', h);
+    $('#canvas3').attr('width', w);
+    $('#canvas3').attr('height', h);
+
+    // 計算してグラフを書く関数を呼ぶ
+    var ctx1 = document.getElementById('canvas1').getContext('2d');
+    myChart1 = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'sin(mx)',
+                    pointRadius: 0, // 点の半径
+                    borderColor: "blue",
+                    backgroundColor: "rgba(0,0,128,0.5)",
+                    data: fx,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: 
+                {
+                    type: 'linear',
+                    min: -2*Math.PI,
+                    max: 2*Math.PI,
+                    ticks: {
+                        stepSize: Math.PI / 2,
+                        autoSkip: false,
+                        callback: function(value) {
+                            const n = Math.round(value / (Math.PI / 2));
+
+                            if (n === 0) return '0';
+                            if (n === 1) return 'π/2';
+                            if (n === -1) return '-π/2';
+
+                            if (n % 2 === 0) {
+                                return (n < 0 ? '-' : '') +
+                                    (Math.abs(n) / 2 === 1 ? '' : Math.abs(n) / 2) +
+                                    'π';
+                            }
+
+                            return (n < 0 ? '-' : '') +
+                                Math.abs(n) + 'π/2';
+                        }
+                    }
+                }
+                ,
+                y:
+                {
+                    min: -4,
+                    max: 4
+                }
+            }
+        }
+    });
+
+    var ctx2 = document.getElementById('canvas2').getContext('2d');
+    myChart2 = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'sin(mx)',
+                    pointRadius: 0, // 点の半径
+                    borderColor: "green",
+                    backgroundColor: "rgba(0,128,0,0.5)",
+                    data: gx,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: 
+                {
+                    type: 'linear',
+                    min: -2*Math.PI,
+                    max: 2*Math.PI,
+                    ticks: {
+                        stepSize: Math.PI / 2,
+                        autoSkip: false,
+                        callback: function(value) {
+                            const n = Math.round(value / (Math.PI / 2));
+
+                            if (n === 0) return '0';
+                            if (n === 1) return 'π/2';
+                            if (n === -1) return '-π/2';
+
+                            if (n % 2 === 0) {
+                                return (n < 0 ? '-' : '') +
+                                    (Math.abs(n) / 2 === 1 ? '' : Math.abs(n) / 2) +
+                                    'π';
+                            }
+
+                            return (n < 0 ? '-' : '') +
+                                Math.abs(n) + 'π/2';
+                        }
+                    }
+                }
+                ,
+                y:
+                {
+                    min: -4,
+                    max: 4
+                }
+            }
+        }
+    });
+
+    var ctx3 = document.getElementById('canvas3').getContext('2d');
+    myChart3 = new Chart(ctx3, {
+        type: 'line',
+        data: {
+            datasets: [
+                {
+                    label: 'sin(mx)',
+                    pointRadius: 0, // 点の半径
+                    borderColor: "skyblue",
+                    backgroundColor: "rgba(0,128,128,0.5)",
+                    data: fg,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: 
+                {
+                    type: 'linear',
+                    min: -2*Math.PI,
+                    max: 2*Math.PI,
+                    ticks: {
+                        stepSize: Math.PI / 2,
+                        autoSkip: false,
+                        callback: function(value) {
+                            const n = Math.round(value / (Math.PI / 2));
+
+                            if (n === 0) return '0';
+                            if (n === 1) return 'π/2';
+                            if (n === -1) return '-π/2';
+
+                            if (n % 2 === 0) {
+                                return (n < 0 ? '-' : '') +
+                                    (Math.abs(n) / 2 === 1 ? '' : Math.abs(n) / 2) +
+                                    'π';
+                            }
+
+                            return (n < 0 ? '-' : '') +
+                                Math.abs(n) + 'π/2';
+                        }
+                    }
+                }
+                ,
+                y:
+                {
+                    min: -4,
+                    max: 4
+                }
+            }
+        }
+    });
 }
 
 /*******************************************************

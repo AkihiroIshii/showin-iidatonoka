@@ -625,7 +625,12 @@ Route::get('workbook/h_eng_relative', [WorkbookController::class, 'h_eng_relativ
 ->middleware(['auth', 'verified'])->name('workbook.h_eng_relative');
 
 /******** javaScript **************/
-// 数理物理
+// 小学生
+Route::get('workbook/js_long_multiplication', [WorkbookController::class, 'js_long_multiplication'])
+->middleware(['auth', 'verified'])->name('workbook.js_long_multiplication');
+Route::get('workbook/js_fraction_division', [WorkbookController::class, 'js_fraction_division'])
+->middleware(['auth', 'verified'])->name('workbook.js_fraction_division');
+// 高校生
 Route::get('workbook/js_euclidean_algorithm', [WorkbookController::class, 'js_euclidean_algorithm'])
 ->middleware(['auth', 'verified'])->name('workbook.js_euclidean_algorithm');
 Route::get('workbook/js_log_graph', [WorkbookController::class, 'js_log_graph'])
@@ -634,10 +639,15 @@ Route::get('workbook/js_n_ary_numeral', [WorkbookController::class, 'js_n_ary_nu
 ->middleware(['auth', 'verified'])->name('workbook.js_n_ary_numeral');
 Route::get('workbook/js_series_sums_vs_integrals', [WorkbookController::class, 'js_series_sums_vs_integrals'])
 ->middleware(['auth', 'verified'])->name('workbook.js_series_sums_vs_integrals');
+Route::get('workbook/js_superposition_sine_waves', [WorkbookController::class, 'js_superposition_sine_waves'])
+->middleware(['auth', 'verified'])->name('workbook.js_superposition_sine_waves');
 Route::get('workbook/js_make_harmony', [WorkbookController::class, 'js_make_harmony'])
 ->middleware(['auth', 'verified'])->name('workbook.js_make_harmony');
 Route::get('workbook/js_sin_cos_integral', [WorkbookController::class, 'js_sin_cos_integral'])
 ->middleware(['auth', 'verified'])->name('workbook.js_sin_cos_integral');
+// 大学
+Route::get('workbook/js_sin_cos_orthogonality', [WorkbookController::class, 'js_sin_cos_orthogonality'])
+->middleware(['auth', 'verified'])->name('workbook.js_sin_cos_orthogonality');
 Route::get('workbook/js_joukowski', [WorkbookController::class, 'js_joukowski'])
 ->middleware(['auth', 'verified'])->name('workbook.js_joukowski');
 Route::get('workbook/js_matrix_notation', [WorkbookController::class, 'js_matrix_notation'])
