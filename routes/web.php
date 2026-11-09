@@ -60,7 +60,10 @@ Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
     'path' => $disk->path($filePath),
     'exists' => file_exists($disk->path($filePath)),
     'size' => filesize($disk->path($filePath)),
-    'symfony' => \Symfony\Component\HttpFoundation\Kernel::VERSION,
+    'symfony_http_foundation' =>
+        \Composer\InstalledVersions::getPrettyVersion(
+            'symfony/http-foundation'
+        ),
 ]);
 
     // MP3の場合
