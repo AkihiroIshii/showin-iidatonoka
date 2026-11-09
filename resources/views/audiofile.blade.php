@@ -16,12 +16,12 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">ファイル名</th>
                     </tr>
                     @php
-                        $numbers = ['1'];
+                        $numbers = ['2','3','4','5'];
                     @endphp
                     @foreach($numbers as $number)
                         <tr>
                             <td class="border border-slate-300 px-4 cursor-pointer text-blue-500 font-semibold">
-                                <a href="{{ route('secure.file', ['folder' => 'mp3/nagamoshi_listening', 'filename' => '2025_' . $number . '.mp3']) }}">なが模試2025年度　第{{$number}}回</button>
+                                <a href="{{ route('secure.file', ['folder' => 'mp3/nagamoshi_listening', 'filename' => '2026_' . $number . '.mp3']) }}">なが模試2026年度　第{{$number}}回</button>
                             </td>
                         </tr>
                     @endforeach
@@ -37,7 +37,7 @@
                         <th style="position:sticky;top:0;background-color:white;" class="border border-slate-300 px-4">ファイル名</th>
                     </tr>
                     @php
-                        $years = ['2025','2024','2023','2022','2021','2020','2019','H30'];
+                        $years = ['2026','2025','2024','2023','2022','2021','2020','2019','H30'];
                     @endphp
                     @foreach($years as $year)
                         <tr>
