@@ -161,7 +161,7 @@
                             <source
                                 src="{{ route('secure.file', [
                                     'folder' => 'mp3',
-                                    'filename' => '04_ラダーシリーズ_英語朗読音声/021_赤毛のアン（ステップ２）/0628_anne_of_green_gables_01'
+                                    'filename' => '04_ラダーシリーズ_英語朗読音声/021_赤毛のアン（ステップ２）/0628_anne_of_green_gables_01.mp3'
                                 ]) }}"
                                 type="audio/mpeg"
                             >
