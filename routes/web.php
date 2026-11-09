@@ -46,26 +46,65 @@ Route::get('readme', function() {
 
 // ファイルへのアクセス
 Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
-    // URL デコード
     $decodedFolder = urldecode($folder);
-
-    // スラッシュを区切り文字に変換（必要な場合）
     $folderPath = str_replace('/', DIRECTORY_SEPARATOR, $decodedFolder);
-
-    // ファイルパスを組み立て
     $filePath = "{$folderPath}/{$filename}";
-    // $filePath = "private/{$folderPath}/{$filename}";
-// dd($filePath);
-    if (!Storage::disk('local')->exists($filePath)) {
-        session()->flash('error_type', 'pdf_not_found');
-        abort(404); // ファイルが存在しない場合は 404 エラー
+
+    $disk = Storage::disk('local');
+
+    if (!$disk->exists($filePath)) {
+        abort(404);
     }
 
-    return Response::make(Storage::get($filePath), 200, [
-        'Content-Type' => Storage::mimeType($filePath),
-        'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+\Log::info('MP3 response debug', [
+    'path' => $disk->path($filePath),
+    'exists' => file_exists($disk->path($filePath)),
+    'size' => filesize($disk->path($filePath)),
+    'symfony' => \Symfony\Component\HttpFoundation\Kernel::VERSION,
+]);
+
+    // MP3の場合
+    if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) === 'mp3') {
+        return response()->file(
+            $disk->path($filePath),
+            [
+                'Content-Type' => 'audio/mpeg',
+                'Content-Disposition' =>
+                    'inline; filename="' . basename($filename) . '"',
+            ]
+        );
+    }
+
+    // MP3以外は従来どおり
+    return Response::make($disk->get($filePath), 200, [
+        'Content-Type' => $disk->mimeType($filePath),
+        'Content-Disposition' =>
+            'inline; filename="' . basename($filePath) . '"',
     ]);
-})->middleware('auth')->where('filename', '.*')->name('secure.file');
+})->middleware('auth')
+  ->where('filename', '.*')
+  ->name('secure.file');
+// Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
+//     // URL デコード
+//     $decodedFolder = urldecode($folder);
+
+//     // スラッシュを区切り文字に変換（必要な場合）
+//     $folderPath = str_replace('/', DIRECTORY_SEPARATOR, $decodedFolder);
+
+//     // ファイルパスを組み立て
+//     $filePath = "{$folderPath}/{$filename}";
+//     // $filePath = "private/{$folderPath}/{$filename}";
+// // dd($filePath);
+//     if (!Storage::disk('local')->exists($filePath)) {
+//         session()->flash('error_type', 'pdf_not_found');
+//         abort(404); // ファイルが存在しない場合は 404 エラー
+//     }
+
+//     return Response::make(Storage::get($filePath), 200, [
+//         'Content-Type' => Storage::mimeType($filePath),
+//         'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"'
+//     ]);
+// })->middleware('auth')->where('filename', '.*')->name('secure.file');
 
 // jitsiのビデオ通話
 Route::get('/meeting/video', [RoomController::class, 'video'])
@@ -637,6 +676,8 @@ Route::get('workbook/js_log_graph', [WorkbookController::class, 'js_log_graph'])
 ->middleware(['auth', 'verified'])->name('workbook.js_log_graph');
 Route::get('workbook/js_n_ary_numeral', [WorkbookController::class, 'js_n_ary_numeral'])
 ->middleware(['auth', 'verified'])->name('workbook.js_n_ary_numeral');
+Route::get('workbook/js_plane_map_projection', [WorkbookController::class, 'js_plane_map_projection'])
+->middleware(['auth', 'verified'])->name('workbook.js_plane_map_projection');
 Route::get('workbook/js_series_sums_vs_integrals', [WorkbookController::class, 'js_series_sums_vs_integrals'])
 ->middleware(['auth', 'verified'])->name('workbook.js_series_sums_vs_integrals');
 Route::get('workbook/js_superposition_sine_waves', [WorkbookController::class, 'js_superposition_sine_waves'])
