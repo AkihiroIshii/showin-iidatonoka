@@ -20,8 +20,19 @@
                     @endphp
                     @foreach($numbers as $number)
                         <tr>
-                            <td class="border border-slate-300 px-4 cursor-pointer text-blue-500 font-semibold">
-                                <a href="{{ route('secure.file', ['folder' => 'mp3/nagamoshi_listening', 'filename' => '2026_' . $number . '.mp3']) }}">なが模試2026年度　第{{$number}}回</button>
+                            <td class="border border-slate-300 px-4 cursor-pointer font-semibold">
+                                {{-- <a href="{{ route('secure.file', ['folder' => 'mp3/nagamoshi_listening', 'filename' => '2026_' . $number . '.mp3']) }}">なが模試2026年度　第{{$number}}回</button> --}}
+                                なが模試2026年度　第{{$number}}回
+                                <audio controls preload="metadata" class="w-full">
+                                    <source
+                                        src="{{ route('secure.file', [
+                                            'folder' => 'mp3/nagamoshi_listening',
+                                            'filename' => '2026_' . $number . '.mp3'
+                                        ]) }}"
+                                        type="audio/mpeg"
+                                    >
+                                    お使いのブラウザは音声再生に対応していません。
+                                </audio>
                             </td>
                         </tr>
                     @endforeach
@@ -41,8 +52,19 @@
                     @endphp
                     @foreach($years as $year)
                         <tr>
-                            <td class="border border-slate-300 px-4 cursor-pointer text-blue-500 font-semibold">
-                                <a href="{{ route('secure.file', ['folder' => 'mp3/pastexam_listening', 'filename' => 'listening_' . $year . '.mp3']) }}">公立高校入試過去問　{{$year}}年</button>
+                            <td class="border border-slate-300 px-4 cursor-pointer font-semibold">
+                                {{-- <a href="{{ route('secure.file', ['folder' => 'mp3/pastexam_listening', 'filename' => 'listening_' . $year . '.mp3']) }}">公立高校入試過去問　{{$year}}年</button> --}}
+                                公立高校入試過去問　{{$year}}年
+                                <audio controls preload="metadata" class="w-full">
+                                    <source
+                                        src="{{ route('secure.file', [
+                                            'folder' => 'mp3/pastexam_listening',
+                                            'filename' => 'listening_' . $year . '.mp3'
+                                        ]) }}"
+                                        type="audio/mpeg"
+                                    >
+                                    お使いのブラウザは音声再生に対応していません。
+                                </audio>
                             </td>
                         </tr>
                     @endforeach
@@ -60,13 +82,33 @@
                 <tr>
                     <td class="border border-slate-300 px-4">平家物語　巻第一【1】　祇園精舎 ～ 殿上闇討</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/05_古典_朗読音声/平家物語（日本の古典をよむ13）原文編/002 巻第一【1】祇園精舎～殿上闇討.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/05_古典_朗読音声/平家物語（日本の古典をよむ13）原文編/002 巻第一【1】祇園精舎～殿上闇討.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '05_古典_朗読音声/平家物語（日本の古典をよむ13）原文編/002 巻第一【1】祇園精舎～殿上闇討.mp3'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
                 <tr>
                     <td class="border border-slate-300 px-4">平家物語　巻第十一【2】　那須与一 ～ 鶏合 壇浦合戦</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/05_古典_朗読音声/平家物語（日本の古典をよむ13）原文編/022 巻第十一【2】那須与一～鶏合壇浦合戦.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/05_古典_朗読音声/平家物語（日本の古典をよむ13）原文編/022 巻第十一【2】那須与一～鶏合壇浦合戦.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '05_古典_朗読音声/平家物語（日本の古典をよむ13）原文編/022 巻第十一【2】那須与一～鶏合壇浦合戦.mp3'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
             </table>                
@@ -82,37 +124,97 @@
                 <tr>
                     <td class="border border-slate-300 px-4">STEP Ladder　リトル・マーメイド（ステップ１）　Chapter1</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/011_リトル・マーメイド（ステップ１）/01.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/011_リトル・マーメイド（ステップ１）/01.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '04_ラダーシリーズ_英語朗読音声/011_リトル・マーメイド（ステップ１）/01.mp3'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
                 <tr>
                     <td class="border border-slate-300 px-4">STEP Ladder　アインシュタイン物語（ステップ１）　Chapter1</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/012_アインシュタイン物語（ステップ１）/0614_the_albert_einstein_story_01.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/012_アインシュタイン物語（ステップ１）/0614_the_albert_einstein_story_01.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '04_ラダーシリーズ_英語朗読音声/012_アインシュタイン物語（ステップ１）/0614_the_albert_einstein_story_01.mp3'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
                 <tr>
                     <td class="border border-slate-300 px-4">STEP Ladder　赤毛のアン（ステップ２）　Chapter1</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/021_赤毛のアン（ステップ２）/0628_anne_of_green_gables_01.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/021_赤毛のアン（ステップ２）/0628_anne_of_green_gables_01.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '04_ラダーシリーズ_英語朗読音声/021_赤毛のアン（ステップ２）/0628_anne_of_green_gables_01'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
                 <tr>
                     <td class="border border-slate-300 px-4">STEP Ladder　オズの魔法使い（ステップ２）　Chapter1</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/022_オズの魔法使い（ステップ２）/01.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/022_オズの魔法使い（ステップ２）/01.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '04_ラダーシリーズ_英語朗読音声/022_オズの魔法使い（ステップ２）/01.mp3'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
                 <tr>
                     <td class="border border-slate-300 px-4">ラダーシリーズ　美女と野獣（レベル1）　Chapter1</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/111_美女と野獣（レベル1）/001 分割版1.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/111_美女と野獣（レベル1）/001 分割版1.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '04_ラダーシリーズ_英語朗読音声/111_美女と野獣（レベル1）/001 分割版1.mp3'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
                 <tr>
                     <td class="border border-slate-300 px-4">ラダーシリーズ　日本昔話1　桃太郎ほか（レベル1）　Chapter1</td>
                     <td class="border border-slate-300 px-4">
-                        <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/112_日本昔話1　桃太郎ほか（レベル1）/001 分割版1.mp3') }}" type="audio/mpeg"></audio>
+                        {{-- <audio controls controlslist="nodownload" src="{{ asset('mp3/04_ラダーシリーズ_英語朗読音声/112_日本昔話1　桃太郎ほか（レベル1）/001 分割版1.mp3') }}" type="audio/mpeg"></audio> --}}
+                        <audio controls preload="metadata" class="w-full">
+                            <source
+                                src="{{ route('secure.file', [
+                                    'folder' => 'mp3',
+                                    'filename' => '04_ラダーシリーズ_英語朗読音声/112_日本昔話1　桃太郎ほか（レベル1）/001 分割版1.mp3'
+                                ]) }}"
+                                type="audio/mpeg"
+                            >
+                            お使いのブラウザは音声再生に対応していません。
+                        </audio>
                     </td>
                 </tr>
             </table>                
