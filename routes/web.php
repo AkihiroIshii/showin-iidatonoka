@@ -56,16 +56,6 @@ Route::get('/secure-file/{folder}/{filename}', function ($folder, $filename) {
         abort(404);
     }
 
-\Log::info('MP3 response debug', [
-    'path' => $disk->path($filePath),
-    'exists' => file_exists($disk->path($filePath)),
-    'size' => filesize($disk->path($filePath)),
-    'symfony_http_foundation' =>
-        \Composer\InstalledVersions::getPrettyVersion(
-            'symfony/http-foundation'
-        ),
-]);
-
     // MP3の場合
     if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) === 'mp3') {
         return response()->file(
