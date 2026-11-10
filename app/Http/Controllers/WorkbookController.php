@@ -5234,9 +5234,9 @@ class WorkbookController extends Controller
         return compact('question');
     }
 
-    // 規則性（nで表す）
+    // 規則性（証明）
     public function regularity() {
-        $unitname = "規則性（\(n\) で表す）";
+        $unitname = "規則性（証明）";
         $result = $this->get_regularity();
         $question = $result['question'];
         return view('workbook.unit_template', compact('unitname','question'));
@@ -5264,20 +5264,20 @@ class WorkbookController extends Controller
         // q：問、a：答、e：解説
         // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
         $questions = [
-            [
-                'q_type' => 3,
-                'q' => "<p>次のように、1列目から順に {$ad_arr[1]}人, {$ad_arr[2]}人, {$ad_arr[3]}人, {$ad_arr[4]}人,... と人が並んでいる。</p>
-                        {$q1_str}
-                        <p>この列と人数には規則性がある。{$n} 列目には何人が並んでいると考えられるか。</p>
-                        ",
-                'a_type' => 2,
-                'a' => "{$ad_n}人",
-                'e_type' => 3,
-                'e' => "<p>1列目が {$a}人で、その後は {$d}人ずつ増えているので、</p>
-                        <p>\(n\) 列目の人数を \(a_n\) とすると、\(a_n = {$a} + (n - 1) \\times {$d} = {$d}n" . $this->add_plus($a - $d) . "\)。</p>
-                        <p>よって、{$n} 列目の人数は、\(a_{{$n}} = {$d} \\times {$n}" . $this->add_plus($a - $d) . " = " . $d * $n . $this->add_plus($a - $d) . " = {$ad_n} 人\)。</p>
-                        ",
-            ],
+            // [
+            //     'q_type' => 3,
+            //     'q' => "<p>次のように、1列目から順に {$ad_arr[1]}人, {$ad_arr[2]}人, {$ad_arr[3]}人, {$ad_arr[4]}人,... と人が並んでいる。</p>
+            //             {$q1_str}
+            //             <p>この列と人数には規則性がある。{$n} 列目には何人が並んでいると考えられるか。</p>
+            //             ",
+            //     'a_type' => 2,
+            //     'a' => "{$ad_n}人",
+            //     'e_type' => 3,
+            //     'e' => "<p>1列目が {$a}人で、その後は {$d}人ずつ増えているので、</p>
+            //             <p>\(n\) 列目の人数を \(a_n\) とすると、\(a_n = {$a} + (n - 1) \\times {$d} = {$d}n" . $this->add_plus($a - $d) . "\)。</p>
+            //             <p>よって、{$n} 列目の人数は、\(a_{{$n}} = {$d} \\times {$n}" . $this->add_plus($a - $d) . " = " . $d * $n . $this->add_plus($a - $d) . " = {$ad_n} 人\)。</p>
+            //             ",
+            // ],
             [
                 'q_type' => 3,
                 'q' => "<p>二つの奇数の和は偶数になることを示せ。</p>",
@@ -5324,6 +5324,184 @@ class WorkbookController extends Controller
         $q_index = rand(0,count($questions)-1);
         $question = $questions[$q_index];
         return compact('question');
+    }
+
+    // 規則性（図）
+    public function regularity_figure() {
+        $unitname = "規則性（図）";
+        $result = $this->get_regularity_figure();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_regularity_figure() {
+        // グラフ描画用
+        // $size = 400;    //viewportの大きさ（仮）
+        $margin = 40;
+        $vb_width = 400;
+        $vb_height = 220;        
+
+        $vb_xfrom = 0 - $margin;
+        $vb_yfrom = 0 - $margin;
+        
+        $plot_par_q = $plot_par_e = [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => $vb_xfrom,
+            'vb_yfrom' => $vb_yfrom,
+        ];
+
+        $m = 4; //行数
+        $n = rand(4, 7); //列数
+
+        $x = rand(7, 14); // 行番号
+        $y = rand(2, $n-1); // 列番号
+        $val = ($x - 1) * $n + $y; // m段目n列目のカードの番号
+
+        $sq_w = 30;
+        $sq_h = 60;
+        $space_w = 20;
+        $space_h = 20;
+
+        $plot_q_common = "
+            <defs>
+                <!-- 長方形のパーツ w:60,h:30-->
+                <g id=\"resistor\"
+                fill=\"white\"
+                stroke=\"black\"
+                stroke-width=\"2\">
+                    <rect x=\"0\" y=\"5\" width=\"{$sq_w}\" height=\"{$sq_h}\"/>
+                </g>
+            </defs>
+            ";
+
+        // 単純な回路
+        $plot_q1 = $plot_q_common;
+        for ($i = 0; $i < $m; $i++) {
+            for ($j = 0; $j < $n; $j++) {
+                $plot_q1 .= "
+                    <use href=\"#resistor\" x=\"" . $j * ($sq_w + $space_w) . "\" y=\"" . $i * ($sq_h + $space_h) . "\"/>
+                    <text x=\"" . $j * ($sq_w + $space_w) + $sq_w / 2 . "\" y=\"" . $i * ($sq_h + $space_h) + $sq_h / 2 . "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-weight=\"bold\" font-size=\"18\">
+                        " . $i * $n + $j + 1 . "
+                    </text>";
+            }
+        }
+
+        $plot_e1 = $plot_q1;
+
+        // // 問１
+        // $plot_q1 = "
+        //     <!-- 三角形 -->
+        //     <path d=\"M{$Ax} {$Ay} L {$Bx} {$By} L {$Cx} {$Cy} Z\" fill=\"none\" stroke=\"black\" stroke-width=\"2\" />
+        //     <!-- 頂点 -->
+        //     <text x=\"" . $Ax - 5 . "\" y=\"" . $Ay - 5 . "\" font-weight=\"bold\" font-size=\"18\">A</text>
+        //     <text x=\"" . $Bx - 5 . "\" y=\"" . $By + 20 . "\" font-weight=\"bold\" font-size=\"18\">B</text>
+        //     <text x=\"" . $Cx - 5 . "\" y=\"" . $Cy + 20 . "\" font-weight=\"bold\" font-size=\"18\">C</text>
+        //     <text x=\"" . $Mx - 5 . "\" y=\"" . $My + 20 . "\" font-weight=\"bold\" font-size=\"18\">M</text>
+        //     <text x=\"" . $Nx + 5 . "\" y=\"" . $Ny . "\" font-weight=\"bold\" font-size=\"18\">N</text>
+        //     <!-- 補助線 -->
+        //     <line x1=\"{$Mx}\" y1=\"{$My}\" x2=\"{$Nx}\" y2=\"{$Ny}\" stroke=\"black\" stroke-width=\"1\" />
+        //     <!-- ∠ABC -->
+        //     <path d=\"M " . $Bx + $ur . " " . $By . " 
+        //         A {$ur} {$ur}, 0, 0, 0, " . $Bx + $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $By - $ur * sin(2 * M_PI * $angle_ABC / 360) . "\" 
+        //         fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+        //     <text x=\"" . $Bx + $ur . "\" y=\"" . $By - 5 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ABC}°</text>
+        //     <!-- ∠ACB -->
+        //     <path d=\"M {$Cx} {$Cy} L " . $Cx -$ur * cos(2 * M_PI * $angle_ACB / 360) . " " . -$ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+        //         A {$ur} {$ur}, 0, 0, 0, " . $Cx - $ur . " 0 Z\"    
+        //         fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+        //     <text x=\"" . $Cx - 3 * $ur . "\" y=\"" . $Cy - 5 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ACB}°</text>
+        //     <!-- ∠ANM -->
+        //     <path d=\"M {$Nx} {$Ny} L " . $Nx - $ur * cos(2 * M_PI * $angle_ACB / 360) . " " . $Ny - $ur * sin(2 * M_PI * $angle_ACB / 360) . " 
+        //         A {$ur} {$ur}, 0, 0, 0, " . $Nx - $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $Ny + $ur * sin(2 * M_PI * $angle_ABC / 360) . " Z\" 
+        //         fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />   
+        // ";
+        // $plot_e1 = $plot_q1 . "
+        //     <!-- ∠NMC -->
+        //     <path d=\"M " . $Mx + $ur . " " . $My . " 
+        //         A {$ur} {$ur}, 0, 0, 0, " . $Mx + $ur * cos(2 * M_PI * $angle_ABC / 360) . " " . $My - $ur * sin(2 * M_PI * $angle_ABC / 360) . "\" 
+        //         fill=\"transparent\" stroke=\"black\" stroke-width=\"1\" />
+        //     <text x=\"" . $Mx + $ur . "\" y=\"" . $My - 10 . "\" font-weight=\"bold\" font-size=\"18\">{$angle_ABC}°</text>
+        // ";
+
+
+
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
+        $questions = [
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>図のように、１段につき {$n} 枚のカードが並んでいる。</p>
+                            <p>それぞれのカードには 1 から順番に自然数が書かれている。</p>
+                            <p>上から {$x} 段目、左から {$y} 列目のカードに書かれている数を答えよ。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$val}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>上から " . $x - 1 . " 段目までには、" . $x - 1 . " × {$n} = " . ($x - 1) * $n . " 枚のカードが置かれている。</p>
+                            <p>これに {$x} 段目の {$y} 枚分を足せば、上から {$x} 段目、左から {$y} 列目のカードに書かれている数になる。</p>
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => "",
+            ],
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>図のように、１段につき {$n} 枚のカードが並んでいる。</p>
+                            <p>それぞれのカードには 1 から順番に自然数が書かれている。</p>
+                            <p>上から \(x\) 段目、左から \(y\) 列目のカードの番号を \(n\) とするとき、\(n\) を \(x,\,y\) の式で表せ。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "n = {$n}(x - 1) + y",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>上から \(x\) 段目、左から \(y\) 列目のカードの番号を \(n\) とする。</p>
+                            <p>\(x-1\) 段目までには、\((x - 1) \\times {$n}\) 枚のカードが置かれている。</p>
+                            <p>これに \(x\) 段目の \(y\) 枚分を足せば、上から \(x\) 段目、左から \(y\) 列目のカードに</p>
+                            <p>書かれている数になる。よって、\( {$n}(x - 1) + y = n\) の関係が成り立つ。</p>
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => "",
+            ],
+            [
+                'q_type' => 8,
+                'q' => "<div class=\"leading-[2]\">
+                            <p>図のように、１段につき {$n} 枚のカードが並んでいる。</p>
+                            <p>それぞれのカードには 1 から順番に自然数が書かれている。</p>
+                            <p>{$val} が書かれたカードは、上から何段目、左から何列目に置かれているか。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "{$x}\,段目の\,{$y}\,列目",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>上から \(x\) 段目、左から \(y\) 列目のカードの番号を \(n\) とする。</p>
+                            <p>\(x-1\) 段目までには、\((x - 1) \\times {$n}\) 枚のカードが置かれている。</p>
+                            <p>これに \(x\) 段目の \(y\) 枚分を足せば、上から \(x\) 段目、左から \(y\) 列目のカードに</p>
+                            <p>書かれている数になる。よって、\( {$n}(x - 1) + y = n\) の関係が成り立つ。</p>
+                            <p>いまは \(n={$val}\) のときを考えるので、<span class=\"bg-blue-200\"> \({$n}(x - 1) + y = {$val}\) ・・・①</span></p>
+                            <p>また、１段あたりのカード数は {$n} 枚なので、\({$n}(x-1) < {$val} \leqq {$n}x\) が成り立つ。</p>
+                            <p>各辺を {$n} で割ると、\((x-1) < " . round($val / $n, 2) . " \leqq x\)。これを満たす自然数は \(x = {$x}\)。</p>
+                            <p>これを<span class=\"bg-blue-200\"> ①式 </span>に代入すれば、\({$n} \\times " . $x - 1 . " + y = {$val}\)。よって、\(y = {$y}\)。</p>
+                        </div>
+                        ",
+                'pq' => $plot_q1,
+                'pe' => "",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        $plot_con_q = $question['pq'];
+        $plot_con_e = $question['pe'];
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
     }
 
     // 連立方程式
@@ -10628,13 +10806,13 @@ class WorkbookController extends Controller
     // 入試　問２
     public function math_entrance_exam_2() {
         $unitname = "問２";
-        $idx = rand(0, 4);
+        $idx = rand(0, 5);
         switch ($idx) {
             case 0:
                 $result = $this->get_part_volume(); // 部分の体積
                 break;
             case 1:
-                $result = $this->get_regularity();  // 規則性（nで表す）
+                $result = $this->get_regularity();  // 規則性（証明）
                 break;
             case 2:
                 $result = $this->get_simultaneous_equation2();  // 連立方程式（文章題）
@@ -10644,6 +10822,9 @@ class WorkbookController extends Controller
                 break;
             case 4:
                 $result = $this->get_box_plot();    // 箱ひげ図の解釈
+                break;
+            case 5:
+                $result = $this->get_regularity_figure();  // 規則性（図）
                 break;
         }
         $question = $result['question'];
@@ -20855,6 +21036,114 @@ class WorkbookController extends Controller
         return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
     }
 
+    // 地球の陸地を平面地図に投影したときの拡大率を求める
+    public function js_plane_map_projection() {
+        $imageUrl_q1 = route('secure.file', ['folder' => 'workbook', 'filename' => 'move_land.gif']);
+        $imageUrl_q2 = route('secure.file', ['folder' => 'workbook', 'filename' => 'seijikuentouzuhou.jpg']);
+        $imageUrl_q3 = route('secure.file', ['folder' => 'workbook', 'filename' => 'latitude_expand.png']);
+        $imageUrl_q4 = route('secure.file', ['folder' => 'workbook', 'filename' => 'longitude_expand.png']);
+        $sentence = "
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">概要</h3>
+            地球儀は球面に分布する陸地を正しい縮尺で示しますが、平面の地図に示すと歪みが生じます。赤道を基準とした地図では緯度が高くなるほど（極に近づくほど）、実際より大きく投影されます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">イメージ</h3>
+            この現象がよく理解できるWebサイトがあります。同ページで日本を高緯度にずらすと次のようになります。
+            
+            <p class=\"text-right\">
+                <a href=\"https://thetruesize.com/#?borders=1~!MTc0MjAxNzE.MjQ5NDk1OA*MzYwMDAwMDA(MA~!JP*MA.MTgwMDAwMDA)Mw\" target=\"_blank\" rel=\"noreferrer noopener\" aria-label=\" (新しいタブで開く)\">参考：The True Size</a>
+            </p>
+            <img src=\"{$imageUrl_q1}\" class=\"w-1/2 mx-auto my-4\"  alt=\"日本を地図上で動かしたときの面積変化\">
+
+            高緯度では、日本が縦横ともに大きく示されることがわかります。
+            例えばロシアは高緯度に位置するため、赤道付近の国々と比べると大きく引き伸ばされていると考えられます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">球面から円筒への投影</h3>
+            本記事では、地球を円筒で囲み、地球の中心から見て球面を円筒に投影し、その円筒を展開する方法（正軸円筒図法）を考えます。
+
+            <img src=\"{$imageUrl_q2}\" class=\"w-1/2 mx-auto my-4\"  alt=\"正軸円筒図法のイメージ\">
+
+            円筒に接する赤道は等倍ですが、緯度が高くなるほど平面図では東西および南北方向に引き延ばされます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">東西方向の拡大率</h3>
+            まず、緯度 \(\\theta\) における東西方向の拡大率について見てみます。
+
+            <img src=\"{$imageUrl_q3}\" class=\"w-1/2 mx-auto my-4\"  alt=\"東西方向の拡大率\">
+
+            地球の半径を \(R\) とすると、緯度 \(\\theta\) の緯線が囲む円の半径は \(R\cos\\theta\) です。よって、緯度 \(\\theta\) の緯線の周長は、赤道の周長の \(\cos\\theta\) 倍です。
+
+            平面図では緯線の両端が赤道と同じ長さに揃えられるため、<strong>緯度 \(\\theta\) 上の陸地は東西方向に \(1/\cos\\theta\) 倍引き延ばされます。</strong>
+
+            例えば、ロシアの西部にある首都モスクワの緯度は、\(55.7558\)度です。\(\cos55.7558^\circ = 0.563\) なので(※1)、<strong>この緯線上にあるロシア領土は、平面地図では東西方向に \(1/0.563 = 1.78\) 倍引き延ばされます</strong>。
+            (※1)<a href=\"https://keisan.casio.jp/exec/system/1260261251\" target=\"_blank\" rel=\"noreferrer noopener\" aria-label=\"ke!san (新しいタブで開く)\">ke!san</a>というサイトで計算できます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">南北方向の拡大率</h3>
+            次に、緯度 \(\\theta\) 付近での南北方向の拡大率について見てみます。
+
+            <img src=\"{$imageUrl_q4}\" class=\"w-1/2 mx-auto my-4\"  alt=\"東西方向の拡大率\">
+
+            球面での南北方向の区間 \(\Delta l\) は、円筒に投影すると上図の \(\Delta z\) に引き延ばされます。緯度 \(\\theta\) が大きいほど、引き延ばされる比率 \(\Delta z/\Delta l\) も大きくなります。
+
+            \(\Delta l = R\Delta \\theta\) なので、
+            $$
+                \\frac{\Delta z}{\Delta l} 
+                = \\frac{R\\tan(\\theta + \Delta \\theta) - R\\tan\\theta}{R\Delta\\theta} 
+                = \\frac{\\tan(\\theta + \Delta \\theta) - \\tan\\theta}{\Delta\\theta} 
+            $$
+
+            例によって、モスクワ周辺での南北方向の拡大率を考えます。緯度が55度から56度までの南北方向の区間（緯度１度差）にて、球面での距離 \(\Delta l\) に対する円筒に投影される距離 \(\Delta z\) の比率を求めます。
+
+            $$
+                \\frac{\Delta z}{\Delta l}
+                = \\frac{\\tan(55^\circ + 1^\circ) - \\tan55^\circ}{\pi/180}
+                = \\frac{1.483 - 1.428}{0.0175} = 3.14
+            $$
+            <p>(※)\(\Delta \\theta = 1^\circ = \pi/180 [rad]\)</p>
+
+            モスクワ周辺の緯度では、１度分の距離が3.14倍に引き延ばされて平面地図に投影されることになります。高緯度にいけば、さらに引き延ばされます。
+
+            <h3 class=\"text-center text-xl p-2 mt-4 bg-green-200\">緯度を指定して拡大率を求めてみよう</h3>
+            <p>緯度 \(\\theta\) から \(\\theta + \Delta\\theta\) までの領域にある陸地が、正軸円筒図法によって平面地図に投影されるときの拡大率を概算してみましょう。</p>
+            <p>\(0^\circ \leq \\theta + \Delta\\theta \lt 90^\circ\) の範囲で入力し、「計算」ボタンを押してください</p>
+            
+            <div class=\"set_parameters\">
+                緯度 \(\\theta=\) <input id=\"para_theta\" class=\"parameter\" max=\"90\" min=\"0\" type=\"number\" value=\"55\" />\(^\circ\)
+                緯度差 \(\Delta\\theta=\) <input id=\"para_delta_theta\" class=\"parameter\" max=\"90\" min=\"0\" type=\"number\" value=\"1\" />\(^\circ\)
+            </div>
+        ";
+
+        $disp_con = "
+            ———- 表示ここから ———-
+            <div>
+                <h4>東西方向の拡大率 \(\alpha(\\theta)\)</h4>
+                <div id=\"display_eqn_alpha\"></div>
+            </div>
+            <div>
+                <h4>南北方向の拡大率 \(\beta(\\theta, \Delta\\theta)\)</h4>
+                <div id=\"display_eqn_beta\"></div>
+            </div>
+            <div>
+                <h4>球面上での大きさ</h4>
+                <div style=\"position: relative; height: 100px;\">
+                    <div id=\"shape_before\" style=\"position: absolute; left: 20px; width: 300px; height: 100px; background: #e6e6fa; transition: all 1000ms 0s ease;\"></div>
+                </div>
+                <h4>平面地図に投影される大きさ</h4>
+                <div class=\"shape_caption\"></div>
+                <div class=\"flex-container\">
+                    <div id=\"caption_left\"></div>
+                    <div id=\"shape_magnified\"></div>
+                </div>
+                <div class=\"shape_caption\"></div>
+                (※)イメージを重視するため台形に近似して表示しますが、\(\Delta\\theta\) が大きいと不正確になります
+
+            </div>
+            ———- 表示ここまで ———-
+        ";
+
+        $jsAction = "plane_map_projection";
+        $unitname = "地球の陸地を平面地図に投影したときの拡大率を求める";
+        return view('workbook.unit_js_template', compact('unitname','sentence','jsAction','disp_con'));
+    }
+                    // <div id=\"shape_before\"></div>
     // 級数和と積分
     public function js_series_sums_vs_integrals() {
             // <figure><img class=""aligncenter wp-image-1867 size-medium" src="https://life-research.net/wp-content/uploads/2022/07/926d3ced825dad50ad43dadb92e3fbe1-300x291.jpeg" alt="ジューコフスキー変換前の円" width="300" height="291" /><figcaption><a href="https://honto.jp/ebook/pd_26273726.html" target="_blank" rel="noopener noreferrer">図の出典：『高校数学でわかる流体力学　ベルヌーイの定理から翼に働く揚力まで』講談社/竹内淳</a></figcaption></figure>

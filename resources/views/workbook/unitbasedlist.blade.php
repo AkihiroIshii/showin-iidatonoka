@@ -196,7 +196,10 @@
                                     <a href="{{route('workbook.mul_div_monomials')}}">単項式の乗除</a>
                                 </x-button-link>
                                 <x-button-link>
-                                    <a href="{{route('workbook.regularity')}}">☆規則性（\(n\) で表す）</a>
+                                    <a href="{{route('workbook.regularity')}}">☆規則性（証明）</a>
+                                </x-button-link>
+                                <x-button-link>
+                                    <a href="{{route('workbook.regularity_figure')}}">☆規則性（図）</a>
                                 </x-button-link>
                             </div>
                         </x-td>
@@ -970,6 +973,9 @@
                                 </x-button-link>
                                 <x-button-link color="orange">
                                     <a href="{{route('workbook.js_log_graph')}}">対数のグラフ</a>
+                                </x-button-link>
+                                <x-button-link color="orange">
+                                    <a href="{{route('workbook.js_plane_map_projection')}}">地球の陸地を平面地図に投影したときの拡大率を求める</a>
                                 </x-button-link>
                                 <x-button-link color="orange">
                                     <a href="{{route('workbook.js_n_ary_numeral')}}">十進数から \(n\) 進数への変換</a>

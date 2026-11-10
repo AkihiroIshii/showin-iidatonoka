@@ -427,6 +427,8 @@ Route::get('workbook/mul_div_monomials', [WorkbookController::class, 'mul_div_mo
 ->middleware(['auth', 'verified'])->name('workbook.mul_div_monomials');
 Route::get('workbook/regularity', [WorkbookController::class, 'regularity'])
 ->middleware(['auth', 'verified'])->name('workbook.regularity');
+Route::get('workbook/regularity_figure', [WorkbookController::class, 'regularity_figure'])
+->middleware(['auth', 'verified'])->name('workbook.regularity_figure');
 Route::get('workbook/simultaneous_equation', [WorkbookController::class, 'simultaneous_equation'])
 ->middleware(['auth', 'verified'])->name('workbook.simultaneous_equation');
 Route::get('workbook/simultaneous_equation2', [WorkbookController::class, 'simultaneous_equation2'])

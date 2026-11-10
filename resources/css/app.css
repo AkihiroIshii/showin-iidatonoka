@@ -3,3 +3,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/***** javaScript *****/
+.rotate90 {
+    transform: rotate(-90.0deg);
+}

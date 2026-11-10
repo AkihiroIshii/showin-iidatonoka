@@ -46,6 +46,9 @@ $(function () {
             case 'log_graph':
                 log_graph();
                 break;
+            case 'plane_map_projection':
+                plane_map_projection();
+                break;
             case 'euclidean_algorithm':
                 euclidean_algorithm();
                 break;
@@ -686,6 +689,100 @@ function log_graph() {
         //             }
         //     }
         // }
+}
+
+/*******************************************************
+* 地球の陸地を平面地図に投影したときの拡大率を求める
+********************************************************/
+function plane_map_projection() {
+    // パラメータを取得
+    var para_theta = Number($("#para_theta").val());
+    var para_delta_theta = Number($("#para_delta_theta").val());
+
+    // パラメータチェック
+    if (isNaN(para_theta) || isNaN(para_delta_theta)
+        || para_theta < 0 || para_delta_theta < 0
+        || para_theta >= 90 || para_delta_theta >= 90) {
+        alert('緯度および緯度差は0以上90未満の数を入力してください。');
+        return;
+    } else if ((para_theta + para_delta_theta) >= 90) {
+        alert('緯度と緯度差の和が90度未満になるように設定してください。')
+    }
+    // 東西方向の拡大率αを計算
+    var alpha_upper = 1/Math.cos(Math.PI*(para_theta + para_delta_theta)/180);
+    var alpha_lower = 1/Math.cos(Math.PI*para_theta/180);
+    // 東西方向の拡大率α（低緯度側）の展開式を生成
+    var eqn_alpha = '\\[ \\begin{aligned} '
+        + '\\alpha(\\theta) &= \\frac{1}{\\cos\\theta}'
+        + ' = \\frac{1}{\\cos' + para_theta + '^{\\circ}} '
+        + ' \\fallingdotseq ' + Math.round(alpha_lower*1000)/1000 + '\\\\[1em]';
+    // 東西方向の拡大率α（高緯度側）の展開式を生成
+    eqn_alpha += '\\alpha(\\theta+\\Delta\\theta) &= \\frac{1}{\\cos(\\theta+\\Delta\\theta)}'
+    + ' = \\frac{1}{\\cos(' + para_theta + '^\\circ +' + para_delta_theta + '^\\circ)} '
+    + ' \\simeq ' + Math.round(alpha_upper*1000)/1000;
+    eqn_alpha += ' \\end{aligned} \\]';
+    // 数式を表示
+    $("#display_eqn_alpha").html(eqn_alpha);
+    renderMathInElement(document.getElementById("display_eqn_alpha"));
+
+    // 南北方向の拡大率βを計算
+    var numerator_first = Math.tan(Math.PI*(para_theta + para_delta_theta)/180);
+    var numerator_second = Math.tan(Math.PI*para_theta/180);
+    var denominator = Math.PI*para_delta_theta/180;
+    var beta = (numerator_first - numerator_second)/denominator;
+    // 南北方向の拡大率βの展開式を生成
+    var eqn_beta = '';
+    eqn_beta = '\\[ \\begin{aligned} ';
+    eqn_beta += '\\beta(\\theta, \\Delta\\theta)'
+        + ' &= \\frac{\\tan(\\theta + \\Delta\\theta) - \\tan\\theta}{\\Delta\\theta}'
+        + ' = \\frac{\\tan(' + para_theta + '^\\circ +' + para_delta_theta + '^\\circ) - \\tan' + para_theta + '^\\circ}'
+        + '{\\pi\\times(' + para_delta_theta + '/180)}\\\\[1em]'
+        + ' &= \\frac{' + numerator_first + '-' + numerator_second + '}{' + denominator + '}\\\\[1em]'
+        + ' &\\simeq ' + Math.round(beta*1000)/1000;
+    eqn_beta += '\\end{aligned} \\]';
+    // 数式を表示
+    $("#display_eqn_beta").html(eqn_beta);
+    renderMathInElement(document.getElementById("display_eqn_beta"));
+
+    // 球面上の正方形のサイズ
+    var w = $("#shape_before").width();
+    var h = $("#shape_before").height();
+
+    // 平面地図に投影した図形のイメージを作成
+    $("#shape_magnified").css({
+        "width": (w * alpha_lower) + "px",
+        "border-top": (h * beta) + "px solid #e6e6fa",
+        "border-bottom": "0",
+        "border-left": (w * (alpha_upper - alpha_lower) / 2) + "px solid transparent",
+        "border-right": (w * (alpha_upper - alpha_lower) / 2) + "px solid transparent",
+        "position": "absolute",
+        "left": "20px"
+    });
+    // イメージに注釈を追記
+    $(".shape_caption").css({
+        "width": (w * alpha_upper) + "px",
+        "height": "20px",
+        "text-align": "center"
+    })
+    $("#caption_upper").html('←北緯' + (para_theta + para_delta_theta) + '\\(^\\circ\\)線上では東西に'
+        + Math.round(alpha_upper*1000)/1000 + '倍→');
+    $("#caption_lower").html('←北緯' + para_theta + '\\(^\\circ\\)線上では東西に'
+        + Math.round(alpha_lower*1000)/1000 + '倍→');
+    $("#caption_left").css({
+        "width": (h * beta) + "px",
+        "height": "20px",
+        "text-align": "center",
+        "transform": "translate(" + ((h * beta - 20) / 2) + "px, " + ((h * beta - 20) / 2) + "px) rotate(-90deg)",
+        "position": "absolute",
+        "left": -(h * beta - 20) + "px"
+    }).html('←' + Math.round(beta*1000)/1000 + '倍→');
+
+    // 親要素のスタイルを調整
+    $(".flex-container").css({
+        "display": "flex",
+        "position": "relative",
+        "height": (h * beta) + "px"
+    });
 }
 
 /*******************************************************
