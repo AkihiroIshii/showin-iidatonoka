@@ -8871,7 +8871,7 @@ class WorkbookController extends Controller
                 'a' => 2*($p - $q) . "\sqrt{{$p}}",
                 'e_type' => 3,
                 'e' => "<div class=\"leading-[2] mt-4\">
-                            <p>そのまま代入すると大変そうだが、\(x\) と \(y\) が対照的な形をしていることに注目する。</p>
+                            <p>そのまま代入すると大変そうだが、\(x\) と \(y\) が対称的な形をしていることに注目する。</p>
                             <p>\(x^2y+xy^2 = xy(x+y)\) と変形できて、それぞれの因数を計算すると次のようになる。</p>
                             \[
                                 \\begin{aligned}

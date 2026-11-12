@@ -34,7 +34,7 @@
                         <x-input-error :messages="$errors->get('year')" class="mt-2" />
                         <label for="year" class="font-semibold mt-4">過去問年度</label>
                         @php
-                            $years = ['2025','2024','2023','2022','2021','2020','なが模試 第1回','なが模試 第2回','なが模試 第3回','なが模試 第4回','なが模試 第5回','なが模試 第6回','なが模試 第7回','なが模試 第8回'];
+                            $years = ['2026','2025','2024','2023','2022','なが模試 第2回','なが模試 第3回','なが模試 第4回','なが模試 第5回','なが模試 第6回','なが模試 第7回','なが模試 第8回'];
                         @endphp
                         <select type="string" name="year" class="w-auto py-2 border border-gray-300 rounded-md" id="year">
                             <option value="">選択してください。</option>
@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="mt-8">
-                    <div>
+                    {{-- <div>
                         <x-input-error :messages="$errors->get('subject')" class="mt-2" />
                         <label for="subject" class="font-semibold mt-4">科目</label>
                         @php
@@ -62,25 +62,73 @@
                                 </option>
                             @endforeach
                         </select>     
+                    </div> --}}
+                    <div class="flex">
+                        <x-input-error :messages="$errors->get('subject')" class="mt-2" />
+                        <label class="font-semibold mt-2 block">科目</label>
+                        @php
+                            $subjects = ['国語','数学','社会','理科','英語'];
+                            $selectedSubject = old('subject');
+                        @endphp
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            @foreach ($subjects as $i => $subject)
+                                <label class="inline-flex items-center gap-1">
+                                    <input
+                                        type="radio"
+                                        name="subject"
+                                        value="{{ $subject }}"
+                                        {{ $selectedSubject == $subject ? 'checked' : '' }}
+                                        class="border-gray-300"
+                                    >
+                                    <span>{{ $subject }}</span>
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
                 <div class="mt-8">
-                    <div>
+                    {{-- <div class="flex">
                         <x-input-error :messages="$errors->get('no')" class="mt-2" />
-                        <label for="no" class="font-semibold mt-4">大問番号</label>
+                        <div class="font-semibold w-[100px]">大問番号</div>
                         @php
-                            $noValues = ['1','2','3','4','5','6','7','8','9','全問'];
-                            $noDisplays = ['問１','問２','問３','問４','問５','問６','問７','問８','問９','全問'];
+                            $noValues = ['1','2','3','4','5','全問'];
+                            $noDisplays = ['問１','問２','問３','問４','問５','全問'];
                         @endphp
                         <select type="string" name="no" class="w-auto py-2 border border-gray-300 rounded-md" id="no">
                             <option value="">選択してください。</option>
-                            @for($i = 0; $i < 10; $i++)
+                            @for($i = 0; $i < count($noValues); $i++)
                                 <option value="{{ $noValues[$i] }}" {{ old('no') == $noValues[$i] ? 'selected' : '' }}>
                                     {{ $noDisplays[$i] }}
                                 </option>
                             @endfor
-                        </select>     
+                        </select>
+                    </div> --}}
+                    <div class="flex">
+                        <x-input-error :messages="$errors->get('no')" class="mt-2" />
+
+                        <label class="font-semibold mt-2 block">大問番号</label>
+
+                        @php
+                            $noValues = ['1', '2', '3', '4', '5', '全問'];
+                            $noDisplays = ['問１', '問２', '問３', '問４', '問５', '全問'];
+                            $selectedNo = old('no');
+                        @endphp
+
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            @foreach ($noValues as $i => $value)
+                                <label class="inline-flex items-center gap-1">
+                                    <input
+                                        type="radio"
+                                        name="no"
+                                        value="{{ $value }}"
+                                        {{ $selectedNo == $value ? 'checked' : '' }}
+                                        class="border-gray-300"
+                                    >
+                                    <span>{{ $noDisplays[$i] }}</span>
+                                </label>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
 
