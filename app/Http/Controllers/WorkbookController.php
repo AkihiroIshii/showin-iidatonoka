@@ -14470,6 +14470,264 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 岩石の分類
+    public function sci_rocks(Request $request) {
+        $minerals = [
+            ['name' => 'カンラン石', 'color' => '有色'],
+            ['name' => '輝石', 'color' => '有色'],
+            ['name' => '角セン石', 'color' => '有色'],
+            ['name' => '黒雲母', 'color' => '有色'],
+            ['name' => '磁鉄鉱', 'color' => '有色'],
+            ['name' => '長石', 'color' => '無色'],
+            ['name' => '石英', 'color' => '無色'],            
+        ];
+        $mineral = $minerals[rand(0, count($minerals)-1)];
+
+        $kaseigans = [
+            ['no' => 1, 'name' => '玄武岩'],
+            ['no' => 2, 'name' => '安山岩'],
+            ['no' => 3, 'name' => '流紋岩'],
+            ['no' => 4, 'name' => 'はんれい岩'],
+            ['no' => 5, 'name' => 'せん緑岩'],
+            ['no' => 6, 'name' => '花こう岩'],
+        ];
+        $kaseigan = $kaseigans[rand(0, count($kaseigans)-1)];
+
+        $taisekigans = [
+            ['no' => 1, 'name' => 'れき岩'],
+            ['no' => 2, 'name' => '砂岩'],
+            ['no' => 3, 'name' => '泥岩'],
+            ['no' => 4, 'name' => '石灰岩'],
+            ['no' => 5, 'name' => 'チャート'],
+            ['no' => 6, 'name' => '凝灰岩'],
+        ];
+        $taisekigan = $taisekigans[rand(0, count($taisekigans)-1)];
+
+        $td_class = "border border-gray-400 px-5 py-0";
+        $table_kasei_q = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\"></td>
+                            <td colspan=\"3\">
+                                <div class=\"flex justify-between align-center px-2 text-base\">
+                                    <span>弱い</span>
+                                    <span>＜　マグマの粘り気　＜</span>
+                                    <span>強い</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-red-300\">火山岩</td>
+                            <td class=\"{$td_class} bg-gray-500 text-white\">(1)</td>
+                            <td class=\"{$td_class} bg-gray-300\">(2)</td>
+                            <td class=\"{$td_class} bg-gray-100\">(3)</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-400\">深成岩</td>
+                            <td class=\"{$td_class} bg-gray-500 text-white\">(4)</td>
+                            <td class=\"{$td_class} bg-gray-300\">(5)</td>
+                            <td class=\"{$td_class} bg-gray-100\">(6)</td>
+                        </tr>
+                    </table>
+                    ";
+        $table_kasei_a = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\"></td>
+                            <td colspan=\"3\">
+                                <div class=\"flex justify-between align-center px-2 text-base\">
+                                    <span>弱い</span>
+                                    <span>＜　マグマの粘り気　＜</span>
+                                    <span>強い</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-red-300\">火山岩</td>
+                            <td class=\"{$td_class} bg-gray-500 text-white\">玄武岩</td>
+                            <td class=\"{$td_class} bg-gray-300\">安山岩</td>
+                            <td class=\"{$td_class} bg-gray-100\">流紋岩</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-400\">深成岩</td>
+                            <td class=\"{$td_class} bg-gray-500 text-white\">斑れい岩</td>
+                            <td class=\"{$td_class} bg-gray-300\">せん緑岩</td>
+                            <td class=\"{$td_class} bg-gray-100\">花こう岩</td>
+                        </tr>
+                    </table>
+                    ";
+
+        $table_taiseki_q = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100 text-base\">
+                            <td class=\"{$td_class}\">岩石の名称</td>
+                            <td class=\"{$td_class}\">作られた当時の環境</td>
+                            <td class=\"{$td_class}\">その他の特徴</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">(1)</td>
+                            <td class=\"{$td_class}\" rowspan=\"3\">陸上、河川、海岸付近</td>
+                            <td class=\"{$td_class}\">粒が大きめ（2mm以上）</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">(2)</td>
+                            <td class=\"{$td_class}\">粒が（2mm～1/16mm）</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">(3)</td>
+                            <td class=\"{$td_class}\">粒が小さめ（1/16mm以下）</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">(4)</td>
+                            <td class=\"{$td_class}\">暖かく浅い海</td>
+                            <td class=\"{$td_class}\">生物の死骸からできている。塩酸をかけると二酸化炭素が生じる。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">(5)</td>
+                            <td class=\"{$td_class}\">大陸から遠く離れた海</td>
+                            <td class=\"{$td_class}\">生物の死骸からできている。くぎでひっかいても傷がつかないほどかたい。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">(6)</td>
+                            <td class=\"{$td_class}\">火山の周辺（広範囲）</td>
+                            <td class=\"{$td_class}\">過去の噴火の記録などから、堆積した年代を推定しやすい。</td>
+                        </tr>
+                    </table>
+                    ";
+        $table_taiseki_a = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100 text-base\">
+                            <td class=\"{$td_class}\">岩石の名称</td>
+                            <td class=\"{$td_class}\">作られた当時の環境</td>
+                            <td class=\"{$td_class}\">その他の特徴</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">れき岩</td>
+                            <td class=\"{$td_class}\" rowspan=\"3\">陸上、河川、海岸付近</td>
+                            <td class=\"{$td_class}\">粒が大きめ（2mm以上）</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">砂岩</td>
+                            <td class=\"{$td_class}\">粒が（2mm～1/16mm）</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">泥岩</td>
+                            <td class=\"{$td_class}\">粒が小さめ（1/16mm以下）</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">石灰岩</td>
+                            <td class=\"{$td_class}\">暖かく浅い海</td>
+                            <td class=\"{$td_class}\">生物の死骸からできている。塩酸をかけると二酸化炭素が生じる。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">チャート</td>
+                            <td class=\"{$td_class}\">大陸から遠く離れた海</td>
+                            <td class=\"{$td_class}\">生物の死骸からできている。くぎでひっかいても傷がつかないほどかたい。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">凝灰岩</td>
+                            <td class=\"{$td_class}\">火山の周辺（広範囲）</td>
+                            <td class=\"{$td_class}\">過去の噴火の記録などから、堆積した年代を推定しやすい。</td>
+                        </tr>
+                    </table>
+                    ";
+
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>火山灰に含まれる鉱物のうち、" . $mineral['name'] . "は無色鉱物と有色鉱物のどちらに分類されるか。</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">" . $mineral['color'] . "鉱物</p>",
+                'e_type' => 3,
+                'e' => "<p>無色鉱物（白または透明）は石英と長石だけ覚えればよい。他は有色鉱物である。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>火成岩を分類したとき、下表の(" . $kaseigan['no'] . ")に当てはまるのは何か。</p>
+                        {$table_kasei_q}",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">" . $kaseigan['name'] . "</p>",
+                'e_type' => 3,
+                'e' => "<p>個々に６種類覚えるよりも、表の並び順ごと覚えた方が記憶しやすい。</p>
+                        {$table_kasei_a}
+                        <div class=\"text-left leading-[2]\">
+                            <p>語呂合わせの例</p>
+                            <p class=\"pl-5\">火山岩・・・原案（玄武・安山）が流出（流紋）した。</p>
+                            <p class=\"pl-5\">深成岩・・・帆船（斑れい・せん緑）が河口（花こう）に停まっている。</p>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<p>堆積岩を分類したとき、下表の(" . $taisekigan['no'] . ")に当てはまるのは何か。</p>
+                        {$table_taiseki_q}",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">" . $taisekigan['name'] . "</p>",
+                'e_type' => 3,
+                'e' => "<p>まずは、火山灰などからできる凝灰岩を覚える。石灰岩とチャートは共通点と違う点を抑えておく。</p>
+                        {$table_taiseki_a}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "岩石の分類";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
+    // 化石の分類
+    public function sci_fossils(Request $request) {
+        $fossils = [
+            ['no' => 1, 'name' => 'フズリナ', 'type' => '示準', 'feature' => '古生代に'],
+            ['no' => 2, 'name' => '三葉虫', 'type' => '示準', 'feature' => '古生代に'],
+            ['no' => 3, 'name' => '恐竜', 'type' => '示準', 'feature' => '中生代に'],
+            ['no' => 4, 'name' => 'アンモナイト', 'type' => '示準', 'feature' => '中生代に'],
+            ['no' => 5, 'name' => 'ナウマンゾウ', 'type' => '示準', 'feature' => '新生代に'],
+            ['no' => 6, 'name' => 'ビカリア', 'type' => '示準', 'feature' => '新生代に'],
+            ['no' => 7, 'name' => 'サンゴ', 'type' => '示相', 'feature' => 'あたたかくて浅い海で'],
+            ['no' => 8, 'name' => 'ブナの葉', 'type' => '示相', 'feature' => 'やや寒冷な地域で'],
+            ['no' => 9, 'name' => 'シジミ', 'type' => '示相', 'feature' => '湖や河口で'],
+        ];
+        $fossil = $fossils[rand(0, count($fossils)-1)];
+
+        $td_class = "border border-gray-400 px-5 py-0";
+        $table_fossil = "<table class=\"border-collapse border border-gray-400 m-auto table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} text-base\">古生代</td>
+                            <td class=\"{$td_class} text-base\">中生代</td>
+                            <td class=\"{$td_class} text-base\">新生代</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">フズリナ、三葉虫</td>
+                            <td class=\"{$td_class}\">恐竜、アンモナイト</td>
+                            <td class=\"{$td_class}\">ナウマンゾウ、ビカリア</td>
+                        </tr>
+                    </table>
+                    ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "
+                    <p>つぎの（　　）にあてはまる用語を、番号に応じた下の語群から選びなさい。</p>
+                    <p class=\"text-2xl my-2\">" . $fossil['name'] . "の化石は、その地層が（　１　）堆積したことを示す（　２　）化石である。</p>
+                    <div class=\"leading-[2] text-left pl-8 mt-4\">
+                        <p>語群１：古生代に／中生代に／新生代に／あたたかくて浅い海で／やや寒冷な地域で／湖や河口で</p>
+                        <p>語群２：示相／示準</p>
+                    </div>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">" . $fossil['feature'] . "、" . $fossil['type'] . "</p>",
+                'e_type' => 3,
+                'e' => "<p class=\"leading-[2]\">示相化石はサンゴ（あたたかくて浅い海）とシジミ（湖や河口）について覚えておこう。</p>
+                        <p class=\"leading-[2]\">示準化石は、まず代表的な下表の化石を覚えよう。</p>
+                        {$table_fossil}",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        $unitname = "化石の分類";
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+
     // 凸レンズによる像
     public function image_formed_lens(Request $request) {
         /***** 問題によって図を作成 *****/
@@ -19791,306 +20049,6 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject','flags'));
     }
 
-    // 緩衝液（値固定 backup）
-    // public function h_sci_buffer_solution() {
-    //     $C_CH3COOH = 0.2;   // 酢酸のモル濃度(mol/L)
-    //     $V_CH3COOH = 0.1;   // 酢酸の体積(L)
-    //     $C_CH3COONa = 0.1;   // 酢酸ナトリウムのモル濃度(mol/L)
-    //     $V_CH3COONa = 0.1;   // 酢酸ナトリウムの体積(L)
-
-    //     $n_NaOH = 0.01; // 追加するNaOH結晶の物質量(mol)
-    //     $Ka = 2.7;  // 酢酸の電離定数(×10^-5 mol/L)
-    //     $log10_2 = 0.3;
-    //     $log10_27 = 0.43;
-
-    //     /***** 各水溶液の物質量の表 *****/
-    //     $td_class_common = "border border-gray-400 px-5 py-0 text-base";
-    //     $td_class_mol = $td_class_common . " w-30";
-    //     $table1 = "
-    //         <table class=\"border-collapse border border-gray-400 m-auto table-fixed mt-4 text-center\" cellpadding=\"5\">
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">溶液</td>
-    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">体積</td>
-    //                 <td class=\"{$td_class_common}\" colspan=\"6\">物質量(mol)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COOH}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COO^-}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H^+}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{Na^+}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{OH^-}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H_2 O}\)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\">
-    //                     <div>①酢酸水溶液</div>
-    //                     <div>(電離平衡)</div>
-    //                 </td>
-    //                 <td class=\"{$td_class_common}\">\({$V_CH3COOH}\mathrm{L}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\">
-    //                     <div>②酢酸ナトリウム</div>
-    //                     <div>水溶液(電離後)</div>
-    //                 </td>
-    //                 <td class=\"{$td_class_common}\">\({$V_CH3COONa}\mathrm{L}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\">
-    //                     <div>③混ぜた直後</div>
-    //                     <div>(①+②)</div>
-    //                 </td>
-    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "(1-\alpha)\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + " . $C_CH3COOH * $V_CH3COOH . "\alpha\\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "\alpha\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\">
-    //                     <div>④平衡状態</div>
-    //                     <div>(①＋②)</div>
-    //                 </td>
-    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //             </tr>
-    //         </table>";
-
-    //     $table2 = "
-    //         <table class=\"border-collapse border border-gray-400 m-auto table-fixed mt-4 text-center\" cellpadding=\"5\">
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">溶液</td>
-    //                 <td class=\"{$td_class_common}\" rowspan=\"2\">体積</td>
-    //                 <td class=\"{$td_class_common}\" colspan=\"6\">物質量(mol)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COOH}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{CH_3 COO^-}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H^+}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{Na^+}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{OH^-}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\mathrm{H_2 O}\)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\">
-    //                     <div>(1)の混合溶液</div>
-    //                     <div>(平衡状態)</div>
-    //                 </td>
-    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . "\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\">
-    //                     <div>NaOHの結晶を</div>
-    //                     <div>入れた直後</div>
-    //                 </td>
-    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH . "- \Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa . " + \Delta\\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
-    //                 <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\)</td>
-    //             </tr>
-    //             <tr class=\"bg-gray-100\">
-    //                 <td class=\"{$td_class_common}\">
-    //                     <div>(2)の混合溶液</div>
-    //                     <div>(平衡状態)</div>
-    //                 </td>
-    //                 <td class=\"{$td_class_common}\">\(" . $V_CH3COOH + $V_CH3COONa . "\mathrm{L}\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "- \Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . " + \Delta\\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(\Delta\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "\)</td>
-    //                 <td class=\"{$td_class_mol}\">\(0\)</td>
-    //                 <td class=\"{$td_class_mol}\">\({$n_NaOH}\)</td>
-    //             </tr>
-    //         </table>";
-
-    //     // q：問、a：答、e：解説
-    //     // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ描画
-    //     $questions = [
-    //         [
-    //             'q_type' => 3,
-    //             'q' => "
-    //                 <div class=\"leading-[2] mt-4\">
-    //                     <p>
-    //                         (1) {$C_CH3COOH} mol/L 酢酸水溶液 " . $V_CH3COOH * 1000 . " mL と
-    //                         {$C_CH3COONa} mol/L 酢酸ナトリウム水溶液 " . $V_CH3COONa * 1000 . " mL の混合水溶液の pH を求めよ。
-    //                     </p>
-    //                     <p>
-    //                         (2) さらに NaOH の結晶 {$n_NaOH} mol を溶かしたときの pH を求めよ。ただし、溶液の体積変化はないものとする。
-    //                     </p>
-    //                     <p>(※)酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5},\,\log_{10} 2 = {$log10_2},\,\log_{10} 2.7 = {$log10_27}}\) とする。</p>
-    //                 </div>
-    //             ",
-    //             'a_type' => 2,
-    //             'a' => "(1)\," . -$log10_2 - $log10_27 + 5 . "\,\,(2)\," . $log10_2 - $log10_27 + 5,
-    //             'e_type' => 3,
-    //             'e' => "
-    //                 <p class=\"font-bold\">
-    //                     (1) {$C_CH3COOH} mol/L 酢酸水溶液 " . $V_CH3COOH * 1000 . " mL と
-    //                     {$C_CH3COONa} mol/L 酢酸ナトリウム水溶液 " . $V_CH3COONa * 1000 . " mL の混合水溶液の pH を求めよ。
-    //                 </p>
-    //                 <div class=\"leading-[2] text-left pl-5\">
-    //                     <p>酢酸は、水に溶かすと次のように電離する。</p>
-    //                     $$ \mathrm{CH_3 COOH \\rightleftharpoons CH_3 COO^- + H^+} $$
-    //                     <p>酢酸水溶液には、{$C_CH3COOH} mol/L × {$V_CH3COOH} L = " . $C_CH3COOH * $V_CH3COOH . " mol の酢酸が溶けている。電離前後の各物質のモル比は</p>
-    //                     <p>
-    //                         1 : 1 : 1 なので、酢酸の電離度を \(\alpha\) とすると、生じる \(\mathrm{CH_3 COO^-,\,H^+}\) の物質量は
-    //                         \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol。
-    //                     </p>
-    //                     <p>
-    //                         \(\mathrm{CH_3 COOH}\) の物質量は電離した分だけ減るので、
-    //                         \(" . $C_CH3COOH * $V_CH3COOH . " - " . $C_CH3COOH * $V_CH3COOH . "\,\alpha = " . $C_CH3COOH * $V_CH3COOH . "(1 - \alpha)\) mol（下表①）。
-    //                     </p>
-
-    //                     <p class=\"mt-4\">また、酢酸ナトリウムは水に溶かすと次のように電離する。</p>
-    //                     $$ \mathrm{CH_3 COONa \\to CH_3 COO^- + Na^+} $$
-    //                     <p>酢酸ナトリウム水溶液には、{$C_CH3COONa} mol/L × {$V_CH3COONa} L = " . $C_CH3COONa * $V_CH3COONa . " mol の酢酸ナトリウムが溶けている。</p>
-    //                     <p>塩は完全に電離するため、\(\mathrm{CH_3 COONa}\) は残らない。こちらも電離前後の各物質のモル比は</p>
-    //                     <p>1 : 1 : 1 なので、生じる \(\mathrm{CH_3 COO^-,\,Na^+}\) の物質量は \(" . $C_CH3COONa * $V_CH3COONa . "\) mol（下表②）。</p>
-                        
-    //                     <p class=\"mt-4\">これらの水溶液を混ぜた直後は下表③の状態に、しばらくすると下表④の平衡状態に落ち着く。</p>
-    //                     <p>①では酢酸が \(" . $C_CH3COOH * $V_CH3COOH . "\,\alpha\) mol 電離していたが、②で多量の \(\mathrm{CH_3 COO^-}\) が加わったことで左に平衡が移り、</p>
-    //                     <p>\(\mathrm{CH_3 COOH}\) はほぼ電離していない状態になると考えてよい。下表では \(\Delta \ll 1\) を用いている。</p>
-                        
-    //                     {$table1}
-
-    //                     <p class=\"mt-4\">ここまで整理出来れば、あとは④の状態について pH を求めればよい。まず \(\mathrm{[H^+]}\) を求める。</p>
-    //                     <p>酢酸の電離定数 \(\mathrm{K_a = {$Ka} \\times 10^{-5}}\) がわかっているので、電離定数の定義から、</p>
-    //                     $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]} = {$Ka} \\times 10^{-5}} $$
-    //                     <p>これに表④からわかる濃度を代入していく。\(\Delta \ll 1\) であることを考慮すれば、</p>
-    //                     $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]}} = {$Ka} \\times 10^{-5} $$
-    //                     \[
-    //                         \\begin{aligned}
-    //                             \mathrm{[H^+]}
-    //                                 &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
-    //                                     = \\frac{\,
-    //                                         \\frac{
-    //                                             " . ($C_CH3COOH * $V_CH3COOH) . "- \Delta
-    //                                         }{
-    //                                             " . $V_CH3COOH + $V_CH3COONa . "
-    //                                         }
-    //                                     \,}{
-    //                                         \\frac{
-    //                                             " . ($C_CH3COONa * $V_CH3COONa) . " + \Delta
-    //                                         }{
-    //                                             " . $V_CH3COOH + $V_CH3COONa . "
-    //                                         }
-    //                                     } \\times {$Ka} \\times 10^{-5} \\\\
-    //                                 &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH . "\,}{" . $C_CH3COONa * $V_CH3COONa . "} \\times {$Ka} \\times 10^{-5}
-    //                                     = " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5} \\\\
-    //                         \\end{aligned}
-    //                     \]
-    //                     <p>よって、</p>
-    //                     \[
-    //                         \\begin{aligned}
-    //                             \mathrm{pH}
-    //                                 &= -\log_{10} \mathrm{[H^+]}
-    //                                     = -\log_{10} (" . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " \\times {$Ka} \\times 10^{-5}) \\\\
-    //                                 &= -(\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
-    //                                 &= -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
-    //                                 &= -{$log10_2} - {$log10_27} + 5  = " . -$log10_2 - $log10_27 + 5 . "
-    //                         \\end{aligned}
-    //                     \]
-    //                 </div>            
-
-    //                 <p class=\"font-bold\">
-    //                     (2) さらに NaOH の結晶 {$n_NaOH} mol を溶かしたときの pH を求めよ。ただし、溶液の体積変化はないものとする。
-    //                 </p>
-    //                 <div class=\"leading-[2] text-left pl-5\">
-    //                     <p>\(\mathrm{NaOH}\) は、水に溶かすと \(\mathrm{Na^+}\) と \(\mathrm{OH^-}\) に電離する。この \(\mathrm{OH^-}\) は、酢酸と中和反応を起こす。</p>
-    //                     $$ \mathrm{CH_3 COOH + OH^- \\to CH_3 COO^- + H_2 O} $$
-    //                     <p>\(\mathrm{NaOH}\) {$n_NaOH} mol からは、\(\mathrm{OH^-}\) も {$n_NaOH} mol 生じる。これが中和することで、\(\mathrm{CH_3 COOH}\) は{$n_NaOH} mol 減り、</p>
-    //                     <p>\(\mathrm{CH_3 COO^-}\) は {$n_NaOH} mol 増える。すると、下表の最下行の状態になる。</p>
-
-    //                     {$table2}
-
-    //                     <p class=\"mt-4\">あとは最下行の平衡状態について、(1)の手順と同様に pH を求めればよい。電離定数の定義から、</p>
-    //                     $$ \mathrm{\\frac{\,[CH_3 COO^-][H^+]\,}{[CH_3 COOH]} = {$Ka} \\times 10^{-5}} $$
-    //                     <p>これに表からわかる濃度を代入していく。\(\Delta \ll 1\) であることを考慮すれば、</p>
-    //                     \[
-    //                         \\begin{aligned}
-    //                             \mathrm{[H^+]}
-    //                                 &= \mathrm{\\frac{\,[CH_3 COOH]\,}{[CH_3 COO^-]}} \\times {$Ka} \\times 10^{-5} 
-    //                                     = \\frac{\,
-    //                                         \\frac{
-    //                                             " . ($C_CH3COOH * $V_CH3COOH - $n_NaOH) . "- \Delta
-    //                                         }{
-    //                                             " . $V_CH3COOH + $V_CH3COONa . "
-    //                                         }
-    //                                     \,}{
-    //                                         \\frac{
-    //                                             " . ($C_CH3COONa * $V_CH3COONa + $n_NaOH) . " + \Delta
-    //                                         }{
-    //                                             " . $V_CH3COOH + $V_CH3COONa . "
-    //                                         }
-    //                                     } \\times {$Ka} \\times 10^{-5} \\\\
-    //                                 &\\fallingdotseq \\frac{\," . $C_CH3COOH * $V_CH3COOH - $n_NaOH . "\,}{" . $C_CH3COONa * $V_CH3COONa + $n_NaOH . "} \\times {$Ka} \\times 10^{-5}
-    //                                     = " . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\\\
-    //                         \\end{aligned}
-    //                     \]
-    //                     <p>よって、</p>
-    //                     \[
-    //                         \\begin{aligned}
-    //                             \mathrm{pH}
-    //                                 &= -\log_{10} \mathrm{[H^+]}
-    //                                     = -\log_{10} \\left(" . $this->fracnum_to_str(($C_CH3COOH * $V_CH3COOH - $n_NaOH)*100, ($C_CH3COONa * $V_CH3COONa + $n_NaOH)*100, "", 1) . " \\times {$Ka} \\times 10^{-5} \\right) \\\\
-    //                                 &= -(\log_{10} 1 -\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " + \log_{10} {$Ka} + \log_{10} 10^{-5}) \\\\
-    //                                 &= -\log_{10} 1 +\log_{10} " . $C_CH3COOH * $V_CH3COOH / ($C_CH3COONa * $V_CH3COONa) . " - \log_{10} {$Ka} - \log_{10} 10^{-5} \\\\
-    //                                 &= 0 + {$log10_2} - {$log10_27} + 5  = " . $log10_2 - $log10_27 + 5 . "
-    //                         \\end{aligned}
-    //                     \]
-    //                 </div>
-    //             ",
-    //         ],
-    //     ];
-    //     $q_index = rand(0,count($questions)-1);
-    //     $question = $questions[$q_index];
-
-    //     // チェックボックスの値を取得。
-    //     // $flag1 = $request->boolean('flag1');    // 定義の確認問題（公式の証明含む）
-    //     // $flag2 = $request->boolean('flag2');    // 計算問題
-    //     // $flags = ['flag1' => '基礎', 'flag2' => '実践'];
-    //     // if ($flag1 == true && $flag2 == false) {
-    //     //     $q_index = rand(0, 5);
-    //     //     $question = $questions[$q_index];
-    //     // } else if ($flag1 == false && $flag2 == true) {
-    //     //     $q_index = rand(6, count($questions)-1);
-    //     //     $question = $questions[$q_index];
-    //     // } else {
-    //     //     $q_index = rand(0,count($questions)-1);
-    //     //     $question = $questions[$q_index];
-    //     // }
-    //     // $subject = "custom";    // カスタムの選択ができることを blade に伝える。
-    //     $unitname = "緩衝液";
-    //     return view('workbook.unit_template', compact('unitname','question'));
-    // }
 
     // 緩衝液
     public function h_sci_buffer_solution() {

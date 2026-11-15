@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/***** 問題 *****/
+.black-white-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 10px;
+}
+
 /***** javaScript *****/
 .rotate90 {
     transform: rotate(-90.0deg);

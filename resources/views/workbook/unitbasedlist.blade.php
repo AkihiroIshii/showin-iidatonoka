@@ -708,6 +708,12 @@
                                 <x-button-link color="green">
                                     <a href="{{route('workbook.sci_earth')}}">地震</a>
                                 </x-button-link>
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.sci_rocks')}}">岩石の分類</a>
+                                </x-button-link>
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.sci_fossils')}}">化石の分類</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                         <x-td class="font-bold">
