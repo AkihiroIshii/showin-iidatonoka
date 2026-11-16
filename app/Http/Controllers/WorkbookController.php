@@ -16729,7 +16729,7 @@ class WorkbookController extends Controller
                 'a' => "0\,\mathrm{J}",
                 'e_type' => 3,
                 'e' => "<div class=\"leading-[2] mb-4\">
-                            <p>仕事[J] = 力[N] × 動かした距離[m] なので、<span class=\"underline\">動かした距離が 0 m なら物体に対してした仕事も 0 m</span> である。</p>
+                            <p>仕事[J] = 力[N] × 動かした距離[m] なので、<span class=\"underline\">動かした距離が 0 m なら物体に対してした仕事も 0 J</span> である。</p>
                             <p>なお、{$m} kg の物体にかかる重力は {$F_mg} N であり、これ以上の力なら引き上げられる（動かせる）はずだが、</p>
                             <p>物体が地面に固定されていたりして他の力も下向きにかかっていれば動かせない場合もある。</p>
                         </div>",
