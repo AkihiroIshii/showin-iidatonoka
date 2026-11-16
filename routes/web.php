@@ -610,6 +610,8 @@ Route::get('workbook/sci_proportional_quantity', [WorkbookController::class, 'sc
 ->middleware(['auth', 'verified'])->name('workbook.sci_proportional_quantity');
 Route::get('workbook/heredity', [WorkbookController::class, 'heredity'])
 ->middleware(['auth', 'verified'])->name('workbook.heredity');
+Route::get('workbook/reagent', [WorkbookController::class, 'reagent'])
+->middleware(['auth', 'verified'])->name('workbook.reagent');
 Route::get('workbook/work_energy', [WorkbookController::class, 'work_energy'])
 ->middleware(['auth', 'verified'])->name('workbook.work_energy');
 Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_terms_all'])

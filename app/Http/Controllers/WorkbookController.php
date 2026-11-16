@@ -16654,6 +16654,138 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 試薬・指示薬
+    public function reagent() {
+        $unitname = "◎試薬・指示薬";
+        $result = $this->get_reagent();
+        $question = $result['question'];
+        // $plot_par_e = $result['plot_par_e'];
+        // $plot_con_e = $result['plot_con_e'];
+        // return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_reagent() {
+        $th_class = "border border-gray-400 px-5 py-0 w-80 bg-gray-200";
+        $td_class = "border border-gray-400 px-5 py-0 w-40";
+        $table_ph = "<table class=\"border-collapse border border-gray-400 mx-auto my-0 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$th_class}\">試薬</td>
+                            <td class=\"{$td_class} bg-gray-200\">酸性</td>
+                            <td class=\"{$td_class} bg-gray-200\">中性</td>
+                            <td class=\"{$td_class} bg-gray-200\">アルカリ性</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$th_class}\">リトマス紙</td>
+                            <td class=\"{$td_class} bg-red-200\">赤くなる</td>
+                            <td class=\"{$td_class}\">変化なし</td>
+                            <td class=\"{$td_class} bg-blue-200\">青くなる</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$th_class}\">BTB溶液</td>
+                            <td class=\"{$td_class} bg-yellow-200\">黄色</td>
+                            <td class=\"{$td_class} bg-green-200\">緑色</td>
+                            <td class=\"{$td_class} bg-blue-200\">青色</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$th_class}\">フェノールフタレイン溶液</td>
+                            <td class=\"{$td_class}\">無色</td>
+                            <td class=\"{$td_class}\">無色</td>
+                            <td class=\"{$td_class} bg-red-200\">赤色</td>
+                        </tr>
+                    </table>
+                    ";
+
+        $arrays = [
+            [
+                'reaction' => '水溶液に触れたリトマス紙が青く変色した。',
+                'condition' => '水溶液はアルカリ性である。',
+                'e' => '酸性・中性・アルカリ性を調べる試薬と反応は次の通り。' . $table_ph
+            ],
+            [
+                'reaction' => '水溶液に触れたリトマス紙が赤く変色した。',
+                'condition' => '水溶液は酸性である。',
+                'e' => '酸性・中性・アルカリ性を調べる試薬と反応は次の通り。' . $table_ph
+            ],
+            [
+                'reaction' => '水溶液にBTB溶液を加えると黄色くなった。',
+                'condition' => '水溶液は酸性である。',
+                'e' => '酸性・中性・アルカリ性を調べる試薬と反応は次の通り。' . $table_ph
+            ],
+            [
+                'reaction' => '水溶液にBTB溶液を加えると緑色になった。',
+                'condition' => '水溶液は中性である。',
+                'e' => '酸性・中性・アルカリ性を調べる試薬と反応は次の通り。' . $table_ph
+            ],
+            [
+                'reaction' => '水溶液にBTB溶液を加えると青色になった。',
+                'condition' => '水溶液はアルカリ性である。',
+                'e' => '酸性・中性・アルカリ性を調べる試薬と反応は次の通り。' . $table_ph
+            ],
+            [
+                'reaction' => '水溶液にフェノールフタレイン溶液を加えると赤色になった。',
+                'condition' => '水溶液はアルカリ性である。',
+                'e' => '酸性・中性・アルカリ性を調べる試薬と反応は次の通り。' . $table_ph
+            ],
+            [
+                'reaction' => '水溶液にフェノールフタレイン溶液を加えても変化がなかった。',
+                'condition' => '水溶液は酸性または中性である（アルカリ性ではない）。',
+                'e' => '酸性・中性・アルカリ性を調べる試薬と反応は次の通り。' . $table_ph
+            ],
+            [
+                'reaction' => '水溶液にヨウ素液を加えると青紫色に変化した。',
+                'condition' => '水溶液にはデンプンが含まれている。',
+                'e' => 'デンプンの有無を調べたいときはヨウ素液の出番。'
+            ],
+            [
+                'reaction' => '水溶液にヨウ素液を加えても変化がなかった。',
+                'condition' => '水溶液にはデンプンが含まれていない。',
+                'e' => 'デンプンの有無を調べたいときはヨウ素液の出番。'
+            ],
+            [
+                'reaction' => '水溶液にベネジクト液を加えて加熱すると、赤褐色の沈殿が生じた。',
+                'condition' => '水溶液には麦芽糖などが含まれている。',
+                'e' => '加熱も必要なので注意すること。麦芽糖はブドウ糖が２つ繋がったもの。'
+            ],
+            [
+                'reaction' => '水溶液にベネジクト液を加えて加熱しても変化がない。',
+                'condition' => '水溶液には麦芽糖などが含まれていない。',
+                'e' => '加熱も必要なので注意すること。麦芽糖はブドウ糖が２つ繋がったもの。'
+            ],
+            [
+                'reaction' => '気体を石灰水に通すと白く濁った。',
+                'condition' => 'その気体は二酸化炭素である。',
+                'e' => ''
+            ],
+            [
+                'reaction' => '液体に塩化コバルト紙を触れさせると桃色に変色した。',
+                'condition' => 'その液体は水である。',
+                'e' => 'エタノールなどの液体では変色しない。'
+            ],
+        ];
+        $arr = $arrays[rand(0, count($arrays)-1)];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>次の反応からわかることを述べなさい。</p>
+                            <p class=\"text-2xl\">" . $arr['reaction'] . "</p>
+                        </div>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">" . $arr['condition'] . "</p>",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            {$arr['e']}
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 仕事とエネルギー
     public function work_energy() {
         $unitname = "仕事とエネルギー";
