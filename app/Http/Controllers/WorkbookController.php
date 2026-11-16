@@ -16654,6 +16654,92 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','subject'));
     }
 
+    // 仕事とエネルギー
+    public function work_energy() {
+        $unitname = "仕事とエネルギー";
+        $result = $this->get_work_energy();
+        $question = $result['question'];
+        // $plot_par_e = $result['plot_par_e'];
+        // $plot_con_e = $result['plot_con_e'];
+        // return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_work_energy() {
+        $m_g = 200 * rand(2, 15); // 質量(g)
+        $m = $m_g / 1000;   // 質量(kg)
+        $l = rand(2, 9);    // 動かした距離(m)
+        $F_mg = $m_g / 100;      // m kg の物体にかかる重力(N)
+        $F = rand(2, 8);    // 重力以外で加える力(N)
+        $l2cm = 10 * rand(1, 4);   // 動かした距離(cm) (※)$l とは別物
+        $t = rand(8, 20);   // 時間(秒)
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>摩擦がない斜面に置かれた物体を、斜面に水平な {$F} N の力で {$l} m 引き上げた。</p>
+                            <p>このとき、この物体に対してした仕事は何 J か。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $F * $l . "\,\mathrm{J}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>仕事[J] = 力[N] × 動かした距離[m] なので、{$F} × {$l} = " . $F * $l . " J。</p>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>{$m} kg の物体を {$l} m 引き上げるのに必要な仕事は何 J か。</p>
+                            <p>なお、100 g の物体にかかる重力は 1 N とする。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $F_mg * $l . "\,\mathrm{J}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>100 g の物体にかかる重力が 1 N なので、{$m} kg（{$m_g} g）の物体には {$F_mg} N の重力がかかる。</p> 
+                            <p>これを支えたり持ち上げたりするには、重力と同じく {$F_mg} N の力を上向きに加える必要がある。</p>
+                            <p>仕事[J] = 力[N] × 動かした距離[m] なので、{$F_mg} × {$l} = " . $F_mg * $l . " J。</p>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>{$m_g} g の物体を {$l2cm} cm 引き上げるのに必要な仕事は何 J か。</p>
+                            <p>なお、100 g の物体にかかる重力は 1 N とする。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => $F_mg * $l2cm / 100 . "\,\mathrm{J}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>100 g の物体にかかる重力が 1 N なので、{$m_g} g の物体には {$F_mg} N の重力がかかる。</p>
+                            <p>これを支えたり持ち上げたりするには、重力と同じく {$F_mg} N の力を上向きに加える必要がある。</p>
+                            <p>仕事[J] = 力[N] × 動かした距離[m] なので、{$l2cm} cm（" . $l2cm / 100 . " m）引き上げるための仕事は、{$F_mg} × " . $l2cm / 100 . " = " . $F_mg * $l2cm / 100 . " J。</p>
+                        </div>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>{$m} kg の物体を持ち上げようと {$F} N の力で上向きに {$t} 秒間引っ張ったが、まったく持ち上がらなかった。</p>
+                            <p>このとき物体に対してした仕事は何 J か。なお、100 g の物体にかかる重力は 1 N とする。</p>
+                        </div>",
+                'a_type' => 2,
+                'a' => "0\,\mathrm{J}",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            <p>仕事[J] = 力[N] × 動かした距離[m] なので、<span class=\"underline\">動かした距離が 0 m なら物体に対してした仕事も 0 m</span> である。</p>
+                            <p>なお、{$m} kg の物体にかかる重力は {$F_mg} N であり、これ以上の力なら引き上げられる（動かせる）はずだが、</p>
+                            <p>物体が地面に固定されていたりして他の力も下向きにかかっていれば動かせない場合もある。</p>
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 理科 用語の理解
     public function science_terms_all() {
         $terms = [
