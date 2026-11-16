@@ -665,6 +665,9 @@
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
+                                <x-button-link color="green">
+                                    <a href="{{route('workbook.heredity')}}">遺伝</a>
+                                </x-button-link>
                             </div>
                         </x-td>
                     </tr>
@@ -719,7 +722,7 @@
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="green">
-                                    <a href="{{route('workbook.unit.humidity')}}">湿度・水蒸気量・露点</a>
+                                    <a href="{{route('workbook.humidity')}}">湿度・水蒸気量・露点</a>
                                 </x-button-link>
                             </div>
                         </x-td>

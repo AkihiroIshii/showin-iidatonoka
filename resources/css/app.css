@@ -5,11 +5,36 @@
 @tailwind utilities;
 
 /***** 問題 *****/
-.black-white-cell {
+/* .black-white-cell {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 4px 10px;
+} */
+
+/***** 表の左上を区切る *****/
+.diagonal-cell {
+    position: relative;
+    width: 100px;
+    height: 60px;
+    padding: 0;
+    background: linear-gradient(
+        to bottom left,
+        transparent calc(50% - 0.5px),
+        #555 calc(50% - 0.5px),
+        #555 calc(50% + 0.5px),
+        transparent calc(50% + 0.5px)
+    );
+}
+.diagonal-top {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+}
+.diagonal-bottom {
+    position: absolute;
+    bottom: 2px;
+    left: 5px;
 }
 
 /***** javaScript *****/

@@ -603,11 +603,13 @@ Route::get('workbook/mass_change_NAHCO3', [WorkbookController::class, 'mass_chan
 Route::get('workbook/animal_function', [WorkbookController::class, 'animal_function'])
 ->middleware(['auth', 'verified'])->name('workbook.animal_function');
 Route::get('workbook/humidity', [WorkbookController::class, 'humidity'])
-->middleware(['auth', 'verified'])->name('workbook.unit.humidity');
+->middleware(['auth', 'verified'])->name('workbook.humidity');
 Route::get('workbook/electric_circuit', [WorkbookController::class, 'electric_circuit'])
 ->middleware(['auth', 'verified'])->name('workbook.electric_circuit');
 Route::get('workbook/sci_proportional_quantity', [WorkbookController::class, 'sci_proportional_quantity'])
 ->middleware(['auth', 'verified'])->name('workbook.sci_proportional_quantity');
+Route::get('workbook/heredity', [WorkbookController::class, 'heredity'])
+->middleware(['auth', 'verified'])->name('workbook.heredity');
 Route::get('workbook/science_terms_all', [WorkbookController::class, 'science_terms_all'])
 ->middleware(['auth', 'verified'])->name('workbook.science_terms_all');
 // 社会

@@ -16397,6 +16397,263 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
     }
 
+    // 遺伝
+    public function heredity(Request $request) {
+        $terms = [
+            ['term' => '対立形質', 'mean' => 'エンドウの丸型としわ型のように、同時にあらわれない形質', 'exp' => ''],
+            ['term' => '純系', 'mean' => '何世代にもわたって形質が変わらない系統', 'exp' => 'エンドウで丸型の遺伝子をA、しわ型の遺伝子をaとすると、AAやaaが純系。Aaは純系ではない。'],
+            [
+                'term' => '自家受粉',
+                'mean' => '花粉が同じ個体のめしべについて受粉すること',
+                'exp' => '
+                    <p class="leading-[2]">例えば遺伝子が AA, Aa の組み合わせを含む種子を「自家受粉」させる場合、</p>
+                    <pclass="leading-[2]">考えられるかけ合わせは AA × AA または Aa × Aa であり、AA × Aa は考えない。</p>
+                '],
+        ];
+        $idx = rand(0,count($terms)-1);
+        $term = $terms[$idx];
+
+        $g_all = 40 * rand(20, 50); // 孫の種子の数（4の倍数にする）
+
+        $td_class = "border border-gray-400 px-5 w-30";
+        $table1p = "<table class=\"border-collapse border border-gray-400 mx-auto my-0 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} diagonal-cell\">
+                                <span class=\"diagonal-top text-base\">親(しわ)</span>
+                                <span class=\"diagonal-bottom text-base\">親(丸)</span>
+                            </td>
+                            <td class=\"{$td_class}\">a</td>
+                            <td class=\"{$td_class}\">a</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                        </tr>
+                    </table>
+                    ";
+        $table1c = "<table class=\"border-collapse border border-gray-400 mx-auto my-0 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} diagonal-cell\">
+                                <span class=\"diagonal-top text-base\">子(Aa)</span>
+                                <span class=\"diagonal-bottom text-base\">子(Aa)</span>
+                            </td>
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">a</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">AA</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">a</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                            <td class=\"{$td_class}\">aa</td>
+                        </tr>
+                    </table>
+                    ";
+        $table1gAA = "<table class=\"border-collapse border border-gray-400 mx-auto my-0 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} diagonal-cell\">
+                                <span class=\"diagonal-top text-base\">孫(AA)</span>
+                                <span class=\"diagonal-bottom text-base\">孫(AA)</span>
+                            </td>
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">A</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">AA</td>
+                            <td class=\"{$td_class}\">AA</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">AA</td>
+                            <td class=\"{$td_class}\">AA</td>
+                        </tr>
+                    </table>
+                    ";
+        $table1gAa = "<table class=\"border-collapse border border-gray-400 mx-auto my-0 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} diagonal-cell\">
+                                <span class=\"diagonal-top text-base\">孫(Aa)</span>
+                                <span class=\"diagonal-bottom text-base\">孫(Aa)</span>
+                            </td>
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">a</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">A</td>
+                            <td class=\"{$td_class}\">AA</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class}\">a</td>
+                            <td class=\"{$td_class}\">Aa</td>
+                            <td class=\"{$td_class}\">aa</td>
+                        </tr>
+                    </table>
+                    ";
+
+        $e1 = "
+            <div class=\"leading-[2] mt-4\">
+                <p>丸い種子をつくる遺伝子を A、しわのある種子をつくる遺伝子を a とし、表に整理すると次のようになる。</p>
+            </div>
+            <div class=\"flex justify-center\">
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">子の代</p>
+                    {$table1p}
+                </div>
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">孫の代</p>
+                    {$table1c}
+                </div>
+            </div>
+            <div class=\"leading-[2] mt-4\">
+                <p>子の代の遺伝子は、必ず Aa の組み合わせになる。また、孫の代は</p>
+                <p>右の表のように AA, Aa, aa の組み合わせがあり、その比率は 1 : 2 : 1 になる。</p>
+                <p>さて、子の代(Aa)がすべて丸い種子になっているので、A は顕性の遺伝子である。</p>
+                <p>よって、AA と Aa は丸い種子、aa だけがしわのある種子になるので、</p>
+                <p>丸い種子としわの種子の比率は (1 + 2) : 1 = 3 : 1 になる。</p>
+            </div>";
+
+        $e2 = "
+            <div class=\"leading-[2] mt-4\">
+                <p>丸い種子をつくる遺伝子を A、しわのある種子をつくる遺伝子を a とし、表に整理すると次のようになる。</p>
+            </div>
+            <div class=\"flex justify-center\">
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">子の代</p>
+                    {$table1p}
+                </div>
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">孫の代</p>
+                    {$table1c}
+                </div>
+            </div>
+            <div class=\"leading-[2] mt-4\">
+                <p>子の代の遺伝子は、必ず Aa の組み合わせになる。また、孫の代は右の表のように AA, Aa, aa の組み合わせがある。</p>
+                <p>さて、子の代(Aa)がすべて丸い種子になっているので、A は顕性の遺伝子である。よって、丸い種子は AA と Aa の２通りであり、</p>
+                <p>その比率は 1 : 2 である。ひ孫の代は AA または Aa を自家受粉させた組み合わせのみ考えればよい。表にすると次の２通りである。</p>
+            </div>
+            <div class=\"flex justify-center\">
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">ひ孫の代(AAの自家受粉)</p>
+                    {$table1gAA}
+                </div>
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">ひ孫の代(Aaの自家受粉)</p>
+                    {$table1gAa}
+                </div>
+            </div>
+            <p>孫の代の AA と Aa の比率は 1 : 2 だったので、右の表は下のように２つ書いた方が数の比率がイメージしやすいかもしれない。
+            <div class=\"flex justify-center\">
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">ひ孫の代(AAの自家受粉)</p>
+                    {$table1gAA}
+                </div>
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">ひ孫の代(Aaの自家受粉)</p>
+                    {$table1gAa}
+                </div>
+                <div class=\"px-8\">
+                    <p class=\"pb-0\">ひ孫の代(Aaの自家受粉)</p>
+                    {$table1gAa}
+                </div>
+            </div>
+            <div class=\"leading-[2] mt-4\">
+                <p>これより、ひ孫の代での遺伝子の組み合わせによる数の比率は、AA : Aa : aa = 6 : 4 : 2 = 3 : 2 : 1。</p>
+                <p>AA と Aa が丸い種子になるので、丸い種子としわの種子の数の比率は (3 + 2) : 1 = 5 : 1。</p>
+            </div>
+            ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<p>次の意味をもつ用語を答えなさい。</p>
+                        <p class=\"text-xl\">{$term['mean']}</p>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$term['term']}</p>",
+                'e_type' => 3,
+                'e' => "{$term['exp']}",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>丸い種子をつくる純系のエンドウと、しわのある種子をつくる純系のエンドウがある。</p>
+                        <p>これらをかけ合わせると子の代の種子はすべて丸くなった。また、子の代の種子を</p>
+                        <p>自家受粉させると、孫の代では丸い種子としわのある種子がどちらも現れた。</p>
+                        <p>孫の代での丸い種子としわのある種子の数の割合を、簡単な整数比で表せ。</p>
+                    </div>
+                    ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">3 : 1</p>",
+                'e_type' => 3,
+                'e' => $e1,
+            ],
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>丸い種子をつくる純系のエンドウと、しわのある種子をつくる純系のエンドウがある。</p>
+                        <p>これらをかけ合わせると子の代の種子はすべて丸くなった。また、子の代の種子を</p>
+                        <p>自家受粉させると、孫の代では丸い種子としわのある種子がどちらも現れた。</p>
+                        <p>孫の代の種子が全部で {$g_all} 個あるとき、孫の代の丸い種子の数を答えなさい。</p>
+                    </div>
+                    ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">" . $g_all * 3/4 . " 個</p>",
+                'e_type' => 3,
+                'e' => $e1 . 
+                    "<p class=\"leading-[2]\">孫の代の種子は全部で {$g_all} 個あるので、丸い種子の数は {$g_all} × (3/4) = " . $g_all * 3/4 . " 個。</p>",
+            ],
+            [
+                'q_type' => 3,
+                'q' => "
+                    <div class=\"leading-[2] mt-4\">
+                        <p>丸い種子をつくる純系のエンドウと、しわのある種子をつくる純系のエンドウがある。</p>
+                        <p>これらをかけ合わせると子の代の種子はすべて丸くなった。また、子の代の種子を</p>
+                        <p>自家受粉させると、孫の代では丸い種子としわのある種子がどちらも現れた。</p>
+                        <p>この<span class=\"underline\">孫の代の丸い種子だけを自家受粉させた</span>とき、</p>
+                        <p>ひ孫の代について丸い種子としわのある種子の数の割合を、簡単な整数比で表せ。</p>
+                    </div>
+                    ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-lg\">5 : 1</p>",
+                'e_type' => 3,
+                'e' => $e2,
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+
+        // チェックボックスの値を取得。
+        $term = $request->boolean('term');    // 用語の確認
+        $calc = $request->boolean('calc');    // 計算問題
+        if ($term == true && $calc == false) {
+            $q_index = 0;
+            $question = $questions[$q_index];
+        } else if ($term == false && $calc == true) {
+            $q_index = rand(1,count($questions)-1);
+            $question = $questions[$q_index];
+        } else {
+            $q_index = rand(0,count($questions)-1);
+            $question = $questions[$q_index];
+        }
+        $subject = "science";    // カスタムの選択ができることを blade に伝える。
+        $unitname = "遺伝";
+        return view('workbook.unit_template', compact('unitname','question','subject'));
+    }
+
     // 理科 用語の理解
     public function science_terms_all() {
         $terms = [
