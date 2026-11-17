@@ -578,6 +578,8 @@ Route::get('workbook/preposition', [WorkbookController::class, 'preposition'])
 Route::get('workbook/sentence_structure1', [WorkbookController::class, 'sentence_structure1'])
 ->middleware(['auth', 'verified'])->name('workbook.sentence_structure1');
 // 理科
+Route::get('workbook/plant_classification', [WorkbookController::class, 'plant_classification'])
+->middleware(['auth', 'verified'])->name('workbook.plant_classification');
 Route::get('workbook/density', [WorkbookController::class, 'density'])
 ->middleware(['auth', 'verified'])->name('workbook.unit.density');
 Route::get('workbook/sci_mass_percent_concentration', [WorkbookController::class, 'sci_mass_percent_concentration'])

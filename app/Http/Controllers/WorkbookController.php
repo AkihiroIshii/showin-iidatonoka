@@ -13926,6 +13926,110 @@ class WorkbookController extends Controller
 
 
     /*********** 理科 **************/
+    // 植物の分類
+    public function plant_classification() {
+        $unitname = "植物の分類";
+        $result = $this->get_plant_classification();
+        $question = $result['question'];
+        // $plot_par_e = $result['plot_par_e'];
+        // $plot_con_e = $result['plot_con_e'];
+        // return view('workbook.unit_template', compact('unitname','question','plot_par_e','plot_con_e'));
+        return view('workbook.unit_template', compact('unitname','question'));
+    }
+    public function get_plant_classification() {
+        $td_class = "border border-gray-400 px-5 py-0";
+        $table = "<table class=\"border-collapse border border-gray-400 mx-auto my-0 table-fixed\" cellpadding=\"5\">
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-200\" colspan=\"3\"></td>
+                            <td class=\"{$td_class} bg-gray-200 w-32\">ふえ方</td>
+                            <td class=\"{$td_class} bg-gray-200 w-32\">果実</td>
+                            <td class=\"{$td_class} bg-gray-200 w-100\">その他</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-200 w-30\" rowspan=\"3\">種子植物</td>
+                            <td class=\"{$td_class} bg-gray-200 w-30\" rowspan=\"2\">被子植物</td>
+                            <td class=\"{$td_class} bg-gray-200 w-30\">双子葉類</td>
+                            <td class=\"{$td_class} w-32\" rowspan=\"3\">種子</td>
+                            <td class=\"{$td_class} w-32\" rowspan=\"2\">ある</td>
+                            <td class=\"{$td_class} w-100\">子葉が２枚、葉脈が網状、主根と側根がある。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-200 w-30\">単子葉類</td>
+                            <td class=\"{$td_class} w-100\">子葉が１枚、葉脈が平行、ひげ根がある。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-200 w-32\" colspan=\"2\">裸子植物</td>
+                            <td class=\"{$td_class} w-32\" rowspan=\"3\">ない</td>
+                            <td class=\"{$td_class} w-100\">胚珠がむき出し（子房がない）。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-200 w-32\" colspan=\"3\">シダ植物</td>
+                            <td class=\"{$td_class} w-32\" rowspan=\"2\">胞子</td>
+                            <td class=\"{$td_class} w-100\">根・茎・葉の区別がある。</td>
+                        </tr>
+                        <tr class=\"bg-gray-100\">
+                            <td class=\"{$td_class} bg-gray-200 w-32\" colspan=\"3\">コケ植物</td>
+                            <td class=\"{$td_class} w-100\">根・茎・葉の区別がない。</td>
+                        </tr>
+                    </table>
+                    ";
+
+        $arrays = [
+            [
+                'class' => '双子葉類',
+                'chara' => '種子や果実をつくり、葉脈は網状である。',
+                'e' => '植物の分類は次の通り。' . $table
+            ],
+            [
+                'class' => '単子葉類',
+                'chara' => '種子や果実をつくり、葉脈は平行である。',
+                'e' => '植物の分類は次の通り。' . $table
+            ],
+            [
+                'class' => '被子植物',
+                'chara' => '種子があり、果実をつくる。',
+                'e' => '植物の分類は次の通り。' . $table
+            ],
+            [
+                'class' => '裸子植物',
+                'chara' => '種子があるが、果実はつくらない。',
+                'e' => '植物の分類は次の通り。' . $table
+            ],
+            [
+                'class' => 'シダ植物',
+                'chara' => '胞子でふえ、根・茎・葉の区別がある。',
+                'e' => '植物の分類は次の通り。' . $table
+            ],
+            [
+                'class' => 'コケ植物',
+                'chara' => '胞子でふえ、根・茎・葉の区別がない。',
+                'e' => '植物の分類は次の通り。' . $table
+            ],
+        ];
+        $arr = $arrays[rand(0, count($arrays)-1)];
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）、5:グラフ(旧)、6:グラフ(新)
+        $questions = [
+            [
+                'q_type' => 3,
+                'q' => "<div class=\"leading-[2] mt-4\">
+                            <p>次の特徴にあてはまる植物の分類を答えなさい。</p>
+                            <p class=\"text-2xl\">" . $arr['chara'] . "</p>
+                        </div>",
+                'a_type' => 3,
+                'a' => "<p class=\"text-2xl\">" . $arr['class'] . "</p>",
+                'e_type' => 3,
+                'e' => "<div class=\"leading-[2] mb-4\">
+                            {$arr['e']}
+                        </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question');
+    }
+
     // 密度
     public function density() {
         $v = rand(1, 10);   //体積[cm^3]
