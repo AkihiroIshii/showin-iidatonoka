@@ -150,7 +150,7 @@
                         <td class="border border-slate-500 px-4">共通</td>
                         <td class="border border-slate-500 px-4">理解したのに解けない</td>
                         <td class="border border-slate-500 px-4">
-                            <p>リコーダーで低い「ド」の吹き方を教わっても、練習しなければきれいな音は出せません。数学も（というか何事も）同じです。</p>
+                            <p>リコーダーで低い「ド」の吹き方を教わっても、練習しなければきれいな音は出せません。勉強も（というか何事も）同じです。</p>
                             <p class="underline">少なくとも、問題を読んで５秒以内には手が動くようになること。できなければ、演習量不足と考えてください。</p>
                         </td>
                     </tr>
@@ -193,6 +193,47 @@
                                 <li>まずは中１の教科書の本文をスラスラ音読できるようにすること。</li>
                                 <li>普段から長文をたくさん読むこと。内容は絵本など簡単で構わない。<span class="underline">難しさよりも量を重視すること</span>。</li>
                                 <li>大筋を把握できるのであれば、わからない単語は飛ばし読みしても構わない。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="bg-red-100">
+                        <td rowspan="2" class="border border-slate-500 px-4">国語</td>
+                        <td class="border border-slate-500 px-4">漢字が苦手。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li>まずは読めるようになること。振り仮名や朗読の音源があるものを活用してもよいです。</li>
+                                <li>漢字検定の教材も活用できます。</li>
+                                <li class="underline font-bold">漢字が読めない人は、全教科で学習が困難になると思ってください。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="bg-red-100">
+                        <td class="border border-slate-500 px-4">読むのが嫌い。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li>硬い内容ではなく興味があるもの（小説、漫画、歌の歌詞など）を選んでください。</li>
+                                <li><span class="underline">テストのためではなく、娯楽としての読書をしてください</span>。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="bg-green-100">
+                        <td class="border border-slate-500 px-4">理科</td>
+                        <td class="border border-slate-500 px-4">計算問題がわからない。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li><span class="underline">まず、問題文から関係式を組み立てられるようになること</span>。そのあとの式変形は数学力次第。</li>
+                                <li>式が組み立てられない人は、用語などの理解が不十分だと思われます。教科書などで確認しましょう。</li>
+                                <li><span class="underline">最低限、比の関係式（a : b = c : d）は使えるようにしておくこと</span>。理科の多くの分野で使えます。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="bg-yellow-100">
+                        <td class="border border-slate-500 px-4">社会</td>
+                        <td class="border border-slate-500 px-4">歴史の人物と時代がごちゃ混ぜになる。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li>人物名だけ覚えるのではなく、出来事や関係者と関連付けて覚える。</li>
+                                <li>関連する出来事があれば、そこに至る経緯も知っておくとよい。<span class="underline">経緯を理解すると、現代社会に応用が効く</span>。</li>
                             </ul>
                         </td>
                     </tr>
