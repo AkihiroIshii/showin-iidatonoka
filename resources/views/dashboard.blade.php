@@ -120,7 +120,7 @@
         </div>
 
         {{-- このシステムについて（飯田殿岡校の関係者のみ表示） --}}
-        @if(is_null(@Auth::user()->campus_id))
+        {{-- @if(is_null(@Auth::user()->campus_id))
             <x-h3>このシステムについて</x-h3>
             <div class="inline-block pl-5 text-lg leading-[2]">
                 <ul class="pl-5 list-disc">
@@ -130,7 +130,7 @@
                 </ul>
                 <p>(※)スマホは横向きでのご利用を推奨します（縦向きはレイアウトが崩れやすいため）。</p>
             </div>
-        @endif
+        @endif --}}
 
         @if(mb_substr(@Auth::user()->grade, 0, 1) === "中" || @Auth::user()->grade == "塾長")
             <x-h3>

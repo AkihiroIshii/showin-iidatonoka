@@ -3,17 +3,23 @@
         <div class="text-lg font-semibold">
             <a href="{{route('login')}}" class="text-blue-600 font-semibold">ログイン画面へ</a>
         </div>
-        <p class="text-right">2026/1/18 更新</p>
-        <x-h3>このアプリについて</x-h3>
+        <p class="text-right">2026/11/18 更新</p>
+        <x-h3>このアプリ（Sazaren）について</x-h3>
         <div>
             <x-h4>概要</x-h4>
             <ul class="ml-4" style="list-style-type: disc;">
-                <li>松陰塾 飯田殿岡校の生徒および保護者向けに、塾長が自作したWebアプリです。</li>
-                <li><span class="font-bold">月間目標など</span>を記録、確認するために使用します。</li>
+                <ul class="pl-5 list-disc">
+                    <li>松陰塾 飯田殿岡校 生徒向けの<span class="font-bold">補助教材</span>です。特定の分野を繰り返し演習したいときや、自主学習に使ってください。左上の「単元別学習」から単元を選べます。</li>
+                    <li>保護者との<span class="font-bold">目標共有</span>も兼ねています。課題と併せて上に記載しておりますので、家庭学習の参考になさってください。</li>
+                    <li>中３生は<span class="font-bold">過去問演習の記録管理</span>としても使います。</li>
+                </ul>
+                <p>(※)スマホは横向きでのご利用を推奨します（縦向きはレイアウトが崩れやすいため）。</p>
+                {{-- <li>松陰塾 飯田殿岡校の生徒および保護者向けに、塾長が自作したWebアプリです。</li>
+                <li><span class="font-bold">月間目標など</span>を記録、確認するために使用します。</li> --}}
                 {{-- <li><span class="font-bold">中３生の過去問演習記録の管理</span>を目的として開発しましたが、他の学年の生徒についても<span class="font-bold">学習の記録＆閲覧</span>できるように機能を随時拡張しております（内容や構成は変わる場合があります）。</li> --}}
             </ul>
             <x-h4>使い方</x-h4>
-            <ul class="ml-4" style="list-style-type: disc;">
+            <ul class="ml-8" style="list-style-type: disc;">
                 <li>PCやスマホなどのブラウザからご覧いただけます。PDF閲覧など、一部の機能はPCのみ利用可能です。</li>
                 <li class="font-bold">レンタルiPadではブラウザ閲覧が制限されているため、本アプリは使用できません。</li>
                 <li>PC、タブレットでは画面上部にメニューが表示されます。スマホでは画面右上の「三」を押すとメニューが開きます。</li>
