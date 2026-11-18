@@ -4,6 +4,10 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{$user->name}}さんのダッシュボード
         </h2>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"
+            onload="renderMathInElement(document.body);"></script>
     </x-slot>
     <!-- 変数定義 -->
     @php
@@ -125,6 +129,74 @@
                     <li>中３生は<span class="font-bold">過去問演習の記録管理</span>としても使います。</li>
                 </ul>
                 <p>(※)スマホは横向きでのご利用を推奨します（縦向きはレイアウトが崩れやすいため）。</p>
+            </div>
+        @endif
+
+        @if(mb_substr(@Auth::user()->grade, 0, 1) === "中" || @Auth::user()->grade == "塾長")
+            <x-h3>
+                課題ごとの勉強法
+                @if(@Auth::user()->grade == "塾長")
+                    <span class="text-sm">(※生徒の画面では、中学生の場合のみ表示されます↓)</span>
+                @endif            
+            </x-h3>
+            <div class="mx-auto text-lg leading-[2]">
+                <table class="mt-6 border-separate border border-slate-400 m-auto table-fixed">
+                    <tr class="bg-gray-300">
+                        <x-th>教科</x-th>
+                        <x-th>課題</x-th>
+                        <x-th>学習の方針</x-th>
+                    </tr>
+                    <tr>
+                        <td class="border border-slate-500 px-4">共通</td>
+                        <td class="border border-slate-500 px-4">理解したのに解けない</td>
+                        <td class="border border-slate-500 px-4">
+                            <p>リコーダーで低い「ド」の吹き方を教わっても、練習しなければきれいな音は出せません。数学も（というか何事も）同じです。</p>
+                            <p class="underline">少なくとも、問題を読んで５秒以内には手が動くようになること。できなければ、演習量不足と考えてください。</p>
+                        </td>
+                    </tr>
+                    <tr class="bg-sky-100">
+                        <td rowspan="2" class="border border-slate-500 px-4">数学</td>
+                        <td class="border border-slate-500 px-4">計算ミスが多い。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li>途中式を省かずに書くこと。</li>
+                                <li>絶対に正しいと自信を持って言えない式変形は使わないこと。</li>
+                                <li>解説に理解できない式変形があれば、前の単元の復習が必要。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="bg-sky-100">
+                        <td class="border border-slate-500 px-4">文章題が苦手。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li>不明な数は文字（\(x\) など）で表し、関係式を組み立てる。</li>
+                                <li>関数や図形に関する問題であれば、値や角度などを図に書き込む。</li>
+                                <li>文中に理解できない用語があれば、その用語の意味を<span class="underline">必ず調べる</span>。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="bg-purple-100">
+                        <td rowspan="2" class="border border-slate-500 px-4">英語</td>
+                        <td class="border border-slate-500 px-4">ひとつの文を和訳できない。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li>単純な短い文から練習する。<span class="underline">英文と一緒に和訳が書かれているものを使うとよい</span>。</li>
+                                <li>わからない単語は調べる。</li>
+                                <li>和訳と比較して、それぞれ部分ごとに対応付ける。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="bg-purple-100">
+                        <td class="border border-slate-500 px-4">長文が読めない。</td>
+                        <td class="border border-slate-500 px-4">
+                            <ul class="pl-5 list-disc">
+                                <li>まずは中１の教科書の本文をスラスラ音読できるようにすること。</li>
+                                <li>普段から長文をたくさん読むこと。内容は絵本など簡単で構わない。<span class="underline">難しさよりも量を重視すること</span>。</li>
+                                <li>大筋を把握できるのであれば、わからない単語は飛ばし読みしても構わない。</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
             </div>
         @endif
 
