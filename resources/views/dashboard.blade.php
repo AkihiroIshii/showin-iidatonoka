@@ -148,7 +148,7 @@
                     </tr>
                     <tr>
                         <td class="border border-slate-500 px-4">共通</td>
-                        <td class="border border-slate-500 px-4">理解したのに解けない</td>
+                        <td class="border border-slate-500 px-4">理解したのに解けない。</td>
                         <td class="border border-slate-500 px-4">
                             <p>リコーダーで低い「ド」の吹き方を教わっても、練習しなければきれいな音は出せません。勉強も（というか何事も）同じです。</p>
                             <p class="underline">少なくとも、問題を読んで５秒以内には手が動くようになること。できなければ、演習量不足と考えてください。</p>

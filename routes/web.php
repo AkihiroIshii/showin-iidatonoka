@@ -592,6 +592,8 @@ Route::get('workbook/sci_rocks', [WorkbookController::class, 'sci_rocks'])
 ->middleware(['auth', 'verified'])->name('workbook.sci_rocks');
 Route::get('workbook/sci_fossils', [WorkbookController::class, 'sci_fossils'])
 ->middleware(['auth', 'verified'])->name('workbook.sci_fossils');
+Route::get('workbook/sci_strata', [WorkbookController::class, 'sci_strata'])
+->middleware(['auth', 'verified'])->name('workbook.sci_strata');
 Route::get('workbook/image_formed_lens', [WorkbookController::class, 'image_formed_lens'])
 ->middleware(['auth', 'verified'])->name('workbook.image_formed_lens');
 Route::get('workbook/sci_unit_dimension', [WorkbookController::class, 'sci_unit_dimension'])

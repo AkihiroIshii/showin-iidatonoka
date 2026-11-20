@@ -14832,6 +14832,171 @@ class WorkbookController extends Controller
         return view('workbook.unit_template', compact('unitname','question'));
     }
 
+    // 地層
+    public function sci_strata() {
+        $unitname = "地層";
+        $result = $this->get_sci_strata();
+        $question = $result['question'];
+        $plot_par_q = $result['plot_par_q'];
+        $plot_con_q = $result['plot_con_q'];
+        $plot_par_e = $result['plot_par_e'];
+        $plot_con_e = $result['plot_con_e'];
+        return view('workbook.unit_template', compact('unitname','question','plot_par_q','plot_con_q','plot_par_e','plot_con_e'));
+    }
+    public function get_sci_strata() {
+        $h_Aash = 70 + rand(-5, 5);  // 地点Aの凝灰岩の上面の標高(m)
+        $A_ash_d = rand(5,6);   // 地点Aの凝灰岩上面の、地表からの深さ(m)
+        $hA = $h_Aash + $A_ash_d; // 地点Aの標高
+        $hB = $hA - rand(1, 4); // 地点Bの標高
+        $B_ash_d = rand(2, 7); // 地点Bの凝灰岩上面の、地表からの深さ(m)
+        $h_Bash = $hB - $B_ash_d; // 地点Bの凝灰岩の上面の標高(m)   (※)2 <= B_ash_d <= 7
+        // $h_Bash = $hB + rand(-7, 2); // 地点Bの凝灰岩の上面の標高(m)   (※)2 <= B_ash_d <= 7
+        // $B_ash_d = $hB - $h_Bash; // 地点Bの凝灰岩上面の、地表からの深さ(m)
+
+        if($h_Aash == $h_Bash) {
+            $ans = "A,Bともに同じ標高だった。";
+        } elseif ($h_Aash > $h_Bash) {
+            $ans = "地点Bの方が" . $h_Aash - $h_Bash . "m低かった。";
+        } else {
+            $ans = "地点Aの方が" . $h_Bash - $h_Aash . "m低かった。";
+        }
+
+        /***** 問題によって図を作成 *****/
+        // グラフ描画用
+        $vb_width = 400;    //viewportの大きさ
+        $vb_height = 400;
+        $margin = 50;
+        $plot_width = ($vb_width - 2 * $margin);
+        $plot_height = ($vb_height - 2 * $margin);
+        $y_unit = $plot_height / 10;
+        
+        $plot_par_q = $plot_par_e =  [
+            'vb_width' => $vb_width,
+            'vb_height' => $vb_height,
+            'vb_xfrom' => -$margin,
+            'vb_yfrom' => -$margin,
+        ];
+
+        $plot_con_common = "
+            <defs>
+                <!-- 地層フレーム -->
+                <g id=\"frame\" stroke=\"black\" stroke-width=\"2\">
+                    <rect x=\"0\" y=\"0\" width=\"60\" height=\"" . $y_unit * 10 . "\" fill=\"none\"/>
+                </g>
+                <!-- 地層コア w:60,h:30-->
+                <g id=\"strata\" stroke=\"black\" stroke-width=\"2\">
+                    <rect x=\"0\" y=\"0\" width=\"60\" height=\"" . $y_unit * 2 . "\" fill=\"blue\" fill-opacity=\"0.2\"/>
+                    <rect x=\"0\" y=\"" . $y_unit * 2 . "\" width=\"60\" height=\"" . $y_unit * 1 . "\" fill=\"black\" fill-opacity=\"0.2\"/>
+                    <rect x=\"0\" y=\"" . $y_unit * 3 . "\" width=\"60\" height=\"" . $y_unit * 2 . "\" fill=\"yellow\" fill-opacity=\"0.2\"/>
+                </g>
+                <!-- 地表からの深さの目盛り -->
+                <g id=\"axis\">
+                    <text x=\"-50\" y=\"" . $plot_height / 2 . "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"20\" fill=\"black\" writing-mode=\"tb\" >地表からの深さ（ｍ）</text>
+                    <line x1=\"0\" y1=\"0\" x2 =\"0\" y2=\"{$plot_height}\" stroke=\"black\" stroke-width=\"2\"/>";
+                    for ($i = 0; $i <= 10; $i++) {
+                        $plot_con_common .= "
+                            <line x1=\"-10\" y1=\"" . $i * $y_unit . "\" x2=\"0\" y2=\"" . $i * $y_unit . "\"  stroke=\"black\" stroke-width=\"2\"/>
+                            <text x=\"-22\" y=\"" . $i * $y_unit + ($y_unit/5). "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"18\" fill=\"black\" >{$i}</text>";
+                    }
+                $plot_con_common .= "</g>
+            </defs>";
+
+        $plot_con_q = $plot_con_common . "
+            <!-- A地点 -->
+            <text x=\"90\" y=\"-20\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >A地点</text>
+            <use href=\"#axis\" x=\"50\" y=\"0\"/>
+            <use href=\"#frame\" x=\"60\" y=\"0\"/>
+            <use href=\"#strata\" x=\"60\" y=\"" . $y_unit * ($A_ash_d - 2) . "\"/>
+            <!-- B地点 -->
+            <text x=\"280\" y=\"-20\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"22\" fill=\"black\" >B地点</text>
+            <use href=\"#axis\" x=\"240\" y=\"0\"/>
+            <use href=\"#frame\" x=\"250\" y=\"0\"/>
+            <use href=\"#strata\" x=\"250\" y=\"" . $y_unit * ($B_ash_d - 2) . "\"/>
+            ";
+
+        $plot_con_e = $plot_con_q . "
+            <!-- A地点 -->
+            <text x=\"140\" y=\"" . 0 * $y_unit + ($y_unit/5). "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"18\" fill=\"red\" >{$hA}m</text>
+            <text x=\"140\" y=\"" . $A_ash_d * $y_unit + ($y_unit/5). "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"18\" fill=\"red\" >{$h_Aash}m</text>
+            <!-- B地点 -->
+            <text x=\"330\" y=\"" . 0 * $y_unit + ($y_unit/5). "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"18\" fill=\"red\" >{$hB}m</text>
+            <text x=\"330\" y=\"" . $B_ash_d * $y_unit + ($y_unit/5). "\" text-anchor=\"middle\" font-weight=\"bold\" font-size=\"18\" fill=\"red\" >{$h_Bash}m</text>
+        ";
+
+        // q：問、a：答、e：解説
+        // type・・・1:短文（数式なし or 部分的数式）、2:短文（全体的に数式）、3:複数行（htmlタグあり）、4:2行（変数あり）
+        $questions = [
+            // [
+            //     'q_type' => 3,
+            //     'q' => "
+            //         <p>つぎの（　　）内にあてはまるものを選びなさい。</p>
+            //         <div class=\"text-2xl my-2 leading-[2]\">
+            //             <p>ある地点の地層を見ると、泥岩の層の上に砂岩の層があった。</p>
+            //             <p>これは、かつて海面が（上昇／下降）したことを示している。</p>
+            //         </div>
+            //         ",
+            //     'a_type' => 3,
+            //     'a' => "<p class=\"text-xl\">下降</p>",
+            //     'e_type' => 3,
+            //     'e' => "
+            //         <div class=\"text-xl leading-[2]\">
+            //             <p>まずは、海岸線が近づいたのか遠ざかったのかを考える。河口に流れ出た土砂は、</p>
+            //             <p>粒の大きいもの（れき＞砂＞泥）ほど海岸近くに沈み、粒の小さいものは沖の方まで流れる。</p>
+            //             <p>本問では下層にある泥岩が先に堆積しており、当時は沖の方にあったと考えられる。</p>
+            //             <p>一方、上層は砂岩なので、この時代には<span class=\"underline\">以前よりも海岸が近くなっていた</span>と考えられる。</p>
+            //             <p>海岸が近くなったということは、海面が下降したことを意味する。もし逆に海岸が遠ざかって</p>
+            //             <p>いたのであれば、泥よりも粒が大きい砂は海岸付近に堆積する（この地点には堆積しない）はずである。</p>
+            //         </div>",
+            // ],
+            // [
+            //     'q_type' => 3,
+            //     'q' => "
+            //         <p>つぎの（　　）内にあてはまるものを選びなさい。</p>
+            //         <div class=\"text-2xl my-2 leading-[2]\">
+            //             <p>ある地点の地層を見ると、れき岩の層の上に砂岩の層があった。</p>
+            //             <p>これは、かつて海面が（上昇／下降）したことを示している。</p>
+            //         </div>
+            //         ",
+            //     'a_type' => 3,
+            //     'a' => "<p class=\"text-xl\">上昇</p>",
+            //     'e_type' => 3,
+            //     'e' => "
+            //         <div class=\"text-xl leading-[2]\">
+            //             <p>まずは、海岸線が近づいたのか遠ざかったのかを考える。河口に流れ出た土砂は、</p>
+            //             <p>粒の大きいもの（れき＞砂＞泥）ほど海岸近くに沈み、粒の小さいものは沖の方まで流れる。</p>
+            //             <p>本問では下層にあるれき岩が先に堆積しており、当時は海岸が近かったと考えられる。</p>
+            //             <p>一方、上層は砂岩なので、この時代には<span class=\"underline\">以前よりも海岸から遠ざかっていた</span>と考えられる。</p>
+            //             <p>海岸が遠くなったということは、海面が上昇したことを意味する。もし逆に海岸が近づいていたのであれば、</p>
+            //             <p>れきよりも粒の小さい砂はもっと沖の方に堆積する（この地点には堆積しない）はずである。</p>
+            //         </div>",
+            // ],
+            [
+                'q_type' => 8,
+                'q' => "
+                    <div class=\"text-xl my-2 leading-[2]\">
+                        <p>標高{$hA}mの地点Aと、標高{$hB}mの地点Bで採取した柱状図は以下の通りである。</p>
+                        <p>両地点を含む地域の地層は互いに平行に重なり、地層の傾きの割合は一定とする。</p>
+                        <p>グレーの層は同時期の噴火によって積もった火山灰であり、この噴火以降は</p>
+                        <p>断層のずれやしゅう曲は起きていないことがわかっている。火山が噴火した当時、</p>
+                        <p>A,Bのどちらの地点が何m低かったと考えられるか（A,Bが同じ高さの場合もある）。</p>
+                    </div>
+                    ",
+                'a_type' => 3,
+                'a' => "<p class=\"text-xl\">{$ans}</p>",
+                'e_type' => 8,
+                'e' => "
+                    <div class=\"text-xl leading-[2]\">
+                        <p>柱状図の最上部に地表の標高を書き込む。また、地表からの深さを参考に、</p>
+                        <p>火山灰の層（上面）の標高も書き込む。これら（A:{$h_Aash}m、B:{$h_Bash}m）を</p>
+                        <p>比較すれば、火山灰が堆積した当時の標高差を算出することができる。</p>
+                    </div>",
+            ],
+        ];
+        $q_index = rand(0,count($questions)-1);
+        $question = $questions[$q_index];
+        return compact('question','plot_par_q','plot_con_q','plot_par_e','plot_con_e');
+    }
+
     // 凸レンズによる像
     public function image_formed_lens(Request $request) {
         /***** 問題によって図を作成 *****/
