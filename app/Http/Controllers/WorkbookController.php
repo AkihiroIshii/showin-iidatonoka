@@ -506,7 +506,7 @@ class WorkbookController extends Controller
             'term' => 'nullable',
             'question' => 'required',
             'answer' => 'required',
-            'explanation' => 'required',
+            'explanation' => 'nullable',
             'reference' => 'nullable',
         ]);
 
@@ -530,7 +530,7 @@ class WorkbookController extends Controller
             'term' => 'nullable',
             'question' => 'required',
             'answer' => 'required',
-            'explanation' => 'required',
+            'explanation' => 'nullable',
             'reference' => 'nullable',
         ]);
 
@@ -14974,7 +14974,7 @@ class WorkbookController extends Controller
                 'q_type' => 8,
                 'q' => "
                     <div class=\"text-xl my-2 leading-[2]\">
-                        <p>標高{$hA}mの地点Aと、標高{$hB}mの地点Bで採取した柱状図は以下の通りである。</p>
+                        <p>標高{$hA}mの地点Aと、標高{$hB}mの地点Bでの地層の柱状図は下図の通りである。</p>
                         <p>両地点を含む地域の地層は互いに平行に重なり、地層の傾きの割合は一定とする。</p>
                         <p>グレーの層は同時期の噴火によって積もった火山灰であり、この噴火以降は</p>
                         <p>断層のずれやしゅう曲は起きていないことがわかっている。火山が噴火した当時、</p>
