@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            単元別学習（理数）
+            単元別学習(理数)
         </h2>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
@@ -11,13 +11,12 @@
     <div class="mx-auto px-6 py-10">
         <div class="mx-auto px-6">
             <p>◎：まとめの単元、☆：難しめの単元、⇗：スピードアップ</p>
-            <!---------------------------------------- 小学生 ---------------------------------------->
-            <x-h3 color="lime">小学生</x-h3>
+            <!---------------------------------------- 算数 ---------------------------------------->
+            <x-h3 color="lime">算数</x-h3>
             {{-- <p class="text-center font-bold text-red-600">2026/9/5：漢字の「読み」「書き」を選べるようにしました。苦手な人はまず「読み」だけで練習しましょう。</p> --}}
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
-                        <x-th>分野</x-th>
                         <x-th>小１</x-th>
                         <x-th>小２</x-th>
                         <x-th>小３</x-th>
@@ -29,7 +28,6 @@
                 <tbody>
                     {{-- 小学算数 --}}
                     <tr>
-                        <x-td>算数</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="lime">
@@ -113,8 +111,7 @@
                         </x-td>
                     </tr>
                     {{-- 小学国語 --}}
-                    <tr>
-                        <x-td>国語</x-td>
+                    {{-- <tr>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
                                 <x-button-link color="lime">
@@ -151,12 +148,12 @@
                             <div class="flex flex-wrap gap-4">
                             </div>
                         </x-td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
 
-            <!---------------------------------------- 数学 ---------------------------------------->
-            <x-h3>数学</x-h3>
+            <!---------------------------------------- 中学数学 ---------------------------------------->
+            <x-h3>中学数学</x-h3>
             {{-- <p class="text-center font-bold text-red-600">2026/9/13：中２、中３は、まず中１の「一次方程式まとめ」を目標時間内に解けるようにしましょう。</p> --}}
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
@@ -472,7 +469,7 @@
 
 
             <!---------------------------------------- 英語 ---------------------------------------->
-            <x-h3 color="purple">英語</x-h3>
+            {{-- <x-h3 color="purple">英語</x-h3>
             <p class="text-center font-bold text-red-600">2026/9/30：英語は順次「問題集」に移行しています。</p>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
@@ -512,95 +509,14 @@
                         <x-td>英文法</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                {{-- <x-button-link color="purple">
-                                    <a href="{{route('workbook.be_verb')}}">be動詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.general_verb')}}">一般動詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.interrogative')}}">疑問詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.personal_pronoun')}}">代名詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.past_verb')}}">過去形</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.progressive_tense')}}">進行形</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.eng_summaryJ1')}}">◎中１まとめ</a>
-                                </x-button-link> --}}
-                                {{-- <div>
-                                    be動詞
-                                    <x-button-link color="purple">
-                                        <a href="{{route('workbook.unit.be_verb1')}}">主語と動詞</a>
-                                    </x-button-link>
-                                    <x-button-link color="purple">
-                                        <a href="{{route('workbook.unit.be_verb2')}}">過去形</a>
-                                    </x-button-link>
-                                    <x-button-link color="purple">
-                                        <a href="{{route('workbook.unit.be_verb3')}}">疑問文・否定文</a>
-                                    </x-button-link>
-                                </div>
-                                <div>
-                                    一般動詞
-                                    <x-button-link color="purple">
-                                        <a href="{{route('workbook.unit.general_verb1')}}">肯定文・疑問文・否定文</a>
-                                    </x-button-link>
-                                    <x-button-link color="purple">
-                                        <a href="{{route('workbook.unit.general_verb2')}}">三単現</a>
-                                    </x-button-link>
-                                    <x-button-link color="purple">
-                                        <a href="{{route('workbook.unit.general_verb3')}}">過去形</a>
-                                    </x-button-link>
-                                    <x-button-link color="purple">
-                                        <a href="{{route('workbook.unit.general_verb4')}}">不規則動詞</a>
-                                    </x-button-link>
-                                </div> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                {{-- <x-button-link color="purple">
-                                    <a href="{{route('workbook.conjection')}}">接続詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.infinitive')}}">不定詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.gerund')}}">動名詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.auxiliary_verb')}}">助動詞</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.comparative')}}">比較級</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.passive_voice')}}">受け身</a>
-                                </x-button-link>
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.eng_summaryJ2')}}">◎中２まとめ</a>
-                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                {{-- <x-button-link color="purple">
-                                    <a href="{{route('workbook.present_perfect')}}">現在完了</a>
-                                </x-button-link> --}}
-                                {{-- <x-button-link color="purple">
-                                    <a href="{{route('workbook.svo_infinitive')}}">SVO+不定詞</a>
-                                </x-button-link> --}}
-                                <x-button-link color="purple">
-                                    <a href="{{route('workbook.postfix_modification')}}">後置修飾（分詞、関係代名詞）</a>
-                                </x-button-link>
-                                {{-- <x-button-link color="purple">
-                                    <a href="{{route('workbook.eng_adjective_usage')}}">◎形容詞の用法</a>
-                                </x-button-link> --}}
                             </div>
                         </x-td>
                     </tr>
@@ -611,9 +527,6 @@
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_reading_J1_1')}}">読解練習１</a>
                                 </x-button-link>
-                                {{-- <x-button-link color="purple">
-                                    <a href="{{route('workbook.sentence_structure1')}}">be動詞と一般動詞</a>
-                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -621,9 +534,6 @@
                                 <x-button-link color="purple">
                                     <a href="{{route('workbook.eng_reading_J2_2')}}">読解練習２</a>
                                 </x-button-link>
-                                {{-- <x-button-link color="purple">
-                                    <a href="{{route('workbook.eng_reading_J2_1')}}">桃太郎</a>
-                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -635,7 +545,7 @@
                         </x-td>
                     </tr>
                 </tbody>
-            </table>
+            </table> --}}
 
 
             <!---------------------------------------- 理科 ---------------------------------------->
@@ -834,7 +744,7 @@
             </table>
 
             <!---------------------------------------- 国語 ---------------------------------------->
-            <x-h3 color="red">国語</x-h3>
+            {{-- <x-h3 color="red">国語</x-h3>
             <table class="border-separate border border-slate-400 m-auto table-fixed">
                 <thead>
                     <tr class="bg-gray-300">
@@ -849,9 +759,6 @@
                         <x-td>漢字</x-td>
                         <x-td class="font-bold">
                             <div class="flex flex-wrap gap-4">
-                                {{-- <x-button-link color="red">
-                                    <a href="{{route('workbook.unit.map_scale')}}">地図の縮尺</a>
-                                </x-button-link> --}}
                             </div>
                         </x-td>
                         <x-td class="font-bold">
@@ -882,7 +789,7 @@
                         </x-td>
                     </tr>
                 </tbody>
-            </table>
+            </table> --}}
 
             <!---------------------------------------- 高校生 ---------------------------------------->
             <x-h3 color="pink">高校生</x-h3>

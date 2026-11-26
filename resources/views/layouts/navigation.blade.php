@@ -22,10 +22,10 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
-                        単元別学習
+                        問題(理数)
                     </x-nav-link>
                     <x-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
-                        問題集
+                        問題(英国社)
                     </x-nav-link>
                     <x-nav-link :href="route('workbook.reference')" :active="request()->routeIs('workbook.reference')">
                         公式集
@@ -127,7 +127,10 @@
         <div class="pt-2 pb-3 space-y-1">
             {{-- <p class="text-xs">　一部、スマホ表示に未対応です。すみません(＞＜;)</p> --}}
             <x-responsive-nav-link :href="route('workbook.unitbasedlist')" :active="request()->routeIs('workbook.unitbasedlist')">
-                単元別学習
+                問題(理数)
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
+                問題(英国社)
             </x-responsive-nav-link>
             @if(Auth::user()->role == "admin")
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
@@ -135,9 +138,6 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.maintain')" :active="request()->routeIs('admin.maintain')">
                     メンテナンス
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('workbook')" :active="request()->routeIs('workbook')">
-                    問題集
                 </x-responsive-nav-link>
             <!--　生徒、保護者 -->
             @else
