@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            問題集
+            問題(英国社)
         </h2>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
@@ -162,7 +162,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="flex mt-4">
+                {{-- <div class="flex mt-4">
                     <div class="px-6 w-32 shirink-0 font-bold">語彙</div>
                     <div class="flex flex-wrap gap-x-4 gap-y-2">
                         <!-- 問題集に存在する単元のみチェックボックスを表示 -->
@@ -189,8 +189,36 @@
                             文法 問題表示
                         </button>
                     </div>
+                </div> --}}
+                <div class="flex mt-4">
+                    <div class="px-6 w-32 shirink-0 font-bold">現代文</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['gendai'] as $gendai_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $gendai_unit->physical_name }}" value="1">{{ $gendai_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="gendai_unit" class="inline-block p-2 rounded shadow bg-red-200 font-bold">
+                            現代文 問題表示
+                        </button>
+                    </div>
                 </div>
-                
+                <div class="flex mt-4">
+                    <div class="px-6 w-32 shirink-0 font-bold">古文</div>
+                    <div class="flex flex-wrap gap-x-4 gap-y-2">
+                        <!-- 問題集に存在する単元のみチェックボックスを表示 -->
+                        @foreach($units['kobun'] as $kobun_unit)
+                            <label class="w-auto pl-2">
+                                <input type="checkbox" name="{{ $kobun_unit->physical_name }}" value="1">{{ $kobun_unit->logical_name }}
+                            </label>
+                        @endforeach
+                        <button type="submit" name="target" value="kobun_unit" class="inline-block p-2 rounded shadow bg-red-200 font-bold">
+                            古文 問題表示
+                        </button>
+                    </div>
+                </div>
+
                 <!--------------- 社会 --------------->
                 <x-h3 color="yellow">社会</x-h3>
                 <div class="flex">
